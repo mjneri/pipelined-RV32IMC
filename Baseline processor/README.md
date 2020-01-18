@@ -3,4 +3,4 @@ Base Pipelined RV32I Processor
   > flushing & stalling not yet implemented
 
 FILENAMES:
-  - pr_XXXXX.v -> denotes a pipeline register module
+  - pipereg_XXXXX.v -> denotes a pipeline register module
