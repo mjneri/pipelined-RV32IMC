@@ -8,7 +8,7 @@ module top(
 	output [11:0] OUT_id_PC,
 	output [11:0] OUT_exe_PC,
 	output [11:0] OUT_mem_PC,
-	output [11:0] OUT_wb_PC,
+	output [11:0] OUT_wb_PC
 );
 	
 // Declare wires & regs	/////////////////////////////////////////////////////////////////////////
