@@ -26,9 +26,35 @@ module id_exe(
 
 	// PC of current instruction for debugging
 	input [11:0] id_PC,
-	output reg [11:0] exe_PC
+	output reg [11:0] exe_PC,
 
-	// Control signals go here
+	// Control signals
+	input [3:0] id_ALU_op,
+	output reg [3:0] exe_ALU_op,
+
+	input id_sel_opA,
+	output reg exe_sel_opA,
+
+	input id_sel_opB,
+	output reg exe_sel_opB,
+
+	input id_dm_write,
+	output reg exe_dm_write,
+
+	input id_wr_en,
+	output reg exe_wr_en,
+
+	input [2:0] id_dm_select,
+	output reg [2:0] exe_dm_select,
+
+	input [1:0] id_sel_pc,
+	output reg [1:0] exe_sel_pc,
+
+	input [1:0] id_sel_data,
+	output reg [1:0] exe_sel_data,
+
+	input [1:0] id_store_select,
+	output reg [1:0] exe_store_select
 );
 
 	always@(posedge clk) begin
@@ -40,6 +66,17 @@ module id_exe(
 			exe_rd <= 0;
 
 			exe_PC <= 0;
+
+			// Control signals
+			exe_ALU_op <= 0;
+			exe_sel_opA <= 0;
+			exe_sel_opB <= 0;
+			exe_dm_write <= 0;
+			exe_wr_en <= 0;
+			exe_dm_select <= 0;
+			exe_sel_pc <= 0;
+			exe_sel_data <= 0;
+			exe_store_select <= 0;
 		end else begin
 			exe_pc4 <= id_pc4;
 			exe_rfoutA <= id_rfoutA;
@@ -48,6 +85,17 @@ module id_exe(
 			exe_rd <= id_rd;
 			
 			exe_PC <= id_PC;
+
+			// Control signals
+			exe_ALU_op <= id_ALU_op;
+			exe_sel_opA <= id_sel_opA;
+			exe_sel_opB <= id_sel_opB;
+			exe_dm_write <= id_dm_write;
+			exe_wr_en <= id_wr_en;
+			exe_dm_select <= id_dm_select;
+			exe_sel_pc <= id_sel_pc;
+			exe_sel_data <= id_sel_data;
+			exe_store_select <= id_store_select;
 		end
 	end
 

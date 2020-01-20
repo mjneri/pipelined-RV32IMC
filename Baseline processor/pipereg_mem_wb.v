@@ -20,9 +20,14 @@ module mem_wb(
 	output reg [4:0] wb_rd,
 
 	input [11:0] mem_PC,
-	output reg [11:0] wb_PC
+	output reg [11:0] wb_PC,
 
 	// Control signals go here
+	input mem_wr_en,
+	output reg wb_wr_en,
+
+	input [1:0] mem_sel_data,
+	output reg [1:0] wb_sel_data
 );
 
 	always@(posedge clk) begin
@@ -34,6 +39,11 @@ module mem_wb(
 			wb_rd <= 0;
 
 			wb_PC <= 0;
+
+			// Control signals
+			wb_wr_en <= 0;
+			wb_sel_data <= 0;
+
 		end else begin
 			wb_pc4 <= mem_pc4;
 			wb_ALUout <= mem_ALUout;
@@ -42,6 +52,10 @@ module mem_wb(
 			wb_rd <= mem_rd;
 
 			wb_PC <= mem_PC;
+
+			// Control signals
+			wb_wr_en <= mem_wr_en;
+			wb_sel_data <= mem_sel_data;
 		end
 	end
 

@@ -20,9 +20,20 @@ module exe_mem(
 	output reg [4:0] mem_rd,
 
 	input [11:0] exe_PC,
-	output reg [11:0] mem_PC
+	output reg [11:0] mem_PC,
 
-	// Control signals go here
+	// Control signals
+	input exe_dm_write,
+	output reg mem_dm_write,
+
+	input exe_wr_en,
+	output reg mem_wr_en,
+
+	input [2:0] exe_dm_select,
+	output reg [2:0] mem_dm_select,
+
+	input [1:0] exe_sel_data,
+	output reg [1:0] mem_sel_data
 );
 
 	always@(posedge clk) begin
@@ -34,6 +45,12 @@ module exe_mem(
 			mem_rd <= 0;
 
 			mem_PC <= 0;
+
+			// Control signals
+			mem_dm_write <= 0;
+			mem_wr_en <= 0;
+			mem_dm_select <= 0;
+			mem_sel_data <= 0;
 		end else begin
 			mem_pc4 <= exe_pc4;
 			mem_ALUout <= exe_ALUout;
@@ -42,6 +59,12 @@ module exe_mem(
 			mem_rd <= exe_rd;
 			
 			mem_PC <= exe_PC;
+
+			// Control signals
+			mem_dm_write <= exe_dm_write;
+			mem_wr_en <= exe_wr_en;
+			mem_dm_select <= exe_dm_select;
+			mem_sel_data <= exe_sel_data;
 		end
 	end
 
