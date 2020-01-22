@@ -1,0 +1,16 @@
+#testbench for baseline processor - IBS types
+#instructions ordered properly
+#no hazards as of now
+#NOP = addi x0, x0, 0
+
+#LUI
+
+#ADDI
+#SLTI
+#SLTIU
+#XORI
+#ORI
+#ANDI
+#SLLI
+#SRLI
+#
