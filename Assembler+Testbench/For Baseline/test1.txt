@@ -1,4 +1,4 @@
-#testbench for baseline processor
+#testbench for baseline processor - RUJ types
 #instructions ordered properly
 #no hazards as of now
 #NOP = addi x0, x0, 0
