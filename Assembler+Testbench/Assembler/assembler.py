@@ -228,7 +228,7 @@ def assemble(instructions, labels, instmem):
             imm = int(temp_inst[3])
             imm &= (2**imm_width-1)
             m_code = opcode | (imm&0x800)>>4 | (imm&0x1E)<<7 | funct3<<12 | rs1<<15 | rs2<<20 | (imm&0x7E)<<20 | (imm&0x800)<<19
-            print(bin(m_code)[2:].zfill(32))
+            
         elif (encoding_type=='U'):
             rd = int(temp_inst[1])
             imm = int(temp_inst[2])
