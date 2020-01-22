@@ -121,3 +121,6 @@ sh x13, 64(x0)
 
 #SW
 sw x12, 68(x0)
+
+#BRANCH INSTRUCTIONS
+
