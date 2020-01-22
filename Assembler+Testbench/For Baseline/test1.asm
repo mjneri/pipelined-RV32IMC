@@ -2,7 +2,7 @@
 #instructions ordered properly
 #no hazards as of now
 #NOP = addi x0, x0, 0
-#1
+
 
 
 #LUI
