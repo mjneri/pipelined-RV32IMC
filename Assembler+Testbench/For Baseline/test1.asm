@@ -12,9 +12,9 @@ lui x3, 0x3
 lui x4, 0x19 #25
 lui x5, 0xFFCD #-50
 lui x6, 0x29 #41
-lui x7, FFF4 #-12
+lui x7, 0xFFF4 #-12
 lui x8, 0x0000AFC8 #45000
-lui x9, 0xFFFEEAA8 #-71000
+lui x9, 0xFD3A #-7100
 
 sw x4, 0(x0)
 sw x5, 4(x0)
@@ -159,11 +159,3 @@ addi x0, x0, 0 #NOP
 sw x11, 128(x0)
 
 #JUMP INSTRUCTIONS
-
-
-
-
-
-
-
-
