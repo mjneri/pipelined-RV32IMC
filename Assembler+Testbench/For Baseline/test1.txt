@@ -76,9 +76,9 @@ sw x12, 60(x0)
 #SLT
 slt x13, x4, x4
 slt x14, x4, x6
-slt x15, x4, x4
+slt x15, x5, x4
 slt x16, x0, x0
-slt x17, x8, x5
+slt x17, x9, x5
 
 sw x13, 64(x0)
 sw x14, 68(x0)
@@ -88,13 +88,16 @@ sw x17, 80(x0)
 
 #SLTU
 sltu x10, x6, x8
-sltu x11, x5, x1
+sltu x11, x6, x4
 
 lui x12, 0x70f0
 lui x13, 0x7f0f
 lui x14, 0x6090
 lui x15, 0x6090
 lui x16, 0x0
+
+sw x10, 84(x0)
+sw x11, 88(x0)
 
 
 #XOR
@@ -104,8 +107,8 @@ xor x18, x15, x16
 addi x0, x0, 0 #NOP
 addi x0, x0, 0 #NOP
 
-sw x17, 84(x0)
-sw x18, 88(x0)
+sw x17, 92(x0)
+sw x18, 96(x0)
 
 lui x1, 0x11111
 lui x2, 0x4
@@ -122,10 +125,10 @@ srl x11, x1, x3
 srl x12, x1, x4
 srl x13, x1, x0
 
-sw x10, 92(x0)
-sw x11, 96(x0)
-sw x12, 100(x0)
-sw x13, 104(x0)
+sw x10, 100(x0)
+sw x11, 104(x0)
+sw x12, 108(x0)
+sw x13, 112(x0)
 
 #SRA
 sra x14, x1, x2
@@ -134,8 +137,8 @@ sra x15, x1, x0
 addi x0, x0, 0 #NOP
 addi x0, x0, 0 #NOP
 
-sw x10, 108(x0)
-sw x11, 112(x0)
+sw x10, 116(x0)
+sw x11, 120(x0)
 
 #OR
 or x10, x5, x6
@@ -144,7 +147,7 @@ addi x0, x0, 0 #NOP
 addi x0, x0, 0 #NOP
 addi x0, x0, 0 #NOP
 
-sw x10, 116(x0)
+sw x10, 124(x0)
 
 #AND
 and x11, x5, x6
@@ -153,7 +156,7 @@ and x12, x7, x8
 addi x0, x0, 0 #NOP
 addi x0, x0, 0 #NOP
 
-sw x11, 120(x0)
+sw x11, 128(x0)
 
 #END HERE
 
