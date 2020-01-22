@@ -3,3 +3,49 @@
 #no hazards as of now
 
 
+#LUI
+#test numbers to be used
+lui x1, 0x4
+lui x2, 0x6
+lui x3, 0x8
+lui x4, 0x19 #25
+lui x5, 0xFFCD #-50
+lui x6, 0x0029 #41
+lui x7, FFF4 #-12
+lui x8, 0x0000AFC8 #45000
+lui x9, 0xFFFEEAA8 #-71000
+
+#AUIPC
+auipc x1, 0x1
+auipc x2, 0x2
+auipc x3, 0x3
+
+#ADD
+#1 p + p
+add x10, x8, x6 
+#2 p + n
+add x11, x4, x5
+#3 n + p
+add x12, x9, x8     
+#4 n + n
+add x13, x5, x7 
+#5 n + 0
+add x14, x9, x0     
+
+#SUB
+#1 p - p
+sub x10, x6, x4     
+#2 p - n
+sub x11, x8, x5     
+#3 n - p
+sub 
+
+
+
+
+
+
+
+
+
+
