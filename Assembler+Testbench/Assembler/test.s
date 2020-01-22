@@ -1,14 +1,14 @@
 Base:
-lui a1, 0x1F
-auipc a2, 0xF1
-jal a3, 11
-jalr a4, a5, 0
+lui a1, 0xF0F0F0F0
+auipc a2, 0x0F0F0F0F
+jal a3, 31
+jalr a4, a5, 31
 beq t0, t1, 32
-bne t0, t1, 33
-blt t0, t1, 34
-bge t0, t1, 35
-bltu t0, t1, 36
-bgeu t0, t1, 37
+bne t0, t1, 34
+blt t0, t1, 36
+bge t0, t1, 38
+bltu t0, t1, 40
+bgeu t0, t1, 42
 lb t1, 0(s1)
 lh t1, 0(s1)
 lw t1, 0(s1)
@@ -63,6 +63,6 @@ c.slli t2, 0x11
 c.lwsp t2, 0x11
 c.jr ra
 c.mv  t0, t1
-c.jalr 0x100
+c.jalr ra
 c.add t0, t1
 c.swsp t5, 0x100
