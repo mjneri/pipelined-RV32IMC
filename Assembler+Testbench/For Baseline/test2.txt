@@ -10,8 +10,8 @@ addi x0, x0, 0
 addi x0, x0, 0
 
 #ADDI
-addi x10, x0, 24
-addi x11, x1, 24
+addi x10, x0, 66
+addi x11, x1, 66
 
 addi x0, x0, 0
 addi x0, x0, 0
@@ -97,10 +97,27 @@ sw x12, 52(x0)
 sw x13, 56(x0)
 
 #LB
-#LH
-#LW
-#LHU
+lb x10, 0(x0)
+
 #LBU
+lbu x14, 16(x0)
+
+#LH
+lh x11, 2(x0)
+
+#LHU
+lhu x13, 16(x0)
+
+#LW
+lw x12, 16(x0)
+
 #SB
+sb x10, 60(x0)
+sb x14, 61(x0)
+
 #SH
+sh x11, 62(x0)
+sh x13, 64(x0)
+
 #SW
+sw x12, 68(x0)
