@@ -39,9 +39,10 @@ instruction_dict= {
     'SRA':   {'syntax':'r-r-r',                 'format':'R',   'opcode':51,    'funct3':5, 'funct7':32},
     'OR':    {'syntax':'r-r-r',                 'format':'R',   'opcode':51,    'funct3':6, 'funct7':0},
     'AND':   {'syntax':'r-r-r',                 'format':'R',   'opcode':51,    'funct3':7, 'funct7':0},
-    'FENCE': {'type':'N',                       'format':'F',   'opcode':15},
-    'ECALL': {'type':'N',                       'format':'E',   'opcode':115,   'funct12':0},
-    'EBREAK':{'type':'N',                       'format':'E',   'opcode':115,   'funct12':1},
+    'C.NOP': {'syntax':'none',                  'format':'N',   'opcode':19},
+    #'FENCE': {'syntax':'r-r-r',                 'format':'F',   'opcode':15},
+    'ECALL': {'syntax':'none',                  'format':'N',   'opcode':115},
+    'EBREAK':{'syntax':'none',                  'format':'N',   'opcode':1048691},
 
     # Multiplication
     'MUL':   {'syntax':'r-r-r',                 'format':'R',   'opcode':51,    'funct3':0, 'funct7':1},
@@ -50,20 +51,18 @@ instruction_dict= {
     'MULHU': {'syntax':'r-r-r',                 'format':'R',   'opcode':51,    'funct3':3, 'funct7':1},
 
     # Compressed
-    # Format is as follows:
-    # <instruction>, <encoding type>, <opcode>, <funct3/funct2,funct3/funct2,funct6/funct4>
-    'C.ADDI4SPN':{'syntax':'r-i','i_width':10,  'format':'CIW', 'opcode':0,     'funct3':0},
-    #'C.FLD': {'syntax':'r-i_r', 'i_width':8,    'format':'CL', 'opcode':0,     'funct3':1},
+    'C.ADDI4SPN':{'syntax':'r-i','i_width':10,  'format':'C4',  'opcode':0,     'funct3':0},
+    'C.FLD': {'syntax':'r-i_r', 'i_width':8,    'format':'CLS', 'opcode':0,     'funct3':1},
     'C.LW':  {'syntax':'r-i_r', 'i_width':7,    'format':'CLS', 'opcode':0,     'funct3':2},
     'C.FLW': {'syntax':'r-i_r', 'i_width':7,    'format':'CLS', 'opcode':0,     'funct3':2},
-    #'C.FSD': {'syntax':'r-i_r', 'i_width':7,    'format':'CL', 'opcode':0,     'funct3':2},
+    'C.FSD': {'syntax':'r-i_r', 'i_width':7,    'format':'CLS', 'opcode':0,     'funct3':2},
     'C.FSW': {'syntax':'r-i_r', 'i_width':7,    'format':'CLS', 'opcode':0,     'funct3':2},
     'C.SW':  {'syntax':'r-i_r', 'i_width':7,    'format':'CLS', 'opcode':0,     'funct3':6},
-    'C.NOP': {'syntax':'i',     'i_width':6,    'format':'CN',  'opcode':1,     'funct3':0},
+    'C.NOP': {'syntax':'none',                  'format':'N',   'opcode':1},
     'C.ADDI':{'syntax':'r-i',   'i_width':6,    'format':'CI',  'opcode':1,     'funct3':0},
     'C.JAL': {'syntax':'i',     'i_width':12,   'format':'CJ',  'opcode':1,     'funct3':1},
     'C.LI':  {'syntax':'r-i',   'i_width':6,    'format':'CI',  'opcode':1,     'funct3':2},
-    'C.ADDI16SPN':{'syntax':'i','i_width':10,   'format':'CIW', 'opcode':1,     'funct3':3},
+    'C.ADDI16SP':{'syntax':'i', 'i_width':10,   'format':'C16', 'opcode':1,     'funct3':3},
     'C.LUI': {'syntax':'r-i',   'i_width':18,   'format':'CI',  'opcode':1,     'funct3':3},
     'C.SRLI':{'syntax':'r-i',   'i_width':6,    'format':'CH',  'opcode':1,     'funct2':0, 'funct3':4},
     'C.SRAI':{'syntax':'r-i',	'i_width':6,    'format':'CH',  'opcode':1,     'funct2':1, 'funct3':4},
@@ -81,7 +80,7 @@ instruction_dict= {
     'C.FLWSP':  {'syntax':'r-i','i_width':9,    'format':'CI',  'opcode':2,     'funct3':3},
     'C.JR':     {'syntax':'r',                  'format':'CR',  'opcode':2,     'funct4':8},
     'C.MV':     {'syntax':'r-r',                'format':'CR',  'opcode':2,     'funct4':8},
-    'C.EBREAK': {'syntax':'none',                               'opcode':36866},
+    'C.EBREAK': {'syntax':'none',               'format':'N',   'opcode':36866},
     'C.JALR':   {'syntax':'r',	                'format':'CR',  'opcode':2,     'funct4':9},
     'C.ADD':    {'syntax':'r-r',                'format':'CR',  'opcode':2,     'funct4':9},
     'C.FSDSP':  {'syntax':'r-i','i_width':9,    'format':'CI',  'opcode':2,     'funct3':5},
