@@ -62,23 +62,23 @@ sw x20, 76(x0)
 sw x21, 80(x0)
 sw x22, 84(x0)
 _beqz:
-c.beqz x8, _beqz
+#c.beqz x8, _beqz
 c.addi x8, 2
-c.beqz x0, _bnez
+#c.beqz x0, _bnez
 c.addi x8, 12
 _bnez:
 c.addi x8, 10
 sw x8, 88(x0)
 c.addi x8, -10
-c.bnez x8, _bnez
+#c.bnez x8, _bnez
 c.addi x8, 1
-c.bnez x22, _jump
+#c.bnez x22, _jump
 c.addi x8, -1
 _jump:
 c.addi x8, 12
 sw x8, 92(x0)
 c.addi x8, 12
-c.j _jr
+#c.j _jr
 c.addi x8, -25
 _jr:
 sw x8, 96(x0)
@@ -93,4 +93,4 @@ c.jalr x1
 c.addi x1, 10
 c.swsp x8, 26
 ___jump:
-c.j ___jump
+#c.j ___jump
