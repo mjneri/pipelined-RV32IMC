@@ -16,9 +16,9 @@ c.sw x13, 24(x0)
 c.sw x12, 28(x0)
 c.nop
 c.nop
-c.jal plus
+#c.jal plus
 c.addi x13, 2
-c.j end_jal
+#c.j end_jal
 plus:
 c.addi x13, 1
 c.jr x1
