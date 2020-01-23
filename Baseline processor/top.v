@@ -88,7 +88,10 @@ module top(
 	wire mem_wr_en;					// For WB stage 											/
 	wire [2:0] mem_dm_select;		// For MEM stage 											/
 	wire [1:0] mem_sel_data;		// For WB stage 											/
-// 																								/
+//
+	// MEM Stage Datapath Signals
+	wire[31:0] mem_DATAMEMout;		// Output of DATAMEM
+	 																						/
 	// Inputs to MEM/WB Pipereg 																/
 	wire [31:0] mem_loaddata;		// Output of LOAD BLOCK 									/
 // 																								/
@@ -151,6 +154,11 @@ module top(
 		.src1_out(id_rfoutA),	.src2_out(id_rfoutB)
 	);
 
+	shiftsignshuff SHIFTSIGNSHUFF(
+		.imm_select(id_imm_select),
+		.inst(id_inst[31:7]),
+		.imm(id_imm)
+	);
 
 	pipereg_id_exe ID_EXE(
 		.clk(CLK100MHZ),
@@ -201,6 +209,12 @@ module top(
 // MEM Stage
 	datamem DATAMEM(
 
+	);
+
+	loadblock LOADBLOCK(
+		.data(mem_DATAMEMout),
+		.dm_select(mem_dm_select),
+		.loaddata(mem_loaddata)
 	);
 
 	pipereg_mem_wb MEM_WB(
