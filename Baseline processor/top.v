@@ -129,6 +129,10 @@ module top(
 	assign if_pc4 = if_PC + 12'd4;
 
 	// PC Selection; REPLACE WITH MUX LATER
+	// REPLACE
+	// WITH
+	// MUX
+	// LATER
 	assign if_pcnew = if_pc4;
 
 	pipereg_if_id IF_ID(
