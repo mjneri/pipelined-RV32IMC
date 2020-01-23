@@ -38,8 +38,8 @@ module id_exe(
 	input id_sel_opB,
 	output reg exe_sel_opB,
 
-	input id_dm_write,
-	output reg exe_dm_write,
+	//input id_dm_write,
+	//output reg exe_dm_write,
 
 	input id_wr_en,
 	output reg exe_wr_en,
