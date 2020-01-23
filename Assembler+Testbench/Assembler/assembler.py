@@ -28,27 +28,27 @@ except:
 # Outputs parsed instruction line with replaced registers
 def parse_inst(inst_type, t_inst):
     t_inst[0] = t_inst[0].upper()
-    if ((inst_type['syntax']=='none')):
+    syntax = inst_type['syntax']
+    if ((syntax=='none')):
         if (len(t_inst[1:]) > 0):
             print('Error: excessive number of arguments (0+)')
             exit()
-    if ((inst_type['syntax']=='i') or (inst_type['syntax']=='r')):
+    if ((syntax=='i') or (syntax=='r')):
         if (len(t_inst[2:]) > 0):
             print('Error: excessive number of arguments (1+)')
             exit()
-    if ((inst_type['syntax']=='r-i') or (inst_type['syntax']=='r-r')):
+    if ((syntax=='r-i') or (syntax=='r-r')):
         if (len(t_inst[3:]) > 0):
             print('Error: excessive number of arguments (2+)')
             exit()
-    if ((inst_type['syntax']=='r-r-r') or (inst_type['syntax']=='r-r-i') or (inst_type['syntax']=='r-i_r')):
+    if ((syntax=='r-r-r') or (syntax=='r-r-i') or (syntax=='r-i_r')):
         if (len(t_inst[4:]) > 0):
             print('Error: excessive number of arguments (3+)')
             exit()
     
-    if (inst_type['syntax']=='none'):
-        t_inst = t_inst[0]
+    if (syntax=='none'):
         return t_inst
-    elif (inst_type['syntax']=='i'):
+    elif (syntax=='i'):
         try:
             arg1 = int(t_inst[1], 0)
             t_inst = [t_inst[0], arg1]
@@ -63,9 +63,9 @@ def parse_inst(inst_type, t_inst):
             print('Invalid first arguement (Reg)')
             exit()
 
-    if (inst_type['syntax']=='r'):
+    if (syntax=='r'):
         t_inst = [t_inst[0], arg1]
-    elif ((inst_type['syntax']=='r-r-r') or (inst_type['syntax']=='r-r-i') or (inst_type['syntax']=='r-r')):
+    elif ((syntax=='r-r-r') or (syntax=='r-r-i') or (syntax=='r-r')):
         # inst reg, reg, reg
         # inst reg, reg, imm
         # inst reg, reg
@@ -74,9 +74,9 @@ def parse_inst(inst_type, t_inst):
         except IndexError:
             print('Invalid second arguement (Reg)')
             exit()
-        if (inst_type['syntax'] == 'r-r'):
+        if (syntax == 'r-r'):
             t_inst = [t_inst[0], arg1, arg2]
-        elif (inst_type['syntax'] == 'r-r-r'):
+        elif (syntax == 'r-r-r'):
             try:
                 arg3 = register_dict[t_inst[3]]
                 t_inst = [t_inst[0], arg1, arg2, arg3]
@@ -91,19 +91,23 @@ def parse_inst(inst_type, t_inst):
                 print('Invalid third arguement (Imm)')
                 exit()
             
-    elif (inst_type['syntax']=='r-i_r' or (inst_type['syntax']=='r-i')):
+    elif (syntax=='r-i_r' or (syntax=='r-i')):
         # inst reg, i(reg)
         # inst reg, imm
         try:
             arg2 = int(t_inst[2], 0)
         except:
-            print('Invalid second arguement (i)')
+            print('Invalid second arguement (Imm)')
             exit()
-        if (inst_type['syntax']=='r-i'):
+        if (syntax=='r-i'):
             t_inst = [t_inst[0], arg1, arg2]
         else:
             try:
                 arg3 = register_dict[t_inst[3]]
+                if (t_inst[0][0]=='C'):
+                    if (arg1>15):
+                        print('Invalid first arguement (Reg)')
+                        exit()
                 t_inst = [t_inst[0], arg1, arg2, arg3]
             except IndexError:
                 print('Invalid third arguement (Reg)')
@@ -190,7 +194,9 @@ def parse_file(line_list):
 def assemble(instructions, labels, instmem):
     for i in instructions.keys():
         temp_inst = process_inst(instructions[i])
+        
         print('instruction: {}'.format(temp_inst))
+        
         opt = temp_inst[0]
         opcode = instruction_dict[opt]['opcode']
         encoding_type = instruction_dict[opt]['format']
@@ -198,17 +204,38 @@ def assemble(instructions, labels, instmem):
             imm_width = instruction_dict[opt]['i_width']
         except:
             pass
-        if (encoding_type=='R'):        # Okay
-            rd = int(temp_inst[1])
+        try:    
+            funct2 = instruction_dict[opt]['funct2']
+        except:
+            pass
+        try:    
             funct3 = instruction_dict[opt]['funct3']
+        except:
+            pass
+        try:    
+            funct4 = instruction_dict[opt]['funct4']
+        except:
+            pass
+        try:    
+            funct6 = instruction_dict[opt]['funct6']
+        except:
+            pass
+        try:    
+            funct7 = instruction_dict[opt]['funct7']
+        except:
+            pass
+
+        if (encoding_type=='N'):        # Okay
+            m_code = opcode
+        
+        elif (encoding_type=='R'):      # Okay
+            rd = int(temp_inst[1])
             rs1 = int(temp_inst[2])
             rs2_shamt = int(temp_inst[3])
-            funct7 = instruction_dict[opt]['funct7']
             m_code = opcode |  rd<<7 | funct3<<12 | rs1<<15 | rs2_shamt<<20 | funct7<<25
             
         elif (encoding_type=='I'):      # Okay
             rd = int(temp_inst[1])
-            funct3 = instruction_dict[opt]['funct3']
             if (instruction_dict[opt]['syntax']=='r-i_r'):
                 rs1 = int(temp_inst[3])
                 imm = int(temp_inst[2])
@@ -216,72 +243,86 @@ def assemble(instructions, labels, instmem):
                 rs1 = int(temp_inst[2])
                 imm = int(temp_inst[3])
             imm &= (2**imm_width-1)
-            print(hex(imm))
             m_code = opcode | rd<<7 | funct3<<12 | rs1<<15 | imm<<20
-            print(bin(m_code)[2:].zfill(32))
 
         elif (encoding_type=='S'):      # Okay
-            funct3 = instruction_dict[opt]['funct3']
             rs1 = int(temp_inst[3])
             rs2 = int(temp_inst[1])
-            imm = int(temp_inst[2])
-            imm &= (2**imm_width-1)
+            imm = int(temp_inst[2])&(2**imm_width-1)
             m_code = opcode |  (imm&0x1F)<<7 | funct3<<12 | rs1<<15 | rs2<<20 | (imm&0xFE0)<<14
 
         elif (encoding_type=='B'):
-            funct3 = instruction_dict[opt]['funct3']
             rs1 = int(temp_inst[1])
             rs2 = int(temp_inst[2])
         # Labelling to be implemented
-            imm = int(temp_inst[3])
-            imm &= (2**imm_width-1)
+            imm = int(temp_inst[3])&(2**imm_width-1)
             m_code = opcode | (imm&0x800)>>4 | (imm&0x1E)<<7 | funct3<<12 | rs1<<15 | rs2<<20 | (imm&0x7E)<<20 | (imm&0x800)<<19
             
         elif (encoding_type=='U'):      # Okay
             rd = int(temp_inst[1])
-            imm = int(temp_inst[2])
-            imm &= (2**imm_width-1)&0xFFFFF000
+            imm = int(temp_inst[2])&(2**imm_width-1)&0xFFFFF000
             m_code = opcode |  rd<<7 | imm
         
         elif (encoding_type=='J'):
             rd = int(temp_inst[1])
         # Labelling to be implemented
-            imm = int(temp_inst[2])
-            imm &= (2**imm_width-1)
+            imm = int(temp_inst[2])&(2**imm_width-1)
             m_code = opcode |  rd<<7 | (imm&0xFF000) | (imm&0x800)<<9 | (imm&0x7FE)<<20 | (imm&0x100000)<<11
-            
-        elif (encoding_type=='CN'):     # Okay
-            imm = int(temp_inst[1])
-            m_code = opcode | (imm&0x1F)<<2 | (imm&0x20)<<12
         
         elif (encoding_type=='CR'):     # Okay
             if (instruction_dict[opt]['syntax']=='r'):
-                rd_rs1 = int(temp_inst[1])
-                rs2 = 0
+                rd_rs1_ = int(temp_inst[1])
+                rs2_ = 0
             else:
-                rd_rs1 = int(temp_inst[1])
-                rs2 = int(temp_inst[2])
-            funct4 = instruction_dict[opt]['funct4']
-            m_code = opcode |  rs2<<2 | rd_rs1<<7 | (imm&0x38)<<10 | funct4<<12
+                rd_rs1_ = int(temp_inst[1])
+                rs2_ = int(temp_inst[2])
+            m_code = opcode |  rs2_<<2 | rd_rs1_<<7 | (imm&0x38)<<10 | funct4<<12
         
         elif (encoding_type=='CI'):     # Okay
             rd = int(temp_inst[1])
-            imm = int(temp_inst[2])
-            funct3 = instruction_dict[opt]['funct3']
-            m_code = opcode |  rd_rs2<<2 | (imm&0x20)<<5 | (imm&0x4)<<6 | rs1<<7 | (imm&0x38)<<10 | funct3<<13
+            imm = int(temp_inst[2])&(2**imm_width-1)
+            m_code = opcode | (imm&0x1F)<<2 | rd<<7 | (imm&0x20)<<7 | funct3<<13
         
         elif (encoding_type=='CLS'):    # Okay
-            rd_rs2 = int(temp_inst[1])
+            rd_rs2_ = int(temp_inst[1])
+            imm = int(temp_inst[2])&(2**imm_width-1)
+            rs1_ = int(temp_inst[3])
+            m_code = opcode |  rd_rs2_<<2 | (imm&0x40)>>1 | (imm&0x4)<<4 | rs1_<<7 | (imm&0x38)<<7 | funct3<<13
+
+        elif (encoding_type=='CB'):     # Okay
+            rs1_ = int(temp_inst[1])
+            imm = int(temp_inst[2])&(2**imm_width-1)
+            m_code = opcode | (imm&0x20)>>2 | (imm&0x6)<<2 | (imm&0xC)>>1 | rs1_<<7 | (imm&0x18)<<7 | (imm&0x100)<<4 | funct3<<13
+
+        elif (encoding_type=='CA'):     # Okay
+            rs2_ = int(temp_inst[2])
+            rd_rs1_ = int(temp_inst[1])
+            m_code = opcode |  rs2_<<2 | funct2<<5 | rd_rs1_<<7 | funct6<<10
+
+        elif (encoding_type=='CH'):     # Okay
+            imm = int(temp_inst[2])&(2**imm_width-1)
+            rd_rs1_ = int(temp_inst[1])
+            m_code = opcode | imm&0x1F<<2 | rd_rs1_<<7 | funct2<<10 | imm&0x20<<7 | funct3<<10
+
+        elif (encoding_type=='CJ'):     # Okay
+            rs1 = int(temp_inst[1])
+            # 5|3:1|7|6|10|9:8|4|11
+            m_code = opcode | (imm&0x20)>>2 | (imm&0xE)>>2 | (imm&0x80)>>1 | (imm&0x40)<<1 | (imm&0x400)>>2 | (imm&0x30)>>1 | (imm&0x10)<<8 | (imm&0x800)<<1 | funct3<<13
+
+        elif (encoding_type=='C4'):     # Okay
+            rd_ = int(temp_inst[1])
             imm = int(temp_inst[2])
-            rs1 = int(temp_inst[3])
-            funct3 = instruction_dict[opt]['funct3']
-            m_code = opcode |  rd_rs2<<2 | (imm&0x40)>>1 | (imm&0x4)<<4 | rs1<<7 | (imm&0x38)<<7 | funct3<<13
+            m_code = opcode |  rd_<<2 | (imm&0x8)<<2 | (imm&0x4)<<4 | (imm&0x3C0)<<1 | (imm&0x30)<<7 | funct3<<13
+
+        elif (encoding_type=='C16'):    # Okay
+            imm = int(temp_inst[1])
+            m_code = opcode | (imm&0x20)>>3 | (imm&0x18)>>4 | (imm&0x40)>>1 | (imm&0x10)<<2 | 2<<7 | (imm&0x200)<<4 | funct3<<13
 
         else:
             print('Work in progress')
             m_code = 1
-
-        if (encoding_type[0]=='C'):
+        
+        if (opt[0]=='C'):
             out = (hex(m_code)[2:].zfill(4))
             print(out)
             instmem.write(out +'\n')
@@ -302,6 +343,10 @@ try:
     instmem = open("instmem.txt", "w")
 except:
     print("Failed to create file")
+
+#print(instructions)
+#print(labels)
+
 assemble(instructions, labels, instmem)
 
 
