@@ -38,7 +38,7 @@ module top(
 	// Control signals ////////////////////////////////// 										/
 	wire [3:0] id_ALU_op;			// For EXE stage 	/ 										/
 	wire id_sel_opA, id_sel_opB;	// For EXE stage 	/ 										/
-	wire id_dm_write;				// For MEM stage 	/ 										/
+	//wire [3:0] id_dm_write;				// For MEM stage 	/ 										/
 	wire id_wr_en;					// For WB stage 	/ 										/
 	wire [2:0] id_dm_select;		// For MEM stage 	/ 										/
 	wire [2:0] id_imm_select;		// For ID stage 	/ 										/
@@ -63,7 +63,7 @@ module top(
 	// Control signals 																			/
 	wire [3:0] exe_ALU_op;			// For EXE stage 											/
 	wire exe_sel_opA, exe_sel_opB;	// For EXE stage 											/
-	wire exe_dm_write;				// For MEM stage 											/
+	wire [3:0] exe_dm_write;				// For MEM stage 											/
 	wire exe_wr_en;					// For WB stage 											/
 	wire [2:0] exe_dm_select;		// For MEM stage 											/
 	wire [1:0] exe_sel_pc;			// For EXE stage 											/
@@ -84,7 +84,7 @@ module top(
 	wire [11:0] mem_PC;				// PC 														/
 // 																								/
 	// Control signals 																			/
-	wire mem_dm_write;				// For MEM stage 											/
+	wire [3:0] mem_dm_write;				// For MEM stage 											/
 	wire mem_wr_en;					// For WB stage 											/
 	wire [2:0] mem_dm_select;		// For MEM stage 											/
 	wire [1:0] mem_sel_data;		// For WB stage 											/
@@ -175,7 +175,7 @@ module top(
 		.id_ALU_op(id_ALU_op),				.exe_ALU_op(exe_ALU_op),
 		.id_sel_opA(id_sel_opA),			.exe_sel_opA(exe_sel_opA),
 		.id_sel_opB(id_sel_opB),			.exe_sel_opB(exe_sel_opB),
-		.id_dm_write(id_dm_write),			.exe_dm_write(exe_dm_write),
+		//.id_dm_write(id_dm_write),			.exe_dm_write(exe_dm_write),
 		.id_wr_en(id_wr_en),				.exe_wr_en(exe_wr_en),
 		.id_dm_select(id_dm_select),		.exe_dm_select(exe_dm_select),
 		.id_sel_pc(id_sel_pc),				.exe_sel_pc(exe_sel_pc),
@@ -213,6 +213,7 @@ module top(
 
 	loadblock LOADBLOCK(
 		.data(mem_DATAMEMout),
+		.byte_offset(mem_ALUout[1:0])
 		.dm_select(mem_dm_select),
 		.loaddata(mem_loaddata)
 	);

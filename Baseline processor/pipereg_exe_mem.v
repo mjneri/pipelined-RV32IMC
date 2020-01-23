@@ -23,8 +23,8 @@ module exe_mem(
 	output reg [11:0] mem_PC,
 
 	// Control signals
-	input exe_dm_write,
-	output reg mem_dm_write,
+	input [3:0] exe_dm_write,
+	output reg [3:0] mem_dm_write,
 
 	input exe_wr_en,
 	output reg mem_wr_en,
