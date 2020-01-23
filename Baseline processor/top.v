@@ -213,6 +213,7 @@ module top(
 
 	loadblock LOADBLOCK(
 		.data(mem_DATAMEMout),
+		.byte_offset(mem_ALUout[1:0])
 		.dm_select(mem_dm_select),
 		.loaddata(mem_loaddata)
 	);
