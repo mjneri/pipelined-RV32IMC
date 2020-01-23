@@ -37,8 +37,9 @@ module top(
 // 																								/
 	// Control signals ////////////////////////////////// 										/
 	wire [3:0] id_ALU_op;			// For EXE stage 	/ 										/
-	wire id_sel_opA, id_sel_opB;	// For EXE stage 	/ 										/
-	//wire [3:0] id_dm_write;				// For MEM stage 	/ 										/
+	wire id_sel_opA, id_sel_opB;	// For EXE stage 	/ 
+	wire id_is_stype;	//For EXE stage
+	wire [3:0] id_dm_write;				// For MEM stage 	/ 										/
 	wire id_wr_en;					// For WB stage 	/ 										/
 	wire [2:0] id_dm_select;		// For MEM stage 	/ 										/
 	wire [2:0] id_imm_select;		// For ID stage 	/ 										/
@@ -59,10 +60,17 @@ module top(
 	wire [31:0] exe_imm;			// Immediate 												/
 	wire [4:0] exe_rd;				// destination register 									/
 	wire [11:0] exe_PC;				// PC 														/
-// 																								/
+// 						
+	// Other wires used inside EXE stage
+	wire [31:0] opA;
+	wire [31:0] opB;
+	wire exe_z;
+	wire exe_less;
+//	
 	// Control signals 																			/
 	wire [3:0] exe_ALU_op;			// For EXE stage 											/
-	wire exe_sel_opA, exe_sel_opB;	// For EXE stage 											/
+	wire exe_sel_opA, exe_sel_opB;	// For EXE stage 
+	wire exe_is_stype;	//For EXE stage
 	wire [3:0] exe_dm_write;				// For MEM stage 											/
 	wire exe_wr_en;					// For WB stage 											/
 	wire [2:0] exe_dm_select;		// For MEM stage 											/
@@ -154,7 +162,7 @@ module top(
 		.wr_en(id_wr_en),
 		.wr_data(wb_wr_data),
 		.src1_addr(id_rsA),		.src2_addr(id_rsB),
-		.dest_addr(id_rd),
+		.dest_addr(wb_rd),
 		.src1_out(id_rfoutA),	.src2_out(id_rfoutB)
 	);
 
@@ -189,9 +197,27 @@ module top(
 
 // EXE Stage
 	alu ALU(
-
+		.op_a(opA),
+		.op_b(opB),
+		.ALU_op(exe_ALU_op),
+		.res(exe_ALUout),
+		.z(exe_z),
+		.less(exe_less)
 	);
-
+	
+	storeblock STOREBLOCK(
+		.opB(exe_rfoutB),
+		.byte_offset(exe_ALUout[1:0]),
+		.store_select(exe_store_select),
+		.is_stype(exe_is_stype),
+		.data(exe_storedata),
+		.dm_write(exe_dm_write)
+	);
+	
+	assign opA = (exe_sel_opA) ? exe_rfoutA : exe_PC;
+	assign opB = (exe_sel_opB) ? exe_imm : exe_rfoutB;
+	//assign exe_btarget = exe_PC + exe_imm;
+	
 	pipereg_exe_mem EXE_MEM(
 		.clk(CLK100MHZ),
 		.nrst(nrst),
@@ -240,6 +266,8 @@ module top(
 
 // WB Stage
 	// Selector MUX
+	assign wb_wr_data = (wb_sel_data == 2'd0) ? wb_pc4 : (wb_sel_data == 2'd1) ? wb_ALUout : (wb_sel_data == 2'd2) ? wb_imm : wb_loaddata;
+	
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 // Assign outputs
