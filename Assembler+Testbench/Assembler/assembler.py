@@ -197,7 +197,7 @@ def assemble(instructions, labels, instmem):
             imm_width = instruction_dict[temp_inst[0]]['i_width']
         except:
             pass
-        if (encoding_type=='R'):
+        if (encoding_type=='R'):        # Okay
             rd = int(temp_inst[1])
             funct3 = instruction_dict[temp_inst[0]]['funct3']
             rs1 = int(temp_inst[2])
@@ -205,7 +205,7 @@ def assemble(instructions, labels, instmem):
             funct7 = instruction_dict[temp_inst[0]]['funct7']
             m_code = opcode |  rd<<7 | funct3<<12 | rs1<<15 | rs2_shamt<<20 | funct7<<25
             
-        elif (encoding_type=='I'):
+        elif (encoding_type=='I'):      # Okay
             rd = int(temp_inst[1])
             funct3 = instruction_dict[temp_inst[0]]['funct3']
             rs1 = int(temp_inst[2])
@@ -213,7 +213,7 @@ def assemble(instructions, labels, instmem):
             imm &= (2**imm_width-1)
             m_code = opcode | rd<<7 | funct3<<12 | rs1<<15 | imm<<20
 
-        elif (encoding_type=='S'):
+        elif (encoding_type=='S'):      # Okay
             funct3 = instruction_dict[temp_inst[0]]['funct3']
             rs1 = int(temp_inst[3])
             rs2 = int(temp_inst[1])
@@ -225,11 +225,12 @@ def assemble(instructions, labels, instmem):
             funct3 = instruction_dict[temp_inst[0]]['funct3']
             rs1 = int(temp_inst[1])
             rs2 = int(temp_inst[2])
+        # Labelling to be implemented
             imm = int(temp_inst[3])
             imm &= (2**imm_width-1)
             m_code = opcode | (imm&0x800)>>4 | (imm&0x1E)<<7 | funct3<<12 | rs1<<15 | rs2<<20 | (imm&0x7E)<<20 | (imm&0x800)<<19
             
-        elif (encoding_type=='U'):
+        elif (encoding_type=='U'):      # Okay
             rd = int(temp_inst[1])
             imm = int(temp_inst[2])
             imm &= (2**imm_width-1)&0xFFFFF000
@@ -237,15 +238,16 @@ def assemble(instructions, labels, instmem):
         
         elif (encoding_type=='J'):
             rd = int(temp_inst[1])
+        # Labelling to be implemented
             imm = int(temp_inst[2])
             imm &= (2**imm_width-1)
             m_code = opcode |  rd<<7 | (imm&0xFF000) | (imm&0x800)<<9 | (imm&0x7FE)<<20 | (imm&0x100000)<<11
             
-        elif (encoding_type=='CN'):
+        elif (encoding_type=='CN'):     # Okay
             imm = int(temp_inst[1])
             m_code = opcode | (imm&0x1F)<<2 | (imm&0x20)<<12
         
-        elif (encoding_type=='CR'):
+        elif (encoding_type=='CR'):     # Okay
             if (instruction_dict[temp_inst[0]]['syntax']=='r'):
                 rd_rs1 = int(temp_inst[1])
                 rs2 = 0
@@ -255,18 +257,18 @@ def assemble(instructions, labels, instmem):
             funct4 = instruction_dict[temp_inst[0]]['funct4']
             m_code = opcode |  rs2<<2 | rd_rs1<<7 | (imm&0x38)<<10 | funct4<<12
         
-        elif (encoding_type=='CI'):
+        elif (encoding_type=='CI'):     # Okay
             rd = int(temp_inst[1])
             imm = int(temp_inst[2])
             funct3 = instruction_dict[temp_inst[0]]['funct3']
             m_code = opcode |  rd_rs2<<2 | (imm&0x20)<<5 | (imm&0x4)<<6 | rs1<<7 | (imm&0x38)<<10 | funct3<<13
         
-        elif (encoding_type=='CLS'):
+        elif (encoding_type=='CLS'):    # Okay
             rd_rs2 = int(temp_inst[1])
             imm = int(temp_inst[2])
             rs1 = int(temp_inst[3])
             funct3 = instruction_dict[temp_inst[0]]['funct3']
-            m_code = opcode |  rd_rs2<<2 | (imm&0x20)<<5 | (imm&0x4)<<6 | rs1<<7 | (imm&0x38)<<10 | funct3<<13
+            m_code = opcode |  rd_rs2<<2 | (imm&0x40)>>1 | (imm&0x4)<<4 | rs1<<7 | (imm&0x38)<<7 | funct3<<13
 
         else:
             print('Work in progress')
@@ -276,7 +278,7 @@ def assemble(instructions, labels, instmem):
             out = (hex(m_code)[2:].zfill(4))
             print(out)
             instmem.write(out +'\n')
-            #print(bin(m_code)[2:].zfill(16))
+            print(bin(m_code)[2:].zfill(16))
         else:
             out = (hex(m_code)[2:].zfill(8))
             print(out)

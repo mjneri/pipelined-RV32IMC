@@ -61,7 +61,7 @@ instruction_dict= {
     'C.SW':  {'syntax':'r-i_r', 'i_width':7,    'format':'CLS', 'opcode':0,     'funct3':6},
     'C.NOP': {'syntax':'i',     'i_width':6,    'format':'CN',  'opcode':1,     'funct3':0},
     'C.ADDI':{'syntax':'r-i',   'i_width':6,    'format':'CI',  'opcode':1,     'funct3':0},
-    'C.JAL': {'syntax':'i',     'i_width':12,    'format':'CJ',  'opcode':1,     'funct3':1},
+    'C.JAL': {'syntax':'i',     'i_width':12,   'format':'CJ',  'opcode':1,     'funct3':1},
     'C.LI':  {'syntax':'r-i',   'i_width':6,    'format':'CI',  'opcode':1,     'funct3':2},
     'C.ADDI16SPN':{'syntax':'i','i_width':10,   'format':'CIW', 'opcode':1,     'funct3':3},
     'C.LUI': {'syntax':'r-i',   'i_width':18,   'format':'CI',  'opcode':1,     'funct3':3},
