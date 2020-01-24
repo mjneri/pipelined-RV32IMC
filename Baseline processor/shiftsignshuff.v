@@ -21,7 +21,7 @@ module shiftsignshuff(
 						// INST[6:0] contains the opcode
 
 	// Output immediate
-	output [31:0] imm
+	output reg [31:0] imm
 );
 
 // imm_select:
@@ -41,7 +41,7 @@ module shiftsignshuff(
 	// Refer to RISC-V Vol. 1: Unprivileged Architecture Manual for Immediate Encoding Variants
 	assign Itype_imm = { {20{inst[24]}}, inst[24:13] };
 	assign Stype_imm = { {20{inst[24]}}, inst[24:18], inst[4:0] };
-	assign Utype_imm = { inst[24:5], {12{0}} };
+	assign Utype_imm = { inst[24:5], 12'h0 };
 	assign Btype_imm = { {19{inst[24]}}, inst[24], inst[0], inst[23:18], inst[4:1], 0 };
 	assign Jtype_imm = { {11{inst[24]}}, inst[24], inst[12:5], inst[13], inst[23:14], 0 };
 

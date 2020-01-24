@@ -26,23 +26,25 @@ module top(
 //																								/
 	// 32-bit instruction parts 																/
 	wire [6:0] id_opcode;				// opcode 												/
-	wire [2:0] id_funct;				// funct3 												/
+	wire [2:0] id_funct3;				// funct3 												/
+	wire [6:0] id_funct7;				// funct7
 	wire [4:0] id_rsA, id_rsB;			// source registers 									/
 	wire [4:0] id_rd;					// destination register 								/
 	assign id_opcode = id_inst[6:0]; 	//														/
-	assign id_funct = id_inst[14:12]; 	//														/
+	assign id_funct3 = id_inst[14:12]; 	//														/
+	assign id_funct7 = id_inst[31:25];
 	assign id_rsA = id_inst[19:15]; 	//														/
 	assign id_rsB = id_inst[24:20]; 	//														/
 	assign id_rd = id_inst[11:7]; 		// 														/
 // 																								/
 	// Control signals ////////////////////////////////// 										/
 	wire [3:0] id_ALU_op;			// For EXE stage 	/ 										/
-	wire id_sel_opA, id_sel_opB;	// For EXE stage 	/ 										/
-	//wire [3:0] id_dm_write;				// For MEM stage 	/ 										/
+	wire id_sel_opA, id_sel_opB;	// For EXE stage 	/ 
+	wire id_is_stype;				// For EXE stage 	/
 	wire id_wr_en;					// For WB stage 	/ 										/
 	wire [2:0] id_dm_select;		// For MEM stage 	/ 										/
 	wire [2:0] id_imm_select;		// For ID stage 	/ 										/
-	wire [1:0] id_sel_pc;			// For EXE stage 	/ 										/
+	//wire [1:0] id_sel_pc;			// For EXE stage 	/ 										/
 	wire [1:0] id_sel_data;			// For WB stage 	/ 										/
 	wire [1:0] id_store_select;		// For EXE stage 	/ 										/
 	///////////////////////////////////////////////////// 										/
@@ -59,11 +61,19 @@ module top(
 	wire [31:0] exe_imm;			// Immediate 												/
 	wire [4:0] exe_rd;				// destination register 									/
 	wire [11:0] exe_PC;				// PC 														/
-// 																								/
+// 						
+	// Other wires used inside EXE stage
+	wire [31:0] opA;
+	wire [31:0] opB;
+	wire exe_z;
+	wire exe_less;
+	//wire [31:0] exe_branchtarget;
+//	
 	// Control signals 																			/
 	wire [3:0] exe_ALU_op;			// For EXE stage 											/
-	wire exe_sel_opA, exe_sel_opB;	// For EXE stage 											/
-	wire [3:0] exe_dm_write;				// For MEM stage 											/
+	wire exe_sel_opA, exe_sel_opB;	// For EXE stage 
+	wire exe_is_stype;				// For EXE stage
+	wire [3:0] exe_dm_write;		// For MEM stage 											/
 	wire exe_wr_en;					// For WB stage 											/
 	wire [2:0] exe_dm_select;		// For MEM stage 											/
 	wire [1:0] exe_sel_pc;			// For EXE stage 											/
@@ -80,18 +90,18 @@ module top(
 	wire [31:0] mem_ALUout;			// ALU output 												/
 	wire [31:0] mem_storedata;		// Input data to DATAMEM 									/
 	wire [31:0] mem_imm;			// 32bit Immediate 											/ 
-	wire [4:0] mem_rd;				// Destination register 									/
+	wire [4:0]  mem_rd;				// Destination register 									/
 	wire [11:0] mem_PC;				// PC 														/
 // 																								/
 	// Control signals 																			/
-	wire [3:0] mem_dm_write;				// For MEM stage 											/
+	wire [3:0] mem_dm_write;		// For MEM stage 											/
 	wire mem_wr_en;					// For WB stage 											/
 	wire [2:0] mem_dm_select;		// For MEM stage 											/
 	wire [1:0] mem_sel_data;		// For WB stage 											/
 //
 	// MEM Stage Datapath Signals
 	wire[31:0] mem_DATAMEMout;		// Output of DATAMEM
-	 																						/
+
 	// Inputs to MEM/WB Pipereg 																/
 	wire [31:0] mem_loaddata;		// Output of LOAD BLOCK 									/
 // 																								/
@@ -111,7 +121,8 @@ module top(
 
 /************************************************************************************************/
 
-// Instantiate modules	//////////////////////////////////////////////////////////////////////////
+// DATAPATH -> INSTANTIATING MODULES
+//////////////////////////////////////////////////////////////////////////
 
 // IF Stage
 	pc PC( .clk(CLK100MHZ),
@@ -146,15 +157,33 @@ module top(
 
 // ID Stage
 	//control unit
+	controller1 CONTROL(
+		// Inputs
+		.opcode(id_opcode),
+		.funct3(id_funct3),
+		.funct7(id_funct7),
+
+		// Outputs
+		.ALU_op(id_ALU_op),
+		.sel_opA(id_sel_opA),
+		.sel_opB(id_sel_opB),
+		.is_stype(id_is_stype),
+		.wr_en(id_wr_en),
+		.dm_select(id_dm_select),
+		.imm_select(id_imm_select),
+		//.sel_pc(id_sel_pc),
+		.sel_data(id_sel_data),
+		.store_select(id_store_select)
+	);
 
 	regfile RF(
 		.clk(CLK100MHZ),
 		.nrst(nrst),
 
-		.wr_en(id_wr_en),
+		.wr_en(wb_wr_en),
 		.wr_data(wb_wr_data),
 		.src1_addr(id_rsA),		.src2_addr(id_rsB),
-		.dest_addr(id_rd),
+		.dest_addr(wb_rd),
 		.src1_out(id_rfoutA),	.src2_out(id_rfoutB)
 	);
 
@@ -173,25 +202,44 @@ module top(
 		.id_rfoutB(id_rfoutB),	.exe_rfoutB(exe_rfoutB),
 		.id_imm(id_imm),		.exe_imm(exe_imm),
 		.id_rd(id_rd),			.exe_rd(exe_rd),
-		.id_PC(id_PC),			.exe_PC(exe_PC)
+		.id_PC(id_PC),			.exe_PC(exe_PC),
 
 		// Control signals go here
 		.id_ALU_op(id_ALU_op),				.exe_ALU_op(exe_ALU_op),
 		.id_sel_opA(id_sel_opA),			.exe_sel_opA(exe_sel_opA),
 		.id_sel_opB(id_sel_opB),			.exe_sel_opB(exe_sel_opB),
-		//.id_dm_write(id_dm_write),			.exe_dm_write(exe_dm_write),
+		.id_is_stype(id_is_stype),			.exe_is_stype(exe_is_stype),
 		.id_wr_en(id_wr_en),				.exe_wr_en(exe_wr_en),
 		.id_dm_select(id_dm_select),		.exe_dm_select(exe_dm_select),
-		.id_sel_pc(id_sel_pc),				.exe_sel_pc(exe_sel_pc),
+		//.id_sel_pc(id_sel_pc),				.exe_sel_pc(exe_sel_pc),
 		.id_sel_data(id_sel_data),			.exe_sel_data(exe_sel_data),
 		.id_store_select(id_store_select), 	.exe_store_select(exe_store_select)
 	);
 
 // EXE Stage
+	// Selecting operands
+	assign opA = (exe_sel_opA) ? exe_rfoutA : exe_PC;
+	assign opB = (exe_sel_opB) ? exe_imm : exe_rfoutB;
+	//assign exe_branchtarget = exe_PC + exe_imm;
+
 	alu ALU(
-
+		.op_a(opA),
+		.op_b(opB),
+		.ALU_op(exe_ALU_op),
+		.res(exe_ALUout),
+		.z(exe_z),
+		.less(exe_less)
 	);
-
+	
+	storeblock STOREBLOCK(
+		.opB(exe_rfoutB),
+		.byte_offset(exe_ALUout[1:0]),
+		.store_select(exe_store_select),
+		.is_stype(exe_is_stype),
+		.data(exe_storedata),
+		.dm_write(exe_dm_write)
+	);
+	
 	pipereg_exe_mem EXE_MEM(
 		.clk(CLK100MHZ),
 		.nrst(nrst),
@@ -217,7 +265,7 @@ module top(
 
 	loadblock LOADBLOCK(
 		.data(mem_DATAMEMout),
-		.byte_offset(mem_ALUout[1:0])
+		.byte_offset(mem_ALUout[1:0]),
 		.dm_select(mem_dm_select),
 		.loaddata(mem_loaddata)
 	);
@@ -240,6 +288,8 @@ module top(
 
 // WB Stage
 	// Selector MUX
+	assign wb_wr_data = (wb_sel_data == 2'd0) ? wb_pc4 : (wb_sel_data == 2'd1) ? wb_ALUout : (wb_sel_data == 2'd2) ? wb_imm : wb_loaddata;
+	
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 // Assign outputs

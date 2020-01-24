@@ -122,5 +122,18 @@ sh x13, 64(x0)
 #SW
 sw x12, 68(x0)
 
+
+addi x0, x0, 0
+addi x0, x0, 0
+addi x0, x0, 0
+addi x0, x0, 0
+addi x0, x0, 0
+addi x0, x0, 0
+addi x0, x0, 0
+addi x0, x0, 0
+addi x0, x0, 0
+addi x0, x0, 0
+
+
 #BRANCH INSTRUCTIONS
 

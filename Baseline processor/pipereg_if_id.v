@@ -1,6 +1,6 @@
 `timescale 1ns / 1ps
 
-module if_id(
+module pipereg_if_id(
 	input clk,
 	input nrst,
 

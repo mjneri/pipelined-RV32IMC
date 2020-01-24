@@ -1,6 +1,6 @@
 `timescale 1ns / 1ps
 
-module mem_wb(
+module pipereg_mem_wb(
 	input clk,
 	input nrst,
 
@@ -8,7 +8,7 @@ module mem_wb(
 	output reg [11:0] wb_pc4,
 
 	input [31:0] mem_ALUout,
-	output reg [31:0], wb_ALUout,
+	output reg [31:0] wb_ALUout,
 
 	input [31:0] mem_loaddata,
 	output reg [31:0] wb_loaddata,

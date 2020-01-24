@@ -1,6 +1,6 @@
 `timescale 1ns / 1ps
 
-module id_exe(
+module pipereg_id_exe(
 	input clk,
 	input nrst,
 
@@ -40,6 +40,8 @@ module id_exe(
 
 	//input id_dm_write,
 	//output reg exe_dm_write,
+	input id_is_stype,
+	output reg exe_is_stype,
 
 	input id_wr_en,
 	output reg exe_wr_en,
@@ -47,8 +49,8 @@ module id_exe(
 	input [2:0] id_dm_select,
 	output reg [2:0] exe_dm_select,
 
-	input [1:0] id_sel_pc,
-	output reg [1:0] exe_sel_pc,
+	//input [1:0] id_sel_pc,
+	//output reg [1:0] exe_sel_pc,
 
 	input [1:0] id_sel_data,
 	output reg [1:0] exe_sel_data,
@@ -71,10 +73,11 @@ module id_exe(
 			exe_ALU_op <= 0;
 			exe_sel_opA <= 0;
 			exe_sel_opB <= 0;
-			exe_dm_write <= 0;
+			//exe_dm_write <= 0;
+			exe_is_stype <= 0;
 			exe_wr_en <= 0;
 			exe_dm_select <= 0;
-			exe_sel_pc <= 0;
+			//exe_sel_pc <= 0;
 			exe_sel_data <= 0;
 			exe_store_select <= 0;
 		end else begin
@@ -90,10 +93,11 @@ module id_exe(
 			exe_ALU_op <= id_ALU_op;
 			exe_sel_opA <= id_sel_opA;
 			exe_sel_opB <= id_sel_opB;
-			exe_dm_write <= id_dm_write;
+			//exe_dm_write <= id_dm_write;
+			exe_is_stype <= id_is_stype;
 			exe_wr_en <= id_wr_en;
 			exe_dm_select <= id_dm_select;
-			exe_sel_pc <= id_sel_pc;
+			//exe_sel_pc <= id_sel_pc;
 			exe_sel_data <= id_sel_data;
 			exe_store_select <= id_store_select;
 		end
