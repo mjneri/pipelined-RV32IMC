@@ -1,6 +1,6 @@
 `timescale 1ns / 1ps
 
-module exe_mem(
+module pipereg_exe_mem(
 	input clk,
 	input nrst,
 
@@ -14,7 +14,7 @@ module exe_mem(
 	output reg [31:0] mem_storedata,
 
 	input [31:0] exe_imm,
-	output reg [31:0], mem_imm,
+	output reg [31:0] mem_imm,
 
 	input [4:0] exe_rd,
 	output reg [4:0] mem_rd,
