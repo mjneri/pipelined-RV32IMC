@@ -2,28 +2,28 @@ c.addi x8, 1
 c.addi x9, 2
 c.addi x10, -1
 c.addi x11, -2
-c.sw x8, 0(x0)
-c.sw x9, 4(x0)
-c.sw x10, 8(x0)
-c.sw x11, 12(x0)
-c.lw x12, 0(x0)
-c.lw x13, 4(x0)
-c.lw x14, 8(x0)
-c.lw x15, 12(x0)
-c.sw x15, 16(x0)
-c.sw x14, 20(x0)
-c.sw x13, 24(x0)
-c.sw x12, 28(x0)
+c.sw x8, 0(s0)
+c.sw x9, 4(s0)
+c.sw x10, 8(s0)
+c.sw x11, 12(s0)
+c.lw x12, 0(s0)
+c.lw x13, 4(s0)
+c.lw x14, 8(s0)
+c.lw x15, 12(s0)
+c.sw x15, 16(s0)
+c.sw x14, 20(s0)
+c.sw x13, 24(s0)
+c.sw x12, 28(s0)
 c.nop
 c.nop
-#c.jal plus
+c.jal plus
 c.addi x13, 2
-#c.j end_jal
+c.j end_jal
 plus:
 c.addi x13, 1
 c.jr x1
 end_jal:
-c.sw x13, 32(x0)
+c.sw x13, 32(s0)
 c.li x12, 0
 c.li x13, 1
 c.li x14, -1

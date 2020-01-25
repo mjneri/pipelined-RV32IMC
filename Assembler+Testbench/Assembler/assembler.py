@@ -28,6 +28,7 @@ except:
 # Outputs parsed instruction line with replaced registers
 def parse_inst(inst_type, t_inst):
     t_inst[0] = t_inst[0].upper()
+    encoding_type = inst_type['format']
     syntax = inst_type['syntax']
     args = inst_type['args']
     if (len(t_inst[(args+1):]) > 0):
@@ -64,6 +65,12 @@ def parse_inst(inst_type, t_inst):
 
         if (args==2):
             if (syntax=='r-l'):
+                if (encoding_type=='CLS'):
+                    if (arg1>7 & arg1<16):
+                        arg1 -= 8
+                    else:
+                        print('Invalid first arguement (C.Reg)')
+                        exit()
                 try:
                     arg2 = str(t_inst[2])
                 except IndexError:
@@ -114,6 +121,17 @@ def parse_inst(inst_type, t_inst):
                 except IndexError:
                     print('Invalid third arguement (Reg)')
                     exit()
+                if (encoding_type=='CLS'):
+                    if (arg1>7 & arg1<16):
+                        arg1 -= 8
+                    else:
+                        print('Invalid first arguement (C.Reg)')
+                        exit()
+                    if (arg3>7 & arg3<16):
+                        arg3 -= 8
+                    else:
+                        print('Invalid third arguement (C.Reg)')
+                        exit()
             t_inst = [t_inst[0], arg1, arg2, arg3]
     
     return t_inst
@@ -136,7 +154,7 @@ def parse_file(line_list):
         line_list.append(line)
 
     instructions = {}
-    instruction_counter = 0
+    instruction_address = 0
     labels = {}
     label_q = []
 
@@ -182,19 +200,22 @@ def parse_file(line_list):
                 pass
             else:
                 # instruction, probably
-                instructions[instruction_counter] = temp_line
+                instructions[instruction_address] = temp_line
                 # it's (a) label(s)
                 if (len(label_q) > 0):
                     for l in label_q:
-                        labels[l] = instruction_counter
+                        labels[l] = instruction_address
                     label_q.clear()
-                instruction_counter += 1
+                if (temp_line[0][0].upper()=='C'):
+                    instruction_address += 2
+                else:
+                    instruction_address += 4
 
     return instructions, labels
 
 def assemble(instructions, labels, instmem):
-    for inst_key in instructions.keys():
-        temp_inst = process_inst(instructions[inst_key])
+    for inst_address in instructions.keys():
+        temp_inst = process_inst(instructions[inst_address])
         opt = temp_inst[0]
         opcode = instruction_dict[opt]['opcode']
         encoding_type = instruction_dict[opt]['format']
@@ -245,9 +266,8 @@ def assemble(instructions, labels, instmem):
                 imm = int(temp_inst[3])
             elif (instruction_dict[opt]['syntax']=='r-r-l'):
                 rs1 = int(temp_inst[2])
-                label_key = labels[temp_inst[3]]
-                print('Instruction Key: ' + str(inst_key) + '\tLabel Key:' + str(label_key))
-                imm = (label_key-inst_key)<<1
+                label_address = labels[temp_inst[3]]
+                imm = (label_address-inst_address)
             else:
                 print('Something went wrong')
                 exit()
@@ -263,8 +283,8 @@ def assemble(instructions, labels, instmem):
         elif (encoding_type=='B'):      # Okay
             rs1 = int(temp_inst[1])
             rs2 = int(temp_inst[2])
-            label_key = labels[temp_inst[3]]
-            imm = (label_key-inst_key)<<2
+            label_address = labels[temp_inst[3]]
+            imm = (label_address-inst_address)
             m_code = opcode | (imm&0x800)>>4 | (imm&0x1E)<<7 | funct3<<12 | rs1<<15 | rs2<<20 | (imm&0x7E0)<<20 | (imm&0x1000)<<19
             
         elif (encoding_type=='U'):      # Okay
@@ -274,8 +294,8 @@ def assemble(instructions, labels, instmem):
         
         elif (encoding_type=='J'):
             rd = int(temp_inst[1])
-            label_key = labels[temp_inst[2]]
-            imm = (label_key-inst_key)<<2
+            label_address = labels[temp_inst[2]]
+            imm = (label_address-inst_address)
             m_code = opcode |  rd<<7 | (imm&0xFF000) | (imm&0x800)<<9 | (imm&0x7FE)<<20 | (imm&0x100000)<<11
         
         elif (encoding_type=='CR'):     # Okay
@@ -298,10 +318,10 @@ def assemble(instructions, labels, instmem):
             rs1_ = int(temp_inst[3])
             m_code = opcode |  rd_rs2_<<2 | (imm&0x40)>>1 | (imm&0x4)<<4 | rs1_<<7 | (imm&0x38)<<7 | funct3<<13
 
-        elif (encoding_type=='CB'):
+        elif (encoding_type=='CB'):     # Okay
             rs1_ = int(temp_inst[1])
-            label_key = labels[temp_inst[2]]
-            imm = (label_key-inst_key)<<1
+            label_address = labels[temp_inst[2]]
+            imm = (label_address-inst_address)
             m_code = opcode | (imm&0x20)>>2 | (imm&0x6)<<2 | (imm&0xC)>>1 | rs1_<<7 | (imm&0x18)<<7 | (imm&0x100)<<4 | funct3<<13
 
         elif (encoding_type=='CA'):     # Okay
@@ -315,8 +335,8 @@ def assemble(instructions, labels, instmem):
             m_code = opcode | imm&0x1F<<2 | rd_rs1_<<7 | funct2<<10 | imm&0x20<<7 | funct3<<10
 
         elif (encoding_type=='CJ'):
-            label_key = labels[temp_inst[1]]
-            imm = (label_key-inst_key)<<1
+            label_address = labels[temp_inst[1]]
+            imm = (label_address-inst_address)
             # 5|3:1|7|6|10|9:8|4|11
             m_code = opcode | (imm&0x20)>>2 | (imm&0xE)>>2 | (imm&0x80)>>1 | (imm&0x40)<<1 | (imm&0x400)>>2 | (imm&0x30)>>1 | (imm&0x10)<<8 | (imm&0x800)<<1 | funct3<<13
 
@@ -356,8 +376,8 @@ try:
 except:
     print("Failed to create file")
 
-#print(instructions)
-#print(labels)
+print(instructions)
+print(labels)
 
 assemble(instructions, labels, instmem)
 

@@ -1,4 +1,3 @@
-nop
 addi x1, x0, 5
 slti x2, x1, 6
 slti x3, x1, -1
