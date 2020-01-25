@@ -51,7 +51,7 @@ instruction_dict= {
     'MULHU':    {'args':3,  'syntax':'r-r-r',                   'format':'R',   'opcode':51,    'funct3':3, 'funct7':1},
 
     # Compressed
-    'C.ADDI4SPN':{'args':2, 'syntax':'r-i',     'i_width':10,   'format':'C4',  'opcode':0,     'funct3':0},
+    'C.ADDI4SPN':{'args':2, 'syntax':'r-i',     'i_width':10,   'format':'CIW', 'opcode':0,     'funct3':0},
     'C.FLD':    {'args':3,  'syntax':'r-i_r',   'i_width':8,    'format':'CLS', 'opcode':0,     'funct3':1},
     'C.LW':     {'args':3,  'syntax':'r-i_r',   'i_width':7,    'format':'CLS', 'opcode':0,     'funct3':2},
     'C.FLW':    {'args':3,  'syntax':'r-i_r',   'i_width':7,    'format':'CLS', 'opcode':0,     'funct3':2},

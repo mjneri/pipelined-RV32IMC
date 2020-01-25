@@ -63,14 +63,15 @@ def parse_inst(inst_type, t_inst):
             print('Invalid first arguement (Reg)')
             exit()
 
+        if ((encoding_type=='CLS') | (encoding_type=='CIW') | (encoding_type=='CB') | (encoding_type=='CH')):
+            if (arg1>7 & arg1<16):
+                arg1 -= 8
+            else:
+                print('Invalid first arguement (C.Reg)')
+                exit()
+
         if (args==2):
-            if (syntax=='r-l'):
-                if (encoding_type=='CLS'):
-                    if (arg1>7 & arg1<16):
-                        arg1 -= 8
-                    else:
-                        print('Invalid first arguement (C.Reg)')
-                        exit()
+            if (syntax=='r-l'): 
                 try:
                     arg2 = str(t_inst[2])
                 except IndexError:
@@ -278,8 +279,8 @@ def assemble(instructions, labels, instmem):
             rs1 = int(temp_inst[3])
             rs2 = int(temp_inst[1])
             imm = int(temp_inst[2])&(2**imm_width-1)
-            m_code = opcode |  (imm&0x1F)<<7 | funct3<<12 | rs1<<15 | rs2<<20 | (imm&0xFE0)<<14
-
+            m_code = opcode |  (imm&0x1F)<<7 | funct3<<12 | rs1<<15 | rs2<<20 | (imm&0xFE0)<<20
+            
         elif (encoding_type=='B'):      # Okay
             rs1 = int(temp_inst[1])
             rs2 = int(temp_inst[2])
@@ -332,7 +333,7 @@ def assemble(instructions, labels, instmem):
         elif (encoding_type=='CH'):     # Okay
             imm = int(temp_inst[2])&(2**imm_width-1)
             rd_rs1_ = int(temp_inst[1])
-            m_code = opcode | imm&0x1F<<2 | rd_rs1_<<7 | funct2<<10 | imm&0x20<<7 | funct3<<10
+            m_code = opcode | (imm&0x1F)<<2 | rd_rs1_<<7 | funct2<<10 | (imm&0x20)<<7 | funct3<<13
 
         elif (encoding_type=='CJ'):
             label_address = labels[temp_inst[1]]
@@ -340,13 +341,13 @@ def assemble(instructions, labels, instmem):
             # 5|3:1|7|6|10|9:8|4|11
             m_code = opcode | (imm&0x20)>>2 | (imm&0xE)>>2 | (imm&0x80)>>1 | (imm&0x40)<<1 | (imm&0x400)>>2 | (imm&0x30)>>1 | (imm&0x10)<<8 | (imm&0x800)<<1 | funct3<<13
 
-        elif (encoding_type=='C4'):     # Okay
+        elif (encoding_type=='CIW'):     # Okay
             rd_ = int(temp_inst[1])
-            imm = int(temp_inst[2])
+            imm = int(temp_inst[2])<<2
             m_code = opcode |  rd_<<2 | (imm&0x8)<<2 | (imm&0x4)<<4 | (imm&0x3C0)<<1 | (imm&0x30)<<7 | funct3<<13
 
         elif (encoding_type=='C16'):    # Okay
-            imm = int(temp_inst[1])
+            imm = int(temp_inst[1])<<4
             m_code = opcode | (imm&0x20)>>3 | (imm&0x18)>>4 | (imm&0x40)>>1 | (imm&0x10)<<2 | 2<<7 | (imm&0x200)<<4 | funct3<<13
 
         else:
