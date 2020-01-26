@@ -21,9 +21,9 @@ sw x4, 0(x0)
 sw x5, 4(x0)
 
 #AUIPC
-auipc x1, 0x1
-auipc x2, 0x2
-auipc x3, 0x3
+#auipc x1, 0x1
+#auipc x2, 0x2
+#auipc x3, 0x3
 
 #ADD
 #1 p + p
