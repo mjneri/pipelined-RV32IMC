@@ -49,6 +49,10 @@ instruction_dict= {
     'MULH':     {'args':3,  'syntax':'r-r-r',                   'format':'R',   'opcode':51,    'funct3':1, 'funct7':1},
     'MULHSU':   {'args':3,  'syntax':'r-r-r',                   'format':'R',   'opcode':51,    'funct3':2, 'funct7':1},
     'MULHU':    {'args':3,  'syntax':'r-r-r',                   'format':'R',   'opcode':51,    'funct3':3, 'funct7':1},
+    'DIV':      {'args':3,  'syntax':'r-r-r',                   'format':'R',   'opcode':51,    'funct3':4, 'funct7':1},
+    'DIVU':     {'args':3,  'syntax':'r-r-r',                   'format':'R',   'opcode':51,    'funct3':5, 'funct7':1},
+    'REM':      {'args':3,  'syntax':'r-r-r',                   'format':'R',   'opcode':51,    'funct3':6, 'funct7':1},
+    'REMU':     {'args':3,  'syntax':'r-r-r',                   'format':'R',   'opcode':51,    'funct3':7, 'funct7':1},
 
     # Compressed
     'C.ADDI4SPN':{'args':2, 'syntax':'r-i',     'i_width':10,   'format':'CIW', 'opcode':0,     'funct3':0},
