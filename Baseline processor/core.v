@@ -1,6 +1,6 @@
 `timescale 1ns / 1ps
 
-module top(
+module core(
 	input CLK100MHZ,
 	input nrst,
 
