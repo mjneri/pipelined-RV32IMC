@@ -66,11 +66,17 @@ module controller1(
     //assign b_taken = (opcode == b_type && funct3 == 3'h0 && z) || (opcode == b_type && funct3 == 3'h1 && !z) || (opcode == b_type && funct3 == 3'h4 && less) || (opcode == b_type && funct3 == 3'h5 && !less) || (opcode == b_type && funct3 == 3'h6 && less) || (opcode == b_type && funct3 == 3'h7 && !less);
     
     //assign output_element condition ? value_if_true : value_if_false;
+    
     assign sel_opA = (opcode == auipc_inst || opcode == jal_inst) ? 1'h0 : 1'h1;  //sel_opA = 0 if inst is AUIPC or JAL
+
     assign sel_opB = (opcode == r_type || opcode == b_type) ? 1'h0 : 1'h1;  //sel_opB = 0 if R-type inst or B-type inst
+
     assign is_stype = !(opcode == s_type) ? 1'h0 : 1'h1;    //dm_write = 1 if S-type inst
+
     assign wr_en = !(opcode == s_type || opcode == b_type) ? 1'h1 : 1'h0;
+
     assign dm_select = funct3;
+
     assign imm_select = (opcode == jal_inst || opcode == jalr_inst) ? 3'h4 : (opcode == b_type) ? 3'h3 : (opcode == lui_inst || opcode == auipc_inst) ? 3'h2 : (opcode == s_type) ? 3'h1 : 3'h0;
     //imm_select:
     // 0 if I-type inst (operations except shift + load)

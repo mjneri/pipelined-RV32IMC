@@ -30,7 +30,7 @@ module alu(
 
 	assign z	=	res == 32'h0;
 	assign less	=	op_a < op_b;
-	assign signed_res = signed_a >>> signed_b;
+	assign signed_res = signed_a >>> signed_b[4:0];
 	assign res	=	ALU_op == alu_add	?	op_a + op_b :
 					ALU_op == alu_sub	?	op_a - op_b :
 					ALU_op == alu_and	?	op_a & op_b :
@@ -38,8 +38,8 @@ module alu(
 					ALU_op == alu_xor	?	op_a ^ op_b :
 					ALU_op == alu_slt	?	signed_a < signed_b :
 					ALU_op == alu_sltu	?	op_a < op_b :
-					ALU_op == alu_sll	?	op_a << op_b :
-					ALU_op == alu_srl	?	op_a >> op_b :
+					ALU_op == alu_sll	?	op_a << op_b[4:0] :
+					ALU_op == alu_srl	?	op_a >> op_b[4:0] :
 					ALU_op == alu_sra	?	signed_res :
 											32'h0;
     											

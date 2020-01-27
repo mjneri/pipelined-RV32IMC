@@ -4,11 +4,11 @@ module top(
 	input CLK100MHZ,
 	input nrst,
 
-	output [11:0] OUT_if_PC,
-	output [11:0] OUT_id_PC,
-	output [11:0] OUT_exe_PC,
-	output [11:0] OUT_mem_PC,
-	output [11:0] OUT_wb_PC
+	// inputs from protocol controllers
+	input [3:0] con_write,
+	input [9:0] con_addr,
+	input [31:0] con_in,
+	output [31:0] con_out		// Ouput of DATAMEM connected to Protocol controllers
 );
 	
 // Declare wires & regs	/////////////////////////////////////////////////////////////////////////
@@ -117,6 +117,9 @@ module top(
 	// Control signals 																			/
 	wire wb_wr_en;					// For WB stage 											/
 	wire [1:0] wb_sel_data;			// For WB stage 											/
+
+	// Datapath signals
+	wire [31:0] wb_wr_data;
 /////////////////////////////////////////////////////////////////////////////////////////////////
 
 /************************************************************************************************/
@@ -131,7 +134,7 @@ module top(
 		.inst_addr(if_PC)
 	);
 
-	instmem INSTMEM( .clk(CLK100MHZ),
+	instmem INSTMEM( //.clk(~CLK100MHZ),
 		.addr(if_PC),
 		.inst(if_inst)
 	);
@@ -260,7 +263,17 @@ module top(
 
 // MEM Stage
 	datamem DATAMEM(
+		.clk(CLK100MHZ),
+		.dm_write(mem_dm_write),
+		.data_addr(mem_ALUout[11:2]),
+		.data_in(mem_storedata),
 
+		.con_write(con_write),
+		.con_addr(con_addr),
+		.con_in(con_in),
+
+		.data_out(mem_DATAMEMout),
+		.con_out(con_out)
 	);
 
 	loadblock LOADBLOCK(
@@ -293,9 +306,5 @@ module top(
 ///////////////////////////////////////////////////////////////////////////////////////////////////
 
 // Assign outputs
-	assign OUT_if_PC = if_PC;
-	assign OUT_id_PC = id_PC;
-	assign OUT_exe_PC = exe_PC;
-	assign OUT_mem_PC = mem_PC;
-	assign OUT_wb_PC = wb_PC;
+	//assign con_out = mem_DATAMEMout;	// output already tied to DATAMEM
 endmodule
