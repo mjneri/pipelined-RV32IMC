@@ -221,7 +221,7 @@ def assemble(instructions, labels, instmem):
         opcode = instruction_dict[opt]['opcode']
         encoding_type = instruction_dict[opt]['format']
 
-        print('instruction: {}'.format(temp_inst))
+        print('Instruction at address {}: {}'.format(inst_address, temp_inst))
 
         try:
             imm_width = instruction_dict[opt]['i_width']
@@ -357,14 +357,20 @@ def assemble(instructions, labels, instmem):
         if (opt[0]=='C'):
             out = (hex(m_code)[2:].zfill(4))
             print(out)
-            instmem.write(out +'\n')
-            #print(bin(m_code)[2:].zfill(16))
+            if (inst_address%4==0):
+                out_buffer = out
+            else:
+                instmem.write(out + out_buffer + '\n')
+                out_buffer = {}
         else:
+            if (out_buffer):
+                (hex(m_code)[2:].zfill(4))
+                instmem.write((hex(1)[2:].zfill(4)) + out_buffer + '\n')
             out = (hex(m_code)[2:].zfill(8))
             print(out)
             instmem.write(out +'\n')
             #print(bin(m_code)[2:].zfill(32))
-           
+        out = {}
         print('-------------------------------------------------')
 
     return
@@ -377,8 +383,8 @@ try:
 except:
     print("Failed to create file")
 
-print(instructions)
-print(labels)
+#print(instructions)
+#print(labels)
 
 assemble(instructions, labels, instmem)
 

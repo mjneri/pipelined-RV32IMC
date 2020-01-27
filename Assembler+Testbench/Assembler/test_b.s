@@ -1,14 +1,14 @@
 Base:
 lui a1, 0xF0F0
 auipc a2, 0x0F0F0F
-jal a3, 32
-jalr a4, a5, 31
-beq t0, t1, 32
-bne t0, t1, 32
-blt t0, t1, 32
-bge t0, t1, 32
-bltu t0, t1, 32
-bgeu t0, t1, 32
+jal a3, Base
+jalr a4, a5, 32
+beq t0, t1, Base
+bne t0, t1, Base
+blt t0, t1, Base
+bge t0, t1, Base
+bltu t0, t1, Base
+bgeu t0, t1, Base
 lb t1, 4(s1)
 lh t1, 8(s1)
 lw t1, 12(s1)
