@@ -16,18 +16,15 @@ lui x6, 0x29 #41
 lui x7, 0xFFF4 #-12
 lui x8, 0x0000AFC8 #45000
 lui x9, 0xFD3A #-7100
+lui x20, 0x2
 
-sw x4, 8192(x0)
-sw x5, 8196(x0)
+sw x4, 0(x20)
+sw x5, 4(x20)
 
 #AUIPC
-auipc x1, 0x1
-auipc x2, 0x2
-auipc x3, 0x3
-
-sw x1, 8200(x0)
-sw x2, 8204(x0)
-sw x3, 8208(x0)
+#auipc x1, 0x1
+#auipc x2, 0x2
+#auipc x3, 0x3
 
 #ADD
 #1 p + p
@@ -41,11 +38,11 @@ add x13, x5, x7
 #5 n + 0
 add x14, x9, x0
 
-sw x10, 8212(x0)
-sw x11, 8216(x0)
-sw x12, 8220(x0)
-sw x13, 8224(x0)
-sw x14, 8228(x0)
+sw x10, 8(x20)
+sw x11, 12(x20)
+sw x12, 16(x20)
+sw x13, 20(x20)
+sw x14, 24(x20)
 
 #SUB
 #1 p - p
@@ -61,12 +58,12 @@ sub x14, x0, x4
 #6
 sub x15, x0, x5
 
-sw x10, 8232(x0)
-sw x11, 8236(x0)
-sw x12, 8240(x0)
-sw x13, 8244(x0)
-sw x14, 8248(x0)
-sw x15, 8252(x0)
+sw x10, 28(x20)
+sw x11, 32(x20)
+sw x12, 36(x20)
+sw x13, 40(x20)
+sw x14, 44(x20)
+sw x15, 48(x20)
 
 #SLL
 sll x10, x4, x0
@@ -74,9 +71,9 @@ sll x11, x5, x1
 sll x12, x6, x7
 addi x0, x0, 0 #NOP
 
-sw x10, 8256(x0)
-sw x11, 8260(x0)
-sw x12, 8264(x0)
+sw x10, 52(x20)
+sw x11, 56(x20)
+sw x12, 60(x20)
 
 #SLT
 slt x13, x4, x4
@@ -85,11 +82,11 @@ slt x15, x5, x4
 slt x16, x0, x0
 slt x17, x9, x5
 
-sw x13, 8268(x0)
-sw x14, 8272(x0)
-sw x15, 8276(x0)
-sw x16, 8280(x0)
-sw x17, 8284(x0)
+sw x13, 64(x20)
+sw x14, 68(x20)
+sw x15, 72(x20)
+sw x16, 76(x20)
+sw x17, 80(x20)
 
 #SLTU
 sltu x10, x6, x8
@@ -101,8 +98,8 @@ lui x14, 0x6090
 lui x15, 0x6090
 lui x16, 0x0
 
-sw x10, 12372(x0)
-sw x11, 12376(x0)
+sw x10, 84(x20)
+sw x11, 88(x20)
 
 
 #XOR
@@ -112,8 +109,8 @@ xor x18, x15, x16
 addi x0, x0, 0 #NOP
 addi x0, x0, 0 #NOP
 
-sw x17, 8288(x0)
-sw x18, 8292(x0)
+sw x17, 92(x20)
+sw x18, 96(x20)
 
 lui x1, 0x11111
 lui x2, 0x4
@@ -130,10 +127,10 @@ srl x11, x1, x3
 srl x12, x1, x4
 srl x13, x1, x0
 
-sw x10, 8296(x0)
-sw x11, 8300(x0)
-sw x12, 8304(x0)
-sw x13, 8308(x0)
+sw x10, 100(x20)
+sw x11, 104(x20)
+sw x12, 108(x20)
+sw x13, 112(x20)
 
 #SRA
 sra x14, x1, x2
@@ -142,8 +139,8 @@ sra x15, x1, x0
 addi x0, x0, 0 #NOP
 addi x0, x0, 0 #NOP
 
-sw x10, 8312(x0)
-sw x11, 8316(x0)
+sw x10, 116(x20)
+sw x11, 120(x20)
 
 #OR
 or x10, x5, x6
@@ -152,7 +149,7 @@ addi x0, x0, 0 #NOP
 addi x0, x0, 0 #NOP
 addi x0, x0, 0 #NOP
 
-sw x10, 8320(x0)
+sw x10, 124(x20)
 
 #AND
 and x11, x5, x6
@@ -161,7 +158,7 @@ and x12, x7, x8
 addi x0, x0, 0 #NOP
 addi x0, x0, 0 #NOP
 
-sw x11, 8324(x0)
+sw x11, 128(x20)
 
 
 addi x0, x0, 0
