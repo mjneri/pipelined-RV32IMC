@@ -26,15 +26,23 @@ module BHT(
 
 	input [9:0] id_PC,
 	input [9:0] id_branchtarget,
-	input is_jump,
-	input is_btype,
+	input id_is_jump,
+	input id_is_btype,
 
 	input [9:0] exe_PC,
-	input exe_feedback,
+	input exe_z,
+	input exe_less,
+	input [5:0] exe_btype,		// determines what branch instruction was used
+	// exe_btype[5]: is_beq
+	// exe_btype[4]: is_bne
+	// exe_btype[3]: is_blt
+	// exe_btype[2]: is_bge
+	// exe_btype[1]: is_bltu
+	// exe_btype[0]: is_bgeu
 
 	// Outputs
 	output if_prediction,
-	output exe_correction,
+	output [1:0] exe_correction,
 
 	output flush,
 
@@ -78,8 +86,34 @@ module BHT(
 		Also outputs the corresponding PBT and CNI
 		and corresponding correction output.
 
-		Inputs: exe_PC, exe_feedback
+		Inputs: exe_PC, z, less, branchtype
 		Outputs: exe_correction, exe_PBT, exe_CNI
+
+		Check if prediction is correct -> inc/dec counter, output correction
 	*/
+	wire feedback;	// if feedback = 1, branch compare is correct
+	wire is_beq;
+	wire is_bne;
+	wire is_blt;
+	wire is_bge;
+	wire is_bltu;
+	wire is_bgeu;
+
+	assign is_beq = exe_btype[5];
+	assign is_bne = exe_btype[4];
+	assign is_blt = exe_btype[3];
+	assign is_bge = exe_btype[2];
+	assign is_bltu = exe_btype[1];
+	assign is_bgeu = exe_btype[0];
+
+	assign feedback =   (is_beq && exe_z)? 1'b1 :
+						(is_bne && !exe_z)? 1'b1 : 
+						(is_blt && exe_less)? 1'b1 :
+						(is_bge && !exe_less)? 1'b1 :
+						(is_bltu && exe_less)? 1'b1 :
+						(is_bgeu && !exe_less)? 1'b1 :
+						1'b0;
+
+	
 
 endmodule

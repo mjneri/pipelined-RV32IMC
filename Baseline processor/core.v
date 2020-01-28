@@ -67,6 +67,7 @@ module core(
 // EXE Stage ========================================================
 	// Outputs of ID/EXE Pipeline Register
 	wire [11:0] exe_pc4;			// PC + 4
+	wire [31:0] exe_inst;			// 32 bit instruction
 	wire [31:0] exe_rfoutA;			// Regfile output A
 	wire [31:0] exe_rfoutB;			// Regfile output B
 	wire [31:0] exe_imm;			// Immediate
@@ -103,6 +104,7 @@ module core(
 // MEM Stage ========================================================
 	// Outputs of EXE/MEM Pipeline Register
 	wire [11:0] mem_pc4;			// PC + 4
+	wire [31:0] mem_inst;			// 32bit instruction
 	wire [31:0] mem_ALUout;			// ALU output
 	wire [31:0] mem_storedata;		// Input data to DATAMEM
 	wire [31:0] mem_imm;			// 32bit Immediate
@@ -129,6 +131,7 @@ module core(
 // WB Stage ========================================================
 	// Outputs of MEM/WB Pipeline Register
 	wire [11:0] wb_pc4;				// PC + 4
+	wire [31:0] wb_inst;			// 32bit instruction
 	wire [31:0] wb_ALUout;			// ALU output
 	wire [31:0] wb_loaddata;		// Output of LOAD BLOCK
 	wire [31:0] wb_imm;				// 32bit Immediate
@@ -225,6 +228,7 @@ module core(
 		.nrst(nrst),
 
 		.id_pc4(id_pc4),		.exe_pc4(exe_pc4),
+		.id_inst(id_inst),		.exe_inst(exe_inst),
 		.id_rfoutA(id_rfoutA),	.exe_rfoutA(exe_rfoutA),
 		.id_rfoutB(id_rfoutB),	.exe_rfoutB(exe_rfoutB),
 		.id_imm(id_imm),		.exe_imm(exe_imm),
@@ -274,6 +278,7 @@ module core(
 		.nrst(nrst),
 
 		.exe_pc4(exe_pc4),					.mem_pc4(mem_pc4),
+		.exe_inst(exe_inst),				.mem_inst(mem_inst),
 		.exe_ALUout(exe_ALUout),			.mem_ALUout(mem_ALUout),
 		.exe_storedata(exe_storedata),		.mem_storedata(mem_storedata),
 		.exe_imm(exe_imm),					.mem_imm(mem_imm),
@@ -316,6 +321,7 @@ module core(
 		.nrst(nrst),
 
 		.mem_pc4(mem_pc4),					.wb_pc4(wb_pc4),
+		.mem_inst(mem_inst),				.wb_inst(wb_inst),
 		.mem_ALUout(mem_ALUout),			.wb_ALUout(wb_ALUout),
 		.mem_loaddata(mem_loaddata),		.wb_loaddata(wb_loaddata),
 		.mem_imm(mem_imm),					.wb_imm(wb_imm),
