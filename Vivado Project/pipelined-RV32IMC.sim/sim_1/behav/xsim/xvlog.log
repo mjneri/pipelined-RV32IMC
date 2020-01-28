@@ -1,0 +1,31 @@
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/MJ/Documents/UP Diliman/5th Year/2nd Sem/CoE 198/pipelined-RV32IMC/Baseline processor/alu.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module alu
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/MJ/Documents/UP Diliman/5th Year/2nd Sem/CoE 198/pipelined-RV32IMC/Baseline processor/controller1.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module controller1
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/MJ/Documents/UP Diliman/5th Year/2nd Sem/CoE 198/pipelined-RV32IMC/Baseline processor/datamem.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module datamem
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/MJ/Documents/UP Diliman/5th Year/2nd Sem/CoE 198/pipelined-RV32IMC/Baseline processor/instmem.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module instmem
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/MJ/Documents/UP Diliman/5th Year/2nd Sem/CoE 198/pipelined-RV32IMC/Baseline processor/loadblock.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module loadblock
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/MJ/Documents/UP Diliman/5th Year/2nd Sem/CoE 198/pipelined-RV32IMC/Baseline processor/pc.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module pc
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/MJ/Documents/UP Diliman/5th Year/2nd Sem/CoE 198/pipelined-RV32IMC/Baseline processor/pipereg_exe_mem.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module pipereg_exe_mem
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/MJ/Documents/UP Diliman/5th Year/2nd Sem/CoE 198/pipelined-RV32IMC/Baseline processor/pipereg_id_exe.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module pipereg_id_exe
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/MJ/Documents/UP Diliman/5th Year/2nd Sem/CoE 198/pipelined-RV32IMC/Baseline processor/pipereg_if_id.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module pipereg_if_id
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/MJ/Documents/UP Diliman/5th Year/2nd Sem/CoE 198/pipelined-RV32IMC/Baseline processor/pipereg_mem_wb.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module pipereg_mem_wb
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/MJ/Documents/UP Diliman/5th Year/2nd Sem/CoE 198/pipelined-RV32IMC/Baseline processor/regfile.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module regfile
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/MJ/Documents/UP Diliman/5th Year/2nd Sem/CoE 198/pipelined-RV32IMC/Baseline processor/shiftsignshuff.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module shiftsignshuff
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/MJ/Documents/UP Diliman/5th Year/2nd Sem/CoE 198/pipelined-RV32IMC/Baseline processor/storeblock.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module storeblock
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/MJ/Documents/UP Diliman/5th Year/2nd Sem/CoE 198/pipelined-RV32IMC/Baseline processor/top.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module top
+INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/MJ/Documents/Vivado/pipelined-RV32IMC/pipelined-RV32IMC.srcs/sim_1/new/tb_top.v" into library xil_defaultlib
+INFO: [VRFC 10-311] analyzing module tb_top
+INFO: [VRFC 10-311] analyzing module answerkey

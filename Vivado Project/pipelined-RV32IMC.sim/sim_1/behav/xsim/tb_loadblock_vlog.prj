@@ -1,0 +1,10 @@
+# compile verilog/system verilog design source files
+verilog xil_defaultlib  \
+"../../../../../../UP Diliman/5th Year/2nd Sem/CoE 198/pipelined-RV32IMC/Baseline processor/loadblock.v" \
+"../../../../pipelined-RV32IMC.srcs/sim_1/new/tb_loadblock.v" \
+
+# compile glbl module
+verilog xil_defaultlib "glbl.v"
+
+# Do not sort compile order
+nosort
