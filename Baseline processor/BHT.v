@@ -64,19 +64,31 @@ module BHT(
 	*/
 	reg [18:0] history_table [0:63];
 
-	//IF stage
-	/* 
+
+	/*IF stage 
 		What happens here:
 		- get if_PC, get set (if_PC[3:0]) and tag (if_PC[9:4]) bits 
-		- if_prediction 
+		- output if_prediction (1 if taken, 0 if not taken)
+			- kukunin sa ht[1]
+		- output if_PBT (nakukuha from ht[11:2]) is the predicted branch target
+
+		- problem: simulan muna ung table access 
 	*/
 
-
-	//ID stage
-	/*
+	/*ID stage
 		What happens here:
-		- write to table
+		- write to table/table access
+
+		- replacement scheme: FIFO
+		- get the set bits from id_PC[3:0]
 	*/
+
+	//16 counters for the sets in the BHT
+	reg [1:0] table_counter [0:15];
+
+	// placement/replacement here
+
+
 
 
 // EXE STAGE
