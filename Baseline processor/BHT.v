@@ -50,7 +50,19 @@ module BHT(
 	reg [18:0] history_table [0:63];
 
 	//IF stage
+	/* 
+		What happens here:
+		- get if_PC, get set (if_PC[3:0]) and tag (if_PC[9:4]) bits 
+		- if_prediction 
+	*/
+
+
 	//ID stage
+	/*
+		What happens here:
+		- write to table
+	*/
+
 
 	// EXE STAGE
 
