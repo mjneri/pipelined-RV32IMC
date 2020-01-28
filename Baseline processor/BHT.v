@@ -1,5 +1,15 @@
 `timescale 1ns / 1ps
 
+/*
+	Branch History Table module
+	Format of each entry:
+	========================================================================
+	| Valid bit | Tag[5:0] | Branch target[9:0] | Saturating Counter [1:0] |
+	========================================================================
+	BHT is implemented as a 4-way Set Associative "Cache"
+	id_PC[9:0] = {Tag[5:0], Set[3:0]}
+*/
+
 module BHT(
 	input CLK,
 	input nrst,
