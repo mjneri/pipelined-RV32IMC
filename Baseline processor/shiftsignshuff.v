@@ -42,8 +42,8 @@ module shiftsignshuff(
 	assign Itype_imm = { {20{inst[24]}}, inst[24:13] };
 	assign Stype_imm = { {20{inst[24]}}, inst[24:18], inst[4:0] };
 	assign Utype_imm = { inst[24:5], 12'h0 };
-	assign Btype_imm = { {19{inst[24]}}, inst[24], inst[0], inst[23:18], inst[4:1], 0 };
-	assign Jtype_imm = { {11{inst[24]}}, inst[24], inst[12:5], inst[13], inst[23:14], 0 };
+	assign Btype_imm = { {19{inst[24]}}, inst[24], inst[0], inst[23:18], inst[4:1], 1'h0 };
+	assign Jtype_imm = { {11{inst[24]}}, inst[24], inst[12:5], inst[13], inst[23:14], 1'h0 };
 
 	// Try coding output as assign = w? x:y; later
 	always@(*) begin
