@@ -4,20 +4,28 @@ module BHT(
 	input CLK,
 	input nrst,
 
-	input [9:0] PC_if,
-	input [9:0] PC_id,
-	input [9:0] PC_exe,
-	input is_jump,
-	input is_stype,
-	input ALU_feedback,
+	// Inputs
+	input [9:0] if_PC,
 
-	output if_pred,
-	output exe_corr,
+	input [9:0] id_PC,
+	input [9:0] id_branchtarget,
+	input is_jump,
+	input is_btype,
+
+	input [9:0] exe_PC,
+	input exe_feedback,
+
+	// Outputs
+	output if_prediction,
+	output exe_correction,
 	output flush,
+
+	// Predicted branch target
 	output [9:0] if_PBT,
 	output [9:0] exe_PBT,
-	output [9:0] exe_CNT
 
+	// Correct Next Instruction = CNI
+	output [9:0] exe_CNI
 );
 
 
