@@ -105,6 +105,7 @@ module BHT(
 
 		Check if prediction is correct -> inc/dec counter, output correction
 	*/
+
 	wire feedback;	// if feedback = 1, branch compare is correct
 	wire is_beq;
 	wire is_bne;
@@ -128,6 +129,50 @@ module BHT(
 						(is_bgeu && !exe_less)? 1'b1 :
 						1'b0;
 
-	
+	// Searching the table
+	// exe_entryX: the entries within the set
+	// exe_validX: the valid bit in each entry
+	// exe_iseqtoX: determines if the entry contains the same tag bits from the input
+	// exe_loadentry: the entry that corresponds to the input
+	// is_pred_correct: determines if the prediction is correct
+	wire [18:0] exe_entry0, exe_entry1, exe_entry2, exe_entry3;
+	wire exe_valid0, exe_valid1, exe_valid2, exe_valid3;
+	wire exe_iseqto0, exe_iseqto1, exe_iseqto2, exe_iseqto3;
+	reg [18:0] exe_loadentry;
+	wire is_pred_correct;
 
+	assign exe_entry0 = history_table[{exe_PC[3:0], 2'b00}];
+	assign exe_entry1 = history_table[{exe_PC[3:0], 2'b01}];
+	assign exe_entry2 = history_table[{exe_PC[3:0], 2'b10}];
+	assign exe_entry3 = history_table[{exe_PC[3:0], 2'b11}];
+
+	assign exe_valid0 = exe_entry0[18];
+	assign exe_valid1 = exe_entry1[18];
+	assign exe_valid2 = exe_entry2[18];
+	assign exe_valid3 = exe_entry3[18];
+
+	assign exe_iseqto0 = (exe_entry0[17:12] == exe_PC[9:4]) && exe_valid0;
+	assign exe_iseqto1 = (exe_entry1[17:12] == exe_PC[9:4]) && exe_valid1;
+	assign exe_iseqto2 = (exe_entry2[17:12] == exe_PC[9:4]) && exe_valid2;
+	assign exe_iseqto3 = (exe_entry3[17:12] == exe_PC[9:4]) && exe_valid3;
+
+	always@(*) begin
+		case({exe_iseqto3, exe_iseqto2, exe_iseqto1, exe_iseqto0})
+			4'b0001: exe_loadentry = exe_entry0;
+			4'b0010: exe_loadentry = exe_entry1;
+			4'b0100: exe_loadentry = exe_entry2;
+			4'b1000: exe_loadentry = exe_entry3;
+			default: exe_loadentry = 19'b0;
+		endcase
+	end
+
+	// Assign outputs
+	assign exe_PBT = exe_loadentry[11:2];
+	assign exe_CNI = {exe_loadentry[17:12], exe_PC[3:0]};
+
+	// Check if prediction is correct & output appropriate correction
+	assign is_pred_correct = (exe_loadentry[1] == feedback)? /**/
+
+	// Update counter here
+	// ...
 endmodule
