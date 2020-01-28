@@ -65,6 +65,8 @@ module BHT(
 	reg [18:0] history_table [0:63];
 
 
+	////////////////////////////////////////////////////////////////////////////
+
 	/*IF stage 
 		What happens here:
 		- get if_PC, get set (if_PC[3:0]) and tag (if_PC[9:4]) bits 
@@ -84,7 +86,7 @@ module BHT(
 	wire if_valid0, if_valid1, if_valid2, if_valid3;
 	wire if_iseqto0, if_iseqto1, if_iseqto2, if_iseqto3;
 	reg [18:0] if_loadentry;
-	//wire is_pred_correct;
+	wire [1:0] if_setoffset;
 
 	assign if_entry0 = history_table[{if_PC[3:0], 2'b00}];
 	assign if_entry1 = history_table[{if_PC[3:0], 2'b01}];
@@ -103,18 +105,35 @@ module BHT(
 
 	always@(*) begin
 		case({if_iseqto3, if_iseqto2, if_iseqto1, if_iseqto0})
-			4'b0001: if_loadentry = if_entry0;
-			4'b0010: if_loadentry = if_entry1;
-			4'b0100: if_loadentry = if_entry2;
-			4'b1000: if_loadentry = if_entry3;
+			4'b0001: 
+			begin
+				if_loadentry = if_entry0;
+				if_setoffset = 2'h0;
+			end
+			4'b0010:
+			begin
+				if_loadentry = if_entry1;
+				if_setoffset = 2'h1;
+			end
+			4'b0100:
+			begin
+				if_loadentry = if_entry2;
+				if_setoffset = 2'h2;
+			end
+			4'b1000:
+			begin
+				if_loadentry = if_entry3;
+				if_setoffset = 2'h3;
+			end
 			default: if_loadentry = 19'b0;
 		endcase
 	end
 
 	// Assign outputs
-	assign if_PBT = if_loadentry[11:2];
-	assign if_prediction = if_loadentry[1];
+	assign if_PBT = if_loadentry[11:2];			//predicted branch target
+	assign if_prediction = if_loadentry[1];		//prediction bit coming from most recent BHT access
 
+	////////////////////////////////////////////////////////////////////////////////
 	
 
 	/*ID stage
