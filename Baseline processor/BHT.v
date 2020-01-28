@@ -28,6 +28,7 @@ module BHT(
 	// Outputs
 	output if_prediction,
 	output exe_correction,
+
 	output flush,
 
 	// Predicted branch target
@@ -37,6 +38,16 @@ module BHT(
 	// Correct Next Instruction = CNI
 	output [9:0] exe_CNI
 );
+
+	// Declaring memory for BHT
+	/*  format of each line in reg history_table
+		========================================================================
+		| Valid bit | Tag[5:0] | Branch target[9:0] | Saturating Counter [1:0] |
+		| ht[18]    | ht[17:12]| ht[11:2]           | ht[1:0]				   |
+		========================================================================
+		Where ht = history_table
+	*/
+	reg [18:0] history_table [0:63];
 
 
 endmodule
