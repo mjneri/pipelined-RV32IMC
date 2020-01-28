@@ -51,4 +51,9 @@ module BHT(
 
 	// EXE STAGE
 
+
+	//IF stage
+	//ID stage
+
+
 endmodule
