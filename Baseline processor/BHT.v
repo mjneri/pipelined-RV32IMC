@@ -8,6 +8,13 @@
 	========================================================================
 	BHT is implemented as a 4-way Set Associative "Cache"
 	id_PC[9:0] = {Tag[5:0], Set[3:0]}
+
+	For selecting next PC:
+	format of selection bits: {exe_correction[1:0], if_prediction}
+		default selection: PC+4
+		3'b001: if_PBT
+		3'b100 & 3'b101: exe_CNI
+		3'b110 & 3'b111: exe_PBT
 */
 
 module BHT(
@@ -52,10 +59,15 @@ module BHT(
 	//IF stage
 	//ID stage
 
-	// EXE STAGE
+// EXE STAGE
+	/* 
+		Checks if the prediction made is correct, and
+		makes changes to the saturating counter.
+		Also outputs the corresponding PBT and CNI
+		and corresponding correction output.
 
-
-	
-
+		Inputs: exe_PC, exe_feedback
+		Outputs: exe_correction, exe_PBT, exe_CNI
+	*/
 
 endmodule
