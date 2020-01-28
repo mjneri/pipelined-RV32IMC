@@ -13,7 +13,6 @@ try:
 except:
     print('File error')
     exit()
-# to do: flip bytes (Little Endian)
 '''
     parse_file() does the following:
     - get rid of empty lines
