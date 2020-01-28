@@ -74,11 +74,12 @@ module BHT(
 
 		- problem: simulan muna ung table access 
 	*/
+	//assign if_PBT = 
 
 	/*ID stage
 		What happens here:
 		- write to table/table access
-
+		- DITO ANG REPLACEMENT!!!
 		- replacement scheme: FIFO
 		- get the set bits from id_PC[3:0]
 	*/
