@@ -49,11 +49,13 @@ module BHT(
 	*/
 	reg [18:0] history_table [0:63];
 
+	//IF stage
+	//ID stage
+
 	// EXE STAGE
 
 
-	//IF stage
-	//ID stage
+	
 
 
 endmodule
