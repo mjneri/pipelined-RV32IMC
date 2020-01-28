@@ -264,6 +264,8 @@ module core(
 		.less(exe_less)
 	);
 	
+	// ADD LOGIC HERE FOR GENERATING IS_BEQ, ... etc. SIGNALS
+	// BHT BHT();
 	storeblock STOREBLOCK(
 		.opB(exe_rfoutB),
 		.byte_offset(exe_ALUout[1:0]),
