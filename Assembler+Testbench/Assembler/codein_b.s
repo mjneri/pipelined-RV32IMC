@@ -11,8 +11,6 @@ srli x10, x9, 4
 addi x11, x0, -5
 srai x12, x11, 4
 addi x13, x0, 0xFF
-jal x1, beqtest1
-#jalr x2, 12(x3)
 sb x13, 0(x0)
 sh x13, 4(x0)
 sw x13, 8(x0)
@@ -22,37 +20,47 @@ lw x16, 8(x0)
 lbu x17, 8(x0)
 lhu x18, 8(x0)
 
-addi x19, x0, 5
-beq x19, x0, beqtest1
-addi x19, x19, 1
-beqtest1:
+sw x1, 0(x0)
+sw x2, 4(x0)
+sw x3, 8(x0)
+sw x4, 12(x0)
+sw x5, 16(x0)
+sw x6, 20(x0)
+sw x7, 24(x0)
+sw x8, 28(x0)
+sw x9, 32(x0)
+sw x10, 36(x0)
+sw x11, 40(x0)
+sw x12, 44(x0)
+sw x13, 48(x0)
+sw x14, 52(x0)
+sw x15, 56(x0)
+sw x16, 60(x0)
+sw x17, 64(x0)
+sw x18, 68(x0)
+sw x19, 72(x0)
+sw x20, 76(x0)
+sw x21, 80(x0)
+sw x22, 84(x0)
+sw x23, 88(x0)
+sw x24, 92(x0)
+sw x25, 96(x0)
+sw x26, 100(x0)
+sw x27, 104(x0)
+sw x28, 108(x0)
+sw x29, 112(x0)
+sw x30, 116(x0)
+sw x31, 120(x0)
 
-addi x20, x0, 5
-beq x20, x1, beqtest2
-addi x20, x20, 1
-beqtest2:
-
-addi x21, x0, 1
-loop1:
-addi x21, x21, 1
-bne x21, x1, loop1
-
-addi x22, x0, 1
-loop2:
-addi x22, x22, 1
-blt x22, x1, loop2
-
-addi x23, x0, 10
-loop3:
-addi x23, x23, -1
-bge x23, x1, loop3
-
-addi x24, x0, 1
-loop4:
-addi x24, x24, 1
-bltu x24, x1, loop4
-
-addi x25, x0, 10
-loop5:
-addi x25, x25, -1
-bgeu x25, x1, loop5
+nop
+nop
+nop
+nop
+nop
+nop
+nop
+nop
+nop
+nop
+nop
+nop

@@ -1,0 +1,23 @@
+# compile verilog/system verilog design source files
+verilog xil_defaultlib  --include "../../../../pipelined-RV32IMC.srcs/sources_1/ip/clk_wiz_0" \
+"../../../../../Baseline processor/alu.v" \
+"../../../../../Baseline processor/controller1.v" \
+"../../../../../Baseline processor/core.v" \
+"../../../../../Baseline processor/datamem.v" \
+"../../../../../Baseline processor/instmem.v" \
+"../../../../../Baseline processor/loadblock.v" \
+"../../../../../Baseline processor/pc.v" \
+"../../../../../Baseline processor/pipereg_exe_mem.v" \
+"../../../../../Baseline processor/pipereg_id_exe.v" \
+"../../../../../Baseline processor/pipereg_if_id.v" \
+"../../../../../Baseline processor/pipereg_mem_wb.v" \
+"../../../../../Baseline processor/regfile.v" \
+"../../../../../Baseline processor/shiftsignshuff.v" \
+"../../../../../Baseline processor/storeblock.v" \
+"../../../../pipelined-RV32IMC.srcs/sim_1/new/tb_core.v" \
+
+# compile glbl module
+verilog xil_defaultlib "glbl.v"
+
+# Do not sort compile order
+nosort

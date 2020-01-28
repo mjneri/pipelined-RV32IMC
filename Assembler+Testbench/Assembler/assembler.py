@@ -214,6 +214,7 @@ def parse_file(line_list):
     return instructions, labels
 
 def assemble(instructions, labels, instmem):
+    out_buffer = {}
     for inst_address in instructions.keys():
         temp_inst = process_inst(instructions[inst_address])
         opt = temp_inst[0]
