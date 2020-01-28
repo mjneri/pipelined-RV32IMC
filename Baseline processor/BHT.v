@@ -74,7 +74,8 @@ module BHT(
 
 		- problem: simulan muna ung table access 
 	*/
-	//assign if_PBT = 
+	
+	
 
 	/*ID stage
 		What happens here:
