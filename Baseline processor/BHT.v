@@ -51,6 +51,8 @@ module BHT(
 
 
 
+	//IF stage
+	//ID stage
 
 
 endmodule
