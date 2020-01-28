@@ -148,6 +148,7 @@ module BHT(
 	reg [1:0] table_counter [0:3];
 
 	// placement/replacement here
+	// always block for writes
 
 
 
