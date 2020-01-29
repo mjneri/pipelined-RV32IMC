@@ -20,16 +20,9 @@ module core(
 	wire [31:0] if_inst;		// INSTMEM Output
 // &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 
-wire raw_stall;
-wire raw_forward_A_3EXE, raw_forward_A_4MEM, raw_forward_A_5WB;
-wire raw_forward_B_3EXE, raw_forward_B_4MEM, raw_forward_B_5WB;
 
-assign raw_forward_A_3EXE = ~nrst && (id_rsA == exe_rd) && (id_rsA != 0) && exe_wr_en;
-assign raw_forward_B_3EXE = ~nrst && (id_rsB == exe_rd) && (id_rsB != 0) && exe_wr_en;
-assign raw_forward_A_4MEM = ~nrst && (id_rsA == mem_rd) && (id_rsA != 0) && mem_wr_en;
-assign raw_forward_B_4MEM = ~nrst && (id_rsB == mem_rd) && (id_rsB != 0) && mem_wr_en;
-assign raw_forward_A_5WB = ~nrst && (id_rsA == wb_rd) && (id_rsA != 0) && wb_wr_en;
-assign raw_forward_B_5WB = ~nrst && (id_rsB == wb_rd) && (id_rsB != 0) && wb_wr_en;
+
+
 
 // ID Stage ========================================================
 	// Outputs of IF/ID Pipeline Register
@@ -65,6 +58,17 @@ assign raw_forward_B_5WB = ~nrst && (id_rsB == wb_rd) && (id_rsB != 0) && wb_wr_
 	// Inputs to ID/EXE Pipereg 														
 	wire [31:0] id_rfoutA, id_rfoutB;	// Regfile outputs 								
 	wire [31:0] id_imm;					// Output of SHIFT, SIGN EXT, AND SHUFFLE block 
+
+	wire [31:0] id_opA;
+	wire [31:0] id_opB;
+
+	// Data Forwarding Control Signals
+	wire exe_forward_A;
+    wire exe_forward_B;
+    wire mem_forward_A;
+    wire mem_forward_B;
+	wire wb_forward_A;
+    wire wb_forward_B;
 // &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 
 
@@ -74,15 +78,14 @@ assign raw_forward_B_5WB = ~nrst && (id_rsB == wb_rd) && (id_rsB != 0) && wb_wr_
 // EXE Stage ========================================================
 	// Outputs of ID/EXE Pipeline Register
 	wire [11:0] exe_pc4;			// PC + 4
-	wire [31:0] exe_rfoutA;			// Regfile output A
-	wire [31:0] exe_rfoutB;			// Regfile output B
+	wire [31:0] exe_opA;			// Regfile output A
+	wire [31:0] exe_opB;			// Regfile output B
+	wire [31:0] exe_rfoutB;
 	wire [31:0] exe_imm;			// Immediate
 	wire [4:0] exe_rd;				// destination register
 	wire [11:0] exe_PC;				// PC
 
 	// Other wires used inside EXE stage
-	wire [31:0] opA;
-	wire [31:0] opB;
 	wire exe_z;
 	wire exe_less;
 	//wire [31:0] exe_branchtarget;
@@ -154,6 +157,8 @@ assign raw_forward_B_5WB = ~nrst && (id_rsB == wb_rd) && (id_rsB != 0) && wb_wr_
 
 
 
+
+
 /******************************* DATAPATH (INSTANTIATING MODULES) ******************************/
 
 // IF Stage ========================================================
@@ -191,6 +196,19 @@ assign raw_forward_B_5WB = ~nrst && (id_rsB == wb_rd) && (id_rsB != 0) && wb_wr_
 
 // ID Stage ========================================================
 	//control unit
+
+	assign exe_forward_A = (id_rsA == exe_rd) && (id_rsA != 0) && exe_wr_en && id_sel_opA;
+	assign exe_forward_B = (id_rsB == exe_rd) && (id_rsB != 0) && exe_wr_en && !id_sel_opB;
+	assign mem_forward_A = (id_rsA == mem_rd) && (id_rsA != 0) && mem_wr_en && id_sel_opA;
+	assign mem_forward_B = (id_rsB == mem_rd) && (id_rsB != 0) && mem_wr_en && !id_sel_opB;
+	assign wb_forward_A = (id_rsA == wb_rd) && (id_rsA != 0) && wb_wr_en && id_sel_opA;
+	assign wb_forward_B = (id_rsB == wb_rd) && (id_rsB != 0) && wb_wr_en && !id_sel_opB;
+
+	// Selecting operands
+	assign id_opA = exe_forward_A? exe_ALUout : (mem_forward_A? mem_ALUout : (wb_forward_A? wb_ALUout : (id_sel_opA? id_rfoutA : id_PC)));
+	assign id_opB = exe_forward_B? exe_ALUout : (mem_forward_B? mem_ALUout : (wb_forward_B? wb_ALUout : (id_sel_opB? id_imm : id_rfoutB)));
+	
+
 	controller1 CONTROL(
 		// Inputs
 		.opcode(id_opcode),
@@ -232,11 +250,12 @@ assign raw_forward_B_5WB = ~nrst && (id_rsB == wb_rd) && (id_rsB != 0) && wb_wr_
 		.nrst(nrst),
 
 		.id_pc4(id_pc4),		.exe_pc4(exe_pc4),
-		.id_rfoutA(id_rfoutA),	.exe_rfoutA(exe_rfoutA),
-		.id_rfoutB(id_rfoutB),	.exe_rfoutB(exe_rfoutB),
+		.id_opA(id_opA),		.exe_opA(exe_opA),
+		.id_opB(id_opB),		.exe_opB(exe_opB),
 		.id_imm(id_imm),		.exe_imm(exe_imm),
 		.id_rd(id_rd),			.exe_rd(exe_rd),
 		.id_PC(id_PC),			.exe_PC(exe_PC),
+		.id_rfoutB(id_rfoutB),	.exe_rfoutB(exe_rfoutB),
 
 		// Control signals go here
 		.id_ALU_op(id_ALU_op),				.exe_ALU_op(exe_ALU_op),
@@ -260,14 +279,13 @@ assign raw_forward_B_5WB = ~nrst && (id_rsB == wb_rd) && (id_rsB != 0) && wb_wr_
 	// WB to EXE
 	// MEM to EXE
 
-	// Selecting operands
-	assign opA = (exe_sel_opA) ? exe_rfoutA : exe_PC;
-	assign opB = (exe_sel_opB) ? exe_imm : exe_rfoutB;
+
+
 	//assign exe_branchtarget = exe_PC + exe_imm;
 
 	alu ALU(
-		.op_a(opA),
-		.op_b(opB),
+		.op_a(exe_opA),
+		.op_b(exe_opB),
 		.ALU_op(exe_ALU_op),
 		.res(exe_ALUout),
 		.z(exe_z),

@@ -70,7 +70,7 @@ module tb_core();
 		$display("===| SUMMARY |===");
 		$display("Actual  \tExpected");
 		$display("========\t========");
-		for(i = 0; i < 100; i = i + 1) begin
+		for(i = 0; i < 32; i = i + 1) begin
 			//$display("%X\t%X", CORE.DATAMEM.memory[i], AK.memory[i]);
 			if(CORE.DATAMEM.memory[i] == AK.memory[i]) begin
 				$display("%X\t%X\tPass", CORE.DATAMEM.memory[i], AK.memory[i]);

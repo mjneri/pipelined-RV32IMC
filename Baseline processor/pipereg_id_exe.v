@@ -9,8 +9,12 @@ module pipereg_id_exe(
 	output reg [11:0] exe_pc4,
 
 	// Regfile output A
-	input [31:0] id_rfoutA,
-	output reg [31:0] exe_rfoutA,
+	input [31:0] id_opA,
+	output reg [31:0] exe_opA,
+
+	// Regfile output B
+	input [31:0] id_opB,
+	output reg [31:0] exe_opB,
 
 	// Regfile output B
 	input [31:0] id_rfoutB,
@@ -62,7 +66,8 @@ module pipereg_id_exe(
 	always@(posedge clk) begin
 		if(!nrst) begin
 			exe_pc4 <= 0;
-			exe_rfoutA <= 0;
+			exe_opA <= 0;
+			exe_opB <= 0;
 			exe_rfoutB <= 0;
 			exe_imm <= 0;
 			exe_rd <= 0;
@@ -82,7 +87,8 @@ module pipereg_id_exe(
 			exe_store_select <= 0;
 		end else begin
 			exe_pc4 <= id_pc4;
-			exe_rfoutA <= id_rfoutA;
+			exe_opA <= id_opA;
+			exe_opB <= id_opB;
 			exe_rfoutB <= id_rfoutB;
 			exe_imm <= id_imm;
 			exe_rd <= id_rd;

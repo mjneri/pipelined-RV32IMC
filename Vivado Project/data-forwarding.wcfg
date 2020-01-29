@@ -11,23 +11,15 @@
       </db_ref>
    </db_ref_list>
    <zoom_setting>
-      <ZoomStartTime time="944991fs"></ZoomStartTime>
-      <ZoomEndTime time="945002fs"></ZoomEndTime>
-      <Cursor1Time time="945000fs"></Cursor1Time>
+      <ZoomStartTime time="0fs"></ZoomStartTime>
+      <ZoomEndTime time="148997fs"></ZoomEndTime>
+      <Cursor1Time time="875000fs"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
-      <NameColumnWidth column_width="91"></NameColumnWidth>
-      <ValueColumnWidth column_width="90"></ValueColumnWidth>
+      <NameColumnWidth column_width="337"></NameColumnWidth>
+      <ValueColumnWidth column_width="435"></ValueColumnWidth>
    </column_width_setting>
-   <WVObjectSize size="42" />
-   <wvobject fp_name="/tb_core/CLK" type="logic">
-      <obj_property name="ElementShortName">CLK</obj_property>
-      <obj_property name="ObjectShortName">CLK</obj_property>
-   </wvobject>
-   <wvobject fp_name="/tb_core/nrst" type="logic">
-      <obj_property name="ElementShortName">nrst</obj_property>
-      <obj_property name="ObjectShortName">nrst</obj_property>
-   </wvobject>
+   <WVObjectSize size="23" />
    <wvobject fp_name="/tb_core/CORE/EXE_MEM/clk" type="logic">
       <obj_property name="ElementShortName">clk</obj_property>
       <obj_property name="ObjectShortName">clk</obj_property>
@@ -36,39 +28,63 @@
       <obj_property name="ElementShortName">nrst</obj_property>
       <obj_property name="ObjectShortName">nrst</obj_property>
    </wvobject>
-   <wvobject fp_name="/tb_core/CORE/EXE_MEM/exe_pc4" type="array">
-      <obj_property name="ElementShortName">exe_pc4[11:0]</obj_property>
-      <obj_property name="ObjectShortName">exe_pc4[11:0]</obj_property>
+   <wvobject fp_name="/tb_core/CORE/exe_forward_A" type="logic">
+      <obj_property name="ElementShortName">exe_forward_A</obj_property>
+      <obj_property name="ObjectShortName">exe_forward_A</obj_property>
    </wvobject>
-   <wvobject fp_name="/tb_core/CORE/EXE_MEM/mem_pc4" type="array">
-      <obj_property name="ElementShortName">mem_pc4[11:0]</obj_property>
-      <obj_property name="ObjectShortName">mem_pc4[11:0]</obj_property>
+   <wvobject fp_name="/tb_core/CORE/exe_forward_B" type="logic">
+      <obj_property name="ElementShortName">exe_forward_B</obj_property>
+      <obj_property name="ObjectShortName">exe_forward_B</obj_property>
    </wvobject>
-   <wvobject fp_name="/tb_core/CORE/EXE_MEM/exe_ALUout" type="array">
-      <obj_property name="ElementShortName">exe_ALUout[31:0]</obj_property>
-      <obj_property name="ObjectShortName">exe_ALUout[31:0]</obj_property>
+   <wvobject fp_name="/tb_core/CORE/mem_forward_A" type="logic">
+      <obj_property name="ElementShortName">mem_forward_A</obj_property>
+      <obj_property name="ObjectShortName">mem_forward_A</obj_property>
    </wvobject>
-   <wvobject fp_name="/tb_core/CORE/EXE_MEM/mem_ALUout" type="array">
-      <obj_property name="ElementShortName">mem_ALUout[31:0]</obj_property>
-      <obj_property name="ObjectShortName">mem_ALUout[31:0]</obj_property>
+   <wvobject fp_name="/tb_core/CORE/mem_forward_B" type="logic">
+      <obj_property name="ElementShortName">mem_forward_B</obj_property>
+      <obj_property name="ObjectShortName">mem_forward_B</obj_property>
    </wvobject>
-   <wvobject fp_name="/tb_core/CORE/EXE_MEM/exe_storedata" type="array">
-      <obj_property name="ElementShortName">exe_storedata[31:0]</obj_property>
-      <obj_property name="ObjectShortName">exe_storedata[31:0]</obj_property>
+   <wvobject fp_name="/tb_core/CORE/if_PC" type="array">
+      <obj_property name="ElementShortName">if_PC[11:0]</obj_property>
+      <obj_property name="ObjectShortName">if_PC[11:0]</obj_property>
    </wvobject>
-   <wvobject fp_name="/tb_core/CORE/EXE_MEM/mem_storedata" type="array">
-      <obj_property name="ElementShortName">mem_storedata[31:0]</obj_property>
-      <obj_property name="ObjectShortName">mem_storedata[31:0]</obj_property>
+   <wvobject fp_name="/tb_core/CORE/id_PC" type="array">
+      <obj_property name="ElementShortName">id_PC[11:0]</obj_property>
+      <obj_property name="ObjectShortName">id_PC[11:0]</obj_property>
    </wvobject>
-   <wvobject fp_name="/tb_core/CORE/EXE_MEM/exe_imm" type="array">
-      <obj_property name="ElementShortName">exe_imm[31:0]</obj_property>
-      <obj_property name="ObjectShortName">exe_imm[31:0]</obj_property>
+   <wvobject fp_name="/tb_core/CORE/exe_PC" type="array">
+      <obj_property name="ElementShortName">exe_PC[11:0]</obj_property>
+      <obj_property name="ObjectShortName">exe_PC[11:0]</obj_property>
    </wvobject>
-   <wvobject fp_name="/tb_core/CORE/EXE_MEM/mem_imm" type="array">
-      <obj_property name="ElementShortName">mem_imm[31:0]</obj_property>
-      <obj_property name="ObjectShortName">mem_imm[31:0]</obj_property>
+   <wvobject fp_name="/tb_core/CORE/mem_PC" type="array">
+      <obj_property name="ElementShortName">mem_PC[11:0]</obj_property>
+      <obj_property name="ObjectShortName">mem_PC[11:0]</obj_property>
    </wvobject>
-   <wvobject fp_name="/tb_core/CORE/EXE_MEM/exe_rd" type="array">
+   <wvobject fp_name="/tb_core/CORE/wb_PC" type="array">
+      <obj_property name="ElementShortName">wb_PC[11:0]</obj_property>
+      <obj_property name="ObjectShortName">wb_PC[11:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_core/CORE/if_inst" type="array">
+      <obj_property name="ElementShortName">if_inst[31:0]</obj_property>
+      <obj_property name="ObjectShortName">if_inst[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_core/CORE/id_inst" type="array">
+      <obj_property name="ElementShortName">id_inst[31:0]</obj_property>
+      <obj_property name="ObjectShortName">id_inst[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_core/CORE/id_rsA" type="array">
+      <obj_property name="ElementShortName">id_rsA[4:0]</obj_property>
+      <obj_property name="ObjectShortName">id_rsA[4:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_core/CORE/id_rsB" type="array">
+      <obj_property name="ElementShortName">id_rsB[4:0]</obj_property>
+      <obj_property name="ObjectShortName">id_rsB[4:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_core/CORE/id_rd" type="array">
+      <obj_property name="ElementShortName">id_rd[4:0]</obj_property>
+      <obj_property name="ObjectShortName">id_rd[4:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_core/CORE/ID_EXE/exe_rd" type="array">
       <obj_property name="ElementShortName">exe_rd[4:0]</obj_property>
       <obj_property name="ObjectShortName">exe_rd[4:0]</obj_property>
    </wvobject>
@@ -76,23 +92,15 @@
       <obj_property name="ElementShortName">mem_rd[4:0]</obj_property>
       <obj_property name="ObjectShortName">mem_rd[4:0]</obj_property>
    </wvobject>
-   <wvobject fp_name="/tb_core/CORE/EXE_MEM/exe_PC" type="array">
-      <obj_property name="ElementShortName">exe_PC[11:0]</obj_property>
-      <obj_property name="ObjectShortName">exe_PC[11:0]</obj_property>
+   <wvobject fp_name="/tb_core/CORE/MEM_WB/wb_rd" type="array">
+      <obj_property name="ElementShortName">wb_rd[4:0]</obj_property>
+      <obj_property name="ObjectShortName">wb_rd[4:0]</obj_property>
    </wvobject>
-   <wvobject fp_name="/tb_core/CORE/EXE_MEM/mem_PC" type="array">
-      <obj_property name="ElementShortName">mem_PC[11:0]</obj_property>
-      <obj_property name="ObjectShortName">mem_PC[11:0]</obj_property>
+   <wvobject fp_name="/tb_core/CORE/id_wr_en" type="logic">
+      <obj_property name="ElementShortName">id_wr_en</obj_property>
+      <obj_property name="ObjectShortName">id_wr_en</obj_property>
    </wvobject>
-   <wvobject fp_name="/tb_core/CORE/EXE_MEM/exe_dm_write" type="array">
-      <obj_property name="ElementShortName">exe_dm_write[3:0]</obj_property>
-      <obj_property name="ObjectShortName">exe_dm_write[3:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/tb_core/CORE/EXE_MEM/mem_dm_write" type="array">
-      <obj_property name="ElementShortName">mem_dm_write[3:0]</obj_property>
-      <obj_property name="ObjectShortName">mem_dm_write[3:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/tb_core/CORE/EXE_MEM/exe_wr_en" type="logic">
+   <wvobject fp_name="/tb_core/CORE/ID_EXE/exe_wr_en" type="logic">
       <obj_property name="ElementShortName">exe_wr_en</obj_property>
       <obj_property name="ObjectShortName">exe_wr_en</obj_property>
    </wvobject>
@@ -100,92 +108,8 @@
       <obj_property name="ElementShortName">mem_wr_en</obj_property>
       <obj_property name="ObjectShortName">mem_wr_en</obj_property>
    </wvobject>
-   <wvobject fp_name="/tb_core/CORE/EXE_MEM/exe_dm_select" type="array">
-      <obj_property name="ElementShortName">exe_dm_select[2:0]</obj_property>
-      <obj_property name="ObjectShortName">exe_dm_select[2:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/tb_core/CORE/EXE_MEM/mem_dm_select" type="array">
-      <obj_property name="ElementShortName">mem_dm_select[2:0]</obj_property>
-      <obj_property name="ObjectShortName">mem_dm_select[2:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/tb_core/CORE/EXE_MEM/exe_sel_data" type="array">
-      <obj_property name="ElementShortName">exe_sel_data[1:0]</obj_property>
-      <obj_property name="ObjectShortName">exe_sel_data[1:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/tb_core/CORE/EXE_MEM/mem_sel_data" type="array">
-      <obj_property name="ElementShortName">mem_sel_data[1:0]</obj_property>
-      <obj_property name="ObjectShortName">mem_sel_data[1:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/tb_core/CORE/MEM_WB/clk" type="logic">
-      <obj_property name="ElementShortName">clk</obj_property>
-      <obj_property name="ObjectShortName">clk</obj_property>
-   </wvobject>
-   <wvobject fp_name="/tb_core/CORE/MEM_WB/nrst" type="logic">
-      <obj_property name="ElementShortName">nrst</obj_property>
-      <obj_property name="ObjectShortName">nrst</obj_property>
-   </wvobject>
-   <wvobject fp_name="/tb_core/CORE/MEM_WB/mem_pc4" type="array">
-      <obj_property name="ElementShortName">mem_pc4[11:0]</obj_property>
-      <obj_property name="ObjectShortName">mem_pc4[11:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/tb_core/CORE/MEM_WB/wb_pc4" type="array">
-      <obj_property name="ElementShortName">wb_pc4[11:0]</obj_property>
-      <obj_property name="ObjectShortName">wb_pc4[11:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/tb_core/CORE/MEM_WB/mem_ALUout" type="array">
-      <obj_property name="ElementShortName">mem_ALUout[31:0]</obj_property>
-      <obj_property name="ObjectShortName">mem_ALUout[31:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/tb_core/CORE/MEM_WB/wb_ALUout" type="array">
-      <obj_property name="ElementShortName">wb_ALUout[31:0]</obj_property>
-      <obj_property name="ObjectShortName">wb_ALUout[31:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/tb_core/CORE/MEM_WB/mem_loaddata" type="array">
-      <obj_property name="ElementShortName">mem_loaddata[31:0]</obj_property>
-      <obj_property name="ObjectShortName">mem_loaddata[31:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/tb_core/CORE/MEM_WB/wb_loaddata" type="array">
-      <obj_property name="ElementShortName">wb_loaddata[31:0]</obj_property>
-      <obj_property name="ObjectShortName">wb_loaddata[31:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/tb_core/CORE/MEM_WB/mem_imm" type="array">
-      <obj_property name="ElementShortName">mem_imm[31:0]</obj_property>
-      <obj_property name="ObjectShortName">mem_imm[31:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/tb_core/CORE/MEM_WB/wb_imm" type="array">
-      <obj_property name="ElementShortName">wb_imm[31:0]</obj_property>
-      <obj_property name="ObjectShortName">wb_imm[31:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/tb_core/CORE/MEM_WB/mem_rd" type="array">
-      <obj_property name="ElementShortName">mem_rd[4:0]</obj_property>
-      <obj_property name="ObjectShortName">mem_rd[4:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/tb_core/CORE/MEM_WB/wb_rd" type="array">
-      <obj_property name="ElementShortName">wb_rd[4:0]</obj_property>
-      <obj_property name="ObjectShortName">wb_rd[4:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/tb_core/CORE/MEM_WB/mem_PC" type="array">
-      <obj_property name="ElementShortName">mem_PC[11:0]</obj_property>
-      <obj_property name="ObjectShortName">mem_PC[11:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/tb_core/CORE/MEM_WB/wb_PC" type="array">
-      <obj_property name="ElementShortName">wb_PC[11:0]</obj_property>
-      <obj_property name="ObjectShortName">wb_PC[11:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/tb_core/CORE/MEM_WB/mem_wr_en" type="logic">
-      <obj_property name="ElementShortName">mem_wr_en</obj_property>
-      <obj_property name="ObjectShortName">mem_wr_en</obj_property>
-   </wvobject>
    <wvobject fp_name="/tb_core/CORE/MEM_WB/wb_wr_en" type="logic">
       <obj_property name="ElementShortName">wb_wr_en</obj_property>
       <obj_property name="ObjectShortName">wb_wr_en</obj_property>
-   </wvobject>
-   <wvobject fp_name="/tb_core/CORE/MEM_WB/mem_sel_data" type="array">
-      <obj_property name="ElementShortName">mem_sel_data[1:0]</obj_property>
-      <obj_property name="ObjectShortName">mem_sel_data[1:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/tb_core/CORE/MEM_WB/wb_sel_data" type="array">
-      <obj_property name="ElementShortName">wb_sel_data[1:0]</obj_property>
-      <obj_property name="ObjectShortName">wb_sel_data[1:0]</obj_property>
    </wvobject>
 </wave_config>
