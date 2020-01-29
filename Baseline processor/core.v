@@ -20,9 +20,16 @@ module core(
 	wire [31:0] if_inst;		// INSTMEM Output
 // &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 
+wire raw_stall;
+wire raw_forward_A_3EXE, raw_forward_A_4MEM, raw_forward_A_5WB;
+wire raw_forward_B_3EXE, raw_forward_B_4MEM, raw_forward_B_5WB;
 
-
-
+assign raw_forward_A_3EXE = ~nrst && (id_rsA == exe_rd) && (id_rsA != 0) && exe_wr_en;
+assign raw_forward_B_3EXE = ~nrst && (id_rsB == exe_rd) && (id_rsB != 0) && exe_wr_en;
+assign raw_forward_A_4MEM = ~nrst && (id_rsA == mem_rd) && (id_rsA != 0) && mem_wr_en;
+assign raw_forward_B_4MEM = ~nrst && (id_rsB == mem_rd) && (id_rsB != 0) && mem_wr_en;
+assign raw_forward_A_5WB = ~nrst && (id_rsA == wb_rd) && (id_rsA != 0) && wb_wr_en;
+assign raw_forward_B_5WB = ~nrst && (id_rsB == wb_rd) && (id_rsB != 0) && wb_wr_en;
 
 // ID Stage ========================================================
 	// Outputs of IF/ID Pipeline Register
@@ -246,6 +253,13 @@ module core(
 
 
 // EXE Stage ========================================================
+	
+	// Insert forwarding logic here
+	// Possible scenarios:
+	// WB to MEM
+	// WB to EXE
+	// MEM to EXE
+
 	// Selecting operands
 	assign opA = (exe_sel_opA) ? exe_rfoutA : exe_PC;
 	assign opB = (exe_sel_opB) ? exe_imm : exe_rfoutB;
