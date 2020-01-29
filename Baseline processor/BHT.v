@@ -145,7 +145,7 @@ module BHT(
 	*/
 
 	//16 counters for the sets in the BHT
-	reg [1:0] table_counter [0:3];
+	reg [1:0] fifo_counter [0:3];
 
 	// placement/replacement here
 	// always block for writes
