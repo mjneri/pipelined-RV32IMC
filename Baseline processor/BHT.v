@@ -134,11 +134,13 @@ module BHT(
 	// exe_iseqtoX: determines if the entry contains the same tag bits from the input
 	// exe_loadentry: the entry that corresponds to the input
 	// is_pred_correct: determines if the prediction is correct
+	// exe_setoffset: determines the offset addr within the set of the entry being accessed
 	wire [18:0] exe_entry0, exe_entry1, exe_entry2, exe_entry3;
 	wire exe_valid0, exe_valid1, exe_valid2, exe_valid3;
 	wire exe_iseqto0, exe_iseqto1, exe_iseqto2, exe_iseqto3;
-	reg [18:0] exe_loadentry;
+	wire [18:0] exe_loadentry;
 	wire is_pred_correct;
+	wire [1:0] exe_setoffset;
 
 	assign exe_entry0 = history_table[{exe_PC[3:0], 2'b00}];
 	assign exe_entry1 = history_table[{exe_PC[3:0], 2'b01}];
@@ -155,23 +157,57 @@ module BHT(
 	assign exe_iseqto2 = (exe_entry2[17:12] == exe_PC[9:4]) && exe_valid2;
 	assign exe_iseqto3 = (exe_entry3[17:12] == exe_PC[9:4]) && exe_valid3;
 
-	always@(*) begin
-		case({exe_iseqto3, exe_iseqto2, exe_iseqto1, exe_iseqto0})
-			4'b0001: exe_loadentry = exe_entry0;
-			4'b0010: exe_loadentry = exe_entry1;
-			4'b0100: exe_loadentry = exe_entry2;
-			4'b1000: exe_loadentry = exe_entry3;
-			default: exe_loadentry = 19'b0;
-		endcase
-	end
+	// Selecting the entry
+	wire [3:0] exe_iseq;
+	assign exe_iseq = {exe_iseqto3, exe_iseqto2, exe_iseqto1, exe_iseqto0};
 
+	assign exe_loadentry =  (exe_iseq == 4'b1000)? exe_entry3 :
+							(exe_iseq == 4'b0100)? exe_entry2 :
+							(exe_iseq == 4'b0010)? exe_entry1 :
+							(exe_iseq == 4'b0001)? exe_entry0 :
+							19'h0;
+	assign exe_setoffset =  (exe_iseq == 4'b1000)? 2'h3 :
+							(exe_iseq == 4'b0100)? 2'h2 :
+							(exe_iseq == 4'b0010)? 2'h1 :
+							(exe_iseq == 4'b0001)? 2'h0 :
+							2'h0;
 	// Assign outputs
 	assign exe_PBT = exe_loadentry[11:2];
 	assign exe_CNI = {exe_loadentry[17:12], exe_PC[3:0]};
 
 	// Check if prediction is correct & output appropriate correction
-	assign is_pred_correct = (exe_loadentry[1] == feedback)? /**/
+	// If sat_counter[1] and feedback are equal, then prediction is correct.
+	// Else, prediction is wrong and correction output needs to be set.
+	assign is_pred_correct = (exe_loadentry[1] == feedback)? 1'b1 : 1'b0;
+
+	// Generating exe_correction:
+	// If predictions are wrong, correction bits will depend on 'feedback' signal
+	// If feedback = 1, branch comparison is correct, thus branch SHOULD BE TAKEN
+	// If feedback = 0, branch SHOULD NOT BE TAKEN
+	// ----
+	// exe_correction:
+	// 2'b00 or 2'b01: No correction needed - next PC address would be PC+4
+	// 2'b10: Need to select [C]orrect [N]ext [I]nstruction (CNI)
+	// 2'b11: Need to select PBT
+	assign exe_correction = (is_pred_correct)? 2'b00 		:	// If prediction was correct, no need to change PC again
+								(feedback == 1'b0)? 2'b10 	:	// branch should not have been taken, so CNI should be next PC addr
+								2'b11;							// branch should have been taken, so PBT should be next PC addr
 
 	// Update counter here
-	// ...
+	// Increment/decrement depends on feedback
+	// if feedback = 1, increment. if feedback = 0, decrement
+	// MIGHT NEED TO CHANGE THIS LATER
+	assign exe_loadentry[1:0] = (feedback)?
+									(exe_loadentry[1:0] == 2'h3)? 2'h3 : exe_loadentry[1:0] + 2'b1 :
+								// feedback = 0
+									(exe_loadentry[1:0] == 2'h0)? 2'h0 : exe_loadentry[1:0] - 2'b1;
+
+	// Write back to the table
+	/* add this snippet to the ID stage writes
+	always@(posedge clk) begin
+		if(|exe_btype) begin
+			history_table[{exe_PC[3:0], exe_setoffset}] <= exe_loadentry;
+		end
+	end
+	*/
 endmodule
