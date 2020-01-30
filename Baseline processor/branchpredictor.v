@@ -54,7 +54,46 @@ module branchpredictor(
 	// Correct Next Instruction = CNI
 	output [9:0] exe_CNI
 );
-
+	
+	////////////////////////////////////////////////////////////////////////////////////////
+	//Flushing
+	
+	//Flush state registers
+	reg flush_state;
+	reg flush_state_reg;	//delayed flush_state by 1 cycle
+	
+	always@(posedge CLK) begin
+		if(!nrst) begin
+			flush_state_reg <= 1'd0;
+			flush_state <= 1'd0;
+		end
+		else begin
+			flush_state_reg <= flush_state;
+			
+			if(id_is_btype && !is_pred_correct)
+				flush_state = 1;
+			else begin
+				if(id_is_jump)
+					flush_state = 1;
+				else
+					flush_state = 0;
+			end
+		end
+	end
+	
+	always@(*) begin
+		if(flush_state_reg)
+			flush = 1;
+		else begin
+			if(id_is_btype && !is_pred_correct)
+				flush = 1;
+			else
+				flush = 0;
+		end
+	end
+	
+	////////////////////////////////////////////////////////////////////////////////////////
+	
 	// Declaring memory for BHT
 	/*  format of each line in reg history_table
 		========================================================================
