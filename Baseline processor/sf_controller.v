@@ -43,14 +43,14 @@ module stage_controller(
     assign rf_en = 1'b1;
     assign wb_en = 1'b1;
 
-    wire is_load = (exe_sel_data == 2'd3);
+    wire exe_load = (exe_sel_data == 2'd3);
 
     wire [6:0] if_opcode = if_inst[6:0];
     wire [6:0] id_opcode = id_inst[6:0];
     wire [4:0] id_rs1 = id_inst[24:20];
     wire [4:0] id_rs2 = id_inst[19:15];
 
-    wire load_stall = is_load && ((id_rs1 == exe_rd) || (id_rs2 == exe_rd));
+    wire load_stall = exe_load && ((id_rs1 == exe_rd) || (id_rs2 == exe_rd));
     
     assign if_en    = !load_stall;
     assign id_en    = !load_stall;

@@ -18,6 +18,8 @@ module core(
 	wire [11:0] if_PC;			// Output of PC, input to INSTMEM
 	wire [11:0] if_pc4;			// PC + 4
 	wire [31:0] if_inst;		// INSTMEM Output
+
+	wire buffer_stall = 1'b0;	// for the compressed buffer
 // &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 
 
@@ -124,6 +126,9 @@ module core(
 
 	// Inputs to MEM/WB Pipereg
 	wire [31:0] mem_loaddata;		// Output of LOAD BLOCK
+
+	// temporary branch flushing signal
+	wire branch_flush;
 // &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 
 
@@ -171,6 +176,22 @@ module core(
 /******************************* DATAPATH (INSTANTIATING MODULES) ******************************/
 
 // CLOCKS ========================================================
+	stage_controller (
+		.clk(CLK)
+		.nrst(nrst)
+		.if_inst(if_inst),
+		.buffer_stall(buffer_stall),
+		.id_inst(id_inst),
+		.is_jump(sel_opA),
+		.branch_flush(branch_flush),
+		.exe_rd(exe_rd),
+		.if_en(if_clk_en),
+		.id_en(id_clk_en),
+		.exe_en(exe_clk_en),
+		.mem_en(mem_clk_en),
+		.wb_en(wb_clk_en)
+	);
+
 	BUFGCE en_if (
 		.I(CLK),
 		.CE(if_clk_en),
@@ -205,6 +226,7 @@ module core(
 // IF Stage ========================================================
 	pc PC( .clk(CLK),
 		.nrst(nrst),
+		.en(if_clk_en),
 		.addr_in(if_pcnew),
 		.inst_addr(if_PC)
 	);
@@ -227,6 +249,7 @@ module core(
 	pipereg_if_id IF_ID(
 		.clk(CLK),
 		.nrst(nrst),
+		.en(id_clk_en),
 
 		.if_pc4(if_pc4), 	.id_pc4(id_pc4),
 		.if_inst(if_inst), 	.id_inst(id_inst),
@@ -289,6 +312,7 @@ module core(
 	pipereg_id_exe ID_EXE(
 		.clk(CLK),
 		.nrst(nrst),
+		.en(exe_clk_en),
 
 		.id_pc4(id_pc4),		.exe_pc4(exe_pc4),
 		.id_opA(id_opA),		.exe_opA(exe_opA),
@@ -345,6 +369,7 @@ module core(
 	pipereg_exe_mem EXE_MEM(
 		.clk(CLK),
 		.nrst(nrst),
+		.en(mem_clk_en),
 
 		.exe_pc4(exe_pc4),					.mem_pc4(mem_pc4),
 		.exe_ALUout(exe_ALUout),			.mem_ALUout(mem_ALUout),
