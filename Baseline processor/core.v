@@ -273,17 +273,15 @@ module core(
 	assign id_opA = exe_forward_A? exe_ALUout : 
 					((mem_forward_A && (mem_sel_data==2'd3))? mem_loaddata :
 					(mem_forward_A? mem_ALUout :
-					((wb_forward_A && (wb_sel_data==2'd3))? wb_loaddata :
-					(wb_forward_A? wb_ALUout :
+					(wb_forward_A? wb_wr_data :
 					(id_sel_opA? id_rfoutA : id_PC
-					)))));
+					))));
 	assign id_opB = exe_forward_B? exe_ALUout :
 					((mem_forward_B && (mem_sel_data==2'd3))? mem_loaddata :
 					(mem_forward_B? mem_ALUout :
-					((wb_forward_B && (mem_sel_data==2'd3))? wb_loaddata :
-					(wb_forward_B? wb_ALUout :
+					(wb_forward_B? wb_wr_data :
 					(id_sel_opB? id_imm : id_rfoutB
-					)))));
+					))));
 	
 
 	controller1 CONTROL(
