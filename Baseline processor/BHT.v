@@ -161,6 +161,7 @@ module branchpredictor(
 	//wire [1:0] id_setoffset;
 	wire [1:0] sat_counter;
 	wire [3:0] id_set;
+	wire [5:0] id_tag;
 
 	assign id_entry0 = history_table[{id_PC[3:0], 2'b00}];
 	assign id_entry1 = history_table[{id_PC[3:0], 2'b01}];
@@ -179,6 +180,7 @@ module branchpredictor(
 
 	//finding out which set to write on
 	assign id_set = id_PC[3:0];
+	assign id_tag = id_PC[9:4];
 
 	//saturating counter
 	assign sat_counter = (id_is_btype) ? 2'b01 : (id_is_jump) ? 2'b11;
@@ -187,9 +189,8 @@ module branchpredictor(
 		if((id_is_btype || id_is_jump) && (!id_iseqto3 || !id_iseqto2 || !id_iseqto1 || !id_iseqto0)) begin 		//if wala sa loob ng BHT and branch/jump sila
 
 			fifo_counter[id_set] = fifo_counter[id_set] + 2'b01; 													//increment counter; if = 3 na, equate to zero
-			//if(fifo_counter[id_set]) == 3
-			//fifo_counter = 0
-			history_table[{id_PC[3:0], fifo_counter[id_PC[3:0]]}] = {1, id_PC[9:4], id_branchtarget, sat_counter};	//write to HT
+
+			history_table[{id_set, fifo_counter[id_set]}] = {1, id_tag, id_branchtarget, sat_counter};	//write to HT
 		end 
 	end
 
