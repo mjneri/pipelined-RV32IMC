@@ -235,6 +235,11 @@ module branchpredictor(
 	wire is_bltu;
 	wire is_bgeu;
 
+	wire [5:0] exe_tag;
+	wire [3:0] exe_set;
+	assign exe_tag = exe_PC[9:4];
+	assign exe_set = exe_PC[3:0];
+
 	assign is_beq = exe_btype[5];
 	assign is_bne = exe_btype[4];
 	assign is_blt = exe_btype[3];
@@ -264,20 +269,20 @@ module branchpredictor(
 	wire is_pred_correct;
 	wire [1:0] exe_setoffset;
 
-	assign exe_entry0 = history_table[{exe_PC[3:0], 2'b00}];
-	assign exe_entry1 = history_table[{exe_PC[3:0], 2'b01}];
-	assign exe_entry2 = history_table[{exe_PC[3:0], 2'b10}];
-	assign exe_entry3 = history_table[{exe_PC[3:0], 2'b11}];
+	assign exe_entry0 = history_table[{exe_set, 2'b00}];
+	assign exe_entry1 = history_table[{exe_set, 2'b01}];
+	assign exe_entry2 = history_table[{exe_set, 2'b10}];
+	assign exe_entry3 = history_table[{exe_set, 2'b11}];
 
 	assign exe_valid0 = exe_entry0[18];
 	assign exe_valid1 = exe_entry1[18];
 	assign exe_valid2 = exe_entry2[18];
 	assign exe_valid3 = exe_entry3[18];
 
-	assign exe_iseqto0 = (exe_entry0[17:12] == exe_PC[9:4]) && exe_valid0;
-	assign exe_iseqto1 = (exe_entry1[17:12] == exe_PC[9:4]) && exe_valid1;
-	assign exe_iseqto2 = (exe_entry2[17:12] == exe_PC[9:4]) && exe_valid2;
-	assign exe_iseqto3 = (exe_entry3[17:12] == exe_PC[9:4]) && exe_valid3;
+	assign exe_iseqto0 = (exe_entry0[17:12] == exe_tag) && exe_valid0;
+	assign exe_iseqto1 = (exe_entry1[17:12] == exe_tag) && exe_valid1;
+	assign exe_iseqto2 = (exe_entry2[17:12] == exe_tag) && exe_valid2;
+	assign exe_iseqto3 = (exe_entry3[17:12] == exe_tag) && exe_valid3;
 
 	// Selecting the entry
 	wire [3:0] exe_iseq;
@@ -295,7 +300,7 @@ module branchpredictor(
 							2'h0;
 	// Assign outputs
 	assign exe_PBT = exe_loadentry[11:2];
-	assign exe_CNI = {exe_loadentry[17:12], exe_PC[3:0]};
+	assign exe_CNI = {exe_loadentry[17:12], exe_set};
 
 	// Check if prediction is correct & output appropriate correction
 	// If sat_counter[1] and feedback are equal, then prediction is correct.
