@@ -62,7 +62,7 @@ module BHT(
 		========================================================================
 		Where ht = history_table
 	*/
-	
+
 	reg [18:0] history_table [0:63];
 
 
@@ -157,9 +157,10 @@ module BHT(
 	wire [18:0] id_entry0, id_entry1, id_entry2, id_entry3;
 	wire id_valid0, id_valid1, id_valid2, id_valid3;
 	wire id_iseqto0, id_iseqto1, id_iseqto2, id_iseqto3;
-	reg [18:0] id_loadentry;
-	wire [1:0] id_setoffset;
+	//reg [18:0] id_loadentry;
+	//wire [1:0] id_setoffset;
 	wire [1:0] sat_counter;
+	wire [3:0] id_set;
 
 	assign id_entry0 = history_table[{id_PC[3:0], 2'b00}];
 	assign id_entry1 = history_table[{id_PC[3:0], 2'b01}];
@@ -176,39 +177,18 @@ module BHT(
 	assign id_iseqto2 = (id_entry2[17:12] == id_PC[9:4]) && id_valid2;
 	assign id_iseqto3 = (id_entry3[17:12] == id_PC[9:4]) && id_valid3;
 
-	always@(*) begin
-		case({id_iseqto3, id_iseqto2, id_iseqto1, id_iseqto0})
-			4'b0001: 
-			begin
-				id_loadentry = id_entry0;
-				id_setoffset = 2'h0;
-			end
-			4'b0010:
-			begin
-				id_loadentry = id_entry1;
-				id_setoffset = 2'h1;
-			end
-			4'b0100:
-			begin
-				id_loadentry = id_entry2;
-				id_setoffset = 2'h2;
-			end
-			4'b1000:
-			begin
-				id_loadentry = id_entry3;
-				if_setoffset = 2'h3;
-			end
-			default: id_loadentry = 19'b0;
-		endcase
-	end
+	//finding out which set to write on
+	assign id_set = id_PC[3:0];
 
+
+	//saturating counter
 	assign sat_counter = (id_is_btype) ? 2'b01 : (id_is_jump) ? 2'b11;
 
 	always@(posedge CLK) begin
-		if((id_is_btype || id_is_jump) && (not in table)) begin 			//replace this later
+		if((id_is_btype || id_is_jump) && (!id_iseqto3 || !id_iseqto2 || !id_iseqto1 || !id_iseqto0)) begin 			//replace this later
 
-			fifo_counter[id_setoffset] = fifo_counter[id_setoffset] + 1; 	//increment counter; if = 3 na, equate to zero
-			history_table[???] = {1, id_PC[9:4], id_branchtarget, sat_counter};	//write
+			fifo_counter[id_set] = fifo_counter[id_set] + 2'b01; 	//increment counter; if = 3 na, equate to zero
+			history_table[{id_PC[3:0], fifo_counter[id_PC[3:0]]}] = {1, id_PC[9:4], id_branchtarget, sat_counter};	//write to HT
 		end 
 	end
 
