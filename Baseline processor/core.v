@@ -176,14 +176,15 @@ module core(
 /******************************* DATAPATH (INSTANTIATING MODULES) ******************************/
 
 // CLOCKS ========================================================
-	stage_controller (
-		.clk(CLK)
-		.nrst(nrst)
+	sf_controller SF_CONTROLLER(
+		.clk(CLK),
+		.nrst(nrst),
 		.if_inst(if_inst),
 		.buffer_stall(buffer_stall),
 		.id_inst(id_inst),
-		.is_jump(sel_opA),
+		.is_jump(id_sel_opA),
 		.branch_flush(branch_flush),
+		.exe_sel_data(exe_sel_data),
 		.exe_rd(exe_rd),
 		.if_en(if_clk_en),
 		.id_en(id_clk_en),
@@ -269,8 +270,20 @@ module core(
 	assign wb_forward_B = (id_rsB == wb_rd) && (id_rsB != 0) && wb_wr_en && !id_sel_opB;
 
 	// Selecting operands
-	assign id_opA = exe_forward_A? exe_ALUout : (mem_forward_A? mem_ALUout : (wb_forward_A? wb_ALUout : (id_sel_opA? id_rfoutA : id_PC)));
-	assign id_opB = exe_forward_B? exe_ALUout : (mem_forward_B? mem_ALUout : (wb_forward_B? wb_ALUout : (id_sel_opB? id_imm : id_rfoutB)));
+	assign id_opA = exe_forward_A? exe_ALUout : 
+					((mem_forward_A && (mem_sel_data==2'd3))? mem_loaddata :
+					(mem_forward_A? mem_ALUout :
+					((wb_forward_A && (wb_sel_data==2'd3))? wb_loaddata :
+					(wb_forward_A? wb_ALUout :
+					(id_sel_opA? id_rfoutA : id_PC
+					)))));
+	assign id_opB = exe_forward_B? exe_ALUout :
+					((mem_forward_B && (mem_sel_data==2'd3))? mem_loaddata :
+					(mem_forward_B? mem_ALUout :
+					((wb_forward_B && (mem_sel_data==2'd3))? wb_loaddata :
+					(wb_forward_B? wb_ALUout :
+					(id_sel_opB? id_imm : id_rfoutB
+					)))));
 	
 
 	controller1 CONTROL(

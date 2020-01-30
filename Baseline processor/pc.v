@@ -12,6 +12,6 @@ module pc(
 
 	always@(posedge clk)
 		inst_addr	<=	!nrst	?	12'h0 	:	// Reset
-						en		?	inst_addr :
+						!en		?	inst_addr :
 									addr_in	;
 endmodule

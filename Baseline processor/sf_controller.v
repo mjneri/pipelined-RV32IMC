@@ -16,7 +16,7 @@
                             ^- hazard: need to stall since memory not read yet
 */
 
-module stage_controller(
+module sf_controller(
     input clk,
     input nrst,
     // IF stage
@@ -54,7 +54,7 @@ module stage_controller(
     
     assign if_en    = !load_stall;
     assign id_en    = !load_stall;
-    assign exe_en   = !load_stall;
-    assign mem_en   = !load_stall;
+    assign exe_en   = 1;
+    assign mem_en   = 1;
     
 endmodule
