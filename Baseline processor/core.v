@@ -22,8 +22,6 @@ module core(
 
 
 
-
-
 // ID Stage ========================================================
 	// Outputs of IF/ID Pipeline Register
 	wire [11:0] id_pc4;			// PC + 4
@@ -73,8 +71,6 @@ module core(
 
 
 
-
-
 // EXE Stage ========================================================
 	// Outputs of ID/EXE Pipeline Register
 	wire [11:0] exe_pc4;			// PC + 4
@@ -108,8 +104,6 @@ module core(
 
 
 
-
-
 // MEM Stage ========================================================
 	// Outputs of EXE/MEM Pipeline Register
 	wire [11:0] mem_pc4;			// PC + 4
@@ -134,8 +128,6 @@ module core(
 
 
 
-
-
 // WB Stage ========================================================
 	// Outputs of MEM/WB Pipeline Register
 	wire [11:0] wb_pc4;				// PC + 4
@@ -153,6 +145,23 @@ module core(
 	wire [31:0] wb_wr_data;
 // &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 
+
+
+// Clock Gating ====================================================
+	wire if_clk;
+	wire if_clk_en;
+	wire id_clk;
+	wire id_clk_en;
+	wire exe_clk;
+	wire exe_clk_en;
+	wire mem_clk;
+	wire mem_clk_en;
+	wire wb_clk;
+	wire wb_clk_en;
+// &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+
+
+
 /***********************************************************************************************/
 
 
@@ -160,6 +169,38 @@ module core(
 
 
 /******************************* DATAPATH (INSTANTIATING MODULES) ******************************/
+
+// CLOCKS ========================================================
+	BUFGCE en_if (
+		.I(CLK),
+		.CE(if_clk_en),
+		.O(if_clk)
+	);
+
+	BUFGCE en_id (
+		.I(CLK),
+		.CE(id_clk_en),
+		.O(id_clk)
+	);
+
+	BUFGCE en_exe (
+		.I(CLK),
+		.CE(exe_clk_en),
+		.O(exe_clk)
+	);
+
+	BUFGCE en_mem (
+		.I(CLK),
+		.CE(mem_clk_en),
+		.O(mem_clk)
+	);
+
+	BUFGCE en_wb (
+		.I(CLK),
+		.CE(wb_clk_en),
+		.O(wb_clk)
+	);
+//
 
 // IF Stage ========================================================
 	pc PC( .clk(CLK),

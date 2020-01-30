@@ -3,6 +3,7 @@
 module pipereg_id_exe(
 	input clk,
 	input nrst,
+	input en,
 
 	// PC +4
 	input [11:0] id_pc4,
@@ -85,27 +86,52 @@ module pipereg_id_exe(
 			//exe_sel_pc <= 0;
 			exe_sel_data <= 0;
 			exe_store_select <= 0;
-		end else begin
-			exe_pc4 <= id_pc4;
-			exe_opA <= id_opA;
-			exe_opB <= id_opB;
-			exe_rfoutB <= id_rfoutB;
-			exe_imm <= id_imm;
-			exe_rd <= id_rd;
-			
-			exe_PC <= id_PC;
+		end 
+		else begin
+			if (en) begin
+				exe_pc4 <= id_pc4;
+				exe_opA <= id_opA;
+				exe_opB <= id_opB;
+				exe_rfoutB <= id_rfoutB;
+				exe_imm <= id_imm;
+				exe_rd <= id_rd;
+				
+				exe_PC <= id_PC;
 
-			// Control signals
-			exe_ALU_op <= id_ALU_op;
-			exe_sel_opA <= id_sel_opA;
-			exe_sel_opB <= id_sel_opB;
-			//exe_dm_write <= id_dm_write;
-			exe_is_stype <= id_is_stype;
-			exe_wr_en <= id_wr_en;
-			exe_dm_select <= id_dm_select;
-			//exe_sel_pc <= id_sel_pc;
-			exe_sel_data <= id_sel_data;
-			exe_store_select <= id_store_select;
+				// Control signals
+				exe_ALU_op <= id_ALU_op;
+				exe_sel_opA <= id_sel_opA;
+				exe_sel_opB <= id_sel_opB;
+				//exe_dm_write <= id_dm_write;
+				exe_is_stype <= id_is_stype;
+				exe_wr_en <= id_wr_en;
+				exe_dm_select <= id_dm_select;
+				//exe_sel_pc <= id_sel_pc;
+				exe_sel_data <= id_sel_data;
+				exe_store_select <= id_store_select;
+			end
+			else begin
+				exe_pc4 <= exe_pc4;
+				exe_opA <= exe_opA;
+				exe_opB <= exe_opB;
+				exe_rfoutB <= exe_rfoutB;
+				exe_imm <= exe_imm;
+				exe_rd <= exe_rd;
+				
+				exe_PC <= exe_PC;
+
+				// Control signals
+				exe_ALU_op <= exe_ALU_op;
+				exe_sel_opA <= exe_sel_opA;
+				exe_sel_opB <= exe_sel_opB;
+				//exe_dm_write <= exe_dm_write;
+				exe_is_stype <= exe_is_stype;
+				exe_wr_en <= exe_wr_en;
+				exe_dm_select <= exe_dm_select;
+				//exe_sel_pc <= exe_sel_pc;
+				exe_sel_data <= exe_sel_data;
+				exe_store_select <= exe_store_select;
+			end
 		end
 	end
 

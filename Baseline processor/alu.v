@@ -12,6 +12,7 @@ module alu(
     wire signed [31:0]  signed_a;
     wire signed [31:0]  signed_b;
     wire signed [31:0]  signed_res;
+	wire [63:0]			mult_res;
     
     assign signed_a = op_a;
     assign signed_b = op_b;
@@ -27,11 +28,16 @@ module alu(
 	parameter alu_sll	= 	4'd8;
 	parameter alu_srl 	= 	4'd9;
 	parameter alu_sra 	= 	4'd10;
+	parameter alu_mhi 	= 	4'd11;
+	parameter alu_mlo 	= 	4'd12;
 
 	assign z	=	res == 32'h0;
 	assign less	=	op_a < op_b;
 	assign signed_res = signed_a >>> signed_b[4:0];
-	assign res	=	ALU_op == alu_add	?	op_a + op_b :
+	
+	assign res	=	ALU_op == alu_mhi	?	mult_res[63:32] :
+					ALU_op == alu_mlo	?	mult_res[31:0] :
+					ALU_op == alu_add	?	op_a + op_b :
 					ALU_op == alu_sub	?	op_a - op_b :
 					ALU_op == alu_and	?	op_a & op_b :
 					ALU_op == alu_or	?	op_a | op_b :
