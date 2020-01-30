@@ -6,15 +6,16 @@
 	========================================================================
 	| Valid bit | Tag[5:0] | Branch target[9:0] | Saturating Counter [1:0] |
 	========================================================================
-	BHT is implemented as a 4-way Set Associative "Cache"
+	BHT is implemented as a 4-way Set Associative Cache with 64 entries
+	Replacement policy is FIFO
 	id_PC[9:0] = {Tag[5:0], Set[3:0]}
 
 	For selecting next PC:
 	format of selection bits: {exe_correction[1:0], if_prediction}
 		default selection: PC+4
 		3'b001: if_PBT
-		3'b100 & 3'b101: exe_CNI
-		3'b110 & 3'b111: exe_PBT
+		3'b10x: exe_CNI
+		3'b11x: exe_PBT
 */
 
 module branchpredictor(
@@ -30,15 +31,15 @@ module branchpredictor(
 	input id_is_btype,
 
 	input [9:0] exe_PC,
-	input exe_z,
-	input exe_less,
+	input exe_z,				// Feedback from ALU
+	input exe_less,				// Feedback from ALU
 	input [5:0] exe_btype,		// determines what branch instruction was used
-	// exe_btype[5]: is_beq
-	// exe_btype[4]: is_bne
-	// exe_btype[3]: is_blt
-	// exe_btype[2]: is_bge
-	// exe_btype[1]: is_bltu
-	// exe_btype[0]: is_bgeu
+								// exe_btype[5]: is_beq
+								// exe_btype[4]: is_bne
+								// exe_btype[3]: is_blt
+								// exe_btype[2]: is_bge
+								// exe_btype[1]: is_bltu
+								// exe_btype[0]: is_bgeu
 
 	// Outputs
 	output if_prediction,
@@ -78,7 +79,7 @@ module branchpredictor(
 		- problem: simulan muna ung table access 
 	*/
 
-	// Searching the table
+	// Wire declarations
 	// if_entryX: the entries within the set
 	// if_validX: the valid bit in each entry
 	// if_iseqtoX: determines if the entry contains the same tag bits from the input
@@ -87,7 +88,6 @@ module branchpredictor(
 	wire if_valid0, if_valid1, if_valid2, if_valid3;
 	wire if_iseqto0, if_iseqto1, if_iseqto2, if_iseqto3;
 	reg [18:0] if_loadentry;
-	wire [1:0] if_setoffset;
 
 	assign if_entry0 = history_table[{if_PC[3:0], 2'b00}];
 	assign if_entry1 = history_table[{if_PC[3:0], 2'b01}];
@@ -104,35 +104,18 @@ module branchpredictor(
 	assign if_iseqto2 = (if_entry2[17:12] == if_PC[9:4]) && if_valid2;
 	assign if_iseqto3 = (if_entry3[17:12] == if_PC[9:4]) && if_valid3;
 
-	always@(*) begin
-		case({if_iseqto3, if_iseqto2, if_iseqto1, if_iseqto0})
-			4'b0001: 
-			begin
-				if_loadentry = if_entry0;
-				if_setoffset = 2'h0;
-			end
-			4'b0010:
-			begin
-				if_loadentry = if_entry1;
-				if_setoffset = 2'h1;
-			end
-			4'b0100:
-			begin
-				if_loadentry = if_entry2;
-				if_setoffset = 2'h2;
-			end
-			4'b1000:
-			begin
-				if_loadentry = if_entry3;
-				if_setoffset = 2'h3;
-			end
-			default: if_loadentry = 19'b0;
-		endcase
-	end
+	wire [3:0] if_iseq;
+	assign if_iseq = {if_iseqto3, if_iseqto2, if_iseqto1, if_iseqto0};
+
+	assign if_loadentry = 	(if_iseq == 4'b1000)? if_entry3 :
+							(if_iseq == 4'b0100)? if_entry2 :
+							(if_iseq == 4'b0010)? if_entry1 :
+							(if_iseq == 4'b0001)? if_entry0 :
+							19'b0;
 
 	// Assign outputs
-	assign if_PBT = if_loadentry[11:2];			//predicted branch target
-	assign if_prediction = if_loadentry[1];		//prediction bit coming from most recent BHT access
+	assign if_PBT = if_loadentry[11:2];
+	assign if_prediction = if_loadentry[1];		// prediction bit coming from most recent BHT access
 
 	////////////////////////////////////////////////////////////////////////////////
 	
@@ -157,44 +140,33 @@ module branchpredictor(
 	wire [18:0] id_entry0, id_entry1, id_entry2, id_entry3;
 	wire id_valid0, id_valid1, id_valid2, id_valid3;
 	wire id_iseqto0, id_iseqto1, id_iseqto2, id_iseqto3;
-	//reg [18:0] id_loadentry;
-	//wire [1:0] id_setoffset;
 	wire [1:0] sat_counter;
 	wire [3:0] id_set;
 	wire [5:0] id_tag;
+	assign id_set = id_PC[3:0];
+	assign id_tag = id_PC[9:4];
 
-	assign id_entry0 = history_table[{id_PC[3:0], 2'b00}];
-	assign id_entry1 = history_table[{id_PC[3:0], 2'b01}];
-	assign id_entry2 = history_table[{id_PC[3:0], 2'b10}];
-	assign id_entry3 = history_table[{id_PC[3:0], 2'b11}];
+	// Checking each entry within the set to see if the input is already in the table
+	assign id_entry0 = history_table[{id_set, 2'b00}];
+	assign id_entry1 = history_table[{id_set, 2'b01}];
+	assign id_entry2 = history_table[{id_set, 2'b10}];
+	assign id_entry3 = history_table[{id_set, 2'b11}];
 
 	assign id_valid0 = id_entry0[18];
 	assign id_valid1 = id_entry1[18];
 	assign id_valid2 = id_entry2[18];
 	assign id_valid3 = id_entry3[18];
 
-	assign id_iseqto0 = (id_entry0[17:12] == id_PC[9:4]) && id_valid0;
-	assign id_iseqto1 = (id_entry1[17:12] == id_PC[9:4]) && id_valid1;
-	assign id_iseqto2 = (id_entry2[17:12] == id_PC[9:4]) && id_valid2;
-	assign id_iseqto3 = (id_entry3[17:12] == id_PC[9:4]) && id_valid3;
+	assign id_iseqto0 = (id_entry0[17:12] == id_tag) && id_valid0;
+	assign id_iseqto1 = (id_entry1[17:12] == id_tag) && id_valid1;
+	assign id_iseqto2 = (id_entry2[17:12] == id_tag) && id_valid2;
+	assign id_iseqto3 = (id_entry3[17:12] == id_tag) && id_valid3;
 
-	//finding out which set to write on
-	assign id_set = id_PC[3:0];
-	assign id_tag = id_PC[9:4];
+	wire [3:0] id_iseq;
+	assign id_iseq = {id_iseqto3, id_iseqto2, id_iseqto1, id_iseqto0};	// if id_iseq = 0, then input is not in table yet
 
-	//saturating counter
+	// Saturating counter default states. Branches: WNT | Jumps: ST
 	assign sat_counter = (id_is_btype) ? 2'b01 : (id_is_jump) ? 2'b11;
-
-	always@(posedge CLK) begin
-		if((id_is_btype || id_is_jump) && (!id_iseqto3 || !id_iseqto2 || !id_iseqto1 || !id_iseqto0)) begin 		//if wala sa loob ng BHT and branch/jump sila
-
-			fifo_counter[id_set] = fifo_counter[id_set] + 2'b01; 													//increment counter; if = 3 na, equate to zero
-
-			history_table[{id_set, fifo_counter[id_set]}] = {1, id_tag, id_branchtarget, sat_counter};	//write to HT
-		end 
-	end
-
-
 
 // EXE STAGE
 	/* 
@@ -311,12 +283,26 @@ module branchpredictor(
 								// feedback = 0
 									(exe_loadentry[1:0] == 2'h0)? 2'h0 : exe_loadentry[1:0] - 2'b1;
 
+
+////////////////////////////////////////////////////////////////////////////
 	// Write back to the table
-	/* add this snippet to the ID stage writes
-	always@(posedge clk) begin
-		if(|exe_btype) begin
-			history_table[{exe_PC[3:0], exe_setoffset}] <= exe_loadentry;
+	integer i;	// Used for resetting fifo_counter & history_table
+	always@(posedge CLK) begin
+		if(!nrst) begin
+			for(i = 0; i < 16; i=i+1) begin
+				fifo_counter[i] <= 2'b0;
+			end
+			for(i = 0; i < 64; i=i+1) begin
+				history_table[i] <= 19'b0;
+			end
 		end
+		else if( (id_is_btype || id_is_jump) && (id_iseq == 4'h0) ) begin
+			// Write to table if (Branch or Jump) AND the input is not in the table yet
+			history_table[{id_set, fifo_counter[id_set]}] <= {1'b1, id_tag, id_branchtarget, sat_counter};
+			//increment counter; if = 3 na, equate to zero
+			fifo_counter[id_set] <= fifo_counter[id_set] + 2'b01;
+		end
+		else if(|exe_btype)
+			history_table[{exe_set, exe_setoffset}] <= exe_loadentry;
 	end
-	*/
 endmodule
