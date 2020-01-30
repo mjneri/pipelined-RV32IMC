@@ -17,7 +17,7 @@
 		3'b110 & 3'b111: exe_PBT
 */
 
-module BHT(
+module branchpredictor(
 	input CLK,
 	input nrst,
 
