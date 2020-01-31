@@ -32,12 +32,17 @@ module controller1(
     output sel_opA,
     output sel_opB,
     output is_stype,
+
+    output is_jump,
+    output is_btype,
+
     output wr_en,
     output [2:0] dm_select,
     output [2:0] imm_select,
-    //output [1:0] sel_pc,
+    output [1:0] sel_pc,
     output [1:0] sel_data,
-    output [1:0] store_select
+    output [1:0] store_select,
+    output sel_opBR
     //output mask
     );
     
@@ -73,6 +78,10 @@ module controller1(
 
     assign is_stype = !(opcode == s_type) ? 1'h0 : 1'h1;    //dm_write = 1 if S-type inst
 
+    assign is_btype = (opcode == b_type)? 1'h1 : 1'h0;
+
+    assign is_jump = (opcode == jal_inst || opcode == jalr_inst)? 1'h1 : 1'h0;
+
     assign wr_en = !(opcode == s_type || opcode == b_type) ? 1'h1 : 1'h0;
 
     assign dm_select = funct3;
@@ -85,11 +94,11 @@ module controller1(
     // 3 if B-type inst
     // 4 if J-type inst
 
-    //assign sel_pc = 1;//(opcode == jal_inst || opcode == jalr_inst) ? 2'h0 : (opcode == b_type && b_taken) ? 2'h1 : 2'h2;
+    assign sel_pc = (opcode == jal_inst || opcode == jalr_inst) ? 2'h1 : 2'h0;
     //sel_pc:
-    // 0 if J-type inst
-    // 1 if B-type inst AND branch taken
-    // 2 if R-type, I-type, S-type, U-type inst
+    // 1 if J-type inst
+    // 2 if B-type inst AND branch taken
+    // 0 if R-type, I-type, S-type, U-type inst (PC+4)
 
     assign sel_data = (opcode == jal_inst || opcode == jalr_inst) ? 2'h0 : (opcode == lui_inst) ? 2'h2 : (opcode == load_inst) ? 2'h3 : 2'h1;
     //sel_data
@@ -116,5 +125,7 @@ module controller1(
     // 8 if SLL, SLLI
     // 9 if SRL, SRLI
     // 10 if SRA, SRAI
+
+    assign sel_opBR = (opcode == jalr_inst)? 1'h1 : 1'h0;   // if jalr, select rfoutA, else select PC
     
 endmodule

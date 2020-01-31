@@ -14,7 +14,7 @@ module core(
 /******************************* DECLARING WIRES ******************************/
 
 // IF stage ========================================================
-	wire [11:0] if_pcnew;		// Input to PC; new PC address
+	reg [11:0] if_pcnew;		// Input to PC; new PC address
 	wire [11:0] if_PC;			// Output of PC, input to INSTMEM
 	wire [11:0] if_pc4;			// PC + 4
 	wire [31:0] if_inst;		// INSTMEM Output
@@ -30,7 +30,9 @@ module core(
 	wire [31:0] id_inst;		// 32bit Instruction
 	wire [11:0] id_PC;			// PC
 
-	wire [11:0] id_btargetaddr;
+	// Other Datapath signals
+	wire [31:0] id_branchtarget;
+	wire [31:0] id_brOP;				// For computing branch target address
 	
 	// 32-bit instruction parts
 	wire [6:0] id_opcode;				// opcode
@@ -49,12 +51,15 @@ module core(
 	wire [3:0] id_ALU_op;			// For EXE stage 	/
 	wire id_sel_opA, id_sel_opB;	// For EXE stage 	/ 
 	wire id_is_stype;				// For EXE stage 	/
+	wire id_is_jump;				// For ID stage 	/
+	wire id_is_btype;				// For ID Stage 	/
 	wire id_wr_en;					// For WB stage 	/
 	wire [2:0] id_dm_select;		// For MEM stage 	/
 	wire [2:0] id_imm_select;		// For ID stage 	/
-	//wire [1:0] id_sel_pc;			// For EXE stage 	/ 
+	wire [1:0] id_sel_pc;			// For EXE stage 	/ 
 	wire [1:0] id_sel_data;			// For WB stage 	/
 	wire [1:0] id_store_select;		// For EXE stage 	/
+	wire id_sel_opBR;				// For ID stage 	/
 	/////////////////////////////////////////////////////
 
 	// Inputs to ID/EXE Pipereg 														
@@ -82,6 +87,9 @@ module core(
 	wire exe_z;
 	wire exe_less;
 	//wire [31:0] exe_branchtarget;
+	wire [2:0] exe_funct3;
+	wire [6:0] exe_opcode;
+	wire [5:0] exe_btype;
 
 	// Control signals
 	wire [3:0] exe_ALU_op;			// For EXE stage
@@ -148,6 +156,19 @@ module core(
 	wire [31:0] wb_wr_data;
 // &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 
+
+
+
+
+// Signals for BHT =================================================
+	wire if_prediction;				// Input to sel_PC mux
+	wire [1:0] exe_correction;		// input to sel_PC mux
+	wire flush;
+	wire [9:0] if_PBT;				// Predicted branch target
+	wire [9:0] exe_PBT;				// Predicted branch target
+	wire [9:0] exe_CNI;				// Correct Next Instruction
+// &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+
 /***********************************************************************************************/
 
 
@@ -169,12 +190,30 @@ module core(
 	// PC + 4
 	assign if_pc4 = if_PC + 12'd4;
 
-	// PC Selection; REPLACE WITH MUX LATER
-	// REPLACE
-	// WITH
-	// MUX
-	// LATER
-	assign if_pcnew = if_pc4;
+	// PC Selection
+	// 3'b000 = PC+4
+	// 3'b001 = Prediction
+	// 3'b010 = undef
+	// 3'b011 = undef
+	// 3'b100 = exeCNI
+	// 3'b101 = exeCNI
+	// 3'b110 = exePBT
+	// 3'b111 = exePBT
+	always@(*) begin
+		case({exe_correction, if_prediction})
+			3'b001: if_pcnew = if_PBT;
+			3'b100: if_pcnew = exe_CNI;
+			3'b101: if_pcnew = exe_CNI;
+			3'b110: if_pcnew = exe_PBT;
+			3'b111: if_pcnew = exe_PBT;
+			default: begin
+				case(id_sel_pc)
+					2'h1: if_pcnew = id_branchtarget;
+					default: if_pcnew = if_pc4;
+				endcase
+			end
+		endcase
+	end
 
 	pipereg_if_id IF_ID(
 		.clk(CLK),
@@ -188,7 +227,6 @@ module core(
 
 
 // ID Stage ========================================================
-	assign id_btargetaddr = id_pc + id_imm[11:0];
 	
 	//control unit
 	controller1 CONTROL(
@@ -202,12 +240,17 @@ module core(
 		.sel_opA(id_sel_opA),
 		.sel_opB(id_sel_opB),
 		.is_stype(id_is_stype),
+
+		.is_jump(id_is_jump),
+		.is_btype(id_is_btype),
+
 		.wr_en(id_wr_en),
 		.dm_select(id_dm_select),
 		.imm_select(id_imm_select),
-		//.sel_pc(id_sel_pc),
+		.sel_pc(id_sel_pc),
 		.sel_data(id_sel_data),
-		.store_select(id_store_select)
+		.store_select(id_store_select),
+		.sel_opBR(id_sel_opBR)
 	);
 
 	regfile RF(
@@ -227,9 +270,14 @@ module core(
 		.imm(id_imm)
 	);
 
+	// Branch target address
+	assign id_brOP = (id_sel_opBR)? id_rfoutA : id_PC;
+	assign id_branchtarget = id_brOP + id_imm;
+
 	pipereg_id_exe ID_EXE(
 		.clk(CLK),
 		.nrst(nrst),
+		.flush(flush),
 
 		.id_pc4(id_pc4),		.exe_pc4(exe_pc4),
 		.id_inst(id_inst),		.exe_inst(exe_inst),
@@ -268,8 +316,43 @@ module core(
 		.less(exe_less)
 	);
 	
-	// ADD LOGIC HERE FOR GENERATING IS_BEQ, ... etc. SIGNALS
-	// BHT BHT();
+	// Check what kind of branch instruction
+	assign exe_opcode = exe_inst[6:0];
+	assign exe_funct3 = exe_inst[14:12];
+	assign exe_btype[5] = (exe_opcode == 7'h63)? ( (exe_funct3 == 3'h0)? 1'b1 : 1'b0) : 1'b0;
+	assign exe_btype[4] = (exe_opcode == 7'h63)? ( (exe_funct3 == 3'h1)? 1'b1 : 1'b0) : 1'b0;
+	assign exe_btype[3] = (exe_opcode == 7'h63)? ( (exe_funct3 == 3'h4)? 1'b1 : 1'b0) : 1'b0;
+	assign exe_btype[2] = (exe_opcode == 7'h63)? ( (exe_funct3 == 3'h5)? 1'b1 : 1'b0) : 1'b0;
+	assign exe_btype[1] = (exe_opcode == 7'h63)? ( (exe_funct3 == 3'h6)? 1'b1 : 1'b0) : 1'b0;
+	assign exe_btype[0] = (exe_opcode == 7'h63)? ( (exe_funct3 == 3'h7)? 1'b1 : 1'b0) : 1'b0;
+
+	branchpredictor BHT(
+		.CLK(CLK),
+		.nrst(nrst),
+
+		.if_PC(if_PC),
+
+		.id_PC(id_PC),
+		.id_branchtarget(id_branchtarget[11:2]),
+		.id_is_jump(id_is_jump),
+		.id_is_btype(id_is_btype),
+
+		.exe_PC(exe_PC),
+		.exe_z(exe_z),
+		.exe_less(exe_less),
+		.exe_btype(exe_btype),
+		
+		// Outputs
+		.if_prediction(if_prediction),
+		.exe_correction(exe_correction),
+		
+		.flush(flush),
+
+		.if_PBT(if_PBT),
+		.exe_PBT(exe_PBT),
+		.exe_CNI(exe_CNI)
+	);
+
 	storeblock STOREBLOCK(
 		.opB(exe_rfoutB),
 		.byte_offset(exe_ALUout[1:0]),
@@ -345,8 +428,7 @@ module core(
 	// Selector MUX
 	assign wb_wr_data = (wb_sel_data == 2'd0) ? wb_pc4 : (wb_sel_data == 2'd1) ? wb_ALUout : (wb_sel_data == 2'd2) ? wb_imm : wb_loaddata;
 	
-///////////////////////////////////////////////////////////////////////////////////////////////////
-
+///////////////////////////////////////////////////////////////////////////////////////////////////	
 // Assign outputs
 	//assign con_out = mem_DATAMEMout;	// output already tied to DATAMEM
 endmodule

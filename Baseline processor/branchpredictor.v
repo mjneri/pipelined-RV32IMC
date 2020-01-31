@@ -45,7 +45,7 @@ module branchpredictor(
 	output if_prediction,
 	output [1:0] exe_correction,
 
-	output flush,
+	output reg flush,
 
 	// Predicted branch target
 	output [9:0] if_PBT,
@@ -54,45 +54,6 @@ module branchpredictor(
 	// Correct Next Instruction = CNI
 	output [9:0] exe_CNI
 );
-	
-	////////////////////////////////////////////////////////////////////////////////////////
-	//Flushing
-	
-	//Flush state registers
-	reg flush_state;
-	reg flush_state_reg;	//delayed flush_state by 1 cycle
-	
-	always@(posedge CLK) begin
-		if(!nrst) begin
-			flush_state_reg <= 1'd0;
-			flush_state <= 1'd0;
-		end
-		else begin
-			flush_state_reg <= flush_state;
-			
-			if(id_is_btype && !is_pred_correct)
-				flush_state = 1;
-			else begin
-				if(id_is_jump)
-					flush_state = 1;
-				else
-					flush_state = 0;
-			end
-		end
-	end
-	
-	always@(*) begin
-		if(flush_state_reg)
-			flush = 1;
-		else begin
-			if(id_is_btype && !is_pred_correct)
-				flush = 1;
-			else
-				flush = 0;
-		end
-	end
-	
-	////////////////////////////////////////////////////////////////////////////////////////
 	
 	// Declaring memory for BHT
 	/*  format of each line in reg history_table
@@ -309,9 +270,11 @@ module branchpredictor(
 	// 2'b00 or 2'b01: No correction needed - next PC address would be PC+4
 	// 2'b10: Need to select [C]orrect [N]ext [I]nstruction (CNI)
 	// 2'b11: Need to select PBT
-	assign exe_correction = (is_pred_correct)? 2'b00 		:	// If prediction was correct, no need to change PC again
-								(feedback == 1'b0)? 2'b10 	:	// branch should not have been taken, so CNI should be next PC addr
-								(feedback == 1'b1)? 2'b11	:	// branch should have been taken, so PBT should be next PC addr
+	assign exe_correction = (|exe_btype)?
+								(is_pred_correct)? 2'b00 		:	// If prediction was correct, no need to change PC again
+									(feedback == 1'b0)? 2'b10 	:	// branch should not have been taken, so CNI should be next PC addr
+									(feedback == 1'b1)? 2'b11	:	// branch should have been taken, so PBT should be next PC addr
+									2'b00 						:
 								2'b00;
 
 	// Update counter here
@@ -352,4 +315,43 @@ module branchpredictor(
 			end
 		end
 	end
+
+	////////////////////////////////////////////////////////////////////////////////////////
+	//Flushing
+	
+	//Flush state registers
+	reg flush_state;
+	reg flush_state_reg;	//delayed flush_state by 1 cycle
+	
+	always@(posedge CLK) begin
+		if(!nrst) begin
+			flush_state_reg <= 1'd0;
+			flush_state <= 1'd0;
+		end
+		else begin
+			flush_state_reg <= flush_state;
+			
+			if(|exe_btype && !is_pred_correct)
+				flush_state = 1;
+			else begin
+				if(id_is_jump)
+					flush_state = 1;
+				else
+					flush_state = 0;
+			end
+		end
+	end
+	
+	always@(*) begin
+		if(flush_state_reg)
+			flush = 1;
+		else begin
+			if(|exe_btype && !is_pred_correct)
+				flush = 1;
+			else
+				flush = 0;
+		end
+	end
+	
+	////////////////////////////////////////////////////////////////////////////////////////
 endmodule
