@@ -22,9 +22,26 @@ sw x4, 0(x20)
 sw x5, 4(x20)
 
 #AUIPC
-#auipc x1, 0x1
-#auipc x2, 0x2
-#auipc x3, 0x3
+auipc x1, 0x0
+auipc x2, 0x2
+auipc x3, 0x3
+
+
+#JAL
+jal x1, end
+sub x30, x3, x2
+
+addi x0, x0, 0
+addi x0, x0, 0
+addi x0, x0, 0
+
+end:
+add x30, x2, x3
+
+#JALR
+jalr x31, x1, 0x4
+
+addi x0, x0, 0
 
 #ADD
 #1 p + p
@@ -161,6 +178,8 @@ addi x0, x0, 0 #NOP
 sw x11, 128(x20)
 
 
+
+
 addi x0, x0, 0
 addi x0, x0, 0
 addi x0, x0, 0
@@ -172,4 +191,3 @@ addi x0, x0, 0
 addi x0, x0, 0
 addi x0, x0, 0
 
-#JUMP INSTRUCTIONS
