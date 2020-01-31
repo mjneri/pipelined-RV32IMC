@@ -123,17 +123,67 @@ sh x13, 64(x0)
 sw x12, 68(x0)
 
 
-addi x0, x0, 0
-addi x0, x0, 0
-addi x0, x0, 0
-addi x0, x0, 0
-addi x0, x0, 0
-addi x0, x0, 0
-addi x0, x0, 0
-addi x0, x0, 0
-addi x0, x0, 0
-addi x0, x0, 0
-
-
 #BRANCH INSTRUCTIONS
+#beq, bne, blt, bge, bltu, bgeu
 
+addi x22, x0, 5
+addi x21, x0, 5
+addi x10, x0, 5
+addi x11, x0, 5
+addi x12, x0, 3
+addi x13, x0, 5
+addi x14, x0, 5
+addi x15, x0, 5
+
+
+beq x10, x0, beqtest1
+addi x10, x10, 1
+
+beqtest1:
+
+beq x11, x11, beqtest2
+addi x11, x11, 1
+
+beqtest2:
+
+addi x11, x0, 2
+
+loop1:
+addi x12, x12, 1
+bne x12, x22, loop1
+
+
+loop2:
+addi x13, x13, 1
+blt x13, x1, loop2
+
+addi x13, x0, 10
+
+loop3:
+addi x14, x14, -1
+bge x14, x1, loop3
+
+addi x14, x0, 1
+
+loop4:
+addi x15, x15, 1
+bltu x15, x1, loop4
+
+addi x15, x0, 10
+
+loop5:
+addi x22, x22, -1
+bgeu x22, x1, loop5
+
+
+
+addi x0, x0, 0
+addi x0, x0, 0
+addi x0, x0, 0
+addi x0, x0, 0
+addi x0, x0, 0
+addi x0, x0, 0
+addi x0, x0, 0
+addi x0, x0, 0
+addi x0, x0, 0
+addi x0, x0, 0
