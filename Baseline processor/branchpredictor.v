@@ -87,7 +87,7 @@ module branchpredictor(
 	wire [18:0] if_entry0, if_entry1, if_entry2, if_entry3;
 	wire if_valid0, if_valid1, if_valid2, if_valid3;
 	wire if_iseqto0, if_iseqto1, if_iseqto2, if_iseqto3;
-	reg [18:0] if_loadentry;
+	wire [18:0] if_loadentry;
 
 	assign if_entry0 = history_table[{if_PC[3:0], 2'b00}];
 	assign if_entry1 = history_table[{if_PC[3:0], 2'b01}];
@@ -135,7 +135,7 @@ module branchpredictor(
 	//2. check set counter fifo_counter
 	//3. write to history table
 
-	reg [1:0] fifo_counter [0:3];
+	reg [1:0] fifo_counter [0:15];
 
 	wire [18:0] id_entry0, id_entry1, id_entry2, id_entry3;
 	wire id_valid0, id_valid1, id_valid2, id_valid3;
@@ -166,7 +166,7 @@ module branchpredictor(
 	assign id_iseq = {id_iseqto3, id_iseqto2, id_iseqto1, id_iseqto0};	// if id_iseq = 0, then input is not in table yet
 
 	// Saturating counter default states. Branches: WNT | Jumps: ST
-	assign sat_counter = (id_is_btype) ? 2'b01 : (id_is_jump) ? 2'b11;
+	assign sat_counter = (id_is_jump)? 2'b11 : 2'b01;
 
 // EXE STAGE
 	/* 
@@ -254,7 +254,7 @@ module branchpredictor(
 							2'h0;
 	// Assign outputs
 	assign exe_PBT = exe_loadentry[11:2];
-	assign exe_CNI = {exe_loadentry[17:12], exe_set};
+	assign exe_CNI = {exe_loadentry[17:12], exe_set} + 10'b1;
 
 	// Check if prediction is correct & output appropriate correction
 	// If sat_counter[1] and feedback are equal, then prediction is correct.
@@ -272,16 +272,17 @@ module branchpredictor(
 	// 2'b11: Need to select PBT
 	assign exe_correction = (is_pred_correct)? 2'b00 		:	// If prediction was correct, no need to change PC again
 								(feedback == 1'b0)? 2'b10 	:	// branch should not have been taken, so CNI should be next PC addr
-								2'b11;							// branch should have been taken, so PBT should be next PC addr
+								(feedback == 1'b1)? 2'b11	:	// branch should have been taken, so PBT should be next PC addr
+								2'b00;
 
 	// Update counter here
 	// Increment/decrement depends on feedback
 	// if feedback = 1, increment. if feedback = 0, decrement
 	// MIGHT NEED TO CHANGE THIS LATER
-	assign exe_loadentry[1:0] = (feedback)?
-									(exe_loadentry[1:0] == 2'h3)? 2'h3 : exe_loadentry[1:0] + 2'b1 :
-								// feedback = 0
-									(exe_loadentry[1:0] == 2'h0)? 2'h0 : exe_loadentry[1:0] - 2'b1;
+	// assign exe_loadentry[1:0] = (feedback)?
+	// 								(exe_loadentry[1:0] == 2'h3)? 2'h3 : exe_loadentry[1:0] + 2'b1 :
+	// 							// feedback = 0
+	// 								(exe_loadentry[1:0] == 2'h0)? 2'h0 : exe_loadentry[1:0] - 2'b1;
 
 
 ////////////////////////////////////////////////////////////////////////////
@@ -302,7 +303,14 @@ module branchpredictor(
 			//increment counter; if = 3 na, equate to zero
 			fifo_counter[id_set] <= fifo_counter[id_set] + 2'b01;
 		end
-		else if(|exe_btype)
-			history_table[{exe_set, exe_setoffset}] <= exe_loadentry;
+		else if(|exe_btype) begin
+			if(feedback == 1'h1) begin
+				if(exe_loadentry[1:0] != 2'h3)
+					history_table[{exe_set, exe_setoffset}] <= exe_loadentry + 2'b1;
+			end else begin
+				if(exe_loadentry[1:0] != 2'h0)
+					history_table[{exe_set, exe_setoffset}] <= exe_loadentry - 2'b1;
+			end
+		end
 	end
 endmodule
