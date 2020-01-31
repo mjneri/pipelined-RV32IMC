@@ -30,6 +30,8 @@ module core(
 	wire [31:0] id_inst;		// 32bit Instruction
 	wire [11:0] id_PC;			// PC
 
+	wire [11:0] id_btargetaddr;
+	
 	// 32-bit instruction parts
 	wire [6:0] id_opcode;				// opcode
 	wire [2:0] id_funct3;				// funct3
@@ -186,6 +188,8 @@ module core(
 
 
 // ID Stage ========================================================
+	assign id_btargetaddr = id_pc + id_imm[11:0];
+	
 	//control unit
 	controller1 CONTROL(
 		// Inputs
