@@ -11,15 +11,19 @@
       </db_ref>
    </db_ref_list>
    <zoom_setting>
-      <ZoomStartTime time="0fs"></ZoomStartTime>
-      <ZoomEndTime time="148997fs"></ZoomEndTime>
-      <Cursor1Time time="875000fs"></Cursor1Time>
+      <ZoomStartTime time="698083fs"></ZoomStartTime>
+      <ZoomEndTime time="934384fs"></ZoomEndTime>
+      <Cursor1Time time="895000fs"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
       <NameColumnWidth column_width="337"></NameColumnWidth>
-      <ValueColumnWidth column_width="435"></ValueColumnWidth>
+      <ValueColumnWidth column_width="121"></ValueColumnWidth>
    </column_width_setting>
-   <WVObjectSize size="23" />
+   <WVObjectSize size="43" />
+   <wvobject fp_name="/tb_core/CORE/ALU/res" type="array">
+      <obj_property name="ElementShortName">res[31:0]</obj_property>
+      <obj_property name="ObjectShortName">res[31:0]</obj_property>
+   </wvobject>
    <wvobject fp_name="/tb_core/CORE/EXE_MEM/clk" type="logic">
       <obj_property name="ElementShortName">clk</obj_property>
       <obj_property name="ObjectShortName">clk</obj_property>
@@ -27,6 +31,10 @@
    <wvobject fp_name="/tb_core/CORE/EXE_MEM/nrst" type="logic">
       <obj_property name="ElementShortName">nrst</obj_property>
       <obj_property name="ObjectShortName">nrst</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_core/CORE/PC/addr_in" type="array">
+      <obj_property name="ElementShortName">addr_in[11:0]</obj_property>
+      <obj_property name="ObjectShortName">addr_in[11:0]</obj_property>
    </wvobject>
    <wvobject fp_name="/tb_core/CORE/exe_forward_A" type="logic">
       <obj_property name="ElementShortName">exe_forward_A</obj_property>
@@ -44,13 +52,49 @@
       <obj_property name="ElementShortName">mem_forward_B</obj_property>
       <obj_property name="ObjectShortName">mem_forward_B</obj_property>
    </wvobject>
+   <wvobject fp_name="/tb_core/CORE/wb_forward_A" type="logic">
+      <obj_property name="ElementShortName">wb_forward_A</obj_property>
+      <obj_property name="ObjectShortName">wb_forward_A</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_core/CORE/wb_forward_B" type="logic">
+      <obj_property name="ElementShortName">wb_forward_B</obj_property>
+      <obj_property name="ObjectShortName">wb_forward_B</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_core/CORE/SF_CONTROLLER/if_en" type="logic">
+      <obj_property name="ElementShortName">if_en</obj_property>
+      <obj_property name="ObjectShortName">if_en</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_core/CORE/SF_CONTROLLER/id_en" type="logic">
+      <obj_property name="ElementShortName">id_en</obj_property>
+      <obj_property name="ObjectShortName">id_en</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_core/CORE/SF_CONTROLLER/exe_en" type="logic">
+      <obj_property name="ElementShortName">exe_en</obj_property>
+      <obj_property name="ObjectShortName">exe_en</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_core/CORE/SF_CONTROLLER/mem_en" type="logic">
+      <obj_property name="ElementShortName">mem_en</obj_property>
+      <obj_property name="ObjectShortName">mem_en</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_core/CORE/STOREBLOCK/dm_write" type="array">
+      <obj_property name="ElementShortName">dm_write[3:0]</obj_property>
+      <obj_property name="ObjectShortName">dm_write[3:0]</obj_property>
+   </wvobject>
    <wvobject fp_name="/tb_core/CORE/if_PC" type="array">
       <obj_property name="ElementShortName">if_PC[11:0]</obj_property>
       <obj_property name="ObjectShortName">if_PC[11:0]</obj_property>
    </wvobject>
+   <wvobject fp_name="/tb_core/CORE/if_inst" type="array">
+      <obj_property name="ElementShortName">if_inst[31:0]</obj_property>
+      <obj_property name="ObjectShortName">if_inst[31:0]</obj_property>
+   </wvobject>
    <wvobject fp_name="/tb_core/CORE/id_PC" type="array">
       <obj_property name="ElementShortName">id_PC[11:0]</obj_property>
       <obj_property name="ObjectShortName">id_PC[11:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_core/CORE/id_inst" type="array">
+      <obj_property name="ElementShortName">id_inst[31:0]</obj_property>
+      <obj_property name="ObjectShortName">id_inst[31:0]</obj_property>
    </wvobject>
    <wvobject fp_name="/tb_core/CORE/exe_PC" type="array">
       <obj_property name="ElementShortName">exe_PC[11:0]</obj_property>
@@ -63,14 +107,6 @@
    <wvobject fp_name="/tb_core/CORE/wb_PC" type="array">
       <obj_property name="ElementShortName">wb_PC[11:0]</obj_property>
       <obj_property name="ObjectShortName">wb_PC[11:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/tb_core/CORE/if_inst" type="array">
-      <obj_property name="ElementShortName">if_inst[31:0]</obj_property>
-      <obj_property name="ObjectShortName">if_inst[31:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/tb_core/CORE/id_inst" type="array">
-      <obj_property name="ElementShortName">id_inst[31:0]</obj_property>
-      <obj_property name="ObjectShortName">id_inst[31:0]</obj_property>
    </wvobject>
    <wvobject fp_name="/tb_core/CORE/id_rsA" type="array">
       <obj_property name="ElementShortName">id_rsA[4:0]</obj_property>
@@ -111,5 +147,49 @@
    <wvobject fp_name="/tb_core/CORE/MEM_WB/wb_wr_en" type="logic">
       <obj_property name="ElementShortName">wb_wr_en</obj_property>
       <obj_property name="ObjectShortName">wb_wr_en</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_core/CORE/mem_storedata" type="array">
+      <obj_property name="ElementShortName">mem_storedata[31:0]</obj_property>
+      <obj_property name="ObjectShortName">mem_storedata[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_core/CORE/mem_ALUout" type="array">
+      <obj_property name="ElementShortName">mem_ALUout[31:0]</obj_property>
+      <obj_property name="ObjectShortName">mem_ALUout[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_core/CORE/exe_ALUout" type="array">
+      <obj_property name="ElementShortName">exe_ALUout[31:0]</obj_property>
+      <obj_property name="ObjectShortName">exe_ALUout[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_core/CORE/wb_ALUout" type="array">
+      <obj_property name="ElementShortName">wb_ALUout[31:0]</obj_property>
+      <obj_property name="ObjectShortName">wb_ALUout[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_core/CORE/id_opA" type="array">
+      <obj_property name="ElementShortName">id_opA[31:0]</obj_property>
+      <obj_property name="ObjectShortName">id_opA[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_core/CORE/id_opB" type="array">
+      <obj_property name="ElementShortName">id_opB[31:0]</obj_property>
+      <obj_property name="ObjectShortName">id_opB[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_core/CORE/exe_opA" type="array">
+      <obj_property name="ElementShortName">exe_opA[31:0]</obj_property>
+      <obj_property name="ObjectShortName">exe_opA[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_core/CORE/exe_opB" type="array">
+      <obj_property name="ElementShortName">exe_opB[31:0]</obj_property>
+      <obj_property name="ObjectShortName">exe_opB[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_core/CORE/id_imm" type="array">
+      <obj_property name="ElementShortName">id_imm[31:0]</obj_property>
+      <obj_property name="ObjectShortName">id_imm[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_core/CORE/id_rfoutA" type="array">
+      <obj_property name="ElementShortName">id_rfoutA[31:0]</obj_property>
+      <obj_property name="ObjectShortName">id_rfoutA[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_core/CORE/id_rfoutB" type="array">
+      <obj_property name="ElementShortName">id_rfoutB[31:0]</obj_property>
+      <obj_property name="ObjectShortName">id_rfoutB[31:0]</obj_property>
    </wvobject>
 </wave_config>

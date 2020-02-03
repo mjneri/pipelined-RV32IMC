@@ -12,6 +12,7 @@ verilog xil_defaultlib  --include "../../../../pipelined-RV32IMC.srcs/sources_1/
 "../../../../../Baseline processor/pipereg_if_id.v" \
 "../../../../../Baseline processor/pipereg_mem_wb.v" \
 "../../../../../Baseline processor/regfile.v" \
+"../../../../../Baseline processor/sf_controller.v" \
 "../../../../../Baseline processor/shiftsignshuff.v" \
 "../../../../../Baseline processor/storeblock.v" \
 "../../../../pipelined-RV32IMC.srcs/sim_1/new/tb_core.v" \
