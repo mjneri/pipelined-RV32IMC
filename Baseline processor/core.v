@@ -63,12 +63,17 @@ module core(
 	wire [31:0] id_opB;
 
 	// Data Forwarding Control Signals
-	wire exe_forward_A;
-    wire exe_forward_B;
-    wire mem_forward_A;
-    wire mem_forward_B;
-	wire wb_forward_A;
-    wire wb_forward_B;
+	wire exe_forward_id_A;
+    wire exe_forward_id_B;
+    wire mem_forward_id_A;
+    wire mem_forward_id_B;
+	wire wb_forward_id_A;
+    wire wb_forward_id_B;
+
+	wire mem_forward_exe_A;
+    wire mem_forward_exe_B;
+	wire wb_forward_exe_A;
+    wire wb_forward_exe_B;
 // &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 
 
@@ -260,30 +265,21 @@ module core(
 
 
 // ID Stage ========================================================
-	//control unit
-
-	assign exe_forward_A = (id_rsA == exe_rd) && (id_rsA != 0) && exe_wr_en && id_sel_opA;
-	assign exe_forward_B = (id_rsB == exe_rd) && (id_rsB != 0) && exe_wr_en && !id_sel_opB;
-	assign mem_forward_A = (id_rsA == mem_rd) && (id_rsA != 0) && mem_wr_en && id_sel_opA;
-	assign mem_forward_B = (id_rsB == mem_rd) && (id_rsB != 0) && mem_wr_en && !id_sel_opB;
-	assign wb_forward_A = (id_rsA == wb_rd) && (id_rsA != 0) && wb_wr_en && id_sel_opA;
-	assign wb_forward_B = (id_rsB == wb_rd) && (id_rsB != 0) && wb_wr_en && !id_sel_opB;
 
 	// Selecting operands
-	assign id_opA = exe_forward_A? exe_ALUout : 
-					((mem_forward_A && (mem_sel_data==2'd3))? mem_loaddata :
-					(mem_forward_A? mem_ALUout :
-					(wb_forward_A? wb_wr_data :
+	assign id_opA = exe_forward_id_A? exe_ALUout : 
+					((mem_forward_id_A && (mem_sel_data==2'd3))? mem_loaddata :
+					(mem_forward_id_A? mem_ALUout :
+					(wb_forward_id_A? wb_wr_data :
 					(id_sel_opA? id_rfoutA : id_PC
 					))));
-	assign id_opB = exe_forward_B? exe_ALUout :
-					((mem_forward_B && (mem_sel_data==2'd3))? mem_loaddata :
-					(mem_forward_B? mem_ALUout :
-					(wb_forward_B? wb_wr_data :
+	assign id_opB = exe_forward_id_B? exe_ALUout :
+					((mem_forward_id_B && (mem_sel_data==2'd3))? mem_loaddata :
+					(mem_forward_id_B? mem_ALUout :
+					(wb_forward_id_B? wb_wr_data :
 					(id_sel_opB? id_imm : id_rfoutB
 					))));
 	
-
 	controller1 CONTROL(
 		// Inputs
 		.opcode(id_opcode),
@@ -318,6 +314,26 @@ module core(
 		.imm_select(id_imm_select),
 		.inst(id_inst[31:7]),
 		.imm(id_imm)
+	);
+
+	forward FORWARD(
+		// Inputs
+		.id_rsA(id_rsA),		.id_rsB(id_rsB),
+		.exe_rd(exe_rd),		.mem_rd(mem_rd),		.wb_rd(wb_rd),
+		.exe_wr_en(exe_wr_en),	.mem_wr_en(mem_wr_en),	.wb_wr_en(wb_wr_en),
+		.id_sel_opA(id_sel_opA),.id_sel_opB(id_sel_opB),
+
+		.exe_forward_id_A(exe_forward_id_A),
+		.exe_forward_id_B(exe_forward_id_B),
+		.mem_forward_id_A(mem_forward_id_A),
+		.mem_forward_id_B(mem_forward_id_B),
+		.wb_forward_id_A(wb_forward_id_A),
+		.wb_forward_id_B(wb_forward_id_B),
+
+		.mem_forward_exe_A(mem_forward_exe_A),
+		.mem_forward_exe_B(mem_forward_exe_B),
+		.wb_forward_exe_A(wb_forward_exe_A),
+		.wb_forward_exe_B(wb_forward_exe_B)
 	);
 
 	pipereg_id_exe ID_EXE(

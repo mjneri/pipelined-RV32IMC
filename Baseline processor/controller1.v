@@ -67,9 +67,9 @@ module controller1(
     
     //assign output_element condition ? value_if_true : value_if_false;
     
-    assign sel_opA = (opcode == auipc_inst || opcode == jal_inst) ? 1'h0 : 1'h1;  //sel_opA = 0 if inst is AUIPC or JAL
+    assign sel_opA = (opcode == auipc_inst || opcode == jal_inst) ? 1'h0 : 1'h1;    //sel_opA = 0 if inst is AUIPC or JAL
 
-    assign sel_opB = (opcode == r_type || opcode == b_type) ? 1'h0 : 1'h1;  //sel_opB = 0 if R-type inst or B-type inst
+    assign sel_opB = (opcode == r_type || opcode == b_type) ? 1'h0 : 1'h1;          //sel_opB = 0 if R-type inst or B-type inst
 
     assign is_stype = !(opcode == s_type) ? 1'h0 : 1'h1;    //dm_write = 1 if S-type inst
 
