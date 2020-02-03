@@ -214,6 +214,7 @@ def parse_file(line_list):
     return instructions, labels
 
 def assemble(instructions, labels, instmem):
+    out = {}
     out_buffer = {}
     for inst_address in instructions.keys():
         temp_inst = process_inst(instructions[inst_address])
@@ -353,7 +354,7 @@ def assemble(instructions, labels, instmem):
         else:
             print('Work in progress')
             m_code = 1
-        
+
         if (opt[0]=='C'):
             out = (hex(m_code)[2:].zfill(4))
             print(out)

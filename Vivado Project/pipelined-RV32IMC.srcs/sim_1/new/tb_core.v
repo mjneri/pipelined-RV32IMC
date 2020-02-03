@@ -67,16 +67,16 @@ module tb_core();
 
 	// Displaying Memory contents
 	always@(posedge done) begin
-		$display("===| SUMMARY |===");
-		$display("Actual  \tExpected");
-		$display("========\t========");
-		for(i = 0; i < 32; i = i + 1) begin
+		$display("\t===| SUMMARY |===");
+		$display("\tActual  \tExpected");
+		$display("\t========\t========");
+		for(i = 0; i < 25; i = i + 1) begin
 			//$display("%X\t%X", CORE.DATAMEM.memory[i], AK.memory[i]);
 			if(CORE.DATAMEM.memory[i] == AK.memory[i]) begin
-				$display("%X\t%X\tPass", CORE.DATAMEM.memory[i], AK.memory[i]);
+				$display("%d\t%X\t%X\tPass", i, CORE.DATAMEM.memory[i], AK.memory[i]);
 				pass = pass + 1;
 			end else begin
-				$display("%X\t%X\tFail", CORE.DATAMEM.memory[i], AK.memory[i]);
+				$display("%d\t%X\t%X\tFail", i, CORE.DATAMEM.memory[i], AK.memory[i]);
 			end
 		end
 		$display("\n");
