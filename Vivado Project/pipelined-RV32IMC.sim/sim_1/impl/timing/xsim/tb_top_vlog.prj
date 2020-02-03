@@ -1,7 +1,0 @@
-# compile verilog/system verilog design source files
-verilog xil_defaultlib  \
-"tb_top_time_impl.v" \
-"../../../../../pipelined-RV32IMC.srcs/sim_1/new/tb_top.v" \
-
-# Do not sort compile order
-nosort

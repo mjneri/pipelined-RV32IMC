@@ -1,7 +1,0 @@
-Running: xsim.dir/tb_shiftsignshuff_behav/xsimk.exe -simmode gui -wdb tb_shiftsignshuff_behav.wdb -simrunnum 0 -socket 49971
-Design successfully loaded
-Design Loading Memory Usage: 5316 KB (Peak: 5316 KB)
-Design Loading CPU Usage: 30 ms
-Simulation completed
-Simulation Memory Usage: 6028 KB (Peak: 6028 KB)
-Simulation CPU Usage: 30 ms
