@@ -33,6 +33,7 @@ module core(
 	// Other Datapath signals
 	wire [31:0] id_branchtarget;
 	wire [31:0] id_brOP;				// For computing branch target address
+	wire id_jump_in_bht;				// For jumps already in BHT
 	
 	// 32-bit instruction parts
 	wire [6:0] id_opcode;				// opcode
@@ -201,14 +202,14 @@ module core(
 	// 3'b111 = exePBT
 	always@(*) begin
 		case({exe_correction, if_prediction})
-			3'b001: if_pcnew = if_PBT;
-			3'b100: if_pcnew = exe_CNI;
-			3'b101: if_pcnew = exe_CNI;
-			3'b110: if_pcnew = exe_PBT;
-			3'b111: if_pcnew = exe_PBT;
+			3'b001: if_pcnew = {if_PBT, 2'h0};
+			3'b100: if_pcnew = {exe_CNI, 2'h0};
+			3'b101: if_pcnew = {exe_CNI, 2'h0};
+			3'b110: if_pcnew = {exe_PBT, 2'h0};
+			3'b111: if_pcnew = {exe_PBT, 2'h0};
 			default: begin
-				case(id_sel_pc)
-					2'h1: if_pcnew = id_branchtarget;
+				case({id_jump_in_bht, id_sel_pc})
+					3'b001: if_pcnew = id_branchtarget;
 					default: if_pcnew = if_pc4;
 				endcase
 			end
@@ -330,14 +331,14 @@ module core(
 		.CLK(CLK),
 		.nrst(nrst),
 
-		.if_PC(if_PC),
+		.if_PC(if_PC[11:2]),
 
-		.id_PC(id_PC),
+		.id_PC(id_PC[11:2]),
 		.id_branchtarget(id_branchtarget[11:2]),
 		.id_is_jump(id_is_jump),
 		.id_is_btype(id_is_btype),
 
-		.exe_PC(exe_PC),
+		.exe_PC(exe_PC[11:2]),
 		.exe_z(exe_z),
 		.exe_less(exe_less),
 		.exe_btype(exe_btype),
@@ -347,6 +348,7 @@ module core(
 		.exe_correction(exe_correction),
 		
 		.flush(flush),
+		.id_jump_in_bht(id_jump_in_bht),
 
 		.if_PBT(if_PBT),
 		.exe_PBT(exe_PBT),

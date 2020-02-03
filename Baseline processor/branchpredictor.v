@@ -46,6 +46,7 @@ module branchpredictor(
 	output [1:0] exe_correction,
 
 	output reg flush,
+	output reg id_jump_in_bht,	// zzzzzzzzzz
 
 	// Predicted branch target
 	output [9:0] if_PBT,
@@ -330,11 +331,20 @@ module branchpredictor(
 		end
 		else begin
 			flush_state_reg <= flush_state;
-			
-			if(|exe_btype && !is_pred_correct)
+		end
+	end
+	
+	always@(*) begin
+		if(flush_state_reg) begin
+			flush = 1;
+			flush_state = 0;
+		end else begin
+			if(|exe_btype && !is_pred_correct) begin
 				flush_state = 1;
-			else begin
-				if(id_is_jump)
+				flush = 1;
+			end else begin
+				flush = 0;
+				if(id_is_jump && id_iseq == 4'h0)
 					flush_state = 1;
 				else
 					flush_state = 0;
@@ -343,15 +353,10 @@ module branchpredictor(
 	end
 	
 	always@(*) begin
-		if(flush_state_reg)
-			flush = 1;
-		else begin
-			if(|exe_btype && !is_pred_correct)
-				flush = 1;
-			else
-				flush = 0;
-		end
+		if(id_is_jump == 1'b1 && id_iseq != 4'h0)
+			id_jump_in_bht = 1'b1;
+		else 
+			id_jump_in_bht = 1'b0;
 	end
-	
 	////////////////////////////////////////////////////////////////////////////////////////
 endmodule
