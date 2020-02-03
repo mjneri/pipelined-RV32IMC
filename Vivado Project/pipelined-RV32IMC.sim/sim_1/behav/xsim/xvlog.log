@@ -22,8 +22,6 @@ INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/Emman/Documents/GitHub/pip
 INFO: [VRFC 10-311] analyzing module pipereg_mem_wb
 INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/Emman/Documents/GitHub/pipelined-RV32IMC/Baseline processor/regfile.v" into library xil_defaultlib
 INFO: [VRFC 10-311] analyzing module regfile
-INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/Emman/Documents/GitHub/pipelined-RV32IMC/Baseline processor/sf_controller.v" into library xil_defaultlib
-INFO: [VRFC 10-311] analyzing module sf_controller
 INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/Emman/Documents/GitHub/pipelined-RV32IMC/Baseline processor/shiftsignshuff.v" into library xil_defaultlib
 INFO: [VRFC 10-311] analyzing module shiftsignshuff
 INFO: [VRFC 10-2263] Analyzing Verilog file "C:/Users/Emman/Documents/GitHub/pipelined-RV32IMC/Baseline processor/storeblock.v" into library xil_defaultlib

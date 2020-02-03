@@ -4,13 +4,10 @@ Running: C:/Xilinx/Vivado/2019.2/bin/unwrapped/win64.o/xelab.exe -wto c8cf415cb9
 Using 2 slave threads.
 Starting static elaboration
 Pass Through NonSizing Optimizer
-WARNING: [VRFC 10-5021] port 'is_nop' is not connected on this instance [C:/Users/Emman/Documents/GitHub/pipelined-RV32IMC/Baseline processor/core.v:179]
 Completed static elaboration
 Starting simulation data flow analysis
 Completed simulation data flow analysis
 Time Resolution for simulation is 1ps
-Compiling module xil_defaultlib.sf_controller
-Compiling module unisims_ver.BUFGCE
 Compiling module xil_defaultlib.pc
 Compiling module xil_defaultlib.instmem
 Compiling module xil_defaultlib.pipereg_if_id
