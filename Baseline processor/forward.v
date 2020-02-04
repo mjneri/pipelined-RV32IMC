@@ -3,6 +3,8 @@
 module forward(
 	input [4:0] id_rsA,
 	input [4:0] id_rsB,
+    input [4:0] exe_rsA,
+	input [4:0] exe_rsB,
     input [4:0] exe_rd,
     input [4:0] mem_rd,
     input [4:0] wb_rd,
@@ -11,6 +13,10 @@ module forward(
     input wb_wr_en,
     input id_sel_opA,
     input id_sel_opB,
+    input [1:0] id_sel_data,
+    input [1:0] exe_sel_data,
+    input [1:0] mem_sel_data,
+    input [1:0] wb_sel_data,
 
 	output exe_forward_id_A,
     output exe_forward_id_B,
@@ -37,9 +43,9 @@ module forward(
     assign wb_forward_id_A = (id_rsA == wb_rd) && (id_rsA != 0) && wb_wr_en && id_sel_opA;
     assign wb_forward_id_B = (id_rsB == wb_rd) && (id_rsB != 0) && wb_wr_en && !id_sel_opB;
 
-    assign mem_forward_exe_A = 0;
-    assign mem_forward_exe_B = 0;
-    assign wb_forward_exe_A = 0;
-    assign wb_forward_exe_B = 0;
+    assign mem_forward_exe_A = (exe_rsA == mem_rd) && (exe_rsA != 0) && mem_wr_en && exe_sel_data;
+    assign mem_forward_exe_B = (exe_rsB == mem_rd) && (exe_rsB != 0) && mem_wr_en && exe_sel_data;
+    assign wb_forward_exe_A = (exe_rsA == wb_rd) && (exe_rsA != 0) && wb_wr_en && exe_sel_data;
+    assign wb_forward_exe_B = (exe_rsB == wb_rd) && (exe_rsB != 0) && wb_wr_en && exe_sel_data;
 
 endmodule

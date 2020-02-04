@@ -85,6 +85,7 @@ module core(
 	wire [31:0] exe_opB;			// Regfile output B
 	wire [31:0] exe_rfoutB;
 	wire [31:0] exe_imm;			// Immediate
+	wire [4:0] exe_rsA, exe_rsB;	// source registers
 	wire [4:0] exe_rd;				// destination register
 	wire [11:0] exe_PC;				// PC
 
@@ -319,9 +320,14 @@ module core(
 	forward FORWARD(
 		// Inputs
 		.id_rsA(id_rsA),		.id_rsB(id_rsB),
+		.exe_rsA(exe_rsA),		.exe_rsB(exe_rsB),
 		.exe_rd(exe_rd),		.mem_rd(mem_rd),		.wb_rd(wb_rd),
 		.exe_wr_en(exe_wr_en),	.mem_wr_en(mem_wr_en),	.wb_wr_en(wb_wr_en),
 		.id_sel_opA(id_sel_opA),.id_sel_opB(id_sel_opB),
+		.id_sel_data(id_sel_data),
+		.exe_sel_data(exe_sel_data),
+		.mem_sel_data(mem_sel_data),
+		.wb_sel_data(wb_sel_data),
 
 		.exe_forward_id_A(exe_forward_id_A),
 		.exe_forward_id_B(exe_forward_id_B),
@@ -345,6 +351,8 @@ module core(
 		.id_opA(id_opA),		.exe_opA(exe_opA),
 		.id_opB(id_opB),		.exe_opB(exe_opB),
 		.id_imm(id_imm),		.exe_imm(exe_imm),
+		.id_rsA(id_rsA),		.exe_rsA(exe_rsA),
+		.id_rsB(id_rsB),		.exe_rsB(exe_rsB),
 		.id_rd(id_rd),			.exe_rd(exe_rd),
 		.id_PC(id_PC),			.exe_PC(exe_PC),
 		.id_rfoutB(id_rfoutB),	.exe_rfoutB(exe_rfoutB),
