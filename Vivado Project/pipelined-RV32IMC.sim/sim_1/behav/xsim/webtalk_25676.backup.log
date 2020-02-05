@@ -2,8 +2,8 @@
 # Webtalk v2019.2.1 (64-bit)
 # SW Build 2729669 on Thu Dec  5 04:49:17 MST 2019
 # IP Build 2729494 on Thu Dec  5 07:38:25 MST 2019
-# Start of session at: Wed Feb  5 19:50:17 2020
-# Process ID: 32300
+# Start of session at: Wed Feb  5 19:36:13 2020
+# Process ID: 25676
 # Current directory: D:/Files/schoolwork/198/processor/Vivado Project/pipelined-RV32IMC.sim/sim_1/behav/xsim
 # Command line: wbtcv.exe -mode batch -source D:/Files/schoolwork/198/processor/Vivado Project/pipelined-RV32IMC.sim/sim_1/behav/xsim/xsim.dir/tb_core_behav/webtalk/xsim_webtalk.tcl -notrace
 # Log file: D:/Files/schoolwork/198/processor/Vivado Project/pipelined-RV32IMC.sim/sim_1/behav/xsim/webtalk.log
@@ -11,4 +11,4 @@
 #-----------------------------------------------------------
 source D:/Files/schoolwork/198/processor/Vivado -notrace
 couldn't read file "D:/Files/schoolwork/198/processor/Vivado": no such file or directory
-INFO: [Common 17-206] Exiting Webtalk at Wed Feb  5 19:50:17 2020...
+INFO: [Common 17-206] Exiting Webtalk at Wed Feb  5 19:36:14 2020...

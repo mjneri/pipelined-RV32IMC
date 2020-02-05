@@ -72,8 +72,6 @@ module core(
 
 	wire fw_mem_to_exe_A;
     wire fw_mem_to_exe_B;
-	wire fw_wb_to_exe_A;
-    wire fw_wb_to_exe_B;
 // &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 
 
@@ -347,9 +345,7 @@ module core(
 		.fw_wb_to_id_B(fw_wb_to_id_B),
 
 		.fw_mem_to_exe_A(fw_mem_to_exe_A),
-		.fw_mem_to_exe_B(fw_mem_to_exe_B),
-		.fw_wb_to_exe_A(fw_wb_to_exe_A),
-		.fw_wb_to_exe_B(fw_wb_to_exe_B)
+		.fw_mem_to_exe_B(fw_mem_to_exe_B)
 	);
 
 	pipereg_id_exe ID_EXE(
@@ -394,16 +390,20 @@ module core(
 
 	wire [31:0] opA;
 	wire [31:0] opB;
-	assign opA = fw_mem_to_exe_A? mem_loaddata : (fw_wb_to_exe_A? wb_wr_data : exe_opA);
-	assign opB = (fw_mem_to_exe_B && !exe_is_stype)? mem_loaddata : ((fw_wb_to_exe_B && !id_sel_opB && !exe_is_stype)? wb_wr_data : exe_opB);
+	assign opA = fw_mem_to_exe_A ? mem_loaddata : exe_opA;
+	assign opB = (fw_mem_to_exe_B && !exe_is_stype) ? mem_loaddata : exe_opB;
 
 	//assign exe_branchtarget = exe_PC + exe_imm;
 
 	wire [31:0] exe_rstore;
-	assign exe_rstore = (fw_mem_to_exe_B && (mem_sel_data==2'd3))? mem_loaddata :
+	assign exe_rstore = (fw_mem_to_exe_B && (mem_sel_data==2'd3)) 	? mem_loaddata : 
+						 (fw_mem_to_exe_B							? mem_ALUout :
+						 											exe_rfoutB
+																	);
+	/*assign exe_rstore = (fw_mem_to_exe_B && (mem_sel_data==2'd3))? mem_loaddata :
 					(fw_mem_to_exe_B? mem_ALUout :
 					((fw_wb_to_exe_B)? wb_wr_data : exe_rfoutB
-					));
+					));*/
 
 	alu ALU(
 		.op_a(opA),

@@ -50,7 +50,8 @@ module sf_controller(
     wire [4:0] id_rs1 = id_inst[24:20];
     wire [4:0] id_rs2 = id_inst[19:15];
 
-    wire load_stall = exe_load && ((id_rs1 == exe_rd) || (id_rs2 == exe_rd));
+    // LOAD -> JALR will result in a one-cycle stall for IF and ID stages
+    wire load_stall = exe_load && (id_opcode == 7'h33) && (id_rs1 == exe_rd);
     
     assign if_en    = 1;
     assign id_en    = 1;
