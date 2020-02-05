@@ -52,8 +52,8 @@ module sf_controller(
 
     wire load_stall = exe_load && ((id_rs1 == exe_rd) || (id_rs2 == exe_rd));
     
-    assign if_en    = !load_stall;
-    assign id_en    = !load_stall;
+    assign if_en    = 1;
+    assign id_en    = 1;
     assign exe_en   = 1;
     assign mem_en   = 1;
     
