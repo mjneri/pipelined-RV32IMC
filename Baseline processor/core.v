@@ -267,25 +267,28 @@ module core(
 // ID Stage ========================================================
 
 	// Selecting operands
-	assign id_opA = fw_exe_to_id_A? exe_ALUout : 
-					((fw_mem_to_id_A && (mem_sel_data==2'd3))? mem_loaddata :
-					(fw_mem_to_id_A? mem_ALUout :
-					((fw_wb_to_id_A && id_sel_opA)? wb_wr_data :
-					(id_sel_opA? id_rfoutA : id_PC
-					))));
-	assign id_opB = (fw_exe_to_id_B && !id_is_stype)? exe_ALUout :
-					((fw_mem_to_id_B && (mem_sel_data==2'd3))? mem_loaddata :
-					(fw_mem_to_id_B? mem_ALUout :
-					((fw_wb_to_id_B && !id_sel_opB)? wb_wr_data :
-					(id_sel_opB? id_imm : id_rfoutB
-					))));
+	assign id_opA = fw_exe_to_id_A? 							exe_ALUout : 
+					((fw_mem_to_id_A && (mem_sel_data==2'd3))? 	mem_loaddata :
+					(fw_mem_to_id_A? 							mem_ALUout :
+					((fw_wb_to_id_A && id_sel_opA)? 			wb_wr_data :
+					(id_sel_opA? 								id_rfoutA :
+																id_PC
+																))));
+	assign id_opB = (fw_exe_to_id_B && !id_is_stype)? 			exe_ALUout :
+					((fw_mem_to_id_B && !id_sel_opB && (mem_sel_data==2'd3))? 	mem_loaddata :
+					((fw_mem_to_id_B && !id_is_stype)? 			mem_ALUout :
+					((fw_wb_to_id_B && !id_sel_opB)? 			wb_wr_data :
+					(id_sel_opB? 								id_imm :
+																id_rfoutB
+																))));
 	
 	wire [31:0] id_rstore;
-	assign id_rstore = fw_exe_to_id_B? exe_ALUout :
-					((fw_mem_to_id_B && (mem_sel_data==2'd3))? mem_loaddata :
-					(fw_mem_to_id_B? mem_ALUout :
-					(fw_wb_to_id_B? wb_wr_data : id_rfoutB
-					)));
+	assign id_rstore = fw_exe_to_id_B? 							exe_ALUout :
+					((fw_mem_to_id_B && (mem_sel_data==2'd3))? 	mem_loaddata :
+					(fw_mem_to_id_B? 							mem_ALUout :
+					(fw_wb_to_id_B? 							wb_wr_data :
+																id_rfoutB
+																)));
 
 	controller1 CONTROL(
 		// Inputs
@@ -396,10 +399,10 @@ module core(
 	//assign exe_branchtarget = exe_PC + exe_imm;
 
 	wire [31:0] exe_rstore;
-	assign exe_rstore = (fw_mem_to_exe_B && (mem_sel_data==2'd3)) 	? mem_loaddata : 
-						 (fw_mem_to_exe_B							? mem_ALUout :
+	assign exe_rstore = (fw_mem_to_exe_B && (mem_sel_data==2'd3))?	mem_loaddata : 
+						(fw_mem_to_exe_B?							mem_ALUout :
 						 											exe_rfoutB
-																	);
+																	 );
 	/*assign exe_rstore = (fw_mem_to_exe_B && (mem_sel_data==2'd3))? mem_loaddata :
 					(fw_mem_to_exe_B? mem_ALUout :
 					((fw_wb_to_exe_B)? wb_wr_data : exe_rfoutB
