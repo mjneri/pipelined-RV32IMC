@@ -39,9 +39,9 @@ end:
 add x30, x2, x3
 
 #JALR
-jalr x31, x1, 0x4
+jalr x31, 0x4(x0)
 
-addi x0, x0, 0
+#addi x0, x0, 0
 
 #ADD
 #1 p + p
