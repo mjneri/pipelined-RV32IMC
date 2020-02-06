@@ -9,25 +9,35 @@ module datamem(
 	input [31:0] data_in,
 
 	// Inputs from protocol controllers
-	input [3:0] con_write,	// Similar to dm_write
-	input [9:0] con_addr,	// datamem address from protocol controller
+	input [3:0] con_write,		// Similar to dm_write
+	input [9:0] con_addr,		// datamem address from protocol controller
 	input [31:0] con_in,		// data input from protocol controller
 
-	output [31:0] data_out,	// data output to within the core
-	output [31:0] con_out	// data output to protocol controller
+	output [31:0] data_out,		// data output to within the core
+	output [31:0] con_out		// data output to protocol controller
 );
 	
-	// Datamem uses Block Memory from Vivado Block Mem. Generator module
-	/*blk_mem_gen_datamem BLOCKMEM(
+	// Datamem that uses BLOCKMEM from Vivado IP Catalog
+	// Blockmem generated as TRUE DUAL PORT RAM
+	// Synchronous read
+	blk_mem_gen_datamem BLOCKMEM(
 		.clka(~clk),
 		.wea(dm_write),
 		.addra(data_addr),
 		.dina(data_in),
-		.douta(data_out)
+		.douta(data_out),
+
+		.clkb(~clk),
+		.web(con_write),
+		.addrb(con_addr),
+		.dinb(con_in),
+		.doutb(con_out)
 	);
-	assign con_out = data_out;*/
-	// Cant display contents of BLOCKRAM in testbench
 	
+	// For this part:
+	// Datamem that was coded s.t. Vivado generates RTL_RAM for the memory
+	// Asynchronous read
+	/*
 	reg [31:0] memory [0:511];		// Addresses 0x000 to 0x1FF
 	reg [31:0] con_mem [0:511];		// Addresses 0x200 to 0x3FF
 
@@ -75,5 +85,5 @@ module datamem(
 			4'b0100: con_mem[con_addr] <= (con_mem[con_addr] & 32'hff00ffff) | (con_in & 32'h00ff0000);
 			4'b1000: con_mem[con_addr] <= (con_mem[con_addr] & 32'h00ffffff) | (con_in & 32'hff000000);
 		endcase
-	end
+	end*/
 endmodule

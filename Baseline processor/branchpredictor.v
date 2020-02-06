@@ -46,7 +46,9 @@ module branchpredictor(
 	output [1:0] exe_correction,
 
 	output reg flush,
-	output reg id_jump_in_bht,	// zzzzzzzzzz
+	output reg id_jump_in_bht,	// added as an input w/ sel_pc s.t. branch target is selected
+								// only when this signal is not asserted, which happens only
+								// when the jump instruction is not yet saved into the table
 
 	// Predicted branch target
 	output [9:0] if_PBT,
@@ -278,17 +280,7 @@ module branchpredictor(
 									2'b00 						:
 								2'b00;
 
-	// Update counter here
-	// Increment/decrement depends on feedback
-	// if feedback = 1, increment. if feedback = 0, decrement
-	// MIGHT NEED TO CHANGE THIS LATER
-	// assign exe_loadentry[1:0] = (feedback)?
-	// 								(exe_loadentry[1:0] == 2'h3)? 2'h3 : exe_loadentry[1:0] + 2'b1 :
-	// 							// feedback = 0
-	// 								(exe_loadentry[1:0] == 2'h0)? 2'h0 : exe_loadentry[1:0] - 2'b1;
-
-
-////////////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////////////
 	// Write back to the table
 	integer i;	// Used for resetting fifo_counter & history_table
 	always@(posedge CLK) begin
@@ -327,7 +319,7 @@ module branchpredictor(
 	always@(posedge CLK) begin
 		if(!nrst) begin
 			flush_state_reg <= 1'd0;
-			flush_state <= 1'd0;
+			//flush_state <= 1'd0;
 		end
 		else begin
 			flush_state_reg <= flush_state;

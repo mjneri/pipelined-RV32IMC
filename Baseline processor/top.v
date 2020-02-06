@@ -15,4 +15,11 @@ module top(
 	output [3:0] ck_io
 );
 
+/*=== INSTANTIATING MODULES ===*/
+	// CLKIP
+
+	// RISC-V CORE
+
+	// Protocol Controllers OR UART Controller
+
 endmodule
