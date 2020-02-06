@@ -31,34 +31,38 @@ auipc x3, 0x3
 jal x1, end
 sub x30, x3, x2
 
-addi x0, x0, 0
-addi x0, x0, 0
-addi x0, x0, 0
+#addi x0, x0, 0
+#addi x0, x0, 0
+#addi x0, x0, 0
 
 end:
 add x30, x2, x3
 
 #JALR
-jalr x31, x1, 0x4
+jalr x31, 0x4(x0)
 
-addi x0, x0, 0
+#addi x0, x0, 0
 
 #ADD
 #1 p + p
 add x10, x8, x6 
 #2 p + n
 add x11, x4, x5
+
+sw x10, 8(x20)
+sw x11, 12(x20)
+
 #3 n + p
 add x12, x9, x8     
 #4 n + n
 add x13, x5, x7 
+
+sw x12, 16(x20)
+sw x13, 20(x20)
+
 #5 n + 0
 add x14, x9, x0
 
-sw x10, 8(x20)
-sw x11, 12(x20)
-sw x12, 16(x20)
-sw x13, 20(x20)
 sw x14, 24(x20)
 
 #SUB
@@ -70,15 +74,17 @@ sub x11, x8, x5
 sub x12, x7, x4
 #4 p - p resulting in negative
 sub x13, x6, x8
-#5 0 - p
-sub x14, x0, x4
-#6
-sub x15, x0, x5
 
 sw x10, 28(x20)
 sw x11, 32(x20)
 sw x12, 36(x20)
 sw x13, 40(x20)
+
+#5 0 - p
+sub x14, x0, x4
+#6
+sub x15, x0, x5
+
 sw x14, 44(x20)
 sw x15, 48(x20)
 
@@ -86,7 +92,7 @@ sw x15, 48(x20)
 sll x10, x4, x0
 sll x11, x5, x1
 sll x12, x6, x7
-addi x0, x0, 0 #NOP
+#addi x0, x0, 0 #NOP
 
 sw x10, 52(x20)
 sw x11, 56(x20)
@@ -94,30 +100,28 @@ sw x12, 60(x20)
 
 #SLT
 slt x13, x4, x4
+sw x13, 64(x20)
 slt x14, x4, x6
+sw x14, 68(x20)
 slt x15, x5, x4
 slt x16, x0, x0
-slt x17, x9, x5
-
-sw x13, 64(x20)
-sw x14, 68(x20)
 sw x15, 72(x20)
 sw x16, 76(x20)
+slt x17, x9, x5
 sw x17, 80(x20)
 
 #SLTU
 sltu x10, x6, x8
 sltu x11, x6, x4
 
+sw x10, 84(x20)
+sw x11, 88(x20)
+
 lui x12, 0x70f0
 lui x13, 0x7f0f
 lui x14, 0x6090
 lui x15, 0x6090
 lui x16, 0x0
-
-sw x10, 84(x20)
-sw x11, 88(x20)
-
 
 #XOR
 xor x17, x12, x13
@@ -141,11 +145,13 @@ lui x8, 0x6090
 #SRL
 srl x10, x1, x2
 srl x11, x1, x3
-srl x12, x1, x4
-srl x13, x1, x0
 
 sw x10, 100(x20)
 sw x11, 104(x20)
+
+srl x12, x1, x4
+srl x13, x1, x0
+
 sw x12, 108(x20)
 sw x13, 112(x20)
 
@@ -153,8 +159,8 @@ sw x13, 112(x20)
 sra x14, x1, x2
 sra x15, x1, x0
 
-addi x0, x0, 0 #NOP
-addi x0, x0, 0 #NOP
+#addi x0, x0, 0 #NOP
+#addi x0, x0, 0 #NOP
 
 sw x10, 116(x20)
 sw x11, 120(x20)
@@ -162,9 +168,9 @@ sw x11, 120(x20)
 #OR
 or x10, x5, x6
 
-addi x0, x0, 0 #NOP
-addi x0, x0, 0 #NOP
-addi x0, x0, 0 #NOP
+#addi x0, x0, 0 #NOP
+#addi x0, x0, 0 #NOP
+#addi x0, x0, 0 #NOP
 
 sw x10, 124(x20)
 
@@ -172,12 +178,10 @@ sw x10, 124(x20)
 and x11, x5, x6
 and x12, x7, x8
 
-addi x0, x0, 0 #NOP
-addi x0, x0, 0 #NOP
+#addi x0, x0, 0 #NOP
+#addi x0, x0, 0 #NOP
 
 sw x11, 128(x20)
-
-
 
 
 addi x0, x0, 0
