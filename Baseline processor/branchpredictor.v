@@ -329,7 +329,7 @@ module branchpredictor(
 	always@(posedge CLK) begin
 		if(!nrst) begin
 			flush_state_reg <= 1'd0;
-			flush_state <= 1'd0;
+			//flush_state <= 1'd0;
 		end
 		else begin
 			flush_state_reg <= flush_state;
