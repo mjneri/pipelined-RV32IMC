@@ -13,8 +13,8 @@ auipc x6, 0x2
 auipc x7, 0x3
 
 #JAL
-#addi x8, x0, 1
-#jal x5, end
+addi x8, x0, 1
+jal x5, end
 
 end:
 
@@ -168,3 +168,15 @@ nop
 nop
 and x7, x5, x6
 and x10, x8, x9
+
+
+addi x0, x0, 0
+addi x0, x0, 0
+addi x0, x0, 0
+addi x0, x0, 0
+addi x0, x0, 0
+addi x0, x0, 0
+addi x0, x0, 0
+addi x0, x0, 0
+addi x0, x0, 0
+addi x0, x0, 0
