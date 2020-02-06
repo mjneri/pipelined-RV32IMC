@@ -46,7 +46,9 @@ module branchpredictor(
 	output [1:0] exe_correction,
 
 	output reg flush,
-	output reg id_jump_in_bht,	// zzzzzzzzzz
+	output reg id_jump_in_bht,	// added as an input w/ sel_pc s.t. branch target is selected
+								// only when this signal is not asserted, which happens only
+								// when the jump instruction is not yet saved into the table
 
 	// Predicted branch target
 	output [9:0] if_PBT,
