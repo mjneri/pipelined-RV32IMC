@@ -280,17 +280,7 @@ module branchpredictor(
 									2'b00 						:
 								2'b00;
 
-	// Update counter here
-	// Increment/decrement depends on feedback
-	// if feedback = 1, increment. if feedback = 0, decrement
-	// MIGHT NEED TO CHANGE THIS LATER
-	// assign exe_loadentry[1:0] = (feedback)?
-	// 								(exe_loadentry[1:0] == 2'h3)? 2'h3 : exe_loadentry[1:0] + 2'b1 :
-	// 							// feedback = 0
-	// 								(exe_loadentry[1:0] == 2'h0)? 2'h0 : exe_loadentry[1:0] - 2'b1;
-
-
-////////////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////////////
 	// Write back to the table
 	integer i;	// Used for resetting fifo_counter & history_table
 	always@(posedge CLK) begin
