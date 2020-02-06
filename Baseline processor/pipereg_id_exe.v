@@ -10,6 +10,14 @@ module pipereg_id_exe(
 	input [11:0] id_pc4,
 	output reg [11:0] exe_pc4,
 
+	// Regfile output A
+	input [31:0] id_opA,
+	output reg [31:0] exe_opA,
+
+	// Regfile output B
+	input [31:0] id_opB,
+	output reg [31:0] exe_opB,
+
 	// 32bit instruction
 	input [31:0] id_inst,
 	output reg [31:0] exe_inst,
@@ -25,6 +33,14 @@ module pipereg_id_exe(
 	// 32-bit Immediate
 	input [31:0] id_imm,
 	output reg [31:0] exe_imm,
+
+	// Register A
+	input [31:0] id_rsA,
+	output reg [31:0] exe_rsA,
+
+	// Register B
+	input [31:0] id_rsB,
+	output reg [31:0] exe_rsB,
 
 	// Destination register
 	input [4:0] id_rd,
@@ -67,6 +83,10 @@ module pipereg_id_exe(
 		if(!nrst) begin
 			exe_pc4 <= 0;
 			exe_inst <= 0;
+			exe_rsA <= 0;
+			exe_rsB <= 0;
+			exe_opA <= 0;
+			exe_opB <= 0;
 			exe_rfoutA <= 0;
 			exe_rfoutB <= 0;
 			exe_imm <= 0;
@@ -89,6 +109,10 @@ module pipereg_id_exe(
 			if(flush) begin
 				exe_pc4 <= 0;
 				exe_inst <= 0;
+				exe_rsA <= 0;
+				exe_rsB <= 0;
+				exe_opA <= 0;
+				exe_opB <= 0;
 				exe_rfoutA <= 0;
 				exe_rfoutB <= 0;
 				exe_imm <= 0;
@@ -109,6 +133,10 @@ module pipereg_id_exe(
 			end else begin
 				exe_pc4 <= id_pc4;
 				exe_inst <= id_inst;
+				exe_rsA <= id_rsA;
+				exe_rsB <= id_rsB;
+				exe_opA <= id_opA;
+				exe_opB <= id_opB;
 				exe_rfoutA <= id_rfoutA;
 				exe_rfoutB <= id_rfoutB;
 				exe_imm <= id_imm;
