@@ -20,31 +20,27 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 module controller1(
+    // Input from 32bit instruction
     input [6:0] opcode,
     input [2:0] funct3,
     input [6:0] funct7,
 
-    // Z and less would most likely be taken as an input by the BHT
-    //input z,
-    //input less,
+    output [3:0] ALU_op,        // Input to ALU
+    output sel_opA,             // Input to opA selection mux
+    output sel_opB,             // Input to opB selection mux
+    output is_stype,            // Input to STOREBLOCK
 
-    output [3:0] ALU_op,
-    output sel_opA,
-    output sel_opB,
-    output is_stype,
+    output is_jump,             // Input to BHT
+    output is_btype,            // Input to BHT
 
-    output is_jump,
-    output is_btype,
-
-    output wr_en,
-    output [2:0] dm_select,
-    output [2:0] imm_select,
-    output [1:0] sel_pc,
-    output [1:0] sel_data,
-    output [1:0] store_select,
-    output sel_opBR
-    //output mask
-    );
+    output wr_en,               // Input to regfile
+    output [2:0] dm_select,     // Input to LOADBLOCK
+    output [2:0] imm_select,    // Input to SHIFTSIGNSHUFF block
+    output [1:0] sel_pc,        // Input to PC selection MUX
+    output [1:0] sel_data,      // Input to WB data selection MUX
+    output [1:0] store_select,  // Input to STOREBLOCK
+    output sel_opBR             // Input to Branch target computation MUX
+);
     
     ///////////////////////////////////////////////////////////////////////
     // Legend of Opcodes                                                 //
