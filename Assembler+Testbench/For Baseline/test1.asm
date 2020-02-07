@@ -36,6 +36,11 @@ sub x30, x3, x2
 end:
 add x30, x2, x3
 
+jal x3, end2:
+addi x10, x3, x3
+
+end2:
+
 #JALR
 addi x11, x0, 0x2
 jalr x31, 0x6(x11)
