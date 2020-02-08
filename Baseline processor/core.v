@@ -66,20 +66,9 @@ module core(
 	// Inputs to ID/EXE Pipereg 														
 	wire [31:0] id_rfoutA, id_rfoutB;	// Regfile outputs 								
 	wire [31:0] id_imm;					// Output of SHIFT, SIGN EXT, AND SHUFFLE block
-	wire [31:0] id_opA;
-	wire [31:0] id_opB;
-	wire [31:0] id_rstore;
 
-	// Data Forwarding Control Signals
-	wire fw_exe_to_id_A;
-    wire fw_exe_to_id_B;
-    wire fw_mem_to_id_A;
-    wire fw_mem_to_id_B;
-	wire fw_wb_to_id_A;
-    wire fw_wb_to_id_B;
-	wire fw_mem_to_exe_A;
-    wire fw_mem_to_exe_B;
-
+	wire [31:0] id_fwdopA, id_fwdopB;	// Selected operands based on forwarded data
+	wire [31:0] id_fwdstore;			// Selected input to STOREBLOCK based on forwarded data
 // &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 
 
@@ -89,28 +78,38 @@ module core(
 // EXE Stage ========================================================
 	// Outputs of ID/EXE Pipeline Register
 	wire [11:0] exe_pc4;			// PC + 4
-	wire [31:0] exe_opA;			// Regfile output A
-	wire [31:0] exe_opB;			// Regfile output B
+	wire [31:0] exe_fwdopA;			// Selected opA in ID stage based on forwarded data
+	wire [31:0] exe_fwdopB;			// Selected opB in ID stage based on forwarded data
 	wire [31:0] exe_inst;			// 32 bit instruction
 	wire [31:0] exe_rfoutA;			// Regfile output A
 	wire [31:0] exe_rfoutB;			// Regfile output B
-	wire [4:0] exe_rsA				// Source register A
-	wire [4:0] exe_rsB;				// Source register B
 	wire [31:0] exe_imm;			// Immediate
 	wire [4:0] exe_rd;				// Destination register
 	wire [11:0] exe_PC;				// PC
 
 	// Other wires used inside EXE stage
-	wire [31:0] opA;
-	wire [31:0] opB;
-	wire [31:0] exe_rstore;
+	wire [31:0] opA;				// Input opA to ALU
+	wire [31:0] opB;				// Input opB to ALU
+	wire [31:0] exe_rstore;			// Input data to STOREBLOCK
 
-	wire exe_z;
-	wire exe_less;
-	//wire [31:0] exe_branchtarget;
-	wire [2:0] exe_funct3;
-	wire [6:0] exe_opcode;
-	wire [5:0] exe_btype;
+	wire [4:0] exe_rsA;				// Source register A
+	wire [4:0] exe_rsB;				// Source register B
+	assign exe_rsA = exe_inst[19:15];
+	assign exe_rsB = exe_inst[24:20];
+
+	wire exe_z;						// Output of ALU; used for evaluating Branches
+	wire exe_less;					// Output of ALU; used for evaluating Branches
+	wire [2:0] exe_funct3;			// Used for generating exe_btype
+	wire [6:0] exe_opcode;			// Used for generating exe_btype
+	wire [5:0] exe_btype;			// Determines what branch instruction is in EXE stage
+	assign exe_opcode = exe_inst[6:0];
+	assign exe_funct3 = exe_inst[14:12];
+	assign exe_btype[5] = (exe_opcode == 7'h63)? ( (exe_funct3 == 3'h0)? 1'b1 : 1'b0) : 1'b0;	// BEQ
+	assign exe_btype[4] = (exe_opcode == 7'h63)? ( (exe_funct3 == 3'h1)? 1'b1 : 1'b0) : 1'b0;	// BNE
+	assign exe_btype[3] = (exe_opcode == 7'h63)? ( (exe_funct3 == 3'h4)? 1'b1 : 1'b0) : 1'b0;	// BLT
+	assign exe_btype[2] = (exe_opcode == 7'h63)? ( (exe_funct3 == 3'h5)? 1'b1 : 1'b0) : 1'b0;	// BGE
+	assign exe_btype[1] = (exe_opcode == 7'h63)? ( (exe_funct3 == 3'h6)? 1'b1 : 1'b0) : 1'b0;	// BLTU
+	assign exe_btype[0] = (exe_opcode == 7'h63)? ( (exe_funct3 == 3'h7)? 1'b1 : 1'b0) : 1'b0;	// BGEU
 
 	// Control signals
 	wire [3:0] exe_ALU_op;			// For EXE stage
@@ -119,7 +118,6 @@ module core(
 	wire [3:0] exe_dm_write;		// For MEM stage
 	wire exe_wr_en;					// For WB stage
 	wire [2:0] exe_dm_select;		// For MEM stage
-	wire [1:0] exe_sel_pc;			// For EXE stage
 	wire [1:0] exe_sel_data;		// For WB stage
 	wire [1:0] exe_store_select;	// For EXE stage
 
@@ -194,89 +192,110 @@ module core(
 
 
 
-// Clock Gating ====================================================
-	wire if_clk;
-	wire if_clk_en;
-	wire id_clk;
-	wire id_clk_en;
-	wire exe_clk;
-	wire exe_clk_en;
-	wire mem_clk;
-	wire mem_clk_en;
-	wire wb_clk;
-	wire wb_clk_en;
+// Data Forwarding Control Signals ================================
+	wire fw_exe_to_id_A;
+    wire fw_exe_to_id_B;
+    wire fw_mem_to_id_A;
+    wire fw_mem_to_id_B;
+	wire fw_wb_to_id_A;
+    wire fw_wb_to_id_B;
+	wire fw_mem_to_exe_A;
+    wire fw_mem_to_exe_B;
 // &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 
 
 
 
 
-/***********************************************************************************************/
+// Clock Gating ====================================================
+	wire if_clk;			// CLK input to PC
+	wire if_clk_en;
+	wire id_clk;			// CLK input to IF/ID pipereg
+	wire id_clk_en;
+	wire exe_clk;			// CLK input to ID/EXE pipereg
+	wire exe_clk_en;
+	wire exe_stall;			// Stall for LOAD->JALR hazards
+	wire mem_clk;			// CLK input to EXE/MEM pipereg
+	wire mem_clk_en;
+	// wire wb_clk;			// CLK input to MEM/WB pipereg
+	// wire wb_clk_en;
+// &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+
+
 
 
 
 /******************************* DATAPATH (INSTANTIATING MODULES) ******************************/
-
 // CLOCKS ========================================================
 	sf_controller SF_CONTROLLER(
-		.clk(CLK),
-		.nrst(nrst),
-		.if_inst(if_inst),
-		.buffer_stall(buffer_stall),
+		// .clk(CLK),
+		// .nrst(nrst),
+		//.if_inst(if_inst),
+		//.buffer_stall(buffer_stall),
+
 		.id_inst(id_inst),
-		.is_jump(id_sel_opA),
-		.branch_flush(branch_flush),
+		//.is_jump(id_is_jump),
+		//.is_nop(),
+
+		//.branch_flush(flush),
 		.exe_sel_data(exe_sel_data),
 		.exe_rd(exe_rd),
 
+		.fw_mem_to_exe_A(fw_mem_to_exe_A),
+		.fw_mem_to_exe_B(fw_mem_to_exe_B),
+
 		.if_en(if_clk_en),
 		.id_en(id_clk_en),
-		.exe_en(exe_clk_en),
-		.mem_en(mem_clk_en),
-		.wb_en(wb_clk_en)
+		.exe_load_en(exe_clk_en),
+		.exe_jalr_en(exe_stall),
+		.mem_en(mem_clk_en)
+		//.wb_en(wb_clk_en),
+		//.rf_en()
 	);
 
-	BUFGCE en_if (
-		.I(CLK),
-		.CE(if_clk_en),
-		.O(if_clk)
-	);
+	// BUFGCE en_if (
+	// 	.I(CLK),
+	// 	.CE(if_clk_en),
+	// 	.O(if_clk)
+	// );
 
-	BUFGCE en_id (
-		.I(CLK),
-		.CE(id_clk_en),
-		.O(id_clk)
-	);
+	// BUFGCE en_id (
+	// 	.I(CLK),
+	// 	.CE(id_clk_en),
+	// 	.O(id_clk)
+	// );
 
-	BUFGCE en_exe (
-		.I(CLK),
-		.CE(exe_clk_en),
-		.O(exe_clk)
-	);
+	// BUFGCE en_exe (
+	// 	.I(CLK),
+	// 	.CE(exe_clk_en),
+	// 	.O(exe_clk)
+	// );
 
-	BUFGCE en_mem (
-		.I(CLK),
-		.CE(mem_clk_en),
-		.O(mem_clk)
-	);
+	// BUFGCE en_mem (
+	// 	.I(CLK),
+	// 	.CE(mem_clk_en),
+	// 	.O(mem_clk)
+	// );
 
-	BUFGCE en_wb (
-		.I(CLK),
-		.CE(wb_clk_en),
-		.O(wb_clk)
-	);
+	// BUFGCE en_wb (
+	// 	.I(CLK),
+	// 	.CE(wb_clk_en),
+	// 	.O(wb_clk)
+	// );
 
 
 
 // IF Stage ========================================================
-	pc PC( .clk(CLK),
+	pc PC( 
+		.clk(CLK),
 		.nrst(nrst),
-		//.en(if_clk_en),
+		.en(if_clk_en),
 		.addr_in(if_pcnew),
 		.inst_addr(if_PC)
 	);
 
-	instmem INSTMEM( //.clk(~CLK),
+	instmem INSTMEM( 
+		.clk(CLK),
 		.addr(if_PC),
 		.inst(if_inst)
 	);
@@ -312,7 +331,7 @@ module core(
 	pipereg_if_id IF_ID(
 		.clk(CLK),
 		.nrst(nrst),
-		//.en(id_clk_en),
+		.en(id_clk_en),
 
 		.if_pc4(if_pc4), 	.id_pc4(id_pc4),
 		.if_inst(if_inst), 	.id_inst(id_inst),
@@ -324,14 +343,17 @@ module core(
 // ID Stage ========================================================
 	
 	// Selecting operands
-	assign id_opA = fw_exe_to_id_A? 							exe_ALUout : 
+	// id_fwdopA is passed through ID/EXE pipeline register to the ALU
+	assign id_fwdopA = fw_exe_to_id_A? 							exe_ALUout :
 					((fw_mem_to_id_A && (mem_sel_data==2'd3))? 	mem_loaddata :
 					(fw_mem_to_id_A? 							mem_ALUout :
 					((fw_wb_to_id_A && id_sel_opA)? 			wb_wr_data :
 					(id_sel_opA? 								id_rfoutA :
 																id_PC
 																))));
-	assign id_opB = (fw_exe_to_id_B && !id_is_stype)? 			exe_ALUout :
+
+	// id_fwdopB is passed through ID/EXE pipeline register to the ALU
+	assign id_fwdopB = (fw_exe_to_id_B && !id_is_stype)? 			exe_ALUout :
 					((fw_mem_to_id_B && !id_sel_opB && (mem_sel_data==2'd3))? 	mem_loaddata :
 					((fw_mem_to_id_B && !id_is_stype)? 			mem_ALUout :
 					((fw_wb_to_id_B && !id_sel_opB)? 			wb_wr_data :
@@ -339,7 +361,8 @@ module core(
 																id_rfoutB
 																))));
 	
-	assign id_rstore = fw_exe_to_id_B? 							exe_ALUout :
+	// id_fwdstore is passed through ID/EXE pipeline register & is sent to STOREBLOCK
+	assign id_fwdstore = fw_exe_to_id_B? 						exe_ALUout :
 					((fw_mem_to_id_B && (mem_sel_data==2'd3))? 	mem_loaddata :
 					(fw_mem_to_id_B? 							mem_ALUout :
 					(fw_wb_to_id_B? 							wb_wr_data :
@@ -377,8 +400,9 @@ module core(
 
 		.wr_en(wb_wr_en),
 		.wr_data(wb_wr_data),
-		.src1_addr(id_rsA),		.src2_addr(id_rsB),
 		.dest_addr(wb_rd),
+
+		.src1_addr(id_rsA),		.src2_addr(id_rsB),
 		.src1_out(id_rfoutA),	.src2_out(id_rfoutB)
 	);
 
@@ -388,24 +412,39 @@ module core(
 		.imm(id_imm)
 	);
 
-	// Branch target address
-	assign id_brOP = (id_sel_opBR)? id_rfoutA : id_PC;
+	// Branch target address computation
+	// id_brOP = rfoutA for JALR only
+	assign id_brOP = (fw_mem_to_id_A && (mem_sel_data == 2'd3))? mem_loaddata :
+					 (id_sel_opBR)? id_rfoutA : id_PC;
 	assign id_branchtarget = id_brOP + id_imm;
 
-	forwarding_unit FU(
+	forwarding_unit FWD(
 		// Inputs
-		.id_rsA(id_rsA),		.id_rsB(id_rsB),
-		.exe_rsA(exe_rsA),		.exe_rsB(exe_rsB),
-		.exe_rd(exe_rd),		.mem_rd(mem_rd),		.wb_rd(wb_rd),
-		.exe_wr_en(exe_wr_en),	.mem_wr_en(mem_wr_en),	.wb_wr_en(wb_wr_en),
-		.id_sel_opA(id_sel_opA),.id_sel_opB(id_sel_opB),
+		.id_rsA(id_rsA),
+		.id_rsB(id_rsB),
+		.exe_rsA(exe_rsA),
+		.exe_rsB(exe_rsB),
+
+		.exe_rd(exe_rd),
+		.mem_rd(mem_rd),
+		.wb_rd(wb_rd),
+
+		.exe_wr_en(exe_wr_en),
+		.mem_wr_en(mem_wr_en),
+		.wb_wr_en(wb_wr_en),
+
+		.id_sel_opA(id_sel_opA),
+		.id_sel_opB(id_sel_opB),
+
 		.id_sel_data(id_sel_data),
 		.exe_sel_data(exe_sel_data),
 		.mem_sel_data(mem_sel_data),
 		.wb_sel_data(wb_sel_data),
+
 		.id_is_stype(id_is_stype),
 		.exe_is_stype(exe_is_stype),
 
+		// Outputs
 		.fw_exe_to_id_A(fw_exe_to_id_A),
 		.fw_exe_to_id_B(fw_exe_to_id_B),
 		.fw_mem_to_id_A(fw_mem_to_id_A),
@@ -420,21 +459,20 @@ module core(
 	pipereg_id_exe ID_EXE(
 		.clk(CLK),
 		.nrst(nrst),
-		.flush(flush),
+		.flush(flush | exe_stall),
+		.en(exe_clk_en),
 
-		.id_pc4(id_pc4),		.exe_pc4(exe_pc4),
-		.id_opA(id_opA),		.exe_opA(exe_opA),
-		.id_opB(id_opB),		.exe_opB(exe_opB),
+		.id_pc4(id_pc4),					.exe_pc4(exe_pc4),
+		.id_fwdopA(id_fwdopA),				.exe_fwdopA(exe_fwdopA),
+		.id_fwdopB(id_fwdopB),				.exe_fwdopB(exe_fwdopB),
 
-		.id_inst(id_inst),		.exe_inst(exe_inst),
-		.id_rfoutA(id_rfoutA),	.exe_rfoutA(exe_rfoutA),
-		.id_rfoutB(id_rstore),	.exe_rfoutB(exe_rfoutB),
+		.id_inst(id_inst),					.exe_inst(exe_inst),
+
+		.id_fwdstore(id_fwdstore),			.exe_fwdstore(exe_fwdstore),
 		
-		.id_imm(id_imm),		.exe_imm(exe_imm),
-		.id_rsA(id_rsA),		.exe_rsA(exe_rsA),
-		.id_rsB(id_rsB),		.exe_rsB(exe_rsB),
-		.id_rd(id_rd),			.exe_rd(exe_rd),
-		.id_PC(id_PC),			.exe_PC(exe_PC),
+		.id_imm(id_imm),					.exe_imm(exe_imm),
+		.id_rd(id_rd),						.exe_rd(exe_rd),
+		.id_PC(id_PC),						.exe_PC(exe_PC),
 
 		// Control signals go here
 		.id_ALU_op(id_ALU_op),				.exe_ALU_op(exe_ALU_op),
@@ -443,7 +481,6 @@ module core(
 		.id_is_stype(id_is_stype),			.exe_is_stype(exe_is_stype),
 		.id_wr_en(id_wr_en),				.exe_wr_en(exe_wr_en),
 		.id_dm_select(id_dm_select),		.exe_dm_select(exe_dm_select),
-		//.id_sel_pc(id_sel_pc),				.exe_sel_pc(exe_sel_pc),
 		.id_sel_data(id_sel_data),			.exe_sel_data(exe_sel_data),
 		.id_store_select(id_store_select), 	.exe_store_select(exe_store_select)
 	);
@@ -452,14 +489,12 @@ module core(
 
 // EXE Stage ========================================================
 	// Selecting operands
-	assign opA = fw_mem_to_exe_A ? mem_loaddata : exe_opA;
-	assign opB = (fw_mem_to_exe_B && !exe_is_stype) ? mem_loaddata : exe_opB;
-
-	//assign exe_branchtarget = exe_PC + exe_imm;
+	assign opA = fw_mem_to_exe_A ? mem_loaddata : exe_fwdopA;
+	assign opB = (fw_mem_to_exe_B && !exe_is_stype) ? mem_loaddata : exe_fwdopB;
 
 	assign exe_rstore = (fw_mem_to_exe_B && (mem_sel_data==2'd3))?	mem_loaddata : 
 						(fw_mem_to_exe_B?							mem_ALUout :
-						 											exe_rfoutB
+						 											exe_fwdstore
 																	 );
 
 	alu ALU(
@@ -470,16 +505,6 @@ module core(
 		.z(exe_z),
 		.less(exe_less)
 	);
-	
-	// Check what kind of branch instruction
-	assign exe_opcode = exe_inst[6:0];
-	assign exe_funct3 = exe_inst[14:12];
-	assign exe_btype[5] = (exe_opcode == 7'h63)? ( (exe_funct3 == 3'h0)? 1'b1 : 1'b0) : 1'b0;
-	assign exe_btype[4] = (exe_opcode == 7'h63)? ( (exe_funct3 == 3'h1)? 1'b1 : 1'b0) : 1'b0;
-	assign exe_btype[3] = (exe_opcode == 7'h63)? ( (exe_funct3 == 3'h4)? 1'b1 : 1'b0) : 1'b0;
-	assign exe_btype[2] = (exe_opcode == 7'h63)? ( (exe_funct3 == 3'h5)? 1'b1 : 1'b0) : 1'b0;
-	assign exe_btype[1] = (exe_opcode == 7'h63)? ( (exe_funct3 == 3'h6)? 1'b1 : 1'b0) : 1'b0;
-	assign exe_btype[0] = (exe_opcode == 7'h63)? ( (exe_funct3 == 3'h7)? 1'b1 : 1'b0) : 1'b0;
 
 	branchpredictor BHT(
 		.CLK(CLK),
@@ -521,7 +546,7 @@ module core(
 	pipereg_exe_mem EXE_MEM(
 		.clk(CLK),
 		.nrst(nrst),
-		//.en(mem_clk_en),
+		.en(mem_clk_en),
 
 		.exe_pc4(exe_pc4),					.mem_pc4(mem_pc4),
 		.exe_inst(exe_inst),				.mem_inst(mem_inst),
@@ -543,6 +568,7 @@ module core(
 // MEM Stage ========================================================
 	datamem DATAMEM(
 		.clk(CLK),
+
 		.dm_write(mem_dm_write),
 		.data_addr(mem_ALUout[11:2]),
 		.data_in(mem_storedata),

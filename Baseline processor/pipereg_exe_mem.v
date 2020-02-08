@@ -3,6 +3,7 @@
 module pipereg_exe_mem(
 	input clk,
 	input nrst,
+	input en,
 
 	input [11:0] exe_pc4,
 	output reg [11:0] mem_pc4,
@@ -55,7 +56,7 @@ module pipereg_exe_mem(
 			mem_wr_en <= 0;
 			mem_dm_select <= 0;
 			mem_sel_data <= 0;
-		end else begin
+		end else if(en) begin
 			mem_pc4 <= exe_pc4;
 			mem_inst <= exe_inst;
 			mem_ALUout <= exe_ALUout;

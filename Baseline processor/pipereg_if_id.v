@@ -3,6 +3,10 @@
 module pipereg_if_id(
 	input clk,
 	input nrst,
+	input en,
+
+	// Input enable for stalling/clock gating
+	//input en,
 
 	// PC + 4
 	input [11:0] if_pc4,
@@ -25,10 +29,12 @@ module pipereg_if_id(
 			id_PC <= 0;
 		end
 		else begin
-			id_pc4 <= if_pc4;
-			id_inst <= if_inst;
-			
-			id_PC <= if_PC;
+			if(en) begin
+				id_pc4 <= if_pc4;
+				id_inst <= if_inst;
+				
+				id_PC <= if_PC;
+			end
 		end
 	end
 endmodule

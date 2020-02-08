@@ -1,6 +1,4 @@
 #testbench for baseline processor - RUJ types
-#instructions ordered properly
-#no hazards as of now
 #NOP = addi x0, x0, 0
 
 
@@ -38,10 +36,17 @@ sub x30, x3, x2
 end:
 add x30, x2, x3
 
-#JALR
-jalr x31, 0x4(x0)
+jal x3, end2:
+addi x10, x3, x3
 
-#addi x0, x0, 0
+end2:
+
+#JALR
+addi x11, x0, 0x2
+jalr x31, 0x6(x11)
+
+addi x0, x0, 0
+sw x31, 132(x20)
 
 #ADD
 #1 p + p
