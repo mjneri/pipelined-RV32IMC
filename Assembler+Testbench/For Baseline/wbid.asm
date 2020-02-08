@@ -1,7 +1,6 @@
 # WB > ID test cases
 # 2 NOPS IN BETWEEN
 # X's in excel sheets test cases not included
-# (include adjacent Load+JALR w/ no NOP in between to test stalls)
 
 
 # R-type > R-type
