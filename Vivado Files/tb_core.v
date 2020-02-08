@@ -24,7 +24,7 @@ module tb_core();
 	answerkey AK();
 
 	always
-		#5 CLK = ~CLK;
+		#10 CLK = ~CLK;		// 50MHz clock
 
 	integer i, check, done, pass;
 	integer clock_counter;
@@ -49,6 +49,7 @@ module tb_core();
 		done = 0;
 		check = 0;
 		pass = 0;
+		i = 0;
 		#100;
 		nrst = 1;
 	end
@@ -65,15 +66,20 @@ module tb_core();
 		if(check == 10)
 			done = 1;
 	end
+
+	// Tracking how many clock cycles it takes to execute the program
 	always@(posedge CLK) begin
 		if(!nrst)
 			clock_counter <= 0;
 		else
-			clock_counter <= clock_counter + 1;
+			if(!done)
+				clock_counter <= clock_counter + 1;
 	end
 
+	// The following code snippet is for checking the contents of
+	// the memory when RTL_RAM is used (if it was coded in Verilog)
 	// Displaying Memory contents
-	always@(posedge done) begin
+	/*always@(posedge done) begin
 		$display("===| SUMMARY |===");
 		$display("Actual  \tExpected");
 		$display("========\t========");
@@ -89,6 +95,36 @@ module tb_core();
 		$display("\n");
 		$display("Passed %d/%d test cases.\n=================", pass, i);
 		$finish;
+	end*/
+
+	// The following code snippet is for checking the contents
+	// of BLOCKMEM
+	always@(posedge done) begin
+		$display("===| SUMMARY |===");
+		$display("Actual  \tExpected");
+		$display("========\t========");			
+	end
+
+	always@(negedge CLK) begin
+		if(done) begin	
+			if(con_out == AK.memory[con_addr]) begin
+				$display("%X\t%X\tPass", con_out, AK.memory[con_addr]);
+				pass = pass + 1;
+			end else begin
+				$display("%X\t%X\tFail", con_out, AK.memory[con_addr]);
+			end
+
+			con_addr = con_addr + 1;
+			i = i + 1;
+		end
+	end
+
+	always@(posedge CLK) begin
+		if(con_addr == 100) begin			
+			$display("\n");
+			$display("Passed %d/%d test cases.\nClock cycles: %d\n=================", pass, i, clock_counter);
+			$finish;
+		end
 	end
 
 endmodule
