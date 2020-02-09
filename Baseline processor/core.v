@@ -267,25 +267,25 @@ module core(
 // ID Stage ========================================================
 
 	// Selecting operands
-	assign id_opA = fw_exe_to_id_A? 							exe_ALUout : 
+	assign id_opA = fw_exe_to_id_A? 							((exe_sel_data == 2'd2) ? exe_imm: exe_ALUout) : 
 					((fw_mem_to_id_A && (mem_sel_data==2'd3))? 	mem_loaddata :
-					(fw_mem_to_id_A? 							mem_ALUout :
+					(fw_mem_to_id_A? 							((mem_sel_data == 2'd2) ? mem_imm: mem_ALUout) :
 					((fw_wb_to_id_A && id_sel_opA)? 			wb_wr_data :
 					(id_sel_opA? 								id_rfoutA :
 																id_PC
 																))));
-	assign id_opB = (fw_exe_to_id_B && !id_is_stype)? 			exe_ALUout :
+	assign id_opB = (fw_exe_to_id_B && !id_is_stype)? 			((exe_sel_data == 2'd2) ? exe_imm: exe_ALUout) :
 					((fw_mem_to_id_B && !id_sel_opB && (mem_sel_data==2'd3))? 	mem_loaddata :
-					((fw_mem_to_id_B && !id_is_stype)? 			mem_ALUout :
+					((fw_mem_to_id_B && !id_is_stype)? 			((mem_sel_data == 2'd2) ? mem_imm: mem_ALUout) :
 					((fw_wb_to_id_B && !id_sel_opB)? 			wb_wr_data :
 					(id_sel_opB? 								id_imm :
 																id_rfoutB
 																))));
 	
 	wire [31:0] id_rstore;
-	assign id_rstore = fw_exe_to_id_B? 							exe_ALUout :
+	assign id_rstore = fw_exe_to_id_B? 							((exe_sel_data == 2'd2) ? exe_imm: exe_ALUout) :
 					((fw_mem_to_id_B && (mem_sel_data==2'd3))? 	mem_loaddata :
-					(fw_mem_to_id_B? 							mem_ALUout :
+					(fw_mem_to_id_B? 							((mem_sel_data == 2'd2) ? mem_imm: mem_ALUout) :
 					(fw_wb_to_id_B? 							wb_wr_data :
 																id_rfoutB
 																)));

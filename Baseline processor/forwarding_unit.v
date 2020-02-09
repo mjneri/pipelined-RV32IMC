@@ -34,6 +34,7 @@ module forwarding_unit(
     input [1:0] wb_sel_data,
     input id_is_stype,
     input exe_is_stype,
+    input [2:0] id_imm_select,
 
 	output fw_exe_to_id_A,
     output fw_exe_to_id_B,
@@ -47,11 +48,11 @@ module forwarding_unit(
 
     // ID stage forwarding (ALU output or memory load -> ALU operand/s)
 
-    assign fw_exe_to_id_A = (id_rsA == exe_rd) && (id_rsA != 0) && exe_wr_en && id_sel_opA && (exe_sel_data != 2'd3);
-    assign fw_exe_to_id_B = (id_rsB == exe_rd) && (id_rsB != 0) && exe_wr_en && (!id_sel_opB || id_is_stype) && (exe_sel_data != 2'd3);
-    assign fw_mem_to_id_A = (id_rsA == mem_rd) && (id_rsA != 0) && mem_wr_en && id_sel_opA;
-    assign fw_mem_to_id_B = (id_rsB == mem_rd) && (id_rsB != 0) && mem_wr_en && (!id_sel_opB || id_is_stype);
-    assign fw_wb_to_id_A = (id_rsA == wb_rd) && (id_rsA != 0) && wb_wr_en && id_sel_opA;
+    assign fw_exe_to_id_A = (id_rsA == exe_rd) && (id_rsA != 0) && exe_wr_en && id_sel_opA && (exe_sel_data != 2'd3) && !(id_imm_select == 3'd4 || id_imm_select == 3'd2);
+    assign fw_exe_to_id_B = (id_rsB == exe_rd) && (id_rsB != 0) && exe_wr_en && (!id_sel_opB || id_is_stype) && (exe_sel_data != 2'd3&& !(id_imm_select == 3'd4 || id_imm_select == 3'd2);
+    assign fw_mem_to_id_A = (id_rsA == mem_rd) && (id_rsA != 0) && mem_wr_en && id_sel_opA && !(id_imm_select == 3'd4 || id_imm_select == 3'd2;
+    assign fw_mem_to_id_B = (id_rsB == mem_rd) && (id_rsB != 0) && mem_wr_en && (!id_sel_opB || id_is_stype) && !(id_imm_select == 3'd4 || id_imm_select == 3'd2;
+    assign fw_wb_to_id_A = (id_rsA == wb_rd) && (id_rsA != 0) && wb_wr_en && id_sel_opA && !(id_imm_select == 3'd4 || id_imm_select == 3'd2;
     assign fw_wb_to_id_B = (id_rsB == wb_rd) && (id_rsB != 0) && wb_wr_en && (!id_sel_opB || (wb_sel_data == 2'd3) || id_is_stype);
 
     // EXE stage forwarding (memory load -> ALU operand/s)
