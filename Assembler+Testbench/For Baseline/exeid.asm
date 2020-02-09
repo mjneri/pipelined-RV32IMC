@@ -52,7 +52,7 @@ sub x12, x12, x1
 
 pass:
 sub x13, x6, x6
-beq x13, x0, pass2
+beq x13, x13, pass2
 sll x14, x13, x1
 
 pass2:
