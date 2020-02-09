@@ -435,18 +435,18 @@ module core(
 
 	// Branch target address computation
 	// id_brOP = rfoutA for JALR only
-	assign id_brOP = (fw_wb_to_id_A)? wb_wr_data				:
-
-					 (fw_mem_to_id_A)? 
+	assign id_brOP = (fw_exe_to_id_A && id_opcode == 7'h67)?
+					 	(exe_sel_data == 2'd2)? exe_imm			:
+					 	(exe_sel_data == 2'd1)? exe_ALUout		:
+					 							exe_pc4			:
+					 (fw_mem_to_id_A  && id_opcode == 7'h67)? 
 						(mem_sel_data == 2'd3)? mem_loaddata 	:
 						(mem_sel_data == 2'd2)? mem_imm 		:
 						(mem_sel_data == 2'd1)? mem_ALUout		:
 												mem_pc4			:
-					 (fw_exe_to_id_A)?
-					 	(exe_sel_data == 2'd2)? exe_imm			:
-					 	(exe_sel_data == 2'd1)? exe_ALUout		:
-					 							exe_pc4			:
-					(id_sel_opBR)? id_rfoutA : id_PC;
+					 (fw_wb_to_id_A  && id_opcode == 7'h67)? 
+					 					wb_wr_data				:
+					 (id_sel_opBR)? id_rfoutA : id_PC;
 
 	assign id_branchtarget = id_brOP + id_imm;
 
