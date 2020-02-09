@@ -21,6 +21,7 @@
 module branchpredictor(
 	input CLK,
 	input nrst,
+	input en,
 
 	// Inputs
 	input [9:0] if_PC,
@@ -291,20 +292,21 @@ module branchpredictor(
 			for(i = 0; i < 64; i=i+1) begin
 				history_table[i] <= 19'b0;
 			end
-		end
-		else if( (id_is_btype || id_is_jump) && (id_iseq == 4'h0) ) begin
-			// Write to table if (Branch or Jump) AND the input is not in the table yet
-			history_table[{id_set, fifo_counter[id_set]}] <= {1'b1, id_tag, id_branchtarget, sat_counter};
-			//increment counter; if = 3 na, equate to zero
-			fifo_counter[id_set] <= fifo_counter[id_set] + 2'b01;
-		end
-		else if(|exe_btype) begin
-			if(feedback == 1'h1) begin
-				if(exe_loadentry[1:0] != 2'h3)
-					history_table[{exe_set, exe_setoffset}] <= exe_loadentry + 2'b1;
-			end else begin
-				if(exe_loadentry[1:0] != 2'h0)
-					history_table[{exe_set, exe_setoffset}] <= exe_loadentry - 2'b1;
+		end else if(en) begin
+			if( (id_is_btype || id_is_jump) && (id_iseq == 4'h0) ) begin
+				// Write to table if (Branch or Jump) AND the input is not in the table yet
+				history_table[{id_set, fifo_counter[id_set]}] <= {1'b1, id_tag, id_branchtarget, sat_counter};
+				//increment counter; if = 3 na, equate to zero
+				fifo_counter[id_set] <= fifo_counter[id_set] + 2'b01;
+			end
+			else if(|exe_btype) begin
+				if(feedback == 1'h1) begin
+					if(exe_loadentry[1:0] != 2'h3)
+						history_table[{exe_set, exe_setoffset}] <= exe_loadentry + 2'b1;
+				end else begin
+					if(exe_loadentry[1:0] != 2'h0)
+						history_table[{exe_set, exe_setoffset}] <= exe_loadentry - 2'b1;
+				end
 			end
 		end
 	end
@@ -319,9 +321,8 @@ module branchpredictor(
 	always@(posedge CLK) begin
 		if(!nrst) begin
 			flush_state_reg <= 1'd0;
-			//flush_state <= 1'd0;
 		end
-		else begin
+		else if(en) begin
 			flush_state_reg <= flush_state;
 		end
 	end

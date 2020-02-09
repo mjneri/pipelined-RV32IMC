@@ -27,6 +27,9 @@ except:
 '''
 # Outputs parsed instruction line with replaced registers
 def parse_inst(inst_type, t_inst):
+    # arg1 = 0
+    # arg2 = 0
+    # arg3 = 0
     t_inst[0] = t_inst[0].upper()
     encoding_type = inst_type['format']
     syntax = inst_type['syntax']
@@ -93,7 +96,7 @@ def parse_inst(inst_type, t_inst):
             
         elif (args==3):
             arg1 = register_dict[t_inst[1]]
-            if ((syntax=='r-r-l') | (syntax=='r-r-i')):
+            if ((syntax=='r-r-l') | (syntax=='r-r-i') | (syntax=='r-r-r')):
                 try:
                     arg2 = register_dict[t_inst[2]]
                 except IndexError:
@@ -110,6 +113,12 @@ def parse_inst(inst_type, t_inst):
                         arg3 = int(t_inst[3], 0)
                     except IndexError:
                         print('Invalid third arguement (Imm)')
+                        exit()
+                else:
+                    try:
+                        arg3 = register_dict[t_inst[3]]
+                    except IndexError:
+                        print('Invalid third arguement (Reg)')
                         exit()
             elif (syntax=='r-i_r'):     # Immediate-only arguement
                 try:
