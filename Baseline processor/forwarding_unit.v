@@ -33,7 +33,7 @@ module forwarding_unit(
     input id_sel_opA,
     input id_sel_opB,
 
-    input [1:0] id_sel_data,
+   // input [1:0] id_sel_data,
     input [1:0] exe_sel_data,
     input [1:0] mem_sel_data,
     input [1:0] wb_sel_data,
