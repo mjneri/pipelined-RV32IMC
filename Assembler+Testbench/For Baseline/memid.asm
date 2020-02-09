@@ -12,6 +12,7 @@ lui x5, 0xFFCD #-50
 lui x6, 0x29 #41
 lui x7, 0x24
 
+
 # R-type > R-type
 add x10, x1, x2
 addi x0, x0, 0
@@ -166,7 +167,7 @@ addi x0, x0, 0
 addi x0, x0, 0
 addi x0, x0, 0
 addi x0, x0, 0
-addi x0, x0, 
+addi x0, x0, 0
 
 # LUI > Loads
 lui x10, 0x14
@@ -187,7 +188,7 @@ pass5:
 
 # LUI > S-type
 lui x13, 0x4
-addi x12, x12, 0
+addi x10, x10, 0
 sw x12, 44(x13)
 
 ##############################################################
@@ -230,7 +231,7 @@ lui x2, 0x2
 auipc x2, 0x3
 addi x0, x0, 0
 lw x16, 0(x2)
-sw x16, 60(x0
+sw x16, 60(x0)
 
 # AUIPC > B-type 
 auipc x3, 0x1
@@ -254,6 +255,8 @@ addi x0, x0, 0
 add x10, x10, x0
 
 jump1:
+addi x0, x0, 0
+
 xor x10, x10, x4
 sw x10, 68(x0)
 
@@ -263,6 +266,7 @@ addi x0, x0, 0
 addi x12, x11, 1
 
 jump2:
+addi x0, x0, 0
 srai x11, x11, 3
 sw x11, 72(x0)
 
@@ -272,6 +276,7 @@ addi x0, x0, 0
 sub x10, x10, x0
 
 jump3:
+addi x0, x0, 0
 jalr x13, 4(x12)
 addi x0, x0, 0
 addi x0, x0, 0
@@ -282,6 +287,7 @@ jal x14, jump4
 addi x0, x0, 0
 
 jump4:
+addi x0, x0, 0
 lw x15, -28(x14)
 sw x15, 76(x0)
 
@@ -308,13 +314,13 @@ sw x17, 84(x0)
 
 # Loads > R-type
 lw x10, 4(x0)
-addi x0, x0, x0 
+addi x0, x0, 0 
 slt x11, x0, x10
 sw x11, 120(x0)
 
 # Loads > I-type
 lw x12, 8(x0)
-addi x0, x0, x0
+addi x0, x0, 0
 slli x13, x12, 2
 sw x13, 124(x0)
 
@@ -322,29 +328,29 @@ jal x10, jumpa
 jumpa:
 # Loads > JALR
 lw x14, 12(x0)
-addi x0, x0, x0 
+addi x0, x0, 0 
 jalr x15, 8(x10)
-addi x0, x0, x0 
-addi x0, x0, x0 
-addi x0, x0, x0
+addi x0, x0, 0 
+addi x0, x0, 0 
+addi x0, x0, 0
 
 # Loads > Loads
 lw x16, 16(x0)
-addi x0, x0, x0
+addi x0, x0, 0
 lw x17, 0(x16)
 sw x17, 128(x0)
 
 # Loads > B-type
 lw x10, 20(x0)
-addi x0, x0, x0
+addi x0, x0, 0
 bne x10, x0, pass10
-addi x0, x0, x0
+addi x0, x0, 0
 pass10:
 sw x10, 132(x0)
 
 # Loads > S-type
 lw x11, 24(x0)
-addi x0, x0, x0
+addi x0, x0, 0
 sw x11, 136(x0)
 
 ##############################################################
@@ -401,3 +407,10 @@ jalr x17, 24(x16)
 addi x0, x0, 0
 sw x17, 108(x0)
 sw x16, 112(x0)
+
+
+# LOAD + JALR
+lw x10, 16(x0)
+jalr x11, (x10)
+addi x0, x0, 0
+
