@@ -13,7 +13,7 @@ try:
 except:
     print('File error')
     exit()
-# to do: flip bytes (Little Endian)
+
 '''
     parse_file() does the following:
     - get rid of empty lines
@@ -225,6 +225,7 @@ def parse_file(line_list):
 
 def assemble(instructions, labels, instmem):
     out_buffer = {}
+    compressed_counter = 0
     for inst_address in instructions.keys():
         temp_inst = process_inst(instructions[inst_address])
         opt = temp_inst[0]
@@ -368,10 +369,12 @@ def assemble(instructions, labels, instmem):
         if (opt[0]=='C'):
             out = (hex(m_code)[2:].zfill(4))
             print(out)
-            if (inst_address%4==0):
+            if (compressed_counter==0):
                 out_buffer = out
+                compressed_counter += 1
             else:
                 instmem.write(out + out_buffer + '\n')
+                compressed_counter = 0
                 out_buffer = {}
         else:
             if (out_buffer):
