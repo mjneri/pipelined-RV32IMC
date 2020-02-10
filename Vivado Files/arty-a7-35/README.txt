@@ -1,0 +1,1 @@
+copy into 'C:\Xilinx\Vivado\2019.2\data\boards\board_files'

@@ -43,7 +43,7 @@ module tb_core();
 		nrst = 0;
 
 		con_write = 0;
-		con_addr = 0;
+		con_addr = 10'h3ff;
 		con_in = 0;
 
 		done = 0;
