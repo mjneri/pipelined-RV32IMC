@@ -328,17 +328,35 @@ def assemble(instructions, labels, instmem):
             rd_rs2_ = int(temp_inst[1])
             imm = int(temp_inst[2])&(2**imm_width-1)
             rs1_ = int(temp_inst[3])
+            if (rs1_ < 8 | rs1_ > 16):
+                print('Warning: Rs1 {} truncated to {}'.format(rs1_, (0x08) | (rs1_ & 0x07)))
+            rs1_ = (rs1_ & 0x07)
+            if (rd_rs2_ < 8 | rd_rs2_ > 16):
+                print('Warning: Rs2 {} truncated to {}'.format(rd_rs2_, (0x08) | (rd_rs2_ & 0x07)))
+            rd_rs2_ = (rd_rs2_ & 0x07)
             m_code = opcode |  rd_rs2_<<2 | (imm&0x40)>>1 | (imm&0x4)<<4 | rs1_<<7 | (imm&0x38)<<7 | funct3<<13
 
         elif (encoding_type=='CB'):     # Okay
             rs1_ = int(temp_inst[1])
             label_address = labels[temp_inst[2]]
             imm = (label_address-inst_address)
+            if (rs1_ < 8 | rs1_ > 16):
+                print('Warning: Rs1 {} truncated to {}'.format(rs1_, (0x08) | (rs1_ & 0x07)))
+            rs1_ = (rs1_ & 0x07)
             m_code = opcode | (imm&0x20)>>2 | (imm&0x6)<<2 | (imm&0xC)>>1 | rs1_<<7 | (imm&0x18)<<7 | (imm&0x100)<<4 | funct3<<13
 
         elif (encoding_type=='CA'):     # Okay
             rs2_ = int(temp_inst[2])
             rd_rs1_ = int(temp_inst[1])
+            if (rd_rs1_ < 8 | rd_rs1_ > 16):
+                print('Warning: Rd/Rs1 {} truncated to {}'.format(rd_rs1_, (0x08) | (rd_rs1_ & 0x07)))
+            rd_rs1_ = (rd_rs1_ & 0x07)
+            if (rs2_ < 8 | rs2_ > 16):
+                print('Warning: Rs2 {} truncated to {}'.format(rs2_, (0x08) | (rs2_ & 0x07)))
+            rs2_ = (rs2_ & 0x07)
+            print(rd_rs1_)
+            print(rs2_)
+            print(funct2)
             m_code = opcode |  rs2_<<2 | funct2<<5 | rd_rs1_<<7 | funct6<<10
 
         elif (encoding_type=='CH'):     # Okay
@@ -355,6 +373,9 @@ def assemble(instructions, labels, instmem):
         elif (encoding_type=='CIW'):     # Okay
             rd_ = int(temp_inst[1])
             imm = int(temp_inst[2])<<2
+            if (rd_ < 8 | rd_ > 16):
+                print('Warning: Rd {} truncated to {}'.format(rd_, (0x08) | (rd_ & 0x07)))
+            rd_ = (rd_ & 0x07)
             m_code = opcode |  rd_<<2 | (imm&0x8)<<2 | (imm&0x4)<<4 | (imm&0x3C0)<<1 | (imm&0x30)<<7 | funct3<<13
 
         elif (encoding_type=='C16'):    # Okay

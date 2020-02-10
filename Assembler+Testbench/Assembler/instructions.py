@@ -71,17 +71,10 @@ instruction_dict= {
     'C.SRLI':   {'args':2,  'syntax':'r-i',     'i_width':6,    'format':'CH',  'opcode':1,     'funct2':0, 'funct3':4},
     'C.SRAI':   {'args':2,  'syntax':'r-i',	    'i_width':6,    'format':'CH',  'opcode':1,     'funct2':1, 'funct3':4},
     'C.ANDI':   {'args':2,  'syntax':'r-i',	    'i_width':6,    'format':'CH',  'opcode':1,     'funct2':2, 'funct3':4},
-<<<<<<< Updated upstream
     'C.SUB':    {'args':2,  'syntax':'r-r',	                    'format':'CA',  'opcode':1,     'funct2':0, 'funct6':35},
     'C.XOR':    {'args':2,  'syntax':'r-r',	                    'format':'CA',  'opcode':1,     'funct2':1, 'funct6':35},
     'C.OR':     {'args':2,  'syntax':'r-r',	                    'format':'CA',  'opcode':1,     'funct2':2, 'funct6':35},
     'C.AND':    {'args':2,  'syntax':'r-r',	                    'format':'CA',  'opcode':1,     'funct2':3, 'funct6':35},
-=======
-    'C.SUB':    {'args':2,  'syntax':'r-r',	                    'format':'CA',  'opcode':1,     'funct2':4, 'funct6':35},
-    'C.XOR':    {'args':2,  'syntax':'r-r',	                    'format':'CA',  'opcode':1,     'funct2':5, 'funct6':35},
-    'C.OR':     {'args':2,  'syntax':'r-r',	                    'format':'CA',  'opcode':1,     'funct2':6, 'funct6':35},
-    'C.AND':    {'args':2,  'syntax':'r-r',	                    'format':'CA',  'opcode':1,     'funct2':7, 'funct6':35},
->>>>>>> Stashed changes
     'C.J':      {'args':1,  'syntax':'l',       'i_width':12,   'format':'CJ',  'opcode':1,     'funct3':5},
     'C.BEQZ':   {'args':2,  'syntax':'r-l',	    'i_width':9,    'format':'CB',  'opcode':1,     'funct3':6},
     'C.BNEZ':   {'args':2,  'syntax':'r-l',	    'i_width':9,    'format':'CB',  'opcode':1,     'funct3':7},
