@@ -51,7 +51,7 @@ architecture Behavioral of UART_TX is
 
 type TX_STATE_TYPE is (RDY, LOAD_BIT, SEND_BIT);
 
-constant BIT_TMR_MAX : std_logic_vector(13 downto 0) := "01010001010111"; --(round(CLK / BAUD)) - 1
+constant BIT_TMR_MAX : std_logic_vector(13 downto 0) := "00000110110001"; --(round(CLK / BAUD)) - 1
 constant BIT_INDEX_MAX : natural := 10;
 
 --Counter that keeps track of the number of clock cycles the current bit has been held stable over the

@@ -27,10 +27,10 @@ addi x0, x0, 0
 sw x13, 4(x0) ##
 
 # R-type > JALR
+jal x10, j1 
+j1:
 add x14, x6, x1
-jalr x15, 22(x14)
-addi x0, x0, 0
-addi x0, x0, 0
+jalr x15, 8(x10)
 addi x0, x0, 0
 addi x0, x0, 0
 addi x0, x0, 0
@@ -79,14 +79,10 @@ addi x0, x0, 0
 sw x11, 24(x0)
 
 # I-type > JALR
+jal x10, j2 
+j2:
 slli x12, x4, 1
-jalr x13, 282(x12)
-addi x0, x0, 0
-addi x0, x0, 0
-addi x0, x0, 0
-addi x0, x0, 0
-addi x0, x0, 0
-addi x0, x0, 0
+jalr x13, 8(x10)
 addi x0, x0, 0
 addi x0, x0, 0
 addi x0, x0, 0
@@ -120,14 +116,10 @@ sw x18, 32(x0)
 ##############################################################
 
 # Loads > JALR # stall dapat dito
+jal x20, j3 
+j3:
 lw x10, 20(x0)
-jalr x11, 402(x10)
-addi x0, x0, 0
-addi x0, x0, 0
-addi x0, x0, 0
-addi x0, x0, 0
-addi x0, x0, 0
-addi x0, x0, 0
+jalr x11, 8(x20)
 addi x0, x0, 0
 addi x0, x0, 0
 addi x0, x0, 0
