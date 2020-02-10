@@ -77,7 +77,7 @@ module id_dec (
 
     shiftsignshuff SHIFTSIGNSHUFF(
 		.imm_select(id_imm_select),
-		.inst(id_inst[31:7]),
+		.inst(inst[31:7]),
 		.imm(id_imm)
 	);
 endmodule

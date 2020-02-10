@@ -1,6 +1,6 @@
 `timescale 1ns / 1ps
 module tb_decode();
-    reg [31:0] test_mem [0:46];
+    reg [31:0] test_mem [0:45];
     
     reg [31:0] comp_inst;
     reg [31:0] inst;

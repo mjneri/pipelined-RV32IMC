@@ -1,16 +1,17 @@
 [*]
 [*] GTKWave Analyzer v3.3.100 (w)1999-2019 BSI
-[*] Mon Feb 10 12:13:50 2020
+[*] Mon Feb 10 13:20:45 2020
 [*]
 [dumpfile] "D:\Files\schoolwork\198\processor\Baseline processor\bbb.vcd"
-[dumpfile_mtime] "Mon Feb 10 12:10:34 2020"
-[dumpfile_size] 13671
+[dumpfile_mtime] "Mon Feb 10 13:19:30 2020"
+[dumpfile_size] 17346
 [savefile] "D:\Files\schoolwork\198\processor\Baseline processor\bbb.gtkw"
-[timestart] 0
+[timestart] 75000
 [size] 1842 1051
-[pos] -202 -202
-*-16.000000 178900 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[pos] -1 -1
+*-15.000000 236800 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] tb_decode.
+[treeopen] tb_decode.dec_test.
 [sst_width] 239
 [signals_width] 180
 [sst_expanded] 1
@@ -19,7 +20,33 @@
 tb_decode.dec_alu_op[3:0]
 tb_decode.id_ALU_op[3:0]
 tb_decode.dddd.inst[15:0]
-@29
+@28
 tb_decode.dddd.b_type
+tb_decode.dddd.funct3[2:0]
+tb_decode.dddd.opcode[1:0]
+@22
+tb_decode.dddd.inst[15:0]
+@24
+tb_decode.dec_rd[4:0]
+tb_decode.dec_rs1[4:0]
+tb_decode.dec_rs2[4:0]
+tb_decode.id_rd[4:0]
+tb_decode.id_rsA[4:0]
+tb_decode.id_rsB[4:0]
+@22
+tb_decode.dddd.temp_rs1[5:0]
+tb_decode.dddd.temp_rs2[5:0]
+tb_decode.dddd.rs1_eff[5:0]
+tb_decode.dddd.rs2_eff[5:0]
+@28
+tb_decode.dddd.funct3[2:0]
+@24
+tb_decode.id_imm[31:0]
+tb_decode.dec_imm[31:0]
+@22
+tb_decode.dec_test.SHIFTSIGNSHUFF.Utype_imm[31:0]
+tb_decode.dec_test.SHIFTSIGNSHUFF.inst[24:0]
+@29
+tb_decode.dec_test.SHIFTSIGNSHUFF.imm_select[2:0]
 [pattern_trace] 1
 [pattern_trace] 0

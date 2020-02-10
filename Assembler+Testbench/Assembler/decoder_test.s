@@ -45,8 +45,8 @@ c.li x20, 25
 addi x20, x0, 25
 
 # lui
-c.lui x20, 36
-lui x20, 36
+c.lui x20, 4
+lui x20, 16384
 
 # addi
 c.addi x15, 7
