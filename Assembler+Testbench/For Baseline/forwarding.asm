@@ -115,14 +115,24 @@ sw x26, 104(x0)
 addi x27, x0, 48
 lw x27, 12(x27)
 sw x27, 108(x0)
+addi x28, x0, 60
+lw x28, 8(x28)
+nop
+sw x28, 112(x0)
+addi x29, x0, 60
+lw x29, 12(x29)
+nop
+nop
+sw x29, 116(x0)
 
 
-#jal x30, Save_PC
+jal x30, Save_PC
 Save_PC:
-#sw x30, 120(x0)
-#lw x31, 120(x0)
-#jalr x0, x31, 12
-#sw x31, 124(x0)
+sw x30, 120(x0)
+lw x31, 120(x0)
+jalr x0, x31, 12
+xor x31, x29, x30
+sw x31, 124(x0)
 
 nop
 nop

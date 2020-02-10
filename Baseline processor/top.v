@@ -32,7 +32,7 @@ module top(
 	clk_wiz_0 CLKIP(
 		.clk_in1(CLK100MHZ),
 		.clk_out1(CLKIP_OUT),
-		.resetn(nrst),
+		.reset(nrst),
 		.locked(locked)
 	);
 
