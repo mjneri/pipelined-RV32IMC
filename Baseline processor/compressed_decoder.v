@@ -82,7 +82,7 @@ module compressed_decoder(
         temp_rs1 = 5'd0;
         temp_rs2 = 5'd0;
         temp_rd = 5'd0;
-        temp_op = 3'd0;
+        temp_op = 4'd1;
         i_type = 1'b0;
         j_type = 1'b0;
         jr_type = 1'b0;
@@ -95,6 +95,7 @@ module compressed_decoder(
         spn_imm = 1'b0;
         lssp_imm = 1'b0;
         unsigned_imm = 1'b0;
+        b_type = 1'b1;
 
         // logic
         case(opcode)

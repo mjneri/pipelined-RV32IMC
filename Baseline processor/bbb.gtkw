@@ -1,0 +1,25 @@
+[*]
+[*] GTKWave Analyzer v3.3.100 (w)1999-2019 BSI
+[*] Mon Feb 10 12:13:50 2020
+[*]
+[dumpfile] "D:\Files\schoolwork\198\processor\Baseline processor\bbb.vcd"
+[dumpfile_mtime] "Mon Feb 10 12:10:34 2020"
+[dumpfile_size] 13671
+[savefile] "D:\Files\schoolwork\198\processor\Baseline processor\bbb.gtkw"
+[timestart] 0
+[size] 1842 1051
+[pos] -202 -202
+*-16.000000 178900 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] tb_decode.
+[sst_width] 239
+[signals_width] 180
+[sst_expanded] 1
+[sst_vpaned_height] 305
+@22
+tb_decode.dec_alu_op[3:0]
+tb_decode.id_ALU_op[3:0]
+tb_decode.dddd.inst[15:0]
+@29
+tb_decode.dddd.b_type
+[pattern_trace] 1
+[pattern_trace] 0
