@@ -13,7 +13,7 @@ try:
 except:
     print('File error')
     exit()
-# to do: flip bytes (Little Endian)
+
 '''
     parse_file() does the following:
     - get rid of empty lines
@@ -27,6 +27,9 @@ except:
 '''
 # Outputs parsed instruction line with replaced registers
 def parse_inst(inst_type, t_inst):
+    # arg1 = 0
+    # arg2 = 0
+    # arg3 = 0
     t_inst[0] = t_inst[0].upper()
     encoding_type = inst_type['format']
     syntax = inst_type['syntax']
@@ -93,7 +96,7 @@ def parse_inst(inst_type, t_inst):
             
         elif (args==3):
             arg1 = register_dict[t_inst[1]]
-            if ((syntax=='r-r-l') | (syntax=='r-r-i')):
+            if ((syntax=='r-r-l') | (syntax=='r-r-i') | (syntax=='r-r-r')):
                 try:
                     arg2 = register_dict[t_inst[2]]
                 except IndexError:
@@ -110,6 +113,12 @@ def parse_inst(inst_type, t_inst):
                         arg3 = int(t_inst[3], 0)
                     except IndexError:
                         print('Invalid third arguement (Imm)')
+                        exit()
+                else:
+                    try:
+                        arg3 = register_dict[t_inst[3]]
+                    except IndexError:
+                        print('Invalid third arguement (Reg)')
                         exit()
             elif (syntax=='r-i_r'):     # Immediate-only arguement
                 try:
@@ -215,6 +224,8 @@ def parse_file(line_list):
     return instructions, labels
 
 def assemble(instructions, labels, instmem):
+    out_buffer = {}
+    compressed_counter = 0
     for inst_address in instructions.keys():
         temp_inst = process_inst(instructions[inst_address])
         opt = temp_inst[0]
@@ -354,13 +365,16 @@ def assemble(instructions, labels, instmem):
             print('Work in progress')
             m_code = 1
         
+        
         if (opt[0]=='C'):
             out = (hex(m_code)[2:].zfill(4))
             print(out)
-            if (inst_address%4==0):
+            if (compressed_counter==0):
                 out_buffer = out
+                compressed_counter += 1
             else:
                 instmem.write(out + out_buffer + '\n')
+                compressed_counter = 0
                 out_buffer = {}
         else:
             if (out_buffer):

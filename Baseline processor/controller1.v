@@ -20,26 +20,27 @@
 //////////////////////////////////////////////////////////////////////////////////
 
 module controller1(
+    // Input from 32bit instruction
     input [6:0] opcode,
     input [2:0] funct3,
     input [6:0] funct7,
 
-    // Z and less would most likely be taken as an input by the BHT
-    //input z,
-    //input less,
+    output [3:0] ALU_op,        // Input to ALU
+    output sel_opA,             // Input to opA selection mux
+    output sel_opB,             // Input to opB selection mux
+    output is_stype,            // Input to STOREBLOCK
 
-    output [3:0] ALU_op,
-    output sel_opA,
-    output sel_opB,
-    output is_stype,
-    output wr_en,
-    output [2:0] dm_select,
-    output [2:0] imm_select,
-    //output [1:0] sel_pc,
-    output [1:0] sel_data,
-    output [1:0] store_select
-    //output mask
-    );
+    output is_jump,             // Input to BHT
+    output is_btype,            // Input to BHT
+
+    output wr_en,               // Input to regfile
+    output [2:0] dm_select,     // Input to LOADBLOCK
+    output [2:0] imm_select,    // Input to SHIFTSIGNSHUFF block
+    output [1:0] sel_pc,        // Input to PC selection MUX
+    output [1:0] sel_data,      // Input to WB data selection MUX
+    output [1:0] store_select,  // Input to STOREBLOCK
+    output sel_opBR             // Input to Branch target computation MUX
+);
     
     ///////////////////////////////////////////////////////////////////////
     // Legend of Opcodes                                                 //
@@ -62,49 +63,69 @@ module controller1(
     parameter r_type = 7'h33;
     parameter load_inst = 7'h3;
     
-    // Comment out later once branch prediction is being implemented
-    //assign b_taken = (opcode == b_type && funct3 == 3'h0 && z) || (opcode == b_type && funct3 == 3'h1 && !z) || (opcode == b_type && funct3 == 3'h4 && less) || (opcode == b_type && funct3 == 3'h5 && !less) || (opcode == b_type && funct3 == 3'h6 && less) || (opcode == b_type && funct3 == 3'h7 && !less);
-    
     //assign output_element condition ? value_if_true : value_if_false;
     
-    assign sel_opA = (opcode == auipc_inst || opcode == jal_inst) ? 1'h0 : 1'h1;  //sel_opA = 0 if inst is AUIPC or JAL
+    assign sel_opA = (opcode == auipc_inst) ? 1'h0 : 1'h1;  
+    //sel_opA = 0 if inst is AUIPC or JAL
+    // 0: select PC as operand
+    // 1: select rfoutA as operand
 
-    assign sel_opB = (opcode == r_type || opcode == b_type) ? 1'h0 : 1'h1;  //sel_opB = 0 if R-type inst or B-type inst
+    assign sel_opB = (opcode == r_type || opcode == b_type) ? 1'h0 : 1'h1;  
+    //sel_opB = 0 if R-type inst or B-type inst
+    // 0: rfoutB
+    // 1: imm
 
-    assign is_stype = !(opcode == s_type) ? 1'h0 : 1'h1;    //dm_write = 1 if S-type inst
+    assign is_stype = !(opcode == s_type) ? 1'h0 : 1'h1;
+
+    assign is_btype = (opcode == b_type)? 1'h1 : 1'h0;
+
+    assign is_jump = (opcode == jal_inst || opcode == jalr_inst)? 1'h1 : 1'h0;
 
     assign wr_en = !(opcode == s_type || opcode == b_type) ? 1'h1 : 1'h0;
 
     assign dm_select = funct3;
 
-    assign imm_select = (opcode == jal_inst || opcode == jalr_inst) ? 3'h4 : (opcode == b_type) ? 3'h3 : (opcode == lui_inst || opcode == auipc_inst) ? 3'h2 : (opcode == s_type) ? 3'h1 : 3'h0;
+    assign imm_select = (opcode == jal_inst) ? 3'h4 : 
+                        (opcode == b_type) ? 3'h3 : 
+                        (opcode == lui_inst || opcode == auipc_inst) ? 3'h2 : 
+                        (opcode == s_type) ? 3'h1 : 3'h0;
     //imm_select:
     // 0 if I-type inst (operations except shift + load)
     // 1 if S-type inst
     // 2 if U-type inst
     // 3 if B-type inst
-    // 4 if J-type inst
+    // 4 if JAL
 
-    //assign sel_pc = 1;//(opcode == jal_inst || opcode == jalr_inst) ? 2'h0 : (opcode == b_type && b_taken) ? 2'h1 : 2'h2;
+    assign sel_pc = (opcode == jal_inst || opcode == jalr_inst) ? 2'h1 : 2'h0;
     //sel_pc:
-    // 0 if J-type inst
-    // 1 if B-type inst AND branch taken
-    // 2 if R-type, I-type, S-type, U-type inst
+    // 1 if J-type inst
+    // 2 if B-type inst AND branch taken
+    // 0 if R-type, I-type, S-type, U-type inst (PC+4)
 
-    assign sel_data = (opcode == jal_inst || opcode == jalr_inst) ? 2'h0 : (opcode == lui_inst) ? 2'h2 : (opcode == load_inst) ? 2'h3 : 2'h1;
+    assign sel_data = (opcode == jal_inst || opcode == jalr_inst) ? 2'h0 : 
+					  (opcode == lui_inst) ? 2'h2 : (opcode == load_inst) ? 2'h3 : 2'h1;
     //sel_data
-    // 0 if J-type inst
-    // 1 if R-type, I-type [operations], AUIPC
-    // 2 if LUI
-    // 3 if I-type inst [load]
+    // 0 if J-type inst (select PC+4)
+    // 1 if R-type, I-type arithmetic, AUIPC (select ALUout)
+    // 2 if LUI (select Immediate)
+    // 3 if I-type inst [load] (select Loaddata)
 
-    assign store_select = (opcode == s_type && funct3 == 3'h0) ? 2'h0 : (opcode == s_type && funct3 == 3'h1) ? 2'h1 : 2'h2; 
+    assign store_select = (opcode == s_type && funct3 == 3'h0) ? 2'h0 : 
+    					  (opcode == s_type && funct3 == 3'h1) ? 2'h1 : 2'h2; 
     //store_select
     // 0 if SB
     // 1 if SH
     // 2 if SW
 
-    assign ALU_op = ((opcode == b_type) || (opcode == r_type && funct3 == 3'h0 && funct7 == 7'h20)) ? 4'h2 : (funct3 == 3'h7 && (opcode == r_type || opcode == i_type)) ? 4'h3 : (funct3 == 3'h6 && (opcode == r_type || opcode == i_type)) ? 4'h4 : (funct3 == 3'h4 && (opcode == r_type || opcode == i_type)) ? 4'h5 : (funct3 == 3'h2 && (opcode == r_type || opcode == i_type)) ? 4'h6 : (funct3 == 3'h3 && (opcode == r_type || opcode == i_type)) ? 4'h7 : (funct3 == 3'h1 && (opcode == r_type || opcode == i_type)) ? 4'h8 : (funct3 == 3'h5 && funct7 == 7'h0 && (opcode == r_type || opcode == i_type)) ? 4'h9 :  (funct3 == 3'h5 && funct7 == 7'h20 && (opcode == r_type || opcode == i_type)) ? 4'hA : 4'h1;
+    assign ALU_op = ((opcode == b_type) || (opcode == r_type && funct3 == 3'h0 && funct7 == 7'h20)) ? 4'h2 : 
+                    (funct3 == 3'h7 && (opcode == r_type || opcode == i_type)) ? 4'h3 : 
+                    (funct3 == 3'h6 && (opcode == r_type || opcode == i_type)) ? 4'h4 : 
+                    (funct3 == 3'h4 && (opcode == r_type || opcode == i_type)) ? 4'h5 : 
+                    (funct3 == 3'h2 && (opcode == r_type || opcode == i_type)) ? 4'h6 : 
+                    (funct3 == 3'h3 && (opcode == r_type || opcode == i_type)) ? 4'h7 : 
+                    (funct3 == 3'h1 && (opcode == r_type || opcode == i_type)) ? 4'h8 :
+                    (funct3 == 3'h5 && funct7 == 7'h0 && (opcode == r_type || opcode == i_type)) ? 4'h9 :  
+                    (funct3 == 3'h5 && funct7 == 7'h20 && (opcode == r_type || opcode == i_type)) ? 4'hA : 4'h1;
     //ALU_op
     // 1 if ADD (R-type), ADDI (I-type), I-type [load], S-type
     // 2 if SUB (R-type), B-type
@@ -116,5 +137,7 @@ module controller1(
     // 8 if SLL, SLLI
     // 9 if SRL, SRLI
     // 10 if SRA, SRAI
+
+    assign sel_opBR = (opcode == jalr_inst)? 1'h1 : 1'h0;   // if jalr, select rfoutA, else select PC
     
 endmodule

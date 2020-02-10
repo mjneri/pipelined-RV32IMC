@@ -7,6 +7,9 @@ module pipereg_mem_wb(
 	input [11:0] mem_pc4,
 	output reg [11:0] wb_pc4,
 
+	input [31:0] mem_inst,
+	output reg [31:0] wb_inst,
+
 	input [31:0] mem_ALUout,
 	output reg [31:0] wb_ALUout,
 
@@ -33,6 +36,7 @@ module pipereg_mem_wb(
 	always@(posedge clk) begin
 		if(!nrst) begin
 			wb_pc4 <= 0;
+			wb_inst <= 0;
 			wb_ALUout <= 0;
 			wb_loaddata <= 0;
 			wb_imm <= 0;
@@ -46,6 +50,7 @@ module pipereg_mem_wb(
 
 		end else begin
 			wb_pc4 <= mem_pc4;
+			wb_inst <= mem_inst;
 			wb_ALUout <= mem_ALUout;
 			wb_loaddata <= mem_loaddata;
 			wb_imm <= mem_imm;
