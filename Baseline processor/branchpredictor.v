@@ -286,28 +286,36 @@ module branchpredictor(
 	integer i;	// Used for resetting fifo_counter & history_table
 	always@(posedge CLK) begin
 		if(!nrst) begin
+
 			for(i = 0; i < 16; i=i+1) begin
 				fifo_counter[i] <= 2'b0;
 			end
 			for(i = 0; i < 64; i=i+1) begin
 				history_table[i] <= 19'b0;
 			end
+
 		end else if(en) begin
+
 			if( (id_is_btype || id_is_jump) && (id_iseq == 4'h0) ) begin
 				// Write to table if (Branch or Jump) AND the input is not in the table yet
 				history_table[{id_set, fifo_counter[id_set]}] <= {1'b1, id_tag, id_branchtarget, sat_counter};
 				//increment counter; if = 3 na, equate to zero
 				fifo_counter[id_set] <= fifo_counter[id_set] + 2'b01;
 			end
+
 			else if(|exe_btype) begin
 				if(feedback == 1'h1) begin
 					if(exe_loadentry[1:0] != 2'h3)
 						history_table[{exe_set, exe_setoffset}] <= exe_loadentry + 2'b1;
-				end else begin
+				end
+
+				else begin
 					if(exe_loadentry[1:0] != 2'h0)
 						history_table[{exe_set, exe_setoffset}] <= exe_loadentry - 2'b1;
 				end
+				
 			end
+
 		end
 	end
 
