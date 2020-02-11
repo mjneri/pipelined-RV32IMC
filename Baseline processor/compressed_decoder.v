@@ -334,7 +334,7 @@ module compressed_decoder(
     |    branch_imm     | 8 | 4 | 3 | x | x | x | 7 | 6 | 2 | 1 | 5 |
     |     ls_uimm       | 5 | 4 | 3 | x | x | x | 2 | 6 | x | x | x |
     |    lwsp_uimm      | 5 | x | x | x | x | x | 4 | 3 | 2 | 7 | 6 |
-    |    swsp_uimm      | 5 | 4 | 3 | 8 | 7 | 6 | x | x | x | x | x |
+    |    swsp_uimm      | 5 | 4 | 3 | 2 | 7 | 6 | x | x | x | x | x |
     |      nzimm        | 5 | x | x | x | x | x | 4 | 3 | 2 | 1 | 0 |
     |       imm         | 5 | x | x | x | x | x | 4 | 3 | 2 | 1 | 0 |
     |      nzuimm       | 5 | x | x | x | x | x | 4 | 3 | 2 | 1 | 0 |
@@ -371,13 +371,13 @@ module compressed_decoder(
                  (lui_type) ? lui_set : {6{sign}},      // bits 17:12
                  (lui_type) ? 2'd0 : {2{sign}},         // bits 11:10
                  (lui_type) ? 1'd0 : (spn_imm ? inst[10] : (sp_imm ? inst[12] : sign)),   // bit 9
-                 (lui_type) ? 1'd0 : ((spn_imm || (lssp_imm && store_inst)) ? inst[9] : (sp_imm ? inst[4] : sign)),   // bit 8
-                 (lui_type) ? 1'd0 : ((spn_imm || (lssp_imm && store_inst)) ? inst[8] : (sp_imm ? inst[3] : sign)),   // bit 7
+                 (lui_type) ? 1'd0 : ((spn_imm) ? inst[9] : (sp_imm ? inst[4] : sign)),   // bit 8
+                 (lui_type) ? 1'd0 : ((spn_imm) ? inst[8] : (sp_imm ? inst[3] : sign)),   // bit 7
                  (lui_type) ? 1'd0 : (lssp_imm ? (load_inst ? inst[2] : inst[7]) : (spn_imm ? inst[7] : (sp_imm ? inst[5] : sign))), // bit 6
                  (lui_type) ? 1'd0 : (sp_imm ? inst[2] : inst[12]), // bit 5
                  (lui_type || sp_imm) ? 1'd0 : ((load_inst || spn_imm) ? inst[11] : inst[6]), // bit 4
                  (lui_type || sp_imm) ? 1'd0 : ((store_inst && !lssp_imm) ? inst[10] : inst[5]), // bit 3
-                 (lui_type || sp_imm || (lssp_imm && store_inst)) ? 1'd0 : ((spn_imm || (load_inst && !lssp_imm) || store_inst) ? inst[6] : inst[4]), // bit 2
+                 (lui_type || sp_imm || (lssp_imm && store_inst)) ? 1'd0 : ((spn_imm || (load_inst && lssp_imm) || store_inst) ? inst[6] : inst[4]), // bit 2
                  (lui_type || sp_imm || spn_imm || load_inst || store_inst) ? 2'd0 : inst[1:0]  // bits 1:0
                 };
 
