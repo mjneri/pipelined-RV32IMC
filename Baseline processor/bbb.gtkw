@@ -1,15 +1,15 @@
 [*]
 [*] GTKWave Analyzer v3.3.100 (w)1999-2019 BSI
-[*] Mon Feb 10 13:20:45 2020
+[*] Tue Feb 11 12:44:46 2020
 [*]
 [dumpfile] "D:\Files\schoolwork\198\processor\Baseline processor\bbb.vcd"
-[dumpfile_mtime] "Mon Feb 10 13:19:30 2020"
-[dumpfile_size] 17346
+[dumpfile_mtime] "Tue Feb 11 12:44:41 2020"
+[dumpfile_size] 17532
 [savefile] "D:\Files\schoolwork\198\processor\Baseline processor\bbb.gtkw"
 [timestart] 75000
 [size] 1842 1051
-[pos] -1 -1
-*-15.000000 236800 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[pos] -10 -10
+*-15.000000 262700 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] tb_decode.
 [treeopen] tb_decode.dec_test.
 [sst_width] 239
@@ -46,7 +46,9 @@ tb_decode.dec_imm[31:0]
 @22
 tb_decode.dec_test.SHIFTSIGNSHUFF.Utype_imm[31:0]
 tb_decode.dec_test.SHIFTSIGNSHUFF.inst[24:0]
-@29
+@28
 tb_decode.dec_test.SHIFTSIGNSHUFF.imm_select[2:0]
+@23
+tb_decode.inst[31:0]
 [pattern_trace] 1
 [pattern_trace] 0
