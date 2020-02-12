@@ -4,21 +4,21 @@
 */
 module interrupt_controller(
     input clk,
-    input [31:0] PC,
-    input [31:0] inst_ISR,
+    input [11:0] PC,            // Input from PC module
+    input [31:0] inst,          // Used to catch URET Instructionz
 	input interrupt_signal,
     output ISR_stall,
 	output sel_ISR,
     output ret_ISR,
-    output stall_ISR,
     output ISR_en,
-    output [31:0] new_PC
+    output reg ISR_running,
+    output reg [11:0] save_PC
 );
-    reg [31:0] save_PC;
     reg ISR_running;
 
-    assign sel = interrupt_signal || ISR_running;
-    assign sel_ISR = 
+    assign sel_ISR = interrupt_signal || ISR_running;
+    assign ISR_stall = sel_ISR;
+    assign ret_ISR = inst==1'd0;
 
     always@(posedge clk) begin
         if(interrupt_signal) begin
@@ -29,11 +29,9 @@ module interrupt_controller(
             ISR_running <= 0;
         end
 
-        if(inst_ISR==1'd0) begin
-            new_PC <= save_PC;
-            ISR_running <= 0;    
+        if(inst_ISR==7'h73) begin
+            ISR_running <= 0;   
         end else begin
-            new_PC <= PC;
             sel_ISR <= 0;
         end
     end

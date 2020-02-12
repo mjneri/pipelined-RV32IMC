@@ -10,6 +10,7 @@
 module top(
 	input CLK100MHZ,
 	input nrst,
+	input SW,
 
 	// This will be the output of the protocol controllers
 	// and will be mapped to the IO pins of the FPGA
@@ -40,6 +41,7 @@ module top(
 	core RISCVCORE(
 		.CLK(CLKIP_OUT),
 		.nrst(nrst & locked),
+        .int_sig(SW),
 
 		.con_write(4'h0),
 		.con_addr(con_addr),
