@@ -306,6 +306,7 @@ module core(
 
 	// PC + 4
 	assign if_pc4 = if_PC + 12'd4;
+	// Insert interrupts stuff here
 
 	// PC Selection
 	// 3'b000 = PC+4
