@@ -46,7 +46,7 @@ module branchpredictor(
 	output if_prediction,
 	output [1:0] exe_correction,
 
-	output reg flush,
+	output reg branch_flush,
 	output reg id_jump_in_bht,	// added as an input w/ sel_pc s.t. branch target is selected
 								// only when this signal is not asserted, which happens only
 								// when the jump instruction is not yet saved into the table
@@ -337,14 +337,14 @@ module branchpredictor(
 	
 	always@(*) begin
 		if(flush_state_reg) begin
-			flush = 1;
+			branch_flush = 1;
 			flush_state = 0;
 		end else begin
 			if(|exe_btype && !is_pred_correct) begin
 				flush_state = 1;
-				flush = 1;
+				branch_flush = 1;
 			end else begin
-				flush = 0;
+				branch_flush = 0;
 				if(id_is_jump && id_iseq == 4'h0)
 					flush_state = 1;
 				else

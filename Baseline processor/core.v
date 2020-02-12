@@ -183,7 +183,7 @@ module core(
 // Signals for BHT =================================================
 	wire if_prediction;				// Input to sel_PC mux
 	wire [1:0] exe_correction;		// input to sel_PC mux
-	wire flush;
+	wire branch_flush;
 	wire [9:0] if_PBT;				// Predicted branch target
 	wire [9:0] exe_PBT;				// Predicted branch target
 	wire [9:0] exe_CNI;				// Correct Next Instruction
@@ -240,7 +240,7 @@ module core(
 		//.is_jump(id_is_jump),
 		//.is_nop(),
 
-		//.branch_flush(flush),
+		.branch_flush(branch_flush),
 		.exe_sel_data(exe_sel_data),
 		.exe_wr_en(exe_wr_en),
 		.exe_rd(exe_rd),
@@ -499,7 +499,7 @@ module core(
 	pipereg_id_exe ID_EXE(
 		.clk(CLK),
 		.nrst(nrst),
-		.flush(flush | exe_stall),
+		.flush(branch_flush | exe_stall),
 		.en(exe_clk_en),
 
 		.id_pc4(id_pc4),					.exe_pc4(exe_pc4),
@@ -564,7 +564,7 @@ module core(
 		.if_prediction(if_prediction),
 		.exe_correction(exe_correction),
 		
-		.flush(flush),
+		.branch_flush(branch_flush),
 		.id_jump_in_bht(id_jump_in_bht),
 
 		.if_PBT(if_PBT),
