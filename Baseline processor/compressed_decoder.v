@@ -31,7 +31,7 @@ module compressed_decoder(
     output [4:0] rs2,
     output [4:0] rd,
     output [31:0] imm,
-    output [19:0] jt
+    output [31:0] jt
     );
 
     // instruction encoding
@@ -351,7 +351,7 @@ module compressed_decoder(
     // jump/branch target
     wire [2:0] jump_upper = {sign, inst[8], inst[10]};
 
-    assign jt = {{8{sign}},                             // bits 19:12
+    assign jt = {{20{sign}},                             // bits 31:12
                 (j_type) ? jump_upper : {3{sign}},      // bits 11:9
                 inst[9],                                // bit 8
                 inst[6],                                // bit 7

@@ -36,7 +36,7 @@ module tb_buffer();
             inst = test_mem[i];
             #(`CLK_PD - 1);
             if (!buffer_stall)
-                i++;
+                i = i + 1;
             #1;
         end
         $finish;

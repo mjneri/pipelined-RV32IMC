@@ -92,7 +92,7 @@ module tb_decode();
         inst = 32'd0;
         comp_inst = 32'd0;
         #50;
-        for (i = 0; i < 23; i++) begin
+        for (i = 0; i < 23; i = i + 1) begin
             inst = test_mem[(i*2) + 1];
             comp_inst = test_mem[(i*2)];
             #20;

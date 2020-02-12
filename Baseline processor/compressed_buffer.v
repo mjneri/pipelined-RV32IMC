@@ -14,6 +14,7 @@ module compressed_buffer (
     input clk,
     input nrst,
     input [31:0] inst,
+    output reg_inst,
     output buffer_stall,
     output [31:0] out_inst
     );
@@ -23,7 +24,7 @@ module compressed_buffer (
     reg full;
     wire [1:0] low2     = inst[1:0];
     wire is_word        = (low2 == 2'd3);
-
+    assign reg_inst = is_word;
     wire [15:0] lo_half        = inst[31:16];
     wire [15:0] hi_half        = inst[15:0];
     assign out_inst     =   (full   ?   (is_word    ?   {lo_half, buffer_inst} : {16'd0, buffer_inst}) :
