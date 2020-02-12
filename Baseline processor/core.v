@@ -307,6 +307,7 @@ module core(
 	// PC + 4
 	assign if_pc4 = if_PC + 12'd4;
 
+
 	// PC Selection
 	// 3'b000 = PC+4
 	// 3'b001 = Prediction
