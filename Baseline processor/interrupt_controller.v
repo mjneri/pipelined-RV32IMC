@@ -4,35 +4,60 @@
 */
 module interrupt_controller(
     input clk,
+    input nrst,
     input [11:0] PC,            // Input from PC module
-    input [31:0] inst,          // Used to catch URET Instructionz
+    input [6:0] if_opcode,         // Used to catch URET Instructionz
 	input interrupt_signal,
-    output ISR_stall,
-	output sel_ISR,
-    output ret_ISR,
-    output ISR_en,
-    output reg ISR_running,
+    input [1:0] exe_correction,
+    input if_prediction,
+    input id_sel_pc,
+	output reg sel_ISR,
+    output reg ret_ISR,
+    output reg ISR_en,
+    output reg ISR_stall,
     output reg [11:0] save_PC
 );
-    reg ISR_running;
+    wire save_PC_en;
+    assign save_PC_en = sel_ISR & ISR_stall & exe_correction & if_prediction & id_sel_pc;
 
-    assign sel_ISR = interrupt_signal || ISR_running;
-    assign ISR_stall = sel_ISR;
-    assign ret_ISR = inst==1'd0;
+    reg [2:0] counter;
 
     always@(posedge clk) begin
-        if(interrupt_signal) begin
-            save_PC <= PC;
-            ISR_running <= 1;
-        end else begin
-            save_PC <= save_PC;
-            ISR_running <= 0;
-        end
-
-        if(inst_ISR==7'h73) begin
-            ISR_running <= 0;   
-        end else begin
+        if(!nrst)begin
             sel_ISR <= 0;
+            ret_ISR <= 0;
+            ISR_en <= 0;
+            ISR_stall <= 0;
+            save_PC <= 12'd0;
+            counter <= 0;
+        end else begin
+            if(!interrupt_signal & !sel_ISR) begin
+                sel_ISR <= 1;
+                ISR_stall <= 1;
+            end
+
+            if(if_opcode==7'h73) begin
+                sel_ISR <= 0;
+                ret_ISR <= 1;
+                ISR_stall <= 1;
+            end else begin
+                ret_ISR <= 0;
+            end
+
+            if(save_PC_en) begin
+                save_PC <= PC;
+            end else begin
+                save_PC <= save_PC;
+            end
+
+            if(ISR_stall) begin
+                if(counter == 3'd5) begin
+                    ISR_stall <= 0;
+                    counter <= 0;
+                end else begin
+                    counter <= counter+1;
+                end
+            end
         end
     end
 	

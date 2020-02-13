@@ -19,6 +19,18 @@ module core(
 	wire [11:0] if_PC;			// Output of PC, input to INSTMEM
 	wire [11:0] if_pc4;			// PC + 4
 	wire [31:0] if_inst;		// INSTMEM Output
+	wire [6:0] if_opcode;
+
+	// PC + 4
+	assign if_pc4 = if_PC + 12'd4;
+	assign if_opcode = if_inst[6:0];
+
+	// Outputs of Interrupt Controller
+	wire sel_ISR;
+    wire ret_ISR;
+    wire ISR_en;
+    wire ISR_stall;
+    wire [11:0] save_PC;
 // &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 
 
@@ -241,7 +253,7 @@ module core(
 		//.is_jump(id_is_jump),
 		//.is_nop(),
 
-		.branch_flush(branch_flush),
+		//.branch_flush(branch_flush),
 		.exe_sel_data(exe_sel_data),
 		.exe_wr_en(exe_wr_en),
 		.exe_rd(exe_rd),
@@ -293,7 +305,7 @@ module core(
 // IF Stage ========================================================
 	pc PC( 
 		.clk(CLK),
-		.nrst(nrst),
+		.nrst(nrst & !ISR_stall),
 		.en(if_clk_en),
 		.addr_in(if_pcnew),
 		.inst_addr(if_PC)
@@ -303,23 +315,24 @@ module core(
 		.clk(CLK),
 		.addr(if_PC),
 		.sel_ISR(sel_ISR),
-		.inst(inst)
+		.inst(if_inst)
 	);
 
-	// PC + 4
-	assign if_pc4 = if_PC + 12'd4;
-	
 	// Insert interrupts stuff here
 	interrupt_controller INT_CON(
 		.clk(CLK),
+		.nrst(nrst),
 		.PC(if_PC),
-		.inst(inst),
+		.if_opcode(if_opcode),
 		.interrupt_signal(int_sig),
-		.ISR_stall(ISR_stall),
+		.if_prediction(if_prediction),
+		.exe_correction(exe_correction),
+		.id_sel_pc(id_sel_pc),
 		.sel_ISR(sel_ISR),
 		.ret_ISR(ret_ISR),
 		.ISR_en(ISR_en),
-		.new_PC(new_PC)
+		.ISR_stall(ISR_stall),
+		.save_PC(save_PC)
 	);
 
 

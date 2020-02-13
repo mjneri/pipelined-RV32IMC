@@ -24,7 +24,7 @@ module instmem(
 		.douta(inst_isr)
 	);
 
-	assign inst = ISR_running? inst_isr : inst_mem;
+	assign inst = sel_ISR? inst_isr : inst_mem;
 
 	// For this part:
 	// Instmem that was coded s.t. Vivado generates an RTL_ROM
