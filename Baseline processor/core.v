@@ -3,6 +3,7 @@
 module core(
 	input CLK,
 	input nrst,
+	input int_sig,
 
 	// inputs from protocol controllers
 	input [3:0] con_write,
@@ -301,12 +302,26 @@ module core(
 	instmem INSTMEM( 
 		.clk(CLK),
 		.addr(if_PC),
-		.inst(if_inst)
+		.sel_ISR(sel_ISR),
+		.inst(inst)
 	);
 
 	// PC + 4
 	assign if_pc4 = if_PC + 12'd4;
+	
 	// Insert interrupts stuff here
+	interrupt_controller INT_CON(
+		.clk(CLK),
+		.PC(if_PC),
+		.inst(inst),
+		.interrupt_signal(int_sig),
+		.ISR_stall(ISR_stall),
+		.sel_ISR(sel_ISR),
+		.ret_ISR(ret_ISR),
+		.ISR_en(ISR_en),
+		.new_PC(new_PC)
+	);
+
 
 	// PC Selection
 	// 3'b000 = PC+4
