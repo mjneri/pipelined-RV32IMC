@@ -16,6 +16,7 @@ module interrupt_controller(
 );
     reg [31:0] save_PC;
     reg ISR_running;
+    reg [2:0] ISR_counter;
 
     assign sel = interrupt_signal || ISR_running;
     assign sel_ISR = 
@@ -36,6 +37,17 @@ module interrupt_controller(
             new_PC <= PC;
             sel_ISR <= 0;
         end
+
+        if(ISR_stall==1'b1) begin
+            if(ISR_counter==3'b101) begin
+                ISR_stall <= 0;
+                ISR_counter <= 3'b0; 
+            end else begin
+                ISR_counter <= ISR_counter + 3'b1;
+            end
+        end
+        
+
     end
 	
 endmodule
