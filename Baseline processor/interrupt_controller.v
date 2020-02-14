@@ -11,6 +11,7 @@ module interrupt_controller(
     input [1:0] exe_correction,
     input if_prediction,
     input id_sel_pc,
+    input if_clk_en,
 	output reg sel_ISR,
     output reg ret_ISR,
     output reg ISR_en,
@@ -56,8 +57,9 @@ module interrupt_controller(
                     ISR_stall <= 0;
                     ISR_counter <= 0;
                 end else begin
-                    ISR_counter <= ISR_counter+1;
-                end
+                    if(if_clk_en)
+                        ISR_counter <= ISR_counter+1;
+                end 
             end
         end
     end
