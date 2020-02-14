@@ -17,13 +17,8 @@ module interrupt_controller(
     output reg ISR_stall,
     output reg [11:0] save_PC
 );
-<<<<<<< HEAD
     wire save_PC_en;
     assign save_PC_en = sel_ISR & ISR_stall & exe_correction & if_prediction & id_sel_pc;
-=======
-    reg ISR_running;
-    reg [2:0] ISR_counter;
->>>>>>> 00ffae2661cf8b5a158c04f9b5a69c72f3f51290
 
     reg [2:0] counter;
 
