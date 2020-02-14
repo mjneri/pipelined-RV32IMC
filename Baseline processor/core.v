@@ -328,6 +328,7 @@ module core(
 		.if_prediction(if_prediction),
 		.exe_correction(exe_correction),
 		.id_sel_pc(id_sel_pc),
+		.if_clk_en(if_clk_en)
 		.sel_ISR(sel_ISR),
 		.ret_ISR(ret_ISR),
 		.ISR_en(ISR_en),
@@ -336,6 +337,7 @@ module core(
 	);
 
 
+	//add logic for interrupt save PC handling
 	// PC Selection
 	// 3'b000 = PC+4
 	// 3'b001 = Prediction
@@ -346,19 +348,23 @@ module core(
 	// 3'b110 = exePBT
 	// 3'b111 = exePBT
 	always@(*) begin
-		case({exe_correction, if_prediction})
-			3'b001: if_pcnew = {if_PBT, 2'h0};
-			3'b100: if_pcnew = {exe_CNI, 2'h0};
-			3'b101: if_pcnew = {exe_CNI, 2'h0};
-			3'b110: if_pcnew = {exe_PBT, 2'h0};
-			3'b111: if_pcnew = {exe_PBT, 2'h0};
-			default: begin
-				case({id_jump_in_bht, id_sel_pc})
-					3'b001: if_pcnew = id_branchtarget;
-					default: if_pcnew = if_pc4;
-				endcase
-			end
-		endcase
+		if(ret_ISR)
+			if_pcnew = save_PC;
+		else begin
+			case({exe_correction, if_prediction})
+				3'b001: if_pcnew = {if_PBT, 2'h0};
+				3'b100: if_pcnew = {exe_CNI, 2'h0};
+				3'b101: if_pcnew = {exe_CNI, 2'h0};
+				3'b110: if_pcnew = {exe_PBT, 2'h0};
+				3'b111: if_pcnew = {exe_PBT, 2'h0};
+				default: begin
+					case({id_jump_in_bht, id_sel_pc})
+						3'b001: if_pcnew = id_branchtarget;
+						default: if_pcnew = if_pc4;
+					endcase
+				end
+			endcase
+		end
 	end
 
 	pipereg_if_id IF_ID(

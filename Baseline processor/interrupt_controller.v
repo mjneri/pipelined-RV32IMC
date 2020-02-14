@@ -11,6 +11,7 @@ module interrupt_controller(
     input [1:0] exe_correction,
     input if_prediction,
     input id_sel_pc,
+    input if_clk_en,
 	output reg sel_ISR,
     output reg ret_ISR,
     output reg ISR_en,
@@ -18,7 +19,7 @@ module interrupt_controller(
     output reg [11:0] save_PC
 );
     wire save_PC_en;
-    assign save_PC_en = sel_ISR & ISR_stall & exe_correction & if_prediction & id_sel_pc;
+    assign save_PC_en = !interrupt_signal & (!sel_ISR || (exe_correction & if_prediction & id_sel_pc));
 
     reg [2:0] ISR_counter;
 
@@ -26,14 +27,15 @@ module interrupt_controller(
         if(!nrst)begin
             sel_ISR <= 0;
             ret_ISR <= 0;
-            ISR_en <= 0;
+            ISR_en <= 1;
             ISR_stall <= 0;
             save_PC <= 12'd0;
-            counter <= 0;
+            ISR_counter <= 0;
         end else begin
-            if(!interrupt_signal & !sel_ISR) begin
+            if(!interrupt_signal & !sel_ISR & ISR_en) begin
                 sel_ISR <= 1;
                 ISR_stall <= 1;
+                ISR_en <= 0;
             end
 
             if(if_opcode==7'h73) begin
@@ -51,15 +53,15 @@ module interrupt_controller(
             end
 
             if(ISR_stall) begin
-                if(counter == 3'd5) begin
+                if(ISR_counter == 3'd4) begin
                     ISR_stall <= 0;
                     ISR_counter <= 0;
                 end else begin
-                    ISR_counter <= _ISRcounter+1;
-                end
+                    if(if_clk_en)
+                        ISR_counter <= ISR_counter+1;
+                end 
             end
         end
-
     end
 	
 endmodule
