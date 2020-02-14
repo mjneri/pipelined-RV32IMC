@@ -48,8 +48,8 @@ module tb_interrupt_controller();
 
 
         begin
-          $strobe("PC: %D, OPCODE: %X, interrupt_signal: %D, exe_corr: %X, if_prediction: %D, id_sel_pc: %D, if_clk_en: %D", pc, if_opcd, int_sig, exe_corr, if_pred, id_selpc, if_clken);
-
+            $strobe("PC: %D, OPCODE: %X, interrupt_signal: %D, exe_corr: %X, if_prediction: %D, id_sel_pc: %D, if_clk_en: %D", pc, if_opcd, int_sig, exe_corr, if_pred, id_selpc, if_clken);
+            $strobe("\nsel_ISR: %D, ret_ISR: %D, ISR_en: %D, ISR_stall: %D, save_PC: %X", sel_ISR, ret_ISR, ISR_en, ISR_stall, save_PC);
         end
 
         
