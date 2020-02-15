@@ -4,6 +4,7 @@ module tb_core();
 	
 	reg CLK;
 	reg nrst;
+    reg SW;
 
 	reg [3:0] con_write;
 	reg [9:0] con_addr;
@@ -13,6 +14,7 @@ module tb_core();
 	core CORE(
 		.CLK(CLK),
 		.nrst(nrst),
+		.int_sig(SW),
 
 		.con_write(con_write),
 		.con_addr(con_addr),
@@ -41,17 +43,20 @@ module tb_core();
 	initial begin
 		CLK = 0;
 		nrst = 0;
-
+        SW = 1;
+    
 		con_write = 0;
-		con_addr = 10'h3ff;
+		con_addr = 0;
 		con_in = 0;
 
 		done = 0;
 		check = 0;
 		pass = 0;
 		i = 0;
-		#100;
+		#45;
 		nrst = 1;
+		#200
+		SW = 0;
 	end
 
 	// Checking for 10 NOPs in a row
@@ -120,7 +125,7 @@ module tb_core();
 	end
 
 	always@(posedge CLK) begin
-		if(con_addr == 100) begin			
+		if(con_addr == 32) begin			
 			$display("\n");
 			$display("Passed %d/%d test cases.\nClock cycles: %d\n=================", pass, i, clock_counter);
 			$finish;
