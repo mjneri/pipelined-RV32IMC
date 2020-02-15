@@ -20,7 +20,7 @@ module instmem(
 
 	blk_mem_gen_isr INT_MEM(
 		.clka(~clk),
-		.addra(addr[7:2]),
+		.addra(addr[11:2]),
 		.douta(inst_isr)
 	);
 

@@ -1,11 +1,11 @@
 Main:
-	addi x1, x0, 10
-	addi x2, x0, 15
-	sw x1, 128(x0)
+	addi x28, x0, 10
+	addi x29, x0, 15
+	sw x28, 112(x0)
 Loop:
-	addi x1, x1, 1
-	beq x1, x2, Exit
+	addi x28, x28, 1
+	beq x29, x28, Exit
 	jal x0, Loop
 Exit:
-	sw x1, 132(x0)
+	sw x29, 116(x0)
 	uret

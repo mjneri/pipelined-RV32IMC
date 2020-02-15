@@ -322,7 +322,7 @@ module core(
 	interrupt_controller INT_CON(
 		.clk(CLK),
 		.nrst(nrst),
-		.PC(if_PC),
+		.PC(if_pcnew),
 		.if_opcode(if_opcode),
 		.interrupt_signal(int_sig),
 		.if_prediction(if_prediction),

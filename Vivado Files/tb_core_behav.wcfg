@@ -11,15 +11,15 @@
       </db_ref>
    </db_ref_list>
    <zoom_setting>
-      <ZoomStartTime time="764500fs"></ZoomStartTime>
-      <ZoomEndTime time="870101fs"></ZoomEndTime>
-      <Cursor1Time time="781700fs"></Cursor1Time>
+      <ZoomStartTime time="9888333fs"></ZoomStartTime>
+      <ZoomEndTime time="10022334fs"></ZoomEndTime>
+      <Cursor1Time time="10000000fs"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
-      <NameColumnWidth column_width="244"></NameColumnWidth>
-      <ValueColumnWidth column_width="93"></ValueColumnWidth>
+      <NameColumnWidth column_width="176"></NameColumnWidth>
+      <ValueColumnWidth column_width="75"></ValueColumnWidth>
    </column_width_setting>
-   <WVObjectSize size="28" />
+   <WVObjectSize size="26" />
    <wvobject fp_name="/tb_core/CORE/CLK" type="logic">
       <obj_property name="ElementShortName">CLK</obj_property>
       <obj_property name="ObjectShortName">CLK</obj_property>
@@ -32,33 +32,58 @@
       <obj_property name="ElementShortName">SW</obj_property>
       <obj_property name="ObjectShortName">SW</obj_property>
    </wvobject>
-   <wvobject fp_name="/tb_core/CORE/PC/en" type="logic">
-      <obj_property name="ElementShortName">en</obj_property>
-      <obj_property name="ObjectShortName">en</obj_property>
+   <wvobject fp_name="/tb_core/CORE/INSTMEM/addr" type="array">
+      <obj_property name="ElementShortName">addr[11:0]</obj_property>
+      <obj_property name="ObjectShortName">addr[11:0]</obj_property>
    </wvobject>
-   <wvobject fp_name="/tb_core/CORE/INT_CON/sel_ISR" type="logic">
-      <obj_property name="ElementShortName">sel_ISR</obj_property>
-      <obj_property name="ObjectShortName">sel_ISR</obj_property>
+   <wvobject fp_name="/tb_core/CORE/INSTMEM/inst_mem" type="array">
+      <obj_property name="ElementShortName">inst_mem[31:0]</obj_property>
+      <obj_property name="ObjectShortName">inst_mem[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_core/CORE/INSTMEM/inst_isr" type="array">
+      <obj_property name="ElementShortName">inst_isr[31:0]</obj_property>
+      <obj_property name="ObjectShortName">inst_isr[31:0]</obj_property>
    </wvobject>
    <wvobject fp_name="/tb_core/CORE/INSTMEM/inst" type="array">
       <obj_property name="ElementShortName">inst[31:0]</obj_property>
       <obj_property name="ObjectShortName">inst[31:0]</obj_property>
    </wvobject>
-   <wvobject fp_name="/tb_core/CORE/INT_CON/save_PC" type="array">
-      <obj_property name="ElementShortName">save_PC[11:0]</obj_property>
-      <obj_property name="ObjectShortName">save_PC[11:0]</obj_property>
-   </wvobject>
-   <wvobject fp_name="/tb_core/CORE/INT_CON/save_PC_en" type="logic">
-      <obj_property name="ElementShortName">save_PC_en</obj_property>
-      <obj_property name="ObjectShortName">save_PC_en</obj_property>
-   </wvobject>
-   <wvobject fp_name="/tb_core/CORE/ret_ISR" type="logic">
-      <obj_property name="ElementShortName">ret_ISR</obj_property>
-      <obj_property name="ObjectShortName">ret_ISR</obj_property>
-   </wvobject>
-   <wvobject fp_name="/tb_core/CORE/INT_CON/ISR_stall" type="logic">
-      <obj_property name="ElementShortName">ISR_stall</obj_property>
-      <obj_property name="ObjectShortName">ISR_stall</obj_property>
+   <wvobject fp_name="group85" type="group">
+      <obj_property name="label">Interrupt</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="isExpanded"></obj_property>
+      <wvobject fp_name="/tb_core/CORE/INT_CON/save_PC" type="array">
+         <obj_property name="ElementShortName">save_PC[11:0]</obj_property>
+         <obj_property name="ObjectShortName">save_PC[11:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/INT_CON/save_PC_en" type="logic">
+         <obj_property name="ElementShortName">save_PC_en</obj_property>
+         <obj_property name="ObjectShortName">save_PC_en</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/INT_CON/interrupt_signal" type="logic">
+         <obj_property name="ElementShortName">interrupt_signal</obj_property>
+         <obj_property name="ObjectShortName">interrupt_signal</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/INT_CON/ISR_stall_counter" type="array">
+         <obj_property name="ElementShortName">ISR_stall_counter[2:0]</obj_property>
+         <obj_property name="ObjectShortName">ISR_stall_counter[2:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/INT_CON/ISR_stall" type="logic">
+         <obj_property name="ElementShortName">ISR_stall</obj_property>
+         <obj_property name="ObjectShortName">ISR_stall</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/INT_CON/ISR_en" type="logic">
+         <obj_property name="ElementShortName">ISR_en</obj_property>
+         <obj_property name="ObjectShortName">ISR_en</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/ret_ISR" type="logic">
+         <obj_property name="ElementShortName">ret_ISR</obj_property>
+         <obj_property name="ObjectShortName">ret_ISR</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/INT_CON/sel_ISR" type="logic">
+         <obj_property name="ElementShortName">sel_ISR</obj_property>
+         <obj_property name="ObjectShortName">sel_ISR</obj_property>
+      </wvobject>
    </wvobject>
    <wvobject fp_name="group53" type="group">
       <obj_property name="label">Program Counter</obj_property>

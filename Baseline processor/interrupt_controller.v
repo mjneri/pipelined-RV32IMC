@@ -18,32 +18,36 @@ module interrupt_controller(
     output reg ISR_stall,
     output reg [11:0] save_PC
 );
-    wire save_PC_en;
-    assign save_PC_en = !interrupt_signal & (!sel_ISR || (exe_correction & if_prediction & id_sel_pc));
 
-    reg [2:0] ISR_counter;
+    reg ISR_running;
+    reg ISR_stall_done;
+    reg [2:0] ISR_stall_counter;
+    wire ISR_stall;
+    assign ISR_stall = (!interrupt_signal & ISR_en & (ISR_stall_counter==0)) ||  // Capture first clock edge
+                        (ISR_stall_counter!=0) || ISR_stall_done;  // Stall for 5 cycles
+    
+    wire save_PC_en;
+    assign save_PC_en = (!interrupt_signal & ISR_en) || // Capture first clock edge
+                        (ISR_stall & (exe_correction & if_prediction & id_sel_pc)); // Catch any change in PC while pipeline finishes
 
     always@(posedge clk) begin
         if(!nrst)begin
             sel_ISR <= 0;
             ret_ISR <= 0;
             ISR_en <= 1;
-            ISR_stall <= 0;
             save_PC <= 12'd0;
-            ISR_counter <= 0;
+            ISR_running <= 0;
+            ISR_stall_done <= 0;
+            ISR_stall_counter <= 0;
         end else begin
             if(!interrupt_signal & !sel_ISR & ISR_en) begin
                 sel_ISR <= 1;
-                ISR_stall <= 1;
+                ISR_stall_counter <= 1;
                 ISR_en <= 0;
             end
 
             if(if_opcode==7'h73) begin
-                sel_ISR <= 0;
-                ret_ISR <= 1;
-                ISR_stall <= 1;
-            end else begin
-                ret_ISR <= 0;
+                ISR_stall_counter <= 1;
             end
 
             if(save_PC_en) begin
@@ -52,14 +56,29 @@ module interrupt_controller(
                 save_PC <= save_PC;
             end
 
-            if(ISR_stall) begin
-                if(ISR_counter == 3'd4) begin
-                    ISR_stall <= 0;
-                    ISR_counter <= 0;
+            if(ISR_stall_counter) begin
+                if(ISR_stall_counter == 3'd4) begin
+                    ISR_stall_counter <= 0;
+                    ISR_stall_done <= 1;
                 end else begin
                     if(if_clk_en)
-                        ISR_counter <= ISR_counter+1;
+                        ISR_stall_counter <= ISR_stall_counter+1;
                 end 
+            end
+
+            if(ISR_stall_done & !ISR_running) begin
+                ISR_stall_done <= 0;
+                ISR_running <= 1;
+                sel_ISR <= 1;
+            end else if(ISR_stall_done & ISR_running) begin
+                ISR_stall_done <= 0;
+                ISR_running <= 0;
+                ret_ISR <= 1;
+            end
+
+            if(ret_ISR) begin
+                ret_ISR <= 0;
+                sel_ISR <= 0;
             end
         end
     end

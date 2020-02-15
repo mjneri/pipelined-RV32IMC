@@ -53,7 +53,7 @@ module tb_core();
 		check = 0;
 		pass = 0;
 		i = 0;
-		#45;
+		#40;
 		nrst = 1;
 		#200
 		SW = 0;
