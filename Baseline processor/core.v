@@ -328,7 +328,7 @@ module core(
 		.if_prediction(if_prediction),
 		.exe_correction(exe_correction),
 		.id_sel_pc(id_sel_pc),
-		.if_clk_en(if_clk_en)
+		.if_clk_en(if_clk_en),
 		.sel_ISR(sel_ISR),
 		.ret_ISR(ret_ISR),
 		.ISR_en(ISR_en),
