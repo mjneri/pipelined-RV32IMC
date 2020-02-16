@@ -15,14 +15,14 @@ module interrupt_controller(
 	output reg sel_ISR,
     output reg ret_ISR,
     output reg ISR_en,
-    output reg ISR_stall,
+    output ISR_stall,
     output reg [11:0] save_PC
 );
 
     reg ISR_running;
     reg ISR_stall_done;
     reg [2:0] ISR_stall_counter;
-    wire ISR_stall;
+    //wire ISR_stall;
     assign ISR_stall = (!interrupt_signal & ISR_en & (ISR_stall_counter==0)) ||  // Capture first clock edge
                         (ISR_stall_counter!=0) || ISR_stall_done;  // Stall for 5 cycles
     
