@@ -11,15 +11,15 @@
       </db_ref>
    </db_ref_list>
    <zoom_setting>
-      <ZoomStartTime time="752500fs"></ZoomStartTime>
-      <ZoomEndTime time="821701fs"></ZoomEndTime>
-      <Cursor1Time time="850000fs"></Cursor1Time>
+      <ZoomStartTime time="390000fs"></ZoomStartTime>
+      <ZoomEndTime time="575001fs"></ZoomEndTime>
+      <Cursor1Time time="110400fs"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
       <NameColumnWidth column_width="200"></NameColumnWidth>
-      <ValueColumnWidth column_width="71"></ValueColumnWidth>
+      <ValueColumnWidth column_width="67"></ValueColumnWidth>
    </column_width_setting>
-   <WVObjectSize size="27" />
+   <WVObjectSize size="30" />
    <wvobject fp_name="/tb_core/CORE/CLK" type="logic">
       <obj_property name="ElementShortName">CLK</obj_property>
       <obj_property name="ObjectShortName">CLK</obj_property>
@@ -33,12 +33,12 @@
       <obj_property name="ObjectShortName">SW</obj_property>
    </wvobject>
    <wvobject fp_name="/tb_core/CORE/if_pcnew" type="array">
-      <obj_property name="ElementShortName">if_pcnew[11:0]</obj_property>
-      <obj_property name="ObjectShortName">if_pcnew[11:0]</obj_property>
+      <obj_property name="ElementShortName">if_pcnew[13:0]</obj_property>
+      <obj_property name="ObjectShortName">if_pcnew[13:0]</obj_property>
    </wvobject>
    <wvobject fp_name="/tb_core/CORE/INSTMEM/addr" type="array">
-      <obj_property name="ElementShortName">addr[11:0]</obj_property>
-      <obj_property name="ObjectShortName">addr[11:0]</obj_property>
+      <obj_property name="ElementShortName">addr[12:0]</obj_property>
+      <obj_property name="ObjectShortName">addr[12:0]</obj_property>
    </wvobject>
    <wvobject fp_name="/tb_core/CORE/INSTMEM/inst_mem" type="array">
       <obj_property name="ElementShortName">inst_mem[31:0]</obj_property>
@@ -80,10 +80,6 @@
          <obj_property name="ElementShortName">ISR_stall</obj_property>
          <obj_property name="ObjectShortName">ISR_stall</obj_property>
       </wvobject>
-      <wvobject fp_name="/tb_core/CORE/INT_CON/ISR_stall_done" type="logic">
-         <obj_property name="ElementShortName">ISR_stall_done</obj_property>
-         <obj_property name="ObjectShortName">ISR_stall_done</obj_property>
-      </wvobject>
       <wvobject fp_name="/tb_core/CORE/INT_CON/ISR_running" type="logic">
          <obj_property name="ElementShortName">ISR_running</obj_property>
          <obj_property name="ObjectShortName">ISR_running</obj_property>
@@ -102,24 +98,24 @@
       <obj_property name="DisplayName">label</obj_property>
       <obj_property name="isExpanded"></obj_property>
       <wvobject fp_name="/tb_core/CORE/if_PC" type="array">
-         <obj_property name="ElementShortName">if_PC[11:0]</obj_property>
-         <obj_property name="ObjectShortName">if_PC[11:0]</obj_property>
+         <obj_property name="ElementShortName">if_PC[13:0]</obj_property>
+         <obj_property name="ObjectShortName">if_PC[13:0]</obj_property>
       </wvobject>
       <wvobject fp_name="/tb_core/CORE/id_PC" type="array">
-         <obj_property name="ElementShortName">id_PC[11:0]</obj_property>
-         <obj_property name="ObjectShortName">id_PC[11:0]</obj_property>
+         <obj_property name="ElementShortName">id_PC[13:0]</obj_property>
+         <obj_property name="ObjectShortName">id_PC[13:0]</obj_property>
       </wvobject>
       <wvobject fp_name="/tb_core/CORE/exe_PC" type="array">
-         <obj_property name="ElementShortName">exe_PC[11:0]</obj_property>
-         <obj_property name="ObjectShortName">exe_PC[11:0]</obj_property>
+         <obj_property name="ElementShortName">exe_PC[12:0]</obj_property>
+         <obj_property name="ObjectShortName">exe_PC[12:0]</obj_property>
       </wvobject>
       <wvobject fp_name="/tb_core/CORE/mem_PC" type="array">
-         <obj_property name="ElementShortName">mem_PC[11:0]</obj_property>
-         <obj_property name="ObjectShortName">mem_PC[11:0]</obj_property>
+         <obj_property name="ElementShortName">mem_PC[12:0]</obj_property>
+         <obj_property name="ObjectShortName">mem_PC[12:0]</obj_property>
       </wvobject>
       <wvobject fp_name="/tb_core/CORE/wb_PC" type="array">
-         <obj_property name="ElementShortName">wb_PC[11:0]</obj_property>
-         <obj_property name="ObjectShortName">wb_PC[11:0]</obj_property>
+         <obj_property name="ElementShortName">wb_PC[12:0]</obj_property>
+         <obj_property name="ObjectShortName">wb_PC[12:0]</obj_property>
       </wvobject>
    </wvobject>
    <wvobject fp_name="/tb_core/CORE/if_inst" type="array">
@@ -129,6 +125,18 @@
    <wvobject fp_name="/tb_core/CORE/id_inst" type="array">
       <obj_property name="ElementShortName">id_inst[31:0]</obj_property>
       <obj_property name="ObjectShortName">id_inst[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_core/CORE/exe_inst" type="array">
+      <obj_property name="ElementShortName">exe_inst[31:0]</obj_property>
+      <obj_property name="ObjectShortName">exe_inst[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_core/CORE/mem_inst" type="array">
+      <obj_property name="ElementShortName">mem_inst[31:0]</obj_property>
+      <obj_property name="ObjectShortName">mem_inst[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_core/CORE/wb_inst" type="array">
+      <obj_property name="ElementShortName">wb_inst[31:0]</obj_property>
+      <obj_property name="ObjectShortName">wb_inst[31:0]</obj_property>
    </wvobject>
    <wvobject fp_name="group54" type="group">
       <obj_property name="label">Register</obj_property>

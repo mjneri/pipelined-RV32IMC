@@ -20,12 +20,9 @@ module interrupt_controller(
 );
 
     reg ISR_running;
-    reg ISR_stall_done;
     reg [2:0] ISR_stall_counter;
-    //wire ISR_stall;
-    assign ISR_stall = (!interrupt_signal & ISR_en & (ISR_stall_counter==0)) ||  // Capture first clock edge
-                        (ISR_stall_counter!=0) || ISR_stall_done;  // Stall for 5 cycles
-    
+    assign ISR_stall = (ISR_stall_counter!=0) ||    // Stall for 5 cycles
+                        (if_opcode==7'h73);         // Catch URET instruction
     wire save_PC_en;
     assign save_PC_en = (!interrupt_signal & ISR_en) || // Capture first clock edge
                         (ISR_stall & ((exe_correction!=0) | if_prediction | id_sel_pc)); // Catch any change in PC while pipeline finishes
@@ -37,11 +34,9 @@ module interrupt_controller(
             ISR_en <= 1;
             save_PC <= 12'd0;
             ISR_running <= 0;
-            ISR_stall_done <= 0;
             ISR_stall_counter <= 0;
         end else begin
             if(!interrupt_signal & !sel_ISR & ISR_en) begin
-                sel_ISR <= 1;
                 ISR_stall_counter <= 1;
                 ISR_en <= 0;
             end
@@ -57,21 +52,18 @@ module interrupt_controller(
             end
 
             if(ISR_stall_counter!=0) begin
-                if(ISR_stall_counter == 3'd3) begin
+                if(ISR_stall_counter == 3'd4) begin
                     ISR_stall_counter <= 0;
-                    ISR_stall_done <= 1;
                 end else begin
                     if(if_clk_en)
                         ISR_stall_counter <= ISR_stall_counter+1;
                 end 
             end
 
-            if(ISR_stall_done & !ISR_running) begin
-                ISR_stall_done <= 0;
+            if((ISR_stall_counter == 3'd4) & !ISR_running) begin
                 ISR_running <= 1;
                 sel_ISR <= 1;
-            end else if(ISR_stall_done & ISR_running) begin
-                ISR_stall_done <= 0;
+            end else if((ISR_stall_counter == 3'd4) & ISR_running) begin
                 ISR_running <= 0;
                 ret_ISR <= 1;
             end

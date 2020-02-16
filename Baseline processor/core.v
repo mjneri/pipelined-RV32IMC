@@ -370,7 +370,7 @@ module core(
 	pipereg_if_id IF_ID(
 		.clk(CLK),
 		.nrst(nrst),
-		.en(id_clk_en),
+		.en(id_clk_en & !ISR_stall),
 
 		.if_pc4(if_pc4), 	.id_pc4(id_pc4),
 		.if_inst(if_inst), 	.id_inst(id_inst),
