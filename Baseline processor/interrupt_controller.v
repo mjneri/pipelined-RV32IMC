@@ -57,7 +57,7 @@ module interrupt_controller(
             end
 
             if(ISR_stall_counter) begin
-                if(ISR_stall_counter == 3'd4) begin
+                if(ISR_stall_counter == 3'd3) begin
                     ISR_stall_counter <= 0;
                     ISR_stall_done <= 1;
                 end else begin

@@ -11,15 +11,15 @@
       </db_ref>
    </db_ref_list>
    <zoom_setting>
-      <ZoomStartTime time="9888333fs"></ZoomStartTime>
-      <ZoomEndTime time="10022334fs"></ZoomEndTime>
-      <Cursor1Time time="10000000fs"></Cursor1Time>
+      <ZoomStartTime time="752500fs"></ZoomStartTime>
+      <ZoomEndTime time="821701fs"></ZoomEndTime>
+      <Cursor1Time time="850000fs"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
-      <NameColumnWidth column_width="176"></NameColumnWidth>
-      <ValueColumnWidth column_width="75"></ValueColumnWidth>
+      <NameColumnWidth column_width="200"></NameColumnWidth>
+      <ValueColumnWidth column_width="71"></ValueColumnWidth>
    </column_width_setting>
-   <WVObjectSize size="26" />
+   <WVObjectSize size="27" />
    <wvobject fp_name="/tb_core/CORE/CLK" type="logic">
       <obj_property name="ElementShortName">CLK</obj_property>
       <obj_property name="ObjectShortName">CLK</obj_property>
@@ -31,6 +31,10 @@
    <wvobject fp_name="/tb_core/SW" type="logic">
       <obj_property name="ElementShortName">SW</obj_property>
       <obj_property name="ObjectShortName">SW</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_core/CORE/if_pcnew" type="array">
+      <obj_property name="ElementShortName">if_pcnew[11:0]</obj_property>
+      <obj_property name="ObjectShortName">if_pcnew[11:0]</obj_property>
    </wvobject>
    <wvobject fp_name="/tb_core/CORE/INSTMEM/addr" type="array">
       <obj_property name="ElementShortName">addr[11:0]</obj_property>
@@ -52,6 +56,14 @@
       <obj_property name="label">Interrupt</obj_property>
       <obj_property name="DisplayName">label</obj_property>
       <obj_property name="isExpanded"></obj_property>
+      <wvobject fp_name="/tb_core/CORE/INT_CON/ISR_en" type="logic">
+         <obj_property name="ElementShortName">ISR_en</obj_property>
+         <obj_property name="ObjectShortName">ISR_en</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/INT_CON/interrupt_signal" type="logic">
+         <obj_property name="ElementShortName">interrupt_signal</obj_property>
+         <obj_property name="ObjectShortName">interrupt_signal</obj_property>
+      </wvobject>
       <wvobject fp_name="/tb_core/CORE/INT_CON/save_PC" type="array">
          <obj_property name="ElementShortName">save_PC[11:0]</obj_property>
          <obj_property name="ObjectShortName">save_PC[11:0]</obj_property>
@@ -59,10 +71,6 @@
       <wvobject fp_name="/tb_core/CORE/INT_CON/save_PC_en" type="logic">
          <obj_property name="ElementShortName">save_PC_en</obj_property>
          <obj_property name="ObjectShortName">save_PC_en</obj_property>
-      </wvobject>
-      <wvobject fp_name="/tb_core/CORE/INT_CON/interrupt_signal" type="logic">
-         <obj_property name="ElementShortName">interrupt_signal</obj_property>
-         <obj_property name="ObjectShortName">interrupt_signal</obj_property>
       </wvobject>
       <wvobject fp_name="/tb_core/CORE/INT_CON/ISR_stall_counter" type="array">
          <obj_property name="ElementShortName">ISR_stall_counter[2:0]</obj_property>
@@ -72,9 +80,13 @@
          <obj_property name="ElementShortName">ISR_stall</obj_property>
          <obj_property name="ObjectShortName">ISR_stall</obj_property>
       </wvobject>
-      <wvobject fp_name="/tb_core/CORE/INT_CON/ISR_en" type="logic">
-         <obj_property name="ElementShortName">ISR_en</obj_property>
-         <obj_property name="ObjectShortName">ISR_en</obj_property>
+      <wvobject fp_name="/tb_core/CORE/INT_CON/ISR_stall_done" type="logic">
+         <obj_property name="ElementShortName">ISR_stall_done</obj_property>
+         <obj_property name="ObjectShortName">ISR_stall_done</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/INT_CON/ISR_running" type="logic">
+         <obj_property name="ElementShortName">ISR_running</obj_property>
+         <obj_property name="ObjectShortName">ISR_running</obj_property>
       </wvobject>
       <wvobject fp_name="/tb_core/CORE/ret_ISR" type="logic">
          <obj_property name="ElementShortName">ret_ISR</obj_property>
