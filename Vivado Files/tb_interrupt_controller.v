@@ -71,34 +71,28 @@ module tb_interrupt_controller();
         clk = 0;
         nrst = 0;
 
-        #100 nrst = 1;
+        #50 nrst = 1;
         
-        test_int($random%12, $random%7, 0, $random%2, $random%1, $random%1, $random%1);
-        #10 test_int($random%12, $random%7, 1, $random%2, $random%1, $random%1, $random%1);
-        #10 test_int($random%12, $random%7, 0, $random%2, $random%1, $random%1, $random%1);
-        #10 test_int($random%12, $random%7, 1, $random%2, $random%1, $random%1, $random%1);
-        #10 test_int($random%12, $random%7, 0, $random%2, $random%1, $random%1, $random%1);
-        #10 test_int($random%12, $random%7, 1, $random%2, $random%1, $random%1, $random%1);
-        #10 test_int($random%12, $random%7, 1, $random%2, $random%1, $random%1, $random%1);
-        #10 test_int($random%12, $random%7, 1, $random%2, $random%1, $random%1, $random%1);
-        #10 test_int($random%12, $random%7, 0, $random%2, $random%1, $random%1, $random%1);
-        #10 test_int($random%12, $random%7, 1, $random%2, $random%1, $random%1, $random%1);
-        #10 test_int($random%12, $random%7, 0, $random%2, $random%1, $random%1, $random%1);
-        #10
-        nrst = 0;
-        #50
-        nrst = 1;
-        #10 test_int($random%12, $random%7, 1, $random%2, $random%1, $random%1, $random%1);
-        #10 test_int($random%12, $random%7, 1, $random%2, $random%1, $random%1, $random%1);
-        #10 test_int($random%12, $random%7, 1, $random%2, $random%1, $random%1, $random%1);
-        #10 test_int($random%12, $random%7, 0, $random%2, $random%1, $random%1, $random%1);
-        #10 test_int($random%12, $random%7, 1, $random%2, $random%1, $random%1, $random%1);
-        #10 test_int($random%12, $random%7, 0, $random%2, $random%1, $random%1, $random%1);
-        #10 test_int($random%12, $random%7, 1, $random%2, $random%1, $random%1, $random%1);
-        #10 test_int($random%12, $random%7, 0, $random%2, $random%1, $random%1, $random%1);
-        #10 test_int($random%12, $random%7, 0, $random%2, $random%1, $random%1, $random%1);
-        #10 test_int($random%12, $random%7, 0, $random%2, $random%1, $random%1, $random%1);
-        #10 test_int($random%12, $random%7, 1, $random%2, $random%1, $random%1, $random%1);
+        test_int($random%12, $random%7, 0, $random%2, $random%1, $random%1, 0);
+        #10 test_int($random%12, $random%7, 1, $random%2, $random%1, $random%1, 1);
+        #10 test_int($random%12, $random%7, 0, $random%2, $random%1, $random%1, 1);
+        #10 test_int($random%12, $random%7, 1, $random%2, $random%1, $random%1, 0);
+        #10 test_int($random%12, $random%7, 0, $random%2, $random%1, $random%1, 1);
+        #10 test_int($random%12, $random%7, 1, $random%2, $random%1, $random%1, 0);
+        #10 test_int($random%12, $random%7, 1, $random%2, $random%1, $random%1, 0);
+        #10 test_int($random%12, $random%7, 1, $random%2, $random%1, $random%1, 0);
+        #10 test_int($random%12, $random%7, 0, $random%2, $random%1, $random%1, 1);
+        #10 test_int($random%12, $random%7, 1, $random%2, $random%1, $random%1, 0);
+        #10 test_int($random%12, $random%7, 0, $random%2, $random%1, $random%1, 1);
+        #10 test_int($random%12, $random%7, 1, $random%2, $random%1, $random%1, 0);
+        #10 test_int($random%12, $random%7, 1, $random%2, $random%1, $random%1, 0);
+        #10 test_int($random%12, $random%7, 0, $random%2, $random%1, $random%1, 1);
+        #10 test_int($random%12, $random%7, 1, $random%2, $random%1, $random%1, 1);
+        #10 test_int($random%12, $random%7, 0, $random%2, $random%1, $random%1, 1);
+        #10 test_int($random%12, $random%7, 1, $random%2, $random%1, $random%1, 0);
+        #10 test_int($random%12, $random%7, 0, $random%2, $random%1, $random%1, 1);
+        #10 test_int($random%12, $random%7, 1, $random%2, $random%1, $random%1, 0);
+        #10 test_int($random%12, $random%7, 0, $random%2, $random%1, $random%1, 1);
         $finish;
     end
 
