@@ -28,7 +28,7 @@ module interrupt_controller(
     
     wire save_PC_en;
     assign save_PC_en = (!interrupt_signal & ISR_en) || // Capture first clock edge
-                        (ISR_stall & (exe_correction & if_prediction & id_sel_pc)); // Catch any change in PC while pipeline finishes
+                        (ISR_stall & ((exe_correction!=0) | if_prediction | id_sel_pc)); // Catch any change in PC while pipeline finishes
 
     always@(posedge clk) begin
         if(!nrst)begin
@@ -56,7 +56,7 @@ module interrupt_controller(
                 save_PC <= save_PC;
             end
 
-            if(ISR_stall_counter) begin
+            if(ISR_stall_counter!=0) begin
                 if(ISR_stall_counter == 3'd3) begin
                     ISR_stall_counter <= 0;
                     ISR_stall_done <= 1;
