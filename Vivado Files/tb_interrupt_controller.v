@@ -71,21 +71,21 @@ module tb_interrupt_controller();
 
         #50 nrst = 1;
         
-        test_int($random%12, $random%7, 0, $random%2, 0, 0, 0);
+        test_int($random%12, $random%7, 1, $random%2, 0, 0, 0);
         #10 test_int($random%12, $random%7, 1, $random%2, 1, 0, 1);
-        #10 test_int($random%12, $random%7, 0, $random%2, 1, 1, 1);
+        #10 test_int($random%12, $random%7, 1, $random%2, 1, 1, 1);
         #10 test_int($random%12, $random%7, 0, $random%2, 0, 1, 0);
-        #10 test_int($random%12, $random%7, 1, $random%2, 1, 0, 1);
+        #10 test_int($random%12, $random%7, 0, $random%2, 1, 0, 1);
         #10 test_int($random%12, $random%7, 0, $random%2, 0, 1, 1);
         #10 test_int($random%12, $random%7, 0, $random%2, 1, 1, 0);
         #10 test_int($random%12, $random%7, 1, $random%2, 1, 0, 1);
-        #10 test_int($random%12, $random%7, 0, $random%2, 0, 1, 1);
-        #10 test_int($random%12, $random%7, 0, $random%2, 0, 1, 0);
+        #10 test_int($random%12, $random%7, 1, $random%2, 0, 1, 1);
+        #10 test_int($random%12, $random%7, 1, $random%2, 0, 1, 0);
         #10 test_int($random%12, $random%7, 1, $random%2, 0, 0, 1);
         #10 test_int($random%12, $random%7, 0, $random%2, 0, 0, 0);
         #10 test_int($random%12, $random%7, 0, $random%2, 0, 1, 1);
         #10 test_int($random%12, $random%7, 0, $random%2, 1, 1, 0);
-        #10 test_int($random%12, $random%7, 1, $random%2, 1, 0, 1);
+        #10 test_int($random%12, $random%7, 0, $random%2, 1, 0, 1);
         #10 test_int($random%12, $random%7, 0, $random%2, 0, 1, 1);
         #10 test_int($random%12, $random%7, 0, $random%2, 0, 0, 0);
         #10 test_int($random%12, $random%7, 0, $random%2, 0, 1, 1);
