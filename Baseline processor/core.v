@@ -30,7 +30,9 @@ module core(
     wire ret_ISR;
     wire ISR_en;
     wire ISR_stall;
+	wire ISR_flush;
     wire [11:0] save_PC;
+	wire flush;
 // &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 
 
@@ -253,13 +255,17 @@ module core(
 		//.is_jump(id_is_jump),
 		//.is_nop(),
 
-		//.branch_flush(branch_flush),
 		.exe_sel_data(exe_sel_data),
 		.exe_wr_en(exe_wr_en),
 		.exe_rd(exe_rd),
 
 		.fw_mem_to_exe_A(fw_mem_to_exe_A),
 		.fw_mem_to_exe_B(fw_mem_to_exe_B),
+
+		.branch_flush(branch_flush),
+		.exe_stall(exe_stall),
+		.ISR_flush(ISR_flush),
+		.flush(flush),
 
 		.if_en(if_clk_en),
 		.id_en(id_clk_en),
@@ -305,7 +311,7 @@ module core(
 // IF Stage ========================================================
 	pc PC( 
 		.clk(CLK),
-		.nrst(nrst & !ISR_stall),
+		.nrst(nrst & (!ISR_stall || ret_ISR)),
 		.en(if_clk_en),
 		.addr_in(if_pcnew),
 		.inst_addr(if_PC)
@@ -329,10 +335,11 @@ module core(
 		.exe_correction(exe_correction),
 		.id_sel_pc(id_sel_pc),
 		.if_clk_en(if_clk_en),
+		.ISR_stall(ISR_stall),
+		.ISR_flush(ISR_flush),
 		.sel_ISR(sel_ISR),
 		.ret_ISR(ret_ISR),
 		.ISR_en(ISR_en),
-		.ISR_stall(ISR_stall),
 		.save_PC(save_PC)
 	);
 
@@ -369,8 +376,8 @@ module core(
 
 	pipereg_if_id IF_ID(
 		.clk(CLK),
-		.nrst(nrst),
-		.en(id_clk_en & !ISR_stall),
+		.nrst(nrst & !ISR_stall),
+		.en(id_clk_en),
 
 		.if_pc4(if_pc4), 	.id_pc4(id_pc4),
 		.if_inst(if_inst), 	.id_inst(id_inst),
@@ -534,7 +541,7 @@ module core(
 	pipereg_id_exe ID_EXE(
 		.clk(CLK),
 		.nrst(nrst),
-		.flush(branch_flush | exe_stall),
+		.flush(flush),
 		.en(exe_clk_en),
 
 		.id_pc4(id_pc4),					.exe_pc4(exe_pc4),
