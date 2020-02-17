@@ -311,7 +311,7 @@ module core(
 // IF Stage ========================================================
 	pc PC( 
 		.clk(CLK),
-		.nrst(nrst & (!ISR_stall || ret_ISR)),
+		.nrst(nrst & (!ISR_stall | ret_ISR)),
 		.en(if_clk_en),
 		.addr_in(if_pcnew),
 		.inst_addr(if_PC)

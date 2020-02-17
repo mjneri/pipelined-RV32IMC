@@ -40,10 +40,11 @@ module interrupt_controller(
             ISR_running <= 0;
             ISR_stall_counter <= 0;
         end else begin
-            if(!interrupt_signal & !sel_ISR & ISR_en) begin
+            if(!interrupt_signal & !(sel_ISR | !ISR_en)) begin
                 ISR_stall_counter <= 1;
                 ISR_en <= 0;
-            end
+            end else if(interrupt_signal & !(ISR_running | ISR_stall))
+                ISR_en <= 1;
 
             if(if_opcode==7'h73) begin
                 ISR_stall_counter <= 1;
@@ -58,18 +59,16 @@ module interrupt_controller(
             end
 
             if(ISR_stall_counter!=0) begin
-                if(ISR_stall_counter == 3'd3) begin
-                    ISR_stall_counter <= 0;
-                end else begin
-                    if(if_clk_en)
-                        ISR_stall_counter <= ISR_stall_counter+1;
-                end 
+                if(if_clk_en)
+                    ISR_stall_counter <= ISR_stall_counter+1;
             end
 
             if((ISR_stall_counter == 3'd3) & !ISR_running) begin
+                ISR_stall_counter <= 0;
                 ISR_running <= 1;
                 sel_ISR <= 1;
-            end else if((ISR_stall_counter == 3'd3) & ISR_running) begin
+            end else if((ISR_stall_counter == 3'd2) & ISR_running) begin
+                ISR_stall_counter <= 0;
                 ISR_running <= 0;
                 ret_ISR <= 0;
             end
