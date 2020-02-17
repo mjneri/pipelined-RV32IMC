@@ -233,6 +233,7 @@ module core(
     wire if_not_comp;           // Compressed or not
     wire buff_stall;        //Stall for case where
     wire id_is_comp;
+	// compressed control signals
     wire [2:0] id_c_dm_select;
     wire [2:0] id_c_imm_select;
     wire [1:0] id_c_sel_data;
@@ -242,12 +243,16 @@ module core(
     wire id_c_sel_opB;
     wire id_c_is_stype;
     wire id_c_wr_en;
+	wire [1:0] id_c_btype;
+	wire id_c_use_A;
+	wire id_c_use_B;
+	// registers and immediates
     wire [4:0] id_c_rsA;
     wire [4:0] id_c_rsB;
     wire [4:0] id_c_rd;
     wire [31:0] id_c_imm;
     wire [31:0] id_c_jt;
-
+	// final signals for later stages
     wire [2:0] id_rc_dm_select;
     wire [2:0] id_rc_imm_select;
     wire [1:0] id_rc_sel_data;
@@ -262,6 +267,8 @@ module core(
     wire [4:0] id_rc_rd;
     wire [31:0] id_rc_imm;
     wire [31:0] id_rc_jt;    
+	wire exe_comp_use_A;
+	wire exe_comp_use_B;
 // &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&    
     
 /******************************* DATAPATH (INSTANTIATING MODULES) ******************************/
@@ -524,6 +531,8 @@ module core(
 		.id_imm_select(id_imm_select),
 
 		.exe_opcode(exe_opcode),
+		.exe_comp_use_A(exe_comp_use_A),
+		.exe_comp_use_B(exe_comp_use_B),
 
 		// Outputs
 		.fw_exe_to_id_A(fw_exe_to_id_A),
@@ -558,6 +567,9 @@ module core(
         .sel_opB(id_c_sel_opB),
         .is_stype(id_c_is_stype),
         .wr_en(id_c_wr_en),
+		.btype(id_c_btype),
+		.use_A(id_c_use_A),
+		.use_B(id_c_use_B),
         
         // Results (output)
         .rs1(id_c_rsA),
@@ -600,13 +612,15 @@ module core(
 
 		// Control signals go here
 		.id_ALU_op(id_rc_alu_op),				.exe_ALU_op(exe_ALU_op),
-		// .id_sel_opA(id_sel_opA),			.exe_sel_opA(exe_sel_opA),
-		// .id_sel_opB(id_sel_opB),			.exe_sel_opB(exe_sel_opB),
+		// .id_sel_opA(id_sel_opA),				.exe_sel_opA(exe_sel_opA),
+		// .id_sel_opB(id_sel_opB),				.exe_sel_opB(exe_sel_opB),
 		.id_is_stype(id_rc_is_stype),			.exe_is_stype(exe_is_stype),
-		.id_wr_en(id_rc_wr_en),				.exe_wr_en(exe_wr_en),
-		.id_dm_select(id_rc_dm_select),		.exe_dm_select(exe_dm_select),
+		.id_wr_en(id_rc_wr_en),					.exe_wr_en(exe_wr_en),
+		.id_dm_select(id_rc_dm_select),			.exe_dm_select(exe_dm_select),
 		.id_sel_data(id_rc_sel_data),			.exe_sel_data(exe_sel_data),
-		.id_store_select(id_rc_store_select), 	.exe_store_select(exe_store_select)
+		.id_store_select(id_rc_store_select), 	.exe_store_select(exe_store_select),
+		.id_comp_use_A(id_c_use_A),				.exe_comp_use_A(exe_comp_use_A),
+		.id_comp_use_B(id_c_use_B),				.exe_comp_use_B(exe_comp_use_B)
 	);
 
 

@@ -25,6 +25,9 @@ module compressed_decoder(
     output sel_opB,
     output is_stype,
     output wr_en,
+    output [1:0] btype,
+    output use_A,
+    output use_B,
 
     // results
     output [4:0] rs1,
@@ -385,6 +388,10 @@ module compressed_decoder(
     
     assign is_compressed = !(opcode == 2'b11);
 
+    assign btype[1] = (opcode == 2'd1) && (funct3 == 3'd6); // BEQZ
+    assign btype[0] = (opcode == 2'd1) && (funct3 == 3'd7); // BNEZ
+    assign use_A = !(rs1 == 5'd0);
+    assign use_B = !(rs2 == 5'd0);
     
 
 endmodule
