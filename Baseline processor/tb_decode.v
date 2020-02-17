@@ -83,6 +83,8 @@ module tb_decode();
         dec_jt
     );
 
+    //wire test_id_rsA
+
     
     integer i;
     initial begin

@@ -12,10 +12,10 @@ args = argparser.parse_args(sys.argv[1:])
 
 global comp_buffer_en
 comp_buffer_en = args.comp_buffer
-print(comp_buffer_en)
+#print(comp_buffer_en)
 
 filename = args.file
-print(filename)
+#print(filename)
 
 try:
     inst_file = open(filename)
@@ -395,7 +395,6 @@ def assemble(instructions, labels, instmem):
         if (opt[0] == 'C'):
             out = (hex(m_code)[2:].zfill(4))
             if (comp_buffer_en == 'True'):
-                print('loli')
                 if (compressed_counter == 0):
                     out_buffer = out
                     compressed_counter = 1

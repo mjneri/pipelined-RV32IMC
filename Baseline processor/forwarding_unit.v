@@ -92,6 +92,8 @@ module forwarding_unit(
 
     // EXE stage forwarding (memory load -> ALU operand/s)
 
+    // A: NOT lui/auipc/jal
+    // B: conditions for A + r-type/b-type/store
     assign fw_mem_to_exe_A = (exe_rsA == mem_rd) && (exe_rsA != 0) && 
 							mem_wr_en && (mem_sel_data == 2'd3) &&
 							!(exe_opcode == 7'h37 || exe_opcode == 7'h17 || exe_opcode == 7'h6F);
