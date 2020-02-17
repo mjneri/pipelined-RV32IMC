@@ -56,49 +56,50 @@ module tb_interrupt_controller();
             if_clk_en = if_clken;
 //            $display("INPUTS:");
 //            $display("OUTPUTS:");
-            $strobe("PC: %D, OPCODE: %X, interrupt_signal: %D, exe_corr: %X, if_prediction: %D, id_sel_pc: %D, if_clk_en: %D", PC, if_opcode, interrupt_signal, exe_correction, if_prediction, id_sel_pc, if_clk_en);
-            $strobe("sel_ISR: %D, ret_ISR: %D, ISR_en: %D, ISR_stall: %D, save_PC: %X", sel_ISR, ret_ISR, ISR_en, ISR_stall, save_PC);
+//            $strobe("PC: %D, OPCODE: %X, interrupt_signal: %D, exe_corr: %X, if_prediction: %D, id_sel_pc: %D, if_clk_en: %D", PC, if_opcode, interrupt_signal, exe_correction, if_prediction, id_sel_pc, if_clk_en);
+//            $strobe("sel_ISR: %D, ret_ISR: %D, ISR_en: %D, ISR_stall: %D, save_PC: %X", sel_ISR, ret_ISR, ISR_en, ISR_stall, save_PC);
         end
     endtask
 
     always
-	    	#20 clk = ~clk;
+	    	#10 clk = ~clk;
 
-    initial begin
+  initial begin
 
         clk = 0;
         nrst = 0;
 
-        #50 nrst = 1;
+        #40 nrst = 1;
         
-        test_int($random%12, $random%7, 1, $random%2, 0, 0, 0);
-        #10 test_int($random%12, $random%7, 1, $random%2, 1, 0, 1);
-        #10 test_int($random%12, $random%7, 1, $random%2, 1, 1, 1);
-        #10 test_int($random%12, $random%7, 1, $random%2, 0, 1, 0);
-        #10 test_int($random%12, $random%7, 0, $random%2, 1, 0, 1);
-        #10 test_int($random%12, $random%7, 0, $random%2, 0, 1, 1);
-        #10 test_int($random%12, $random%7, 0, $random%2, 1, 1, 0);
-        #10 test_int($random%12, $random%7, 0, $random%2, 1, 0, 1);
-        #10 test_int($random%12, $random%7, 0, $random%2, 0, 1, 1);
-        #10 test_int($random%12, $random%7, 0, $random%2, 0, 1, 0);
-        #10 test_int($random%12, $random%7, 0, $random%2, 0, 0, 1);
-        #10 test_int($random%12, $random%7, 1, $random%2, 0, 0, 0);
-        #10 test_int($random%12, $random%7, 1, $random%2, 0, 1, 1);
-        #10 test_int($random%12, $random%7, 1, $random%2, 1, 1, 0);
-        #10 test_int($random%12, $random%7, 1, $random%2, 1, 0, 1);
-        #10 test_int($random%12, $random%7, 0, $random%2, 0, 1, 1);
-        #10 test_int($random%12, $random%7, 0, $random%2, 0, 0, 0);
-        #10 test_int($random%12, $random%7, 0, $random%2, 0, 1, 1);
-        #10 test_int($random%12, $random%7, 0, $random%2, 1, 1, 0);
-        #10 test_int($random%12, $random%7, 0, $random%2, 0, 1, 0);
-        #10 test_int($random%12, $random%7, 1, $random%2, 0, 0, 1);
-        #10 test_int($random%12, $random%7, 1, $random%2, 0, 0, 0);
-        #10 test_int($random%12, $random%7, 1, $random%2, 1, 1, 0);
-        #10 test_int($random%12, $random%7, 1, $random%2, 0, 1, 0);
-        #10 test_int($random%12, $random%7, 1, $random%2, 0, 0, 1);
-        #10 test_int($random%12, $random%7, 1, $random%2, 0, 0, 0);
+         #00 test_int(12'd0, $random%30, 1, $random%2, 0, 1, 0);
+         #20 test_int(12'd4, $random%30, 1, $random%2, 0, 0, 0);
+         #20 test_int(12'd8, $random%30, 0, $random%2, 0, 0, 1);
+         #20 test_int($urandom%40, $random%30, 0, $random%2, 0, 1, 1);
+         #20 test_int($urandom%40, $random%30, 0, $random%2, 0, 0, 1);
+         #20 test_int($urandom%42, $random%30, 0, $random%2, 0, 0, 0);
+         #20 test_int($urandom%42, $random%30, 0, $random%2, 0, 1, 0);
+         #20 test_int($urandom%42, $random%30, 0, $random%2, 0, 0, 0);
+         #20 test_int($urandom%42, $random%30, 0, $random%2, 0, 0, 0);
+         #20 test_int($urandom%42, $random%30, 0, $random%2, 1, 1, 1);
+         #20 test_int($urandom%42, $random%30, 0, $random%2, 0, 0, 1);
+         #20 test_int($urandom%42, $random%30, 0, $random%2, 1, 1, 1);
+         #20 test_int($urandom%42, $random%30, 0, $random%2, 1, 0, 1);
+         #20 test_int($urandom%42, $random%30, 0, $random%2, 0, 0, 0);
+         #20 test_int($urandom%42, $random%30, 0, $random%2, 0, 1, 0);
+         #20 test_int($urandom%42, $random%30, 1, $random%2, 0, 0, 0);
+         #20 test_int($urandom%42, $random%30, 1, $random%2, 0, 0, 0);
+         #20 test_int($urandom%42, $random%30, 1, $random%2, 1, 1, 0);
+         #20 test_int($urandom%42, $random%30, 1, $random%2, 0, 0, 0);
+         #20 test_int($urandom%42, $random%30, 1, $random%2, 1, 1, 0);
+         #20 test_int($urandom%42, $random%30, 1, $random%2, 1, 0, 0);
+         #20 test_int($urandom%42, $random%30, 1, $random%2, 0, 1, 0);
+         #20 test_int($urandom%42, $random%30, 1, $random%2, 0, 1, 0);
+         #20 test_int($urandom%42, $random%30, 1, $random%2, 0, 0, 0);
+        
+        
+
         #50
         $finish;
     end
-
-endmodule
+        
+        endmodule
