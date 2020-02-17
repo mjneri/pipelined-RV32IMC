@@ -71,10 +71,10 @@ module tb_interrupt_controller();
 
         #40 nrst = 1;
         
-         #00 test_int(12'd0, $random%30, 1, $random%2, 0, 1, 0);
+         #10 test_int(12'd0, $random%30, 1, $random%2, 0, 1, 0);
          #20 test_int(12'd4, $random%30, 1, $random%2, 0, 0, 0);
-         #20 test_int(12'd8, $random%30, 0, $random%2, 0, 0, 1);
-         #20 test_int($urandom%40, $random%30, 0, $random%2, 0, 1, 1);
+         #20 test_int(12'd8, $random%30, 1, $random%2, 0, 0, 1);
+         #20 test_int($urandom%40, $random%30, 1, $random%2, 0, 1, 1);
          #20 test_int($urandom%40, $random%30, 0, $random%2, 0, 0, 1);
          #20 test_int($urandom%42, $random%30, 0, $random%2, 0, 0, 0);
          #20 test_int($urandom%42, $random%30, 0, $random%2, 0, 1, 0);
