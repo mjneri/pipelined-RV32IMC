@@ -228,6 +228,42 @@ module core(
 
 
 
+//Compressed Instructions ======================================
+    wire [31:0] if_rc_inst;  // Determined Instruction
+    wire if_not_comp;           // Compressed or not
+    wire buff_stall;        //Stall for case where
+    wire id_is_comp;
+    wire [2:0] id_c_dm_select;
+    wire [2:0] id_c_imm_select;
+    wire [1:0] id_c_sel_data;
+    wire [1:0] id_c_store_select;
+    wire [3:0] id_c_alu_op;
+    wire id_c_sel_opA;
+    wire id_c_sel_opB;
+    wire id_c_is_stype;
+    wire id_c_wr_en;
+    wire [4:0] id_c_rsA;
+    wire [4:0] id_c_rsB;
+    wire [4:0] id_c_rd;
+    wire [31:0] id_c_imm;
+    wire [31:0] id_c_jt;
+
+    wire [2:0] id_rc_dm_select;
+    wire [2:0] id_rc_imm_select;
+    wire [1:0] id_rc_sel_data;
+    wire [1:0] id_rc_store_select;
+    wire [3:0] id_rc_alu_op;
+    wire id_rc_sel_opA;
+    wire id_rc_sel_opB;
+    wire id_rc_is_stype;
+    wire id_rc_wr_en;
+    wire [4:0] id_rc_rsA;
+    wire [4:0] id_rc_rsB;
+    wire [4:0] id_rc_rd;
+    wire [31:0] id_rc_imm;
+    wire [31:0] id_rc_jt;    
+// &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&    
+    
 /******************************* DATAPATH (INSTANTIATING MODULES) ******************************/
 // CLOCKS ========================================================
 	sf_controller SF_CONTROLLER(
@@ -304,8 +340,17 @@ module core(
 		.inst(if_inst)
 	);
 
+    compressed_buffer C_BUFFER(
+        .clk(CLK),
+        .nrst(nrst),
+        .inst(if_inst),
+        .reg_inst(if_not_comp),
+        .temp_buff_stall(buff_stall),
+        .out_inst(if_rc_inst)
+    );
+    
 	// PC + 4
-	assign if_pc4 = if_PC + 12'd4;
+	assign if_pc4 = buff_stall ? if_PC : if_PC + 12'd4;
 
 	// PC Selection
 	// 3'b000 = PC+4
@@ -338,7 +383,7 @@ module core(
 		.en(id_clk_en),
 
 		.if_pc4(if_pc4), 	.id_pc4(id_pc4),
-		.if_inst(if_inst), 	.id_inst(id_inst),
+		.if_inst(if_rc_inst), 	.id_inst(id_inst),
 		.if_PC(if_PC), 		.id_PC(id_PC)
 	);
 
@@ -375,7 +420,7 @@ module core(
 					   (fw_wb_to_id_B && !id_is_stype)?
 					   		wb_wr_data								:                 
                     	id_sel_opB?
-	                    	id_imm : id_rfoutB;
+	                    	id_rc_imm : id_rfoutB;
 	
 	// id_fwdstore is passed through ID/EXE pipeline register & is sent to STOREBLOCK
 	assign id_fwdstore = (fw_exe_to_id_B && id_is_stype)?
@@ -423,7 +468,7 @@ module core(
 		.wr_data(wb_wr_data),
 		.dest_addr(wb_rd),
 
-		.src1_addr(id_rsA),		.src2_addr(id_rsB),
+		.src1_addr(id_rc_rsA),		.src2_addr(id_rc_rsB),
 		.src1_out(id_rfoutA),	.src2_out(id_rfoutB)
 	);
 
@@ -452,8 +497,8 @@ module core(
 
 	forwarding_unit FWD(
 		// Inputs
-		.id_rsA(id_rsA),
-		.id_rsB(id_rsB),
+		.id_rsA(id_rc_rsA),
+		.id_rsB(id_rc_rsB),
 		.exe_rsA(exe_rsA),
 		.exe_rsB(exe_rsB),
 
@@ -465,8 +510,8 @@ module core(
 		.mem_wr_en(mem_wr_en),
 		.wb_wr_en(wb_wr_en),
 
-		.id_sel_opA(id_sel_opA),
-		.id_sel_opB(id_sel_opB),
+		.id_sel_opA(id_rc_sel_opA),
+		.id_sel_opB(id_rc_sel_opB),
 
 		//.id_sel_data(id_sel_data),
 		.exe_sel_data(exe_sel_data),
@@ -496,6 +541,45 @@ module core(
 		.fw_wb_to_exe_B(fw_wb_to_exe_B)
 	);
 
+    compressed_decoder C_DECODER (
+        // Input
+        .inst(id_inst[15:0]),
+        
+        // Type indicator (output)
+        .is_compressed(id_is_comp),
+        
+        // Control signals (output)
+        .dm_select(id_c_dm_select),
+        .imm_select(id_c_imm_select),
+        .sel_data(id_c_sel_data),
+        .store_select(id_c_store_select),
+        .alu_op(id_c_alu_op),
+        .sel_opA(id_c_sel_opA),
+        .sel_opB(id_c_sel_opB),
+        .is_stype(id_c_is_stype),
+        .wr_en(id_c_wr_en),
+        
+        // Results (output)
+        .rs1(id_c_rsA),
+        .rs2(id_c_rsB),
+        .rd(id_c_rd),
+        .imm(id_c_imm),
+        .jt(id_c_jt)
+    );
+    
+    assign id_rc_dm_select = id_is_comp ? id_c_dm_select : id_dm_select; 
+    assign id_rc_sel_data = id_is_comp ? id_c_sel_data : id_sel_data;
+    assign id_rc_store_select = id_is_comp ? id_c_store_select : id_store_select;
+    assign id_rc_alu_op = id_is_comp ? id_c_alu_op : id_ALU_op;
+    assign id_rc_is_stype = id_is_comp ? id_c_is_stype : id_is_stype;
+    assign id_rc_wr_en = id_is_comp ? id_c_wr_en : id_wr_en;
+    assign id_rc_imm = id_is_comp ? id_c_imm : id_imm;
+    assign id_rc_rd = id_is_comp ? id_c_rd : id_rd;
+    assign id_rc_rsA = id_is_comp ? id_c_rsA: id_rsA;
+    assign id_rc_rsB = id_is_comp ? id_c_rsB : id_rsB;
+    assign id_rc_sel_opA = id_is_comp ? id_c_sel_opA : id_sel_opA;
+    assign id_rc_sel_opB = id_is_comp ? id_c_sel_opB : id_sel_opB;
+    
 	pipereg_id_exe ID_EXE(
 		.clk(CLK),
 		.nrst(nrst),
@@ -510,19 +594,19 @@ module core(
 
 		.id_fwdstore(id_fwdstore),			.exe_fwdstore(exe_fwdstore),
 		
-		.id_imm(id_imm),					.exe_imm(exe_imm),
-		.id_rd(id_rd),						.exe_rd(exe_rd),
+		.id_imm(id_rc_imm),					.exe_imm(exe_imm),
+		.id_rd(id_rc_rd),						.exe_rd(exe_rd),
 		.id_PC(id_PC),						.exe_PC(exe_PC),
 
 		// Control signals go here
-		.id_ALU_op(id_ALU_op),				.exe_ALU_op(exe_ALU_op),
+		.id_ALU_op(id_rc_alu_op),				.exe_ALU_op(exe_ALU_op),
 		// .id_sel_opA(id_sel_opA),			.exe_sel_opA(exe_sel_opA),
 		// .id_sel_opB(id_sel_opB),			.exe_sel_opB(exe_sel_opB),
-		.id_is_stype(id_is_stype),			.exe_is_stype(exe_is_stype),
-		.id_wr_en(id_wr_en),				.exe_wr_en(exe_wr_en),
-		.id_dm_select(id_dm_select),		.exe_dm_select(exe_dm_select),
-		.id_sel_data(id_sel_data),			.exe_sel_data(exe_sel_data),
-		.id_store_select(id_store_select), 	.exe_store_select(exe_store_select)
+		.id_is_stype(id_rc_is_stype),			.exe_is_stype(exe_is_stype),
+		.id_wr_en(id_rc_wr_en),				.exe_wr_en(exe_wr_en),
+		.id_dm_select(id_rc_dm_select),		.exe_dm_select(exe_dm_select),
+		.id_sel_data(id_rc_sel_data),			.exe_sel_data(exe_sel_data),
+		.id_store_select(id_rc_store_select), 	.exe_store_select(exe_store_select)
 	);
 
 
