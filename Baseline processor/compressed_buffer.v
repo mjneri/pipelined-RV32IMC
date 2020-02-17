@@ -15,11 +15,11 @@ module compressed_buffer (
     input nrst,
     input [31:0] inst,
     output reg_inst,
-    output buffer_stall,
+    output reg temp_buff_stall,
     output [31:0] out_inst
     );
 
-    reg temp_buff_stall;
+    //reg temp_buff_stall;
     reg [15:0] buffer_inst;        // instruction buffer
     reg full;
     wire [1:0] low2     = inst[1:0];
@@ -28,7 +28,7 @@ module compressed_buffer (
     wire [15:0] lo_half        = inst[31:16];
     wire [15:0] hi_half        = inst[15:0];
     assign out_inst     =   (full   ?   (is_word    ?   {lo_half, buffer_inst} : {16'd0, buffer_inst}) :
-                                        (is_word    ?   inst : {16'd0, lo_half}));
+                                        (is_word    ?   inst : {16'd0, hi_half}));
 
     always@ (posedge clk) begin
         if (!nrst) begin
@@ -47,7 +47,7 @@ module compressed_buffer (
                 else begin
                     buffer_inst <= hi_half;
                     full <= 1'b0;
-                    temp_buff_stall <= 1'b1;
+                    temp_buff_stall <= 1'b0;
                 end
             end
             else begin
@@ -57,9 +57,9 @@ module compressed_buffer (
                     temp_buff_stall <= 1'b0;
                 end
                 else begin
-                    buffer_inst <= inst[31:16];
+                    buffer_inst <= lo_half;
                     full <= 1'b1;
-                    temp_buff_stall <= 1'b0;
+                    temp_buff_stall <= 1'b1;
                 end
             end
         end
