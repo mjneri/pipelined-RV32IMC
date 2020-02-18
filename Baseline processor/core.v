@@ -95,8 +95,8 @@ module core(
 
 	wire [4:0] exe_rsA;				// Source register A
 	wire [4:0] exe_rsB;				// Source register B
-	assign exe_rsA = exe_inst[19:15];
-	assign exe_rsB = exe_inst[24:20];
+	// assign exe_rsA = exe_inst[19:15];
+	// assign exe_rsB = exe_inst[24:20];
 
 	wire exe_z;						// Output of ALU; used for evaluating Branches
 	wire exe_less;					// Output of ALU; used for evaluating Branches
@@ -233,6 +233,7 @@ module core(
     wire if_not_comp;           // Compressed or not
     wire buff_stall;        //Stall for case where
     wire id_is_comp;
+	wire exe_is_comp;
 	// compressed control signals
     wire [2:0] id_c_dm_select;
     wire [2:0] id_c_imm_select;
@@ -277,7 +278,7 @@ module core(
 		// .clk(CLK),
 		// .nrst(nrst),
 		//.if_inst(if_inst),
-		//.buffer_stall(buffer_stall),
+		//.buffer_stall(buff_stall),
 
 		.id_inst(id_inst),
 		//.is_jump(id_is_jump),
@@ -352,7 +353,7 @@ module core(
         .nrst(nrst),
         .inst(if_inst),
         .reg_inst(if_not_comp),
-        .temp_buff_stall(buff_stall),
+        .buff_stall(buff_stall),
         .out_inst(if_rc_inst)
     );
     
@@ -533,6 +534,7 @@ module core(
 		.exe_opcode(exe_opcode),
 		.exe_comp_use_A(exe_comp_use_A),
 		.exe_comp_use_B(exe_comp_use_B),
+		.exe_is_comp(exe_is_comp),
 
 		// Outputs
 		.fw_exe_to_id_A(fw_exe_to_id_A),
@@ -620,7 +622,8 @@ module core(
 		.id_sel_data(id_rc_sel_data),			.exe_sel_data(exe_sel_data),
 		.id_store_select(id_rc_store_select), 	.exe_store_select(exe_store_select),
 		.id_comp_use_A(id_c_use_A),				.exe_comp_use_A(exe_comp_use_A),
-		.id_comp_use_B(id_c_use_B),				.exe_comp_use_B(exe_comp_use_B)
+		.id_comp_use_B(id_c_use_B),				.exe_comp_use_B(exe_comp_use_B),
+		.id_is_comp(id_is_comp),				.exe_is_comp(exe_is_comp)
 	);
 
 

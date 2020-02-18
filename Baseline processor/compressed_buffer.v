@@ -22,9 +22,11 @@ module compressed_buffer (
     //reg temp_buff_stall;
     reg [15:0] buffer_inst;        // instruction buffer
     reg full;
-    wire [1:0] low2     = inst[1:0];
-    wire is_word        = (low2 == 2'd3);
-    assign reg_inst = is_word;
+    wire [1:0] inst_low2     = inst[1:0];
+    wire [1:0] buff_low2     = buffer_inst[1:0];
+    wire is_word        = full ? (buff_low2 == 2'd3) : (inst_low2 == 2'd3);
+    assign reg_inst = !is_word;
+    reg temp_buff_stall;
     assign buff_stall = temp_buff_stall;
     wire [15:0] lo_half        = inst[31:16];
     wire [15:0] hi_half        = inst[15:0];

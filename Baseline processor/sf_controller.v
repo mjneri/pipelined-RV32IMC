@@ -23,7 +23,7 @@ module sf_controller(
 
     // IF stage
     //input [31:0] if_inst,       // -- current instmem output
-    input buffer_stall,         // checks if compressed buffer calls stall
+    //input buffer_stall,         // checks if compressed buffer calls stall
 
     // ID stage
     input [31:0] id_inst,       // ID stage inst

@@ -46,6 +46,7 @@ module forwarding_unit(
     input [6:0] exe_opcode,
     input exe_comp_use_A,
     input exe_comp_use_B,
+    input exe_is_comp,
 
     // Outputs
     // Forwarding to ID stage
@@ -98,22 +99,24 @@ module forwarding_unit(
     // A: NOT lui/auipc/jal
     wire base_use_A = !(exe_opcode == 7'h37 || exe_opcode == 7'h17 || exe_opcode == 7'h6F);					// if inst uses operand A
     // B: conditions for A + r-type/b-type/store
-    wire base_use_B = exe_use_A && !(exe_opcode == 7'h37 || exe_opcode == 7'h17 || exe_opcode == 7'h6F);		// if inst uses operand B
+    wire base_use_B = base_use_A && !(exe_opcode == 7'h37 || exe_opcode == 7'h17 || exe_opcode == 7'h6F);		// if inst uses operand B
     // compressed:
     // check if use_A/use_B is nonzero
+    wire fwd_A = exe_is_comp ? exe_comp_use_A : base_use_A;
+    wire fwd_B = exe_is_comp ? exe_comp_use_B : base_use_B;
     assign fw_mem_to_exe_A = (exe_rsA == mem_rd) && (exe_rsA != 0) && 
 							mem_wr_en && (mem_sel_data == 2'd3) &&
-							(base_use_A || exe_comp_use_A);
+							fwd_A;
 
 	assign fw_mem_to_exe_B = (exe_rsB == mem_rd) && (exe_rsB != 0) && 
 							mem_wr_en && (mem_sel_data == 2'd3) &&
-							(base_use_B || exe_comp_use_B);
+							fwd_B;
 
     assign fw_wb_to_exe_A = (exe_rsA == wb_rd) && (exe_rsA != 0) && 
 							wb_wr_en && (wb_sel_data == 2'd3) &&
-							(base_use_A || exe_comp_use_A);
+							fwd_A;
 
     assign fw_wb_to_exe_B = (exe_rsB == wb_rd) && (exe_rsB != 0) && 
 							wb_wr_en && (wb_sel_data == 2'd3) &&
-							(base_use_B || exe_comp_use_B);
+							fwd_B;
 endmodule
