@@ -23,7 +23,7 @@ module branchpredictor(
 	input nrst,
 	input en,
 
-	input ISR_en,
+	input ISR_running,
 	// Inputs
 	input [9:0] if_PC,
 
@@ -67,7 +67,7 @@ module branchpredictor(
 		| ht[19]    | ht[18:12]| ht[11:2]           | ht[1:0]				   |
 		========================================================================
 		Where ht = history_table
-		*MSB of tag bits = ISR_en
+		*MSB of tag bits = ISR_running
 	*/
 
 	reg [19:0] history_table [0:63];
@@ -105,10 +105,10 @@ module branchpredictor(
 	assign if_valid2 = if_entry2[19];
 	assign if_valid3 = if_entry3[19];
 
-	assign if_iseqto0 = (if_entry0[18:12] == {ISR_en, if_PC[9:4]}) && if_valid0;
-	assign if_iseqto1 = (if_entry1[18:12] == {ISR_en, if_PC[9:4]}) && if_valid1;
-	assign if_iseqto2 = (if_entry2[18:12] == {ISR_en, if_PC[9:4]}) && if_valid2;
-	assign if_iseqto3 = (if_entry3[18:12] == {ISR_en, if_PC[9:4]}) && if_valid3;
+	assign if_iseqto0 = (if_entry0[18:12] == {ISR_running, if_PC[9:4]}) && if_valid0;
+	assign if_iseqto1 = (if_entry1[18:12] == {ISR_running, if_PC[9:4]}) && if_valid1;
+	assign if_iseqto2 = (if_entry2[18:12] == {ISR_running, if_PC[9:4]}) && if_valid2;
+	assign if_iseqto3 = (if_entry3[18:12] == {ISR_running, if_PC[9:4]}) && if_valid3;
 
 	wire [3:0] if_iseq;
 	assign if_iseq = {if_iseqto3, if_iseqto2, if_iseqto1, if_iseqto0};
@@ -163,10 +163,10 @@ module branchpredictor(
 	assign id_valid2 = id_entry2[19];
 	assign id_valid3 = id_entry3[19];
 
-	assign id_iseqto0 = (id_entry0[18:12] == {ISR_en, id_tag}) && id_valid0;
-	assign id_iseqto1 = (id_entry1[18:12] == {ISR_en, id_tag}) && id_valid1;
-	assign id_iseqto2 = (id_entry2[18:12] == {ISR_en, id_tag}) && id_valid2;
-	assign id_iseqto3 = (id_entry3[18:12] == {ISR_en, id_tag}) && id_valid3;
+	assign id_iseqto0 = (id_entry0[18:12] == {ISR_running, id_tag}) && id_valid0;
+	assign id_iseqto1 = (id_entry1[18:12] == {ISR_running, id_tag}) && id_valid1;
+	assign id_iseqto2 = (id_entry2[18:12] == {ISR_running, id_tag}) && id_valid2;
+	assign id_iseqto3 = (id_entry3[18:12] == {ISR_running, id_tag}) && id_valid3;
 
 	wire [3:0] id_iseq;
 	assign id_iseq = {id_iseqto3, id_iseqto2, id_iseqto1, id_iseqto0};	// if id_iseq = 0, then input is not in table yet
@@ -239,10 +239,10 @@ module branchpredictor(
 	assign exe_valid2 = exe_entry2[19];
 	assign exe_valid3 = exe_entry3[19];
 
-	assign exe_iseqto0 = (exe_entry0[18:12] == {ISR_en, exe_tag}) && exe_valid0;
-	assign exe_iseqto1 = (exe_entry1[18:12] == {ISR_en, exe_tag}) && exe_valid1;
-	assign exe_iseqto2 = (exe_entry2[18:12] == {ISR_en, exe_tag}) && exe_valid2;
-	assign exe_iseqto3 = (exe_entry3[18:12] == {ISR_en, exe_tag}) && exe_valid3;
+	assign exe_iseqto0 = (exe_entry0[18:12] == {ISR_running, exe_tag}) && exe_valid0;
+	assign exe_iseqto1 = (exe_entry1[18:12] == {ISR_running, exe_tag}) && exe_valid1;
+	assign exe_iseqto2 = (exe_entry2[18:12] == {ISR_running, exe_tag}) && exe_valid2;
+	assign exe_iseqto3 = (exe_entry3[18:12] == {ISR_running, exe_tag}) && exe_valid3;
 
 	// Selecting the entry
 	wire [3:0] exe_iseq;
@@ -300,7 +300,7 @@ module branchpredictor(
 
 			if( (id_is_btype || id_is_jump) && (id_iseq == 4'h0) ) begin
 				// Write to table if (Branch or Jump) AND the input is not in the table yet
-				history_table[{id_set, fifo_counter[id_set]}] <= {1'b1, ISR_en, id_tag, id_branchtarget, sat_counter};
+				history_table[{id_set, fifo_counter[id_set]}] <= {1'b1, ISR_running, id_tag, id_branchtarget, sat_counter};
 				//increment counter; if = 3 na, equate to zero
 				fifo_counter[id_set] <= fifo_counter[id_set] + 2'b01;
 			end

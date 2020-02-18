@@ -18,10 +18,10 @@ module interrupt_controller(
 	output reg sel_ISR,
     output reg ret_ISR,
     output reg ISR_en,
+    output reg ISR_running,
     output reg [11:0] save_PC
 );
 
-    reg ISR_running;
     reg [2:0] ISR_stall_counter;
     assign ISR_stall = (ISR_stall_counter!=0) ||    // Stall for 5 cycles
                         (if_opcode==7'h73);         // Catch URET instruction

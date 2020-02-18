@@ -26,12 +26,14 @@ module core(
 	assign if_opcode = if_inst[6:0];
 
 	// Outputs of Interrupt Controller
-	wire sel_ISR;
-    wire ret_ISR;
-    wire ISR_en;
     wire ISR_stall;
 	wire ISR_flush;
+	wire sel_ISR;
+    wire ret_ISR;
+	wire ISR_en;
+	wire ISR_running;
     wire [11:0] save_PC;
+	
 	wire flush;
 // &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 
@@ -341,6 +343,7 @@ module core(
 		.sel_ISR(sel_ISR),
 		.ret_ISR(ret_ISR),
 		.ISR_en(ISR_en),
+		.ISR_running(ISR_running),
 		.save_PC(save_PC)
 	);
 
@@ -590,7 +593,7 @@ module core(
 		.CLK(CLK),
 		.nrst(nrst),
 		.en(id_clk_en),
-		.ISR_en(ISR_en),
+		.ISR_running(ISR_running),
 		.if_PC(if_PC[11:2]),
 
 		.id_PC(id_PC[11:2]),
