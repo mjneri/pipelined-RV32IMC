@@ -7,5 +7,5 @@ Loop:
 	beq x29, x28, Exit
 	jal x0, Loop
 Exit:
-	sw x29, 116(x0)
+	sw x28, 116(x0)
 	uret
