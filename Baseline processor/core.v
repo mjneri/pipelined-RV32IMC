@@ -333,6 +333,7 @@ module core(
 		.interrupt_signal(int_sig),
 		.if_prediction(if_prediction),
 		.exe_correction(exe_correction),
+		.id_jump_in_bht(id_jump_in_bht),
 		.id_sel_pc(id_sel_pc),
 		.if_clk_en(if_clk_en),
 		.ISR_stall(ISR_stall),

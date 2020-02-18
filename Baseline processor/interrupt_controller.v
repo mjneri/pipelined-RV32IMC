@@ -10,6 +10,7 @@ module interrupt_controller(
 	input interrupt_signal,
     input [1:0] exe_correction,
     input if_prediction,
+    input id_jump_in_bht,
     input id_sel_pc,
     input if_clk_en,
     output ISR_stall,
@@ -29,7 +30,7 @@ module interrupt_controller(
 
     wire save_PC_en;
     assign save_PC_en = (!interrupt_signal & ISR_en) || // Capture first clock edge
-                        (ISR_stall & ((exe_correction!=0) | if_prediction | id_sel_pc)); // Catch any change in PC while pipeline finishes
+                        (ISR_stall & ((exe_correction!=0) | if_prediction | (id_sel_pc & !id_jump_in_bht))); // Catch any change in PC while pipeline finishes
 
     always@(posedge clk) begin
         if(!nrst)begin
