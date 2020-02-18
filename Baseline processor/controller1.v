@@ -117,18 +117,24 @@ module controller1(
     // 1 if SH
     // 2 if SW
 
-    assign ALU_op = ((opcode == b_type) || (opcode == r_type && funct3 == 3'h0 && funct7 == 7'h20)) ? 4'h2 : 
-                    (funct3 == 3'h7 && (opcode == r_type || opcode == i_type)) ? 4'h3 : 
-                    (funct3 == 3'h6 && (opcode == r_type || opcode == i_type)) ? 4'h4 : 
-                    (funct3 == 3'h4 && (opcode == r_type || opcode == i_type)) ? 4'h5 : 
-                    (funct3 == 3'h2 && (opcode == r_type || opcode == i_type)) ? 4'h6 : 
-                    (funct3 == 3'h3 && (opcode == r_type || opcode == i_type)) ? 4'h7 : 
-                    (funct3 == 3'h1 && (opcode == r_type || opcode == i_type)) ? 4'h8 :
-                    (funct3 == 3'h5 && funct7 == 7'h0 && (opcode == r_type || opcode == i_type)) ? 4'h9 :  
-                    (funct3 == 3'h5 && funct7 == 7'h20 && (opcode == r_type || opcode == i_type)) ? 4'hA : 4'h1;
+    assign ALU_op = (opcode == r_type && funct3 == 3'h0 && funct7 == 7'h20)    ? 4'h2                       : 
+                    (funct3 == 3'h7 && (opcode == r_type || opcode == i_type)) ? 4'h3                       : 
+                    (funct3 == 3'h6 && (opcode == r_type || opcode == i_type)) ? 4'h4                       : 
+                    (funct3 == 3'h4 && (opcode == r_type || opcode == i_type)) ? 4'h5                       : 
+                    (funct3 == 3'h2 && ((opcode == r_type && funct7 == 7'h0) || (opcode == i_type)))? 4'h6  : 
+                    (funct3 == 3'h3 && ((opcode == r_type && funct7 == 7'h0) || (opcode == i_type)))? 4'h7  : 
+                    (funct3 == 3'h1 && ((opcode == r_type && funct7 == 7'h0) || (opcode == i_type)))? 4'h8  :
+                    (funct3 == 3'h5 && funct7 == 7'h0 && (opcode == r_type || opcode == i_type)) ? 4'h9     :  
+                    (funct3 == 3'h5 && funct7 == 7'h20 && (opcode == r_type || opcode == i_type)) ? 4'hA    :
+
+                    (funct3 == 3'h0 && funct7 == 7'h1 && opcode == r_type)? 4'hB                            :
+                    (funct3 == 3'h1 && funct7 == 7'h1 && opcode == r_type)? 4'hC                            :
+                    (funct3 == 3'h2 && funct7 == 7'h1 && opcode == r_type)? 4'hD                            :
+                    (funct3 == 3'h3 && funct7 == 7'h1 && opcode == r_type)? 4'hE                            :
+                    4'h1;
     //ALU_op
     // 1 if ADD (R-type), ADDI (I-type), I-type [load], S-type
-    // 2 if SUB (R-type), B-type
+    // 2 if SUB (R-type)
     // 3 if AND, ANDI
     // 4 if OR, ORI
     // 5 if XOR, XORI
@@ -137,6 +143,11 @@ module controller1(
     // 8 if SLL, SLLI
     // 9 if SRL, SRLI
     // 10 if SRA, SRAI
+    
+    // 11 if MUL
+    // 12 if MULH
+    // 13 if MULHSU
+    // 14 if MULHU
 
     assign sel_opBR = (opcode == jalr_inst)? 1'h1 : 1'h0;   // if jalr, select rfoutA, else select PC
     

@@ -535,6 +535,7 @@ module core(
 	assign exe_rstore = (fw_wb_to_exe_B && exe_is_stype)? wb_loaddata : exe_fwdstore;
 
 	alu ALU(
+		//.CLK(CLK),
 		.op_a(opA),
 		.op_b(opB),
 		.ALU_op(exe_ALU_op),
