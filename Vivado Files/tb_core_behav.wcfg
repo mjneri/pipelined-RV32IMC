@@ -11,9 +11,9 @@
       </db_ref>
    </db_ref_list>
    <zoom_setting>
-      <ZoomStartTime time="541166fs"></ZoomStartTime>
-      <ZoomEndTime time="863767fs"></ZoomEndTime>
-      <Cursor1Time time="619966fs"></Cursor1Time>
+      <ZoomStartTime time="666381fs"></ZoomStartTime>
+      <ZoomEndTime time="738382fs"></ZoomEndTime>
+      <Cursor1Time time="324797fs"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
       <NameColumnWidth column_width="228"></NameColumnWidth>
@@ -28,9 +28,30 @@
       <obj_property name="ElementShortName">SW</obj_property>
       <obj_property name="ObjectShortName">SW</obj_property>
    </wvobject>
-   <wvobject fp_name="/tb_core/CORE/if_pcnew" type="array">
-      <obj_property name="ElementShortName">if_pcnew[11:0]</obj_property>
-      <obj_property name="ObjectShortName">if_pcnew[11:0]</obj_property>
+   <wvobject fp_name="group152" type="group">
+      <obj_property name="label">New PC</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="isExpanded"></obj_property>
+      <wvobject fp_name="/tb_core/CORE/exe_correction" type="array">
+         <obj_property name="ElementShortName">exe_correction[1:0]</obj_property>
+         <obj_property name="ObjectShortName">exe_correction[1:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/id_jump_in_bht" type="logic">
+         <obj_property name="ElementShortName">id_jump_in_bht</obj_property>
+         <obj_property name="ObjectShortName">id_jump_in_bht</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/if_prediction" type="logic">
+         <obj_property name="ElementShortName">if_prediction</obj_property>
+         <obj_property name="ObjectShortName">if_prediction</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/id_sel_pc" type="array">
+         <obj_property name="ElementShortName">id_sel_pc[1:0]</obj_property>
+         <obj_property name="ObjectShortName">id_sel_pc[1:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/if_pcnew" type="array">
+         <obj_property name="ElementShortName">if_pcnew[11:0]</obj_property>
+         <obj_property name="ObjectShortName">if_pcnew[11:0]</obj_property>
+      </wvobject>
    </wvobject>
    <wvobject fp_name="/tb_core/CORE/INSTMEM/addr" type="array">
       <obj_property name="ElementShortName">addr[11:0]</obj_property>

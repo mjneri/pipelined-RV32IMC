@@ -55,8 +55,10 @@ module tb_core();
 		i = 0;
 		#40;
 		nrst = 1;
-		#200
+		#2000
 		SW = 0;
+		#200
+		SW = 1;
 	end
 
 	// Checking for 10 NOPs in a row
