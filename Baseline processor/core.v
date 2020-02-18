@@ -590,7 +590,7 @@ module core(
 		.CLK(CLK),
 		.nrst(nrst),
 		.en(id_clk_en),
-
+		.ISR_en(ISR_en),
 		.if_PC(if_PC[11:2]),
 
 		.id_PC(id_PC[11:2]),
