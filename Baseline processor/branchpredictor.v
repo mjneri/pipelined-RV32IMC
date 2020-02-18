@@ -148,7 +148,7 @@ module branchpredictor(
 	wire id_iseqto0, id_iseqto1, id_iseqto2, id_iseqto3;
 	wire [1:0] sat_counter;
 	wire [3:0] id_set;
-	wire [6:0] id_tag;
+	wire [5:0] id_tag;
 	assign id_set = id_PC[3:0];
 	assign id_tag = id_PC[9:4];
 
