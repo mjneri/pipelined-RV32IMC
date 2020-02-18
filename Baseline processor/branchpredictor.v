@@ -67,6 +67,7 @@ module branchpredictor(
 		| ht[19]    | ht[18:12]| ht[11:2]           | ht[1:0]				   |
 		========================================================================
 		Where ht = history_table
+		*MSB of tag bits = ISR_en
 	*/
 
 	reg [19:0] history_table [0:63];
@@ -259,7 +260,7 @@ module branchpredictor(
 							2'h0;
 	// Assign outputs
 	assign exe_PBT = exe_loadentry[11:2];
-	assign exe_CNI = {exe_loadentry[18:12], exe_set} + 10'b1;
+	assign exe_CNI = {exe_loadentry[17:12], exe_set} + 10'b1;
 
 	// Check if prediction is correct & output appropriate correction
 	// If sat_counter[1] and feedback are equal, then prediction is correct.
@@ -292,14 +293,14 @@ module branchpredictor(
 				fifo_counter[i] <= 2'b0;
 			end
 			for(i = 0; i < 64; i=i+1) begin
-				history_table[i] <= 19'b0;
+				history_table[i] <= 20'b0;
 			end
 
 		end else if(en) begin
 
 			if( (id_is_btype || id_is_jump) && (id_iseq == 4'h0) ) begin
 				// Write to table if (Branch or Jump) AND the input is not in the table yet
-				history_table[{id_set, fifo_counter[id_set]}] <= {1'b1, id_tag, id_branchtarget, sat_counter};
+				history_table[{id_set, fifo_counter[id_set]}] <= {1'b1, ISR_en, id_tag, id_branchtarget, sat_counter};
 				//increment counter; if = 3 na, equate to zero
 				fifo_counter[id_set] <= fifo_counter[id_set] + 2'b01;
 			end
