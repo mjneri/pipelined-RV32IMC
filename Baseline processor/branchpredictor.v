@@ -23,6 +23,7 @@ module branchpredictor(
 	input nrst,
 	input en,
 
+	input ISR_en,
 	// Inputs
 	input [9:0] if_PC,
 
@@ -62,13 +63,13 @@ module branchpredictor(
 	// Declaring memory for BHT
 	/*  format of each line in reg history_table
 		========================================================================
-		| Valid bit | Tag[5:0] | Branch target[9:0] | Saturating Counter [1:0] |
-		| ht[18]    | ht[17:12]| ht[11:2]           | ht[1:0]				   |
+		| Valid bit | Tag[6:0] | Branch target[9:0] | Saturating Counter [1:0] |
+		| ht[19]    | ht[18:12]| ht[11:2]           | ht[1:0]				   |
 		========================================================================
 		Where ht = history_table
 	*/
 
-	reg [18:0] history_table [0:63];
+	reg [19:0] history_table [0:63];
 
 
 	////////////////////////////////////////////////////////////////////////////
@@ -88,25 +89,25 @@ module branchpredictor(
 	// if_validX: the valid bit in each entry
 	// if_iseqtoX: determines if the entry contains the same tag bits from the input
 	// if_loadentry: the entry that corresponds to the input
-	wire [18:0] if_entry0, if_entry1, if_entry2, if_entry3;
+	wire [19:0] if_entry0, if_entry1, if_entry2, if_entry3;
 	wire if_valid0, if_valid1, if_valid2, if_valid3;
 	wire if_iseqto0, if_iseqto1, if_iseqto2, if_iseqto3;
-	wire [18:0] if_loadentry;
+	wire [19:0] if_loadentry;
 
 	assign if_entry0 = history_table[{if_PC[3:0], 2'b00}];
 	assign if_entry1 = history_table[{if_PC[3:0], 2'b01}];
 	assign if_entry2 = history_table[{if_PC[3:0], 2'b10}];
 	assign if_entry3 = history_table[{if_PC[3:0], 2'b11}];
 
-	assign if_valid0 = if_entry0[18];
-	assign if_valid1 = if_entry1[18];
-	assign if_valid2 = if_entry2[18];
-	assign if_valid3 = if_entry3[18];
+	assign if_valid0 = if_entry0[19];
+	assign if_valid1 = if_entry1[19];
+	assign if_valid2 = if_entry2[19];
+	assign if_valid3 = if_entry3[19];
 
-	assign if_iseqto0 = (if_entry0[17:12] == if_PC[9:4]) && if_valid0;
-	assign if_iseqto1 = (if_entry1[17:12] == if_PC[9:4]) && if_valid1;
-	assign if_iseqto2 = (if_entry2[17:12] == if_PC[9:4]) && if_valid2;
-	assign if_iseqto3 = (if_entry3[17:12] == if_PC[9:4]) && if_valid3;
+	assign if_iseqto0 = (if_entry0[18:12] == {ISR_en, if_PC[9:4]}) && if_valid0;
+	assign if_iseqto1 = (if_entry1[18:12] == {ISR_en, if_PC[9:4]}) && if_valid1;
+	assign if_iseqto2 = (if_entry2[18:12] == {ISR_en, if_PC[9:4]}) && if_valid2;
+	assign if_iseqto3 = (if_entry3[18:12] == {ISR_en, if_PC[9:4]}) && if_valid3;
 
 	wire [3:0] if_iseq;
 	assign if_iseq = {if_iseqto3, if_iseqto2, if_iseqto1, if_iseqto0};
@@ -115,7 +116,7 @@ module branchpredictor(
 							(if_iseq == 4'b0100)? if_entry2 :
 							(if_iseq == 4'b0010)? if_entry1 :
 							(if_iseq == 4'b0001)? if_entry0 :
-							19'b0;
+							20'b0;
 
 	// Assign outputs
 	assign if_PBT = if_loadentry[11:2];
@@ -141,12 +142,12 @@ module branchpredictor(
 
 	reg [1:0] fifo_counter [0:15];
 
-	wire [18:0] id_entry0, id_entry1, id_entry2, id_entry3;
+	wire [19:0] id_entry0, id_entry1, id_entry2, id_entry3;
 	wire id_valid0, id_valid1, id_valid2, id_valid3;
 	wire id_iseqto0, id_iseqto1, id_iseqto2, id_iseqto3;
 	wire [1:0] sat_counter;
 	wire [3:0] id_set;
-	wire [5:0] id_tag;
+	wire [6:0] id_tag;
 	assign id_set = id_PC[3:0];
 	assign id_tag = id_PC[9:4];
 
@@ -156,15 +157,15 @@ module branchpredictor(
 	assign id_entry2 = history_table[{id_set, 2'b10}];
 	assign id_entry3 = history_table[{id_set, 2'b11}];
 
-	assign id_valid0 = id_entry0[18];
-	assign id_valid1 = id_entry1[18];
-	assign id_valid2 = id_entry2[18];
-	assign id_valid3 = id_entry3[18];
+	assign id_valid0 = id_entry0[19];
+	assign id_valid1 = id_entry1[19];
+	assign id_valid2 = id_entry2[19];
+	assign id_valid3 = id_entry3[19];
 
-	assign id_iseqto0 = (id_entry0[17:12] == id_tag) && id_valid0;
-	assign id_iseqto1 = (id_entry1[17:12] == id_tag) && id_valid1;
-	assign id_iseqto2 = (id_entry2[17:12] == id_tag) && id_valid2;
-	assign id_iseqto3 = (id_entry3[17:12] == id_tag) && id_valid3;
+	assign id_iseqto0 = (id_entry0[18:12] == {ISR_en, id_tag}) && id_valid0;
+	assign id_iseqto1 = (id_entry1[18:12] == {ISR_en, id_tag}) && id_valid1;
+	assign id_iseqto2 = (id_entry2[18:12] == {ISR_en, id_tag}) && id_valid2;
+	assign id_iseqto3 = (id_entry3[18:12] == {ISR_en, id_tag}) && id_valid3;
 
 	wire [3:0] id_iseq;
 	assign id_iseq = {id_iseqto3, id_iseqto2, id_iseqto1, id_iseqto0};	// if id_iseq = 0, then input is not in table yet
@@ -220,10 +221,10 @@ module branchpredictor(
 	// exe_loadentry: the entry that corresponds to the input
 	// is_pred_correct: determines if the prediction is correct
 	// exe_setoffset: determines the offset addr within the set of the entry being accessed
-	wire [18:0] exe_entry0, exe_entry1, exe_entry2, exe_entry3;
+	wire [19:0] exe_entry0, exe_entry1, exe_entry2, exe_entry3;
 	wire exe_valid0, exe_valid1, exe_valid2, exe_valid3;
 	wire exe_iseqto0, exe_iseqto1, exe_iseqto2, exe_iseqto3;
-	wire [18:0] exe_loadentry;
+	wire [19:0] exe_loadentry;
 	wire is_pred_correct;
 	wire [1:0] exe_setoffset;
 
@@ -232,15 +233,15 @@ module branchpredictor(
 	assign exe_entry2 = history_table[{exe_set, 2'b10}];
 	assign exe_entry3 = history_table[{exe_set, 2'b11}];
 
-	assign exe_valid0 = exe_entry0[18];
-	assign exe_valid1 = exe_entry1[18];
-	assign exe_valid2 = exe_entry2[18];
-	assign exe_valid3 = exe_entry3[18];
+	assign exe_valid0 = exe_entry0[19];
+	assign exe_valid1 = exe_entry1[19];
+	assign exe_valid2 = exe_entry2[19];
+	assign exe_valid3 = exe_entry3[19];
 
-	assign exe_iseqto0 = (exe_entry0[17:12] == exe_tag) && exe_valid0;
-	assign exe_iseqto1 = (exe_entry1[17:12] == exe_tag) && exe_valid1;
-	assign exe_iseqto2 = (exe_entry2[17:12] == exe_tag) && exe_valid2;
-	assign exe_iseqto3 = (exe_entry3[17:12] == exe_tag) && exe_valid3;
+	assign exe_iseqto0 = (exe_entry0[18:12] == {ISR_en, exe_tag}) && exe_valid0;
+	assign exe_iseqto1 = (exe_entry1[18:12] == {ISR_en, exe_tag}) && exe_valid1;
+	assign exe_iseqto2 = (exe_entry2[18:12] == {ISR_en, exe_tag}) && exe_valid2;
+	assign exe_iseqto3 = (exe_entry3[18:12] == {ISR_en, exe_tag}) && exe_valid3;
 
 	// Selecting the entry
 	wire [3:0] exe_iseq;
@@ -258,7 +259,7 @@ module branchpredictor(
 							2'h0;
 	// Assign outputs
 	assign exe_PBT = exe_loadentry[11:2];
-	assign exe_CNI = {exe_loadentry[17:12], exe_set} + 10'b1;
+	assign exe_CNI = {exe_loadentry[18:12], exe_set} + 10'b1;
 
 	// Check if prediction is correct & output appropriate correction
 	// If sat_counter[1] and feedback are equal, then prediction is correct.
