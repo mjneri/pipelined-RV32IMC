@@ -23,8 +23,9 @@ module branchpredictor(
 	input nrst,
 	input en,
 
-	input ISR_en,
+	
 	// Inputs
+	input ISR_en,		// ISR_en = ISR_running sa core!!!
 	input [9:0] if_PC,
 
 	input [9:0] id_PC,
