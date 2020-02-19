@@ -247,6 +247,8 @@ module core(
 	wire [1:0] id_c_btype;
 	wire id_c_use_A;
 	wire id_c_use_B;
+	wire id_c_is_jump;
+	wire id_c_is_btype;
 	// registers and immediates
     wire [4:0] id_c_rsA;
     wire [4:0] id_c_rsB;
@@ -268,6 +270,8 @@ module core(
     wire [4:0] id_rc_rd;
     wire [31:0] id_rc_imm;
     wire [31:0] id_rc_jt;    
+	wire id_rc_is_jump;
+	wire id_rc_is_btype;
 	wire exe_comp_use_A;
 	wire exe_comp_use_B;
 // &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&    
@@ -352,7 +356,7 @@ module core(
         .clk(CLK),
         .nrst(nrst),
         .inst(if_inst),
-		.ext_stall(exe_stall),
+		.ext_stall(exe_stall || !if_clk_en),
         .reg_inst(if_not_comp),
         .buff_stall(buff_stall),
         .out_inst(if_rc_inst)
@@ -417,31 +421,31 @@ module core(
 					   		id_rfoutA : id_PC;
 
 	// id_fwdopB is passed through ID/EXE pipeline register to the ALU
-	assign id_fwdopB = (fw_exe_to_id_B && !id_is_stype)?             
+	assign id_fwdopB = (fw_exe_to_id_B && !id_rc_is_stype)?             
 							(exe_sel_data == 2'd2)? exe_imm			: 
 							(exe_sel_data == 2'd1)? exe_ALUout 		:
 													exe_pc4			:
-					   (fw_mem_to_id_B && !id_is_stype)?
+					   (fw_mem_to_id_B && !id_rc_is_stype)?
 					   		(mem_sel_data == 2'd3)? mem_loaddata	:
 					   		(mem_sel_data == 2'd2)? mem_imm			:
 					   		(mem_sel_data == 2'd1)? mem_ALUout		:
 					   								mem_pc4			:
-					   (fw_wb_to_id_B && !id_is_stype)?
+					   (fw_wb_to_id_B && !id_rc_is_stype)?
 					   		wb_wr_data								:                 
                     	id_sel_opB?
 	                    	id_rc_imm : id_rfoutB;
 	
 	// id_fwdstore is passed through ID/EXE pipeline register & is sent to STOREBLOCK
-	assign id_fwdstore = (fw_exe_to_id_B && id_is_stype)?
+	assign id_fwdstore = (fw_exe_to_id_B && id_rc_is_stype)?
 							(exe_sel_data == 2'd2)? exe_imm			: 
 							(exe_sel_data == 2'd1)? exe_ALUout 		:
 													exe_pc4			:
-						 (fw_mem_to_id_B && id_is_stype)?
+						 (fw_mem_to_id_B && id_rc_is_stype)?
 						 	(mem_sel_data == 2'd3)? mem_loaddata	:
 						 	(mem_sel_data == 2'd2)? mem_imm			:
 						 	(mem_sel_data == 2'd1)? mem_ALUout		:
 						 							mem_pc4			:
-						 (fw_wb_to_id_B && id_is_stype)?
+						 (fw_wb_to_id_B && id_rc_is_stype)?
 						 	wb_wr_data : id_rfoutB;
 
 	// Control Unit
@@ -502,7 +506,7 @@ module core(
 					 					wb_wr_data				:
 					 (id_sel_opBR)? id_rfoutA : id_PC;
 
-	assign id_branchtarget = id_brOP + id_imm;
+	assign id_branchtarget = id_brOP + (id_is_comp ? id_c_jt : id_imm);
 
 	forwarding_unit FWD(
 		// Inputs
@@ -527,10 +531,10 @@ module core(
 		.mem_sel_data(mem_sel_data),
 		.wb_sel_data(wb_sel_data),
 
-		.id_is_stype(id_is_stype),
+		.id_is_stype(id_rc_is_stype), // id_rc_is_stype
 		.exe_is_stype(exe_is_stype),
 
-		.id_imm_select(id_imm_select),
+		.id_imm_select(id_rc_imm_select),
 
 		.exe_opcode(exe_opcode),
 		.exe_comp_use_A(exe_comp_use_A),
@@ -573,6 +577,8 @@ module core(
 		.btype(id_c_btype),
 		.use_A(id_c_use_A),
 		.use_B(id_c_use_B),
+		.is_jump(id_c_is_jump),
+		.is_btype(id_c_is_btype),
         
         // Results (output)
         .rs1(id_c_rsA),
@@ -594,6 +600,9 @@ module core(
     assign id_rc_rsB = id_is_comp ? id_c_rsB : id_rsB;
     assign id_rc_sel_opA = id_is_comp ? id_c_sel_opA : id_sel_opA;
     assign id_rc_sel_opB = id_is_comp ? id_c_sel_opB : id_sel_opB;
+	assign id_rc_is_jump = id_is_comp ? id_c_is_jump : id_is_jump;
+	assign id_rc_is_btype = id_is_comp ? id_c_is_btype : id_is_btype;
+	assign id_rc_imm_select = id_is_comp ? id_c_imm_select : id_imm_select;
     
 	pipereg_id_exe ID_EXE(
 		.clk(CLK),
@@ -656,8 +665,8 @@ module core(
 
 		.id_PC(id_PC[11:2]),
 		.id_branchtarget(id_branchtarget[11:2]),
-		.id_is_jump(id_is_jump),
-		.id_is_btype(id_is_btype),
+		.id_is_jump(id_rc_is_jump),
+		.id_is_btype(id_rc_is_btype),
 
 		.exe_PC(exe_PC[11:2]),
 		.exe_z(exe_z),

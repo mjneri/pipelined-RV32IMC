@@ -28,6 +28,8 @@ module compressed_decoder(
     output [1:0] btype,
     output use_A,
     output use_B,
+    output is_jump,
+    output is_btype,
 
     // results
     output [4:0] rs1,
@@ -330,6 +332,8 @@ module compressed_decoder(
     assign rs2 = temp_rs2;
     assign rd = temp_rd;
     assign is_stype = store_inst;
+    assign is_jump = (jr_type || j_type);
+    assign is_btype = b_type;
     // immediates
 
     /* Immediate table
@@ -380,7 +384,7 @@ module compressed_decoder(
                  (lui_type) ? 1'd0 : (spn_imm ? inst[10] : (sp_imm ? inst[12] : sign)),   // bit 9
                  (lui_type) ? 1'd0 : ((spn_imm) ? inst[9] : (sp_imm ? inst[4] : sign)),   // bit 8
                  (lui_type) ? 1'd0 : ((spn_imm) ? inst[8] : (sp_imm ? inst[3] : sign)),   // bit 7
-                 (lui_type) ? 1'd0 : (lssp_imm ? (load_inst ? inst[2] : inst[7]) : (spn_imm ? inst[7] : (sp_imm ? inst[5] : sign))), // bit 6
+                 (lui_type) ? 1'd0 : (lssp_imm ? (load_inst ? inst[2] : inst[7]) : (spn_imm ? inst[7] : ((sp_imm || load_inst || store_inst) ? inst[5] : sign))), // bit 6
                  (lui_type) ? 1'd0 : (sp_imm ? inst[2] : inst[12]), // bit 5
                  (lui_type) ? 1'd0 : ((load_inst || store_inst || spn_imm) ? inst[11] : inst[6]), // bit 4
                  (lui_type || sp_imm) ? 1'd0 : ((store_inst || (load_inst && !lssp_imm)) ? inst[10] : inst[5]), // bit 3
