@@ -72,11 +72,11 @@ module pipereg_id_exe(
 	input id_is_comp,
 	output reg exe_is_comp,
 
-	input id_rs1,
-	output reg exe_rs1,
+	input [4:0] id_rs1,
+	output reg [4:0] exe_rs1,
 
-	input id_rs2,
-	output reg exe_rs2
+	input [4:0] id_rs2,
+	output reg [4:0] exe_rs2
 );
 
 	always@(posedge clk) begin
@@ -102,6 +102,8 @@ module pipereg_id_exe(
 			exe_comp_use_A <= 0;
 			exe_comp_use_B <= 0;
 			exe_is_comp <= 0;
+			exe_rs1 <= 5'd0;
+			exe_rs2 <= 5'd0;
 		end else begin
 			if(flush) begin
 				exe_pc4 <= 0;
@@ -125,6 +127,8 @@ module pipereg_id_exe(
 				exe_comp_use_A <= 0;
 				exe_comp_use_B <= 0;
 				exe_is_comp <= 0;
+				exe_rs1 <= 5'd0;
+				exe_rs2 <= 5'd0;
 			end else if (en) begin
 				exe_pc4 <= id_pc4;
 				exe_fwdopA <= id_fwdopA;
@@ -147,6 +151,8 @@ module pipereg_id_exe(
 				exe_comp_use_A <= id_comp_use_A;
 				exe_comp_use_B <= id_comp_use_B;
 				exe_is_comp <= id_is_comp;
+				exe_rs1 <= id_rs1;
+				exe_rs2 <= id_rs2;
 			end
 		end
 	end

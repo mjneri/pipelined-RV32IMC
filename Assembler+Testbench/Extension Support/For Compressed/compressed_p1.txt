@@ -31,33 +31,33 @@ plus:
 c.addi x13, 1
 c.jr x1
 end_jal:
-c.sw x13, 32(x15)			#x13 = 5
+sw x13, 32(x15)			#x13 = 5
 
 #C.LI
 c.li x12, 0
 c.li x13, 1
 c.li x14, -1
 c.li x11, 31
-c.sw x12, 36(x15)			#x12 = 0	
-c.sw x13, 40(x15)			#x13 = 1
-c.sw x14, 44(x15)			#x14 = 0xffffffff
-c.sw x11, 48(x15)			#x11 = 0x1f
+sw x12, 36(x15)			#x12 = 0	
+sw x13, 40(x15)			#x13 = 1
+sw x14, 44(x15)			#x14 = 0xffffffff
+sw x11, 48(x15)			#x11 = 0x1f
 
 #C.LUI
 c.lui x12, 2
 c.lui x13, 1
 c.lui x14, -1
 c.lui x11, 31
-c.sw x12, 52(x15)			#x12 = 0x00002000
-c.sw x13, 56(x15)			#x13 = 0x00001000
-c.sw x14, 60(x15)			#x14 = 0xfffff000
-c.sw x11, 64(x15)			#x15 = 0x0001f000
+sw x12, 52(x15)			#x12 = 0x00002000
+sw x13, 56(x15)			#x13 = 0x00001000
+sw x14, 60(x15)			#x14 = 0xfffff000
+sw x11, 64(x15)			#x15 = 0x0001f000
 
 #C.ADDI4SPN
 c.addi4spn x8, 2
 c.addi4spn x9, -1
-c.sw x8, 68(x15)			#x8 = (value of x2/sp) + 8
-c.sw x9, 72(x15)			#x9 = (value of x2/sp) - 4
+sw x8, 68(x15)			#x8 = (value of x2/sp) + 8
+sw x9, 72(x15)			#x9 = (value of x2/sp) - 4
 
 #C.ADDI16SP
 c.addi16sp 1
@@ -72,9 +72,9 @@ c.li x10, 5
 c.srli x8, 3
 c.srli x9, 4
 c.srli x10, 0
-c.sw x8, 84(x15)			#x8 = 1
-c.sw x9, 88(x15)			#x9 = 1
-c.sw x10, 92(x15)		#x10 = 5
+sw x8, 84(x15)			#x8 = 1
+sw x9, 88(x15)			#x9 = 1
+sw x10, 92(x15)		#x10 = 5
 
 #C.SRAI
 c.li x8, 16

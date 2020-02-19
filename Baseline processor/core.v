@@ -352,6 +352,7 @@ module core(
         .clk(CLK),
         .nrst(nrst),
         .inst(if_inst),
+		.ext_stall(exe_stall),
         .reg_inst(if_not_comp),
         .buff_stall(buff_stall),
         .out_inst(if_rc_inst)
@@ -623,7 +624,9 @@ module core(
 		.id_store_select(id_rc_store_select), 	.exe_store_select(exe_store_select),
 		.id_comp_use_A(id_c_use_A),				.exe_comp_use_A(exe_comp_use_A),
 		.id_comp_use_B(id_c_use_B),				.exe_comp_use_B(exe_comp_use_B),
-		.id_is_comp(id_is_comp),				.exe_is_comp(exe_is_comp)
+		.id_is_comp(id_is_comp),				.exe_is_comp(exe_is_comp),
+		.id_rs1(id_rc_rsA),						.exe_rs1(exe_rsA),
+		.id_rs2(id_rc_rsB),						.exe_rs2(exe_rsB)
 	);
 
 

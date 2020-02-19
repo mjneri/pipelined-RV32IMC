@@ -14,6 +14,7 @@ module compressed_buffer (
     input clk,
     input nrst,
     input [31:0] inst,
+    input ext_stall,
     output reg_inst,
     output buff_stall,
     output [31:0] out_inst
@@ -41,29 +42,36 @@ module compressed_buffer (
         end
         else if (inst != 32'd0) begin
             // legal instruction -- proceed
-            if (full) begin
-                if (is_word) begin
-                    buffer_inst <= hi_half;
-                    full <= 1'b1;
-                    temp_buff_stall <= 1'b0;
+            if (!ext_stall) begin
+                if (full) begin
+                    if (is_word) begin
+                        buffer_inst <= hi_half;
+                        full <= 1'b1;
+                        temp_buff_stall <= 1'b0;
+                    end
+                    else begin
+                        buffer_inst <= hi_half;
+                        full <= 1'b0;
+                        temp_buff_stall <= 1'b0;
+                    end
                 end
                 else begin
-                    buffer_inst <= hi_half;
-                    full <= 1'b0;
-                    temp_buff_stall <= 1'b0;
+                    if (is_word) begin
+                        buffer_inst <= 16'd0;
+                        full <= 1'b0;
+                        temp_buff_stall <= 1'b0;
+                    end
+                    else begin
+                        buffer_inst <= lo_half;
+                        full <= 1'b1;
+                        temp_buff_stall <= 1'b1;
+                    end
                 end
             end
             else begin
-                if (is_word) begin
-                    buffer_inst <= 16'd0;
-                    full <= 1'b0;
-                    temp_buff_stall <= 1'b0;
-                end
-                else begin
-                    buffer_inst <= lo_half;
-                    full <= 1'b1;
-                    temp_buff_stall <= 1'b1;
-                end
+                buffer_inst <= buffer_inst;
+                full <= full;
+                temp_buff_stall <= temp_buff_stall;
             end
         end
     end
