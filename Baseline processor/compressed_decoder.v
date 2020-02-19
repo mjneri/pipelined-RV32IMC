@@ -119,6 +119,7 @@ module compressed_decoder(
                         temp_rs1 = rs1_eff;
                         load_inst = 1'b1;
                         temp_op = 4'd1;
+                        unsigned_imm = 1'b1;
                     end
                     3'd6: begin
                         // SW -> expands to SW rd', (<imm[6:2]>)rs1'
@@ -126,6 +127,7 @@ module compressed_decoder(
                         temp_rs1 = rs1_eff;
                         store_inst = 1'b1;
                         temp_op = 4'd1;
+                        unsigned_imm = 1'b1;
                     end
                     // other cases: non-implemented instructions
                 endcase
@@ -253,6 +255,7 @@ module compressed_decoder(
                         load_inst = 1'b1;
                         temp_op = 4'd1;
                         lssp_imm = 1'b1;
+                        unsigned_imm = 1'b1;
                     end
                     3'd6: begin
                         // SWSP
@@ -261,6 +264,7 @@ module compressed_decoder(
                         store_inst = 1'b1;
                         temp_op = 4'd1;
                         lssp_imm = 1'b1;
+                        unsigned_imm = 1'b1;
                     end
                     3'd4: begin
                         if (funct4) begin

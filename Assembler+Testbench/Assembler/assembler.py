@@ -337,11 +337,7 @@ def assemble(instructions, labels, instmem):
             rd_rs2_ = int(temp_inst[1])
             imm = int(temp_inst[2])&(2**imm_width-1)
             rs1_ = int(temp_inst[3])
-            if (rs1_ < 8 | rs1_ > 16):
-                print('Warning: Rs1 {} truncated to {}'.format(rs1_, (0x08) | (rs1_ & 0x07)))
             rs1_ = (rs1_ & 0x07)
-            if (rd_rs2_ < 8 | rd_rs2_ > 16):
-                print('Warning: Rs2 {} truncated to {}'.format(rd_rs2_, (0x08) | (rd_rs2_ & 0x07)))
             rd_rs2_ = (rd_rs2_ & 0x07)
             m_code = opcode |  rd_rs2_<<2 | (imm&0x40)>>1 | (imm&0x4)<<4 | rs1_<<7 | (imm&0x38)<<7 | funct3<<13
 
