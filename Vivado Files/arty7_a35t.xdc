@@ -7,7 +7,19 @@
 # Clock signal
 
 set_property -dict {PACKAGE_PIN E3 IOSTANDARD LVCMOS33} [get_ports CLK100MHZ]
-create_clock -period 10.000 -name sys_clk -waveform {0.000 5.000} -add [get_ports CLK100MHZ]
+#create_clock -period 10.000 -name sys_clk -waveform {0.000 5.000} -add [get_ports CLK100MHZ]
+
+set_input_delay -clock [get_clocks -of_objects [get_pins CLKIP/inst/plle2_adv_inst/CLKOUT0] -filter {IS_GENERATED && MASTER_CLOCK == CLK100MHZ}] -add_delay 2.000 [get_ports nrst]
+set_output_delay -clock [get_clocks -of_objects [get_pins CLKIP/inst/plle2_adv_inst/CLKOUT0] -filter {IS_GENERATED && MASTER_CLOCK == CLK100MHZ}] -add_delay 2.000 [get_ports -filter { NAME =~  "*" && DIRECTION == "OUT" }]
+
+create_clock -period 20.000 -name VIRTUAL_clk_out1_clk_wiz_0_1 -waveform {0.000 10.000}
+set_input_delay -clock [get_clocks VIRTUAL_clk_out1_clk_wiz_0_1] -min -add_delay 2.000 [get_ports nrst]
+set_input_delay -clock [get_clocks VIRTUAL_clk_out1_clk_wiz_0_1] -max -add_delay 4.000 [get_ports nrst]
+set_output_delay -clock [get_clocks VIRTUAL_clk_out1_clk_wiz_0_1] -min -add_delay 2.000 [get_ports UART_TX]
+set_output_delay -clock [get_clocks VIRTUAL_clk_out1_clk_wiz_0_1] -max -add_delay 2.000 [get_ports UART_TX]
+#set_clock_groups -physically_exclusive -group [get_clocks -include_generated_clocks CLK100MHZ] -group [get_clocks -include_generated_clocks sys_clk]
+#set_clock_groups -physically_exclusive -group [get_clocks -include_generated_clocks clkfbout_clk_wiz_0] -group [get_clocks -include_generated_clocks clkfbout_clk_wiz_0_1]
+#set_clock_groups -physically_exclusive -group [get_clocks -include_generated_clocks clk_out1_clk_wiz_0] -group [get_clocks -include_generated_clocks clk_out1_clk_wiz_0_1]
 
 ##ChipKit Digital I/O Low
 
@@ -246,6 +258,3 @@ set_property -dict {PACKAGE_PIN D10 IOSTANDARD LVCMOS33} [get_ports UART_TX]
 #set_property -dict { PACKAGE_PIN F13   IOSTANDARD LVCMOS33 } [get_ports { sns5v_p[0] }]; #IO_L5P_T0_AD9P_15 Sch=sns5v_p[0]
 #set_property -dict { PACKAGE_PIN C12   IOSTANDARD LVCMOS33 } [get_ports { vsns5v[0] }]; #IO_L3P_T0_DQS_AD1P_15 Sch=vsns5v[0]
 #set_property -dict { PACKAGE_PIN B16   IOSTANDARD LVCMOS33 } [get_ports { vsnsvu }]; #IO_L7P_T1_AD2P_15 Sch=vsnsvu
-
-
-

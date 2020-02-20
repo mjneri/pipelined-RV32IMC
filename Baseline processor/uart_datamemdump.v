@@ -160,7 +160,7 @@ module uart_datamemdump(
 	// each index has to be assigned individually.
 	// This should also be changed everytime the test program is changed.
 	// alu_test.s
-	wire [7:0] TESTPROGNAME_STR [0:TESTPROGNAME_STR_LEN];
+	wire [7:0] TESTPROGNAME_STR [0:TESTPROGNAME_STR_LEN - 1];
 		assign TESTPROGNAME_STR[0] = "a";
 		assign TESTPROGNAME_STR[1] = "l";
 		assign TESTPROGNAME_STR[2] = "u";
@@ -171,12 +171,12 @@ module uart_datamemdump(
 		assign TESTPROGNAME_STR[7] = "t";
 		assign TESTPROGNAME_STR[8] = ".";
 		assign TESTPROGNAME_STR[9] = "s";
-		assign TESTPROGNAME_STR[10] = "\r";
-		assign TESTPROGNAME_STR[11] = "\n";
+		assign TESTPROGNAME_STR[10] = 8'h0D;
+		assign TESTPROGNAME_STR[11] = 8'h0A;
 
 	// LINE 1 string definition
 	// ----------| SUMMARY |----------\r\n
-	wire [7:0] LINE1_STR [0:LINE1_STR_LEN];
+	wire [7:0] LINE1_STR [0:LINE1_STR_LEN - 1];
 		assign LINE1_STR[0] = "-";
 		assign LINE1_STR[1] = "-";
 		assign LINE1_STR[2] = "-";
@@ -208,12 +208,12 @@ module uart_datamemdump(
 		assign LINE1_STR[28] = "-";
 		assign LINE1_STR[29] = "-";
 		assign LINE1_STR[30] = "-";
-		assign LINE1_STR[31] = "\r";
-		assign LINE1_STR[32] = "\n";
+		assign LINE1_STR[31] = 8'h0D;
+		assign LINE1_STR[32] = 8'h0A;
 
 	// LINE 2 string definition
 	// Address\t  Actual  \t Expected \r\n
-	wire [7:0] LINE2_STR [0:LINE2_STR_LEN];
+	wire [7:0] LINE2_STR [0:LINE2_STR_LEN - 1];
 		assign LINE2_STR[0] = "A";
 		assign LINE2_STR[1] = "d";
 		assign LINE2_STR[2] = "d";
@@ -221,7 +221,7 @@ module uart_datamemdump(
 		assign LINE2_STR[4] = "e";
 		assign LINE2_STR[5] = "s";
 		assign LINE2_STR[6] = "s";
-		assign LINE2_STR[7] = "\t";
+		assign LINE2_STR[7] = 8'h09;
 		assign LINE2_STR[8] = " ";
 		assign LINE2_STR[9] = " ";
 		assign LINE2_STR[10] = "A";
@@ -232,7 +232,7 @@ module uart_datamemdump(
 		assign LINE2_STR[15] = "l";
 		assign LINE2_STR[16] = " ";
 		assign LINE2_STR[17] = " ";
-		assign LINE2_STR[18] = "\t";
+		assign LINE2_STR[18] = 8'h09;
 		assign LINE2_STR[19] = " ";
 		assign LINE2_STR[20] = "E";
 		assign LINE2_STR[21] = "x";
@@ -243,12 +243,12 @@ module uart_datamemdump(
 		assign LINE2_STR[26] = "e";
 		assign LINE2_STR[27] = "d";
 		assign LINE2_STR[28] = " ";
-		assign LINE2_STR[29] = "\r";
-		assign LINE2_STR[30] = "\n";
+		assign LINE2_STR[29] = 8'h0D;
+		assign LINE2_STR[30] = 8'h0A;
 	
 	// LINE 3 string definition
 	// =======\t==========\t==========\r\n
-	wire [7:0] LINE3_STR [0:LINE3_STR_LEN];
+	wire [7:0] LINE3_STR [0:LINE3_STR_LEN - 1];
 		assign LINE3_STR[0] = "=";
 		assign LINE3_STR[1] = "=";
 		assign LINE3_STR[2] = "=";
@@ -256,7 +256,7 @@ module uart_datamemdump(
 		assign LINE3_STR[4] = "=";
 		assign LINE3_STR[5] = "=";
 		assign LINE3_STR[6] = "=";
-		assign LINE3_STR[7] = "\t";
+		assign LINE3_STR[7] = 8'h09;
 		assign LINE3_STR[8] = "=";
 		assign LINE3_STR[9] = "=";
 		assign LINE3_STR[10] = "=";
@@ -267,7 +267,7 @@ module uart_datamemdump(
 		assign LINE3_STR[15] = "=";
 		assign LINE3_STR[16] = "=";
 		assign LINE3_STR[17] = "=";
-		assign LINE3_STR[18] = "\t";
+		assign LINE3_STR[18] = 8'h09;
 		assign LINE3_STR[19] = "=";
 		assign LINE3_STR[20] = "=";
 		assign LINE3_STR[21] = "=";
@@ -278,12 +278,12 @@ module uart_datamemdump(
 		assign LINE3_STR[26] = "=";
 		assign LINE3_STR[27] = "=";
 		assign LINE3_STR[28] = "=";
-		assign LINE3_STR[29] = "\r";
-		assign LINE3_STR[30] = "\n";
+		assign LINE3_STR[29] = 8'h0D;
+		assign LINE3_STR[30] = 8'h0A;
 
 	// END LINE string definition
 	// ===============================\r\n\n\n\n
-	wire [7:0] ENDLINE_STR [0:ENDLINE_STR_LEN];
+	wire [7:0] ENDLINE_STR [0:ENDLINE_STR_LEN - 1];
 		assign ENDLINE_STR[0] = "=";
 		assign ENDLINE_STR[1] = "=";
 		assign ENDLINE_STR[2] = "=";
@@ -315,22 +315,22 @@ module uart_datamemdump(
 		assign ENDLINE_STR[28] = "=";
 		assign ENDLINE_STR[29] = "=";
 		assign ENDLINE_STR[30] = "=";
-		assign ENDLINE_STR[31] = "\r";
-		assign ENDLINE_STR[32] = "\n";
-		assign ENDLINE_STR[33] = "\n";
-		assign ENDLINE_STR[34] = "\n";
-		assign ENDLINE_STR[35] = "\n";
+		assign ENDLINE_STR[31] = 8'h0D;
+		assign ENDLINE_STR[32] = 8'h0A;
+		assign ENDLINE_STR[33] = 8'h0A;
+		assign ENDLINE_STR[34] = 8'h0A;
+		assign ENDLINE_STR[35] = 8'h0A;
 
 	// String definitions for ANSWER_STR, RESULT_STR, & CLOCKCYCLES_STR
 	// 0x3FF  \t0x00000000\t0x00000000\tFail\r\n 	ANSWER
 	// \r\nPassed: X/Y test cases.\r\n 				RESULT
 	// Clock cycles: X\r\n 							CLOCKCYCLES
-	reg [7:0] ANSWER_STR [0:ANSWER_STR_LEN];
-	reg [7:0] RESULT_STR [0:RESULT_STR_LEN];
-	reg [7:0] CLOCKCYCLES_STR [0:CLOCKCYCLES_STR_LEN];
+	reg [7:0] ANSWER_STR [0:ANSWER_STR_LEN - 1];
+	reg [7:0] RESULT_STR [0:RESULT_STR_LEN - 1];
+	reg [7:0] CLOCKCYCLES_STR [0:CLOCKCYCLES_STR_LEN - 1];
 
 	// Contains the current string being sent over UART.
-	reg [7:0] sendStr [0:MAX_STR_LEN-1];
+	reg [7:0] sendStr [0:MAX_STR_LEN - 1];
 
 	// Initializing all char arrays
 	integer i;
@@ -535,7 +535,7 @@ module uart_datamemdump(
 			ANSWER_STR[4] = hextoascii(con_addr[3:0]);
 			ANSWER_STR[5] = " ";
 			ANSWER_STR[6] = " ";
-			ANSWER_STR[7] = "\t";
+			ANSWER_STR[7] = 8'h09;
 			ANSWER_STR[8] = "0";
 			ANSWER_STR[9] = "x";
 			ANSWER_STR[10] = hextoascii(con_data[31:28]);
@@ -546,10 +546,10 @@ module uart_datamemdump(
 			ANSWER_STR[15] = hextoascii(con_data[11:8]);
 			ANSWER_STR[16] = hextoascii(con_data[7:4]);
 			ANSWER_STR[17] = hextoascii(con_data[3:0]);
-			ANSWER_STR[18] = "\t";
+			ANSWER_STR[18] = 8'h09;
 			ANSWER_STR[19] = "0";
 			ANSWER_STR[20] = "x";
-			ANSWER_STR[21] = hextoascii(answerkey[con_addr][31:27]);
+			ANSWER_STR[21] = hextoascii(answerkey[con_addr][31:28]);
 			ANSWER_STR[22] = hextoascii(answerkey[con_addr][27:24]);
 			ANSWER_STR[23] = hextoascii(answerkey[con_addr][23:20]);
 			ANSWER_STR[24] = hextoascii(answerkey[con_addr][19:16]);
@@ -557,7 +557,7 @@ module uart_datamemdump(
 			ANSWER_STR[26] = hextoascii(answerkey[con_addr][11:8]);
 			ANSWER_STR[27] = hextoascii(answerkey[con_addr][7:4]);
 			ANSWER_STR[28] = hextoascii(answerkey[con_addr][3:0]);
-			ANSWER_STR[29] = "\t";
+			ANSWER_STR[29] = 8'h09;
 
 			if(con_data == answerkey[con_addr]) begin
 				ANSWER_STR[30] = "P";
@@ -571,13 +571,13 @@ module uart_datamemdump(
 				ANSWER_STR[33] = "l";
 			end
 
-			ANSWER_STR[34] = "\r";
-			ANSWER_STR[35] = "\n";
+			ANSWER_STR[34] = 8'h0D;
+			ANSWER_STR[35] = 8'h0A;
 		end
 
 		if(UARTState == CHECK_RESULT) begin
-			RESULT_STR[0] = "\r";
-			RESULT_STR[1] = "\n";
+			RESULT_STR[0] = 8'h0D;
+			RESULT_STR[1] = 8'h0A;
 			RESULT_STR[2] = "P";
 			RESULT_STR[3] = "a";
 			RESULT_STR[4] = "s";
@@ -609,8 +609,8 @@ module uart_datamemdump(
 			RESULT_STR[30] = "e";
 			RESULT_STR[31] = "s";
 			RESULT_STR[32] = ".";
-			RESULT_STR[33] = "\r";
-			RESULT_STR[34] = "\n";
+			RESULT_STR[33] = 8'h0D;
+			RESULT_STR[34] = 8'h0A;
 		end
 
 		if(UARTState == LD_TESTPROGNAME) begin
@@ -638,8 +638,8 @@ module uart_datamemdump(
 			CLOCKCYCLES_STR[21] = hextoascii(clock_counter[11:8]);
 			CLOCKCYCLES_STR[22] = hextoascii(clock_counter[7:4]);
 			CLOCKCYCLES_STR[23] = hextoascii(clock_counter[3:0]);
-			CLOCKCYCLES_STR[24] = "\r";
-			CLOCKCYCLES_STR[25] = "\n";
+			CLOCKCYCLES_STR[24] = 8'h0D;
+			CLOCKCYCLES_STR[25] = 8'h0A;
 		end
 	end
 

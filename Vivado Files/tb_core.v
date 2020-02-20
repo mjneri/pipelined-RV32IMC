@@ -43,7 +43,7 @@ module tb_core();
 		nrst = 0;
 
 		con_write = 0;
-		con_addr = 10'h3ff;
+		con_addr = 10'h0;
 		con_in = 0;
 
 		done = 0;
@@ -54,9 +54,9 @@ module tb_core();
 		nrst = 1;
 	end
 
-	// Checking for 10 NOPs in a row
+	// Checking for 10 NOPs/looping jals in a row
 	always@(posedge CLK) begin
-		if(INST == 32'h00000013) begin
+		if(INST == 32'h0000006f) begin
 			check = check + 1;
 		end else begin
 			check = 0;
@@ -100,33 +100,31 @@ module tb_core();
 	// The following code snippet is for checking the contents
 	// of BLOCKMEM
 	always@(posedge done) begin
-		$display("===| SUMMARY |===");
-		$display("Actual  \tExpected");
-		$display("========\t========");			
+		$display("---------| SUMMARY |---------");
+		$display("Address\t  Actual  \tExpected ");
+		$display("=======\t==========\t==========");			
 	end
 
 	always@(negedge CLK) begin
 		if(done) begin	
 			if(con_out == AK.memory[con_addr]) begin
-				$display("%X\t%X\tPass", con_out, AK.memory[con_addr]);
+				$display("0x%3X\t0x%X\t0x%X\tPass", con_addr, con_out, AK.memory[con_addr]);
 				pass = pass + 1;
 			end else begin
-				$display("%X\t%X\tFail", con_out, AK.memory[con_addr]);
+				$display("0x%3X\t0x%X\t0x%X\tFail", con_addr, con_out, AK.memory[con_addr]);
 			end
 
-			con_addr = con_addr + 1;
 			i = i + 1;
+
+			if(con_addr == 1023) begin			
+				$display("\n");
+				$display("Passed %d/%d test cases.\nClock cycles: %d\n=================", pass, i, clock_counter);
+				$finish;
+			end
+			
+			con_addr = con_addr + 1;
 		end
 	end
-
-	always@(posedge CLK) begin
-		if(con_addr == 100) begin			
-			$display("\n");
-			$display("Passed %d/%d test cases.\nClock cycles: %d\n=================", pass, i, clock_counter);
-			$finish;
-		end
-	end
-
 endmodule
 
 // ANSWER KEY
