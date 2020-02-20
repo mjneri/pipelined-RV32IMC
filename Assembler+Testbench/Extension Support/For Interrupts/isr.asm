@@ -1,9 +1,9 @@
-.data 0x00004000
-	.word 0x1
+#.data 0x00004000
+#	.word 0x1
 
 #interrupt code
-.text
-main:
+#.text
+#main:
 addi x1, x0, 0x400   #button
 addi x2, x0, 0x401   #switch
 addi x3, x0, 0x402   #LED
@@ -26,6 +26,8 @@ beq x5, x10, btn2
 beq x6, x10, btn3
 beq x7, x10, btn4
 
+jal x0, check_sw
+
 btn1:
 xor x20, x4, x12
 sb x20, 0(x3)
@@ -46,9 +48,11 @@ xor x23, x7, x12
 sb x23, 0(x3)
 jal x0, end
 
+check_sw:
 beq x4, x11, sw1
 beq x5, x11, sw2
 beq x6, x11, sw3
+jal x0, end
 # beq x7, x11, sw4
 
 sw1:
