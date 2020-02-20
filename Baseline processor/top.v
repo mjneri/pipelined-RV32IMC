@@ -83,6 +83,6 @@ module top(
 	);
 	// interrupt signal
 	wire int_sig;
-	assign int_sig = (|db_btn) || (|switch_in);	//add debounce to button
+	assign int_sig = (|db_btn) | (|switch_in);	//add debounce to button
 
 endmodule
