@@ -75,7 +75,7 @@ module top(
 
 	// Button debouncing
 	btn_debounce DEBOUNCE(
-		.db(CLKIP_OUT),
+		.CLK(CLKIP_OUT),
 		.nrst(nrst),
 
 		.btn(btn_in),
