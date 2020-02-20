@@ -27,7 +27,7 @@ module top(
 
 	wire CLKIP_OUT;			// Output of CLKIP module
 	wire locked;			// determines stability of CLKIP output
-	wire db_btn[3:0];		// Debounced button inputs
+	wire [3:0] db_btn;		// Debounced button inputs
 	wire int_sig;			// Interrupt signal
 
 	// Uncomment the following if needed:
@@ -84,6 +84,6 @@ module top(
 	);
 
 	// interrupt signal
-	assign int_sig = (|db_btn) | (|switch_in);	//add debounce to button
+	assign int_sig = (|db_btn | |switch_in);	//add debounce to button
 
 endmodule
