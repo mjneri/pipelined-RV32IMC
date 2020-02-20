@@ -2,6 +2,7 @@
 
 module datamem(
 	input clk,
+	input nrst,
 
 	// Inputs from within the core
 	input [3:0] dm_write,
@@ -54,28 +55,36 @@ module datamem(
 	// 0x1000
 	always@(posedge clk) begin
 		//switch
-		switch_reg <= {29'h0, switch_in};
-		btn_reg <= {28'h0, btn_in};	
-
+		if(!nrst) begin
+			switch_reg <= 0;
+			btn_reg <= 0;
+		end else begin
+			switch_reg <= {29'h0, switch_in};
+			btn_reg <= {28'h0, btn_in};	
+		end
 	end
 
 	// write to LED
 	always@(posedge clk) begin
-		if (data_addr==11'h402) begin
-			case(dm_write)
-				// SW
-				4'b1111: LED_reg <= data_in;
+		if(!nrst) begin
+			LED_reg <= 0;
+		end else begin
+			if (data_addr==11'h402) begin
+				case(dm_write)
+					// SW
+					4'b1111: LED_reg <= data_in;
 
-				// SH
-				4'b0011: LED_reg <= (LED_reg & 32'hffff0000) | (data_in & 32'h0000ffff);
-				4'b1100: LED_reg <= (LED_reg & 32'h0000ffff) | (data_in & 32'hffff0000);
+					// SH
+					4'b0011: LED_reg <= (LED_reg & 32'hffff0000) | (data_in & 32'h0000ffff);
+					4'b1100: LED_reg <= (LED_reg & 32'h0000ffff) | (data_in & 32'hffff0000);
 
-				// SB
-				4'b0001: LED_reg <= (LED_reg & 32'hffffff00) | (data_in & 32'h000000ff);
-				4'b0010: LED_reg <= (LED_reg & 32'hffff00ff) | (data_in & 32'h0000ff00);
-				4'b0100: LED_reg <= (LED_reg & 32'hff00ffff) | (data_in & 32'h00ff0000);
-				4'b1000: LED_reg <= (LED_reg & 32'h00ffffff) | (data_in & 32'hff000000);
-			endcase
+					// SB
+					4'b0001: LED_reg <= (LED_reg & 32'hffffff00) | (data_in & 32'h000000ff);
+					4'b0010: LED_reg <= (LED_reg & 32'hffff00ff) | (data_in & 32'h0000ff00);
+					4'b0100: LED_reg <= (LED_reg & 32'hff00ffff) | (data_in & 32'h00ff0000);
+					4'b1000: LED_reg <= (LED_reg & 32'h00ffffff) | (data_in & 32'hff000000);
+				endcase
+			end
 		end
 	end
 
