@@ -7,7 +7,16 @@
 # Clock signal
 
 set_property -dict {PACKAGE_PIN E3 IOSTANDARD LVCMOS33} [get_ports CLK100MHZ]
-create_clock -period 10.000 -name sys_clk -waveform {0.000 5.000} -add [get_ports CLK100MHZ]
+#create_clock -period 10.000 -name sys_clk -waveform {0.000 5.000} -add [get_ports CLK100MHZ]
+
+set_input_delay -clock [get_clocks -of_objects [get_pins CLKIP/inst/plle2_adv_inst/CLKOUT0] -filter {IS_GENERATED && MASTER_CLOCK == CLK100MHZ}] -add_delay 2.000 [get_ports nrst]
+set_output_delay -clock [get_clocks -of_objects [get_pins CLKIP/inst/plle2_adv_inst/CLKOUT0] -filter {IS_GENERATED && MASTER_CLOCK == CLK100MHZ}] -add_delay 2.000 [get_ports -filter { NAME =~  "*" && DIRECTION == "OUT" }]
+
+create_clock -period 20.000 -name VIRTUAL_clk_out1_clk_wiz_0_1 -waveform {0.000 10.000}
+set_input_delay -clock [get_clocks VIRTUAL_clk_out1_clk_wiz_0_1] -min -add_delay 2.000 [get_ports nrst]
+set_input_delay -clock [get_clocks VIRTUAL_clk_out1_clk_wiz_0_1] -max -add_delay 4.000 [get_ports nrst]
+set_output_delay -clock [get_clocks VIRTUAL_clk_out1_clk_wiz_0_1] -min -add_delay 2.000 [get_ports UART_TX]
+set_output_delay -clock [get_clocks VIRTUAL_clk_out1_clk_wiz_0_1] -max -add_delay 2.000 [get_ports UART_TX]
 
 ##ChipKit Digital I/O Low
 

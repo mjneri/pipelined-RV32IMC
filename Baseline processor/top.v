@@ -21,9 +21,13 @@ module top(
 	output UART_TX
 );
 
-// DECLARING WIRES
+//-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-//
+//				DECLARING WIRES					//
+//-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-//
+
 	wire CLKIP_OUT;			// Output of CLKIP module
 	wire locked;			// determines stability of CLKIP output
+	wire db_btn[3:0];		// Debounced button inputs
 
 	// Uncomment the following if needed:
 	wire [9:0] con_addr;	// Output datamem address from protocol controllers or uartdump
@@ -45,9 +49,9 @@ module top(
 	core RISCVCORE(
 		.CLK(CLKIP_OUT),
 		.nrst(nrst & locked),
-        	.int_sig(int_sig),
+        .int_sig(int_sig),
 
-		.btn_in(btn_in),
+		.btn_in(db_btn),
 		.switch_in(switch_in),
 
 		.con_write(4'h0),
@@ -69,8 +73,16 @@ module top(
 		.TX(UART_TX)
 	);
 
+	// Button debouncing
+	btndebounce DEBOUNCE(
+		.db(CLKIP_OUT),
+		.nrst(nrst),
+
+		.btn(btn_in),
+		.db_btn(db_btn)
+	);
 	// interrupt signal
 	wire int_sig;
-	assign int_sig = (|btn_in) || (|switch_in);	//add debounce to button
+	assign int_sig = (|db_btn) || (|switch_in);	//add debounce to button
 
 endmodule
