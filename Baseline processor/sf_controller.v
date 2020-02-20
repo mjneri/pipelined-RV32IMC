@@ -31,21 +31,16 @@ module sf_controller(
     //input is_nop,
     
     // EXE stage
+    //input branch_flush,         // branch unit tells if IF/ID are flushed
     input [1:0] exe_sel_data,   // for checking if a load inst
     input exe_wr_en,
     input [4:0] exe_rd,
     
-    // Forwarding signals
+    // forwarding signals
     input fw_mem_to_exe_A,
     input fw_mem_to_exe_B,
 
-    // Flushing Signals
-    input branch_flush,
-    input exe_stall,
-    input ISR_flush,
-    output flush,
-
-    // Clocks
+    // clocks
     output if_en,               // controls PC + instmem stall
     output id_en,               // controls IF/ID pipeline register stall
     output exe_en,         // controls ID/EXE pipeline register stall due to LOAD use hazards excluding jalr
@@ -53,9 +48,7 @@ module sf_controller(
     output mem_en              // controls EXE/MEM pipeline register and datamem stall
     //output wb_en,               // controls MEM/WB pipeline register clock
     //output rf_en                // controls RF clock
-
 );
-    assign flush = branch_flush || exe_stall || ISR_flush;
 
     wire exe_load = (exe_sel_data == 2'd3);
 

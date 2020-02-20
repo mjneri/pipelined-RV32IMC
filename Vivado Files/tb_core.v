@@ -4,7 +4,6 @@ module tb_core();
 	
 	reg CLK;
 	reg nrst;
-    reg SW;
 
 	reg [3:0] con_write;
 	reg [9:0] con_addr;
@@ -14,7 +13,6 @@ module tb_core();
 	core CORE(
 		.CLK(CLK),
 		.nrst(nrst),
-		.int_sig(SW),
 
 		.con_write(con_write),
 		.con_addr(con_addr),
@@ -43,8 +41,7 @@ module tb_core();
 	initial begin
 		CLK = 0;
 		nrst = 0;
-        SW = 1;
-    
+
 		con_write = 0;
 		con_addr = 10'h0;
 		con_in = 0;
@@ -53,12 +50,8 @@ module tb_core();
 		check = 0;
 		pass = 0;
 		i = 0;
-		#40;
+		#100;
 		nrst = 1;
-		#1580
-		SW = 0;
-		#200
-		SW = 1;
 	end
 
 	// Checking for 10 NOPs/looping jals in a row
