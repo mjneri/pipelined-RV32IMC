@@ -49,9 +49,9 @@ module tb_uart_datamemdump();
 		con_data = 32'hade1b056;
 		#200;
 		con_data = 32'hade1b055;
-		#20;
-		nrst = 0;
-		#40;
-		nrst = 1;
+		// #20;
+		// nrst = 0;
+		// #40;
+		// nrst = 1;
 	end
 endmodule
