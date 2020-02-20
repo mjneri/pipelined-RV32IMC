@@ -1,5 +1,9 @@
-#interrupt code
+.data 0x00004000
+	.word 0x1
 
+#interrupt code
+.text
+main:
 addi x1, x0, 0x400   #button
 addi x2, x0, 0x401   #switch
 addi x3, x0, 0x402   #LED
