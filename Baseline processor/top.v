@@ -12,8 +12,12 @@ module top(
 	input nrst,
 	input SW,
 
+	input [3:0] btn_in,
+	input [3:0] switch_in,
+
 	// This will be the output of the protocol controllers
 	// and will be mapped to the IO pins of the FPGA
+	output [3:0] LED_out,
 	output UART_TX
 );
 
@@ -41,13 +45,17 @@ module top(
 	core RISCVCORE(
 		.CLK(CLKIP_OUT),
 		.nrst(nrst & locked),
-        .int_sig(SW),
+        	.int_sig(SW),
+
+		.btn_in(btn_in),
+		.switch_in(switch_in),
 
 		.con_write(4'h0),
 		.con_addr(con_addr),
 		.con_in(32'h0),
 
-		.con_out(con_out)
+		.con_out(con_out),
+		.LED_out(LED_out)
 	);
 
 	// Protocol Controllers OR UART Controller
@@ -60,5 +68,8 @@ module top(
 		.con_addr(con_addr),
 		.TX(UART_TX)
 	);
+
+	// interrupt signal
+	assign int_sig = (|btn_in) || (|switch_in);	//add debounce to button
 
 endmodule

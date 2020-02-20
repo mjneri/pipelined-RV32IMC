@@ -4,12 +4,17 @@ module core(
 	input CLK,
 	input nrst,
 	input int_sig,
+	
+	input [31:0] btn_in,
+	input [31:0] switch_in,
+
 
 	// inputs from protocol controllers
 	input [3:0] con_write,
 	input [9:0] con_addr,
 	input [31:0] con_in,
-	output [31:0] con_out		// Ouput of DATAMEM connected to Protocol controllers
+	output [31:0] con_out,		// Ouput of DATAMEM connected to Protocol controllers
+	output [3:0] LED_out
 );
 	
 /******************************* DECLARING WIRES ******************************/
@@ -157,6 +162,7 @@ module core(
 	wire [31:0] mem_imm;			// 32bit Immediate
 	wire [4:0]  mem_rd;				// Destination register
 	wire [11:0] mem_PC;				// PC
+	
 
 	// Control signals
 	wire [3:0] mem_dm_write;		// For MEM stage
@@ -169,6 +175,11 @@ module core(
 
 	// Inputs to MEM/WB Pipereg
 	wire [31:0] mem_loaddata;		// Output of LOAD BLOCK
+
+	// I/O stuff
+	//wire [31:0] LED;
+	//wire [31:0] switch;
+
 // &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 
 
@@ -654,15 +665,20 @@ module core(
 		.clk(CLK),
 
 		.dm_write(mem_dm_write),
-		.data_addr(mem_ALUout[11:2]),
+		.data_addr(mem_ALUout[12:2]),
 		.data_in(mem_storedata),
+
+		.btn_in(btn_in),
+		.switch_in(switch_in),
 
 		.con_write(con_write),
 		.con_addr(con_addr),
 		.con_in(con_in),
 
 		.data_out(mem_DATAMEMout),
-		.con_out(con_out)
+		.con_out(con_out),
+		.LED_out(LED_out)
+
 	);
 
 	loadblock LOADBLOCK(
