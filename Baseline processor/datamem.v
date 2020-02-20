@@ -16,7 +16,7 @@ module datamem(
 	input [9:0] con_addr,		// datamem address from protocol controller
 	input [31:0] con_in,		// data input from protocol controller
 
-	output [31:0] data_out,		// data output to within the core
+	output reg [31:0] data_out,		// data output to within the core
 	output [31:0] con_out,		// data output to protocol controller
 	
 
