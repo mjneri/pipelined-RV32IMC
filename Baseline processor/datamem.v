@@ -9,7 +9,7 @@ module datamem(
 	input [31:0] data_in,
 
 	input [3:0] btn_in,
-	input [3:0] switch_in,
+	input [2:0] switch_in,
 
 	// Inputs from protocol controllers
 	input [3:0] con_write,		// Similar to dm_write
@@ -54,7 +54,7 @@ module datamem(
 	// 0x1000
 	always@(posedge clk) begin
 		//switch
-		switch_reg <= {28'h0, switch_in};
+		switch_reg <= {29'h0, switch_in};
 		btn_reg <= {28'h0, btn_in};	
 
 	end

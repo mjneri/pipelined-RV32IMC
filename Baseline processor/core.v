@@ -5,8 +5,8 @@ module core(
 	input nrst,
 	input int_sig,
 	
-	input [31:0] btn_in,
-	input [31:0] switch_in,
+	input [3:0] btn_in,
+	input [2:0] switch_in,
 
 
 	// inputs from protocol controllers

@@ -10,10 +10,10 @@
 module top(
 	input CLK100MHZ,
 	input nrst,
-	input SW,
+	//input SW,
 
 	input [3:0] btn_in,
-	input [3:0] switch_in,
+	input [2:0] switch_in,
 
 	// This will be the output of the protocol controllers
 	// and will be mapped to the IO pins of the FPGA
@@ -45,7 +45,7 @@ module top(
 	core RISCVCORE(
 		.CLK(CLKIP_OUT),
 		.nrst(nrst & locked),
-        	.int_sig(SW),
+        	.int_sig(int_sig),
 
 		.btn_in(btn_in),
 		.switch_in(switch_in),
@@ -70,6 +70,7 @@ module top(
 	);
 
 	// interrupt signal
+	wire int_sig;
 	assign int_sig = (|btn_in) || (|switch_in);	//add debounce to button
 
 endmodule
