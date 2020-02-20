@@ -3,12 +3,18 @@
 module core(
 	input CLK,
 	input nrst,
+	input int_sig,
+	
+	input [3:0] btn_in,
+	input [2:0] switch_in,
+
 
 	// inputs from protocol controllers
 	input [3:0] con_write,
 	input [9:0] con_addr,
 	input [31:0] con_in,
-	output [31:0] con_out		// Ouput of DATAMEM connected to Protocol controllers
+	output [31:0] con_out,		// Ouput of DATAMEM connected to Protocol controllers
+	output [3:0] LED_out
 );
 	
 /******************************* DECLARING WIRES ******************************/
@@ -18,6 +24,22 @@ module core(
 	wire [11:0] if_PC;			// Output of PC, input to INSTMEM
 	wire [11:0] if_pc4;			// PC + 4
 	wire [31:0] if_inst;		// INSTMEM Output
+	wire [6:0] if_opcode;
+
+	// PC + 4
+	assign if_pc4 = if_PC + 12'd4;
+	assign if_opcode = if_inst[6:0];
+
+	// Outputs of Interrupt Controller
+    wire ISR_stall;
+	wire ISR_flush;
+	wire sel_ISR;
+    wire ret_ISR;
+	wire ISR_en;
+	wire ISR_running;
+    wire [11:0] save_PC;
+	
+	wire flush;
 // &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 
 
@@ -140,6 +162,7 @@ module core(
 	wire [31:0] mem_imm;			// 32bit Immediate
 	wire [4:0]  mem_rd;				// Destination register
 	wire [11:0] mem_PC;				// PC
+	
 
 	// Control signals
 	wire [3:0] mem_dm_write;		// For MEM stage
@@ -152,6 +175,11 @@ module core(
 
 	// Inputs to MEM/WB Pipereg
 	wire [31:0] mem_loaddata;		// Output of LOAD BLOCK
+
+	// I/O stuff
+	//wire [31:0] LED;
+	//wire [31:0] switch;
+
 // &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 
 
@@ -183,7 +211,7 @@ module core(
 // Signals for BHT =================================================
 	wire if_prediction;				// Input to sel_PC mux
 	wire [1:0] exe_correction;		// input to sel_PC mux
-	wire flush;
+	wire branch_flush;
 	wire [9:0] if_PBT;				// Predicted branch target
 	wire [9:0] exe_PBT;				// Predicted branch target
 	wire [9:0] exe_CNI;				// Correct Next Instruction
@@ -240,13 +268,17 @@ module core(
 		//.is_jump(id_is_jump),
 		//.is_nop(),
 
-		//.branch_flush(flush),
 		.exe_sel_data(exe_sel_data),
 		.exe_wr_en(exe_wr_en),
 		.exe_rd(exe_rd),
 
 		.fw_mem_to_exe_A(fw_mem_to_exe_A),
 		.fw_mem_to_exe_B(fw_mem_to_exe_B),
+
+		.branch_flush(branch_flush),
+		.exe_stall(exe_stall),
+		.ISR_flush(ISR_flush),
+		.flush(flush),
 
 		.if_en(if_clk_en),
 		.id_en(id_clk_en),
@@ -292,7 +324,7 @@ module core(
 // IF Stage ========================================================
 	pc PC( 
 		.clk(CLK),
-		.nrst(nrst),
+		.nrst(nrst & (!ISR_stall | ret_ISR)),
 		.en(if_clk_en),
 		.addr_in(if_pcnew),
 		.inst_addr(if_PC)
@@ -301,12 +333,33 @@ module core(
 	instmem INSTMEM( 
 		.clk(CLK),
 		.addr(if_PC),
+		.sel_ISR(sel_ISR),
 		.inst(if_inst)
 	);
 
-	// PC + 4
-	assign if_pc4 = if_PC + 12'd4;
+	// Insert interrupts stuff here
+	interrupt_controller INT_CON(
+		.clk(CLK),
+		.nrst(nrst),
+		.PC(if_pcnew),
+		.if_opcode(if_opcode),
+		.interrupt_signal(int_sig),
+		.if_prediction(if_prediction),
+		.exe_correction(exe_correction),
+		.id_jump_in_bht(id_jump_in_bht),
+		.id_sel_pc(id_sel_pc),
+		.if_clk_en(if_clk_en),
+		.ISR_stall(ISR_stall),
+		.ISR_flush(ISR_flush),
+		.sel_ISR(sel_ISR),
+		.ret_ISR(ret_ISR),
+		.ISR_en(ISR_en),
+		.ISR_running(ISR_running),
+		.save_PC(save_PC)
+	);
 
+
+	//add logic for interrupt save PC handling
 	// PC Selection
 	// 3'b000 = PC+4
 	// 3'b001 = Prediction
@@ -317,24 +370,28 @@ module core(
 	// 3'b110 = exePBT
 	// 3'b111 = exePBT
 	always@(*) begin
-		case({exe_correction, if_prediction})
-			3'b001: if_pcnew = {if_PBT, 2'h0};
-			3'b100: if_pcnew = {exe_CNI, 2'h0};
-			3'b101: if_pcnew = {exe_CNI, 2'h0};
-			3'b110: if_pcnew = {exe_PBT, 2'h0};
-			3'b111: if_pcnew = {exe_PBT, 2'h0};
-			default: begin
-				case({id_jump_in_bht, id_sel_pc})
-					3'b001: if_pcnew = id_branchtarget;
-					default: if_pcnew = if_pc4;
-				endcase
-			end
-		endcase
+		if(ret_ISR)
+			if_pcnew = save_PC;
+		else begin
+			case({exe_correction, if_prediction})
+				3'b001: if_pcnew = {if_PBT, 2'h0};
+				3'b100: if_pcnew = {exe_CNI, 2'h0};
+				3'b101: if_pcnew = {exe_CNI, 2'h0};
+				3'b110: if_pcnew = {exe_PBT, 2'h0};
+				3'b111: if_pcnew = {exe_PBT, 2'h0};
+				default: begin
+					case({id_jump_in_bht, id_sel_pc})
+						3'b001: if_pcnew = id_branchtarget;
+						default: if_pcnew = if_pc4;
+					endcase
+				end
+			endcase
+		end
 	end
 
 	pipereg_if_id IF_ID(
 		.clk(CLK),
-		.nrst(nrst),
+		.nrst(nrst & !ISR_stall),
 		.en(id_clk_en),
 
 		.if_pc4(if_pc4), 	.id_pc4(id_pc4),
@@ -499,7 +556,7 @@ module core(
 	pipereg_id_exe ID_EXE(
 		.clk(CLK),
 		.nrst(nrst),
-		.flush(flush | exe_stall),
+		.flush(flush),
 		.en(exe_clk_en),
 
 		.id_pc4(id_pc4),					.exe_pc4(exe_pc4),
@@ -548,7 +605,7 @@ module core(
 		.CLK(CLK),
 		.nrst(nrst),
 		.en(id_clk_en),
-
+		.ISR_running(ISR_running),
 		.if_PC(if_PC[11:2]),
 
 		.id_PC(id_PC[11:2]),
@@ -565,7 +622,7 @@ module core(
 		.if_prediction(if_prediction),
 		.exe_correction(exe_correction),
 		
-		.flush(flush),
+		.branch_flush(branch_flush),
 		.id_jump_in_bht(id_jump_in_bht),
 
 		.if_PBT(if_PBT),
@@ -607,17 +664,23 @@ module core(
 // MEM Stage ========================================================
 	datamem DATAMEM(
 		.clk(CLK),
+		.nrst(nrst),
 
 		.dm_write(mem_dm_write),
-		.data_addr(mem_ALUout[11:2]),
+		.data_addr(mem_ALUout[12:2]),
 		.data_in(mem_storedata),
+
+		.btn_in(btn_in),
+		.switch_in(switch_in),
 
 		.con_write(con_write),
 		.con_addr(con_addr),
 		.con_in(con_in),
 
 		.data_out(mem_DATAMEMout),
-		.con_out(con_out)
+		.con_out(con_out),
+		.LED_out(LED_out)
+
 	);
 
 	loadblock LOADBLOCK(

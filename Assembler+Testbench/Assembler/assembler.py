@@ -6,10 +6,19 @@ from re import split
 
 argparser = ArgumentParser()
 argparser.add_argument('file', help='Input filename')
+argparser.add_argument('-comp_buffer', '-s', help='Enable compressed buffer', default=False)
 
-filename = argparser.parse_args(sys.argv[1:])
+args = argparser.parse_args(sys.argv[1:])
+
+global comp_buffer_en
+comp_buffer_en = args.comp_buffer
+print(comp_buffer_en)
+
+filename = args.file
+print(filename)
+
 try:
-    inst_file = open(filename.file)
+    inst_file = open(filename)
 except:
     print('File error')
     exit()
@@ -20,7 +29,6 @@ except:
     - strip stuff from lines
     to-do:
     - tokenize all instructions, registers, and things of that nature
-
     return variables:
     - dict: instructions (contains all instructions)
     - dict: labels (contains all labels and symbols)
@@ -301,8 +309,8 @@ def assemble(instructions, labels, instmem):
             
         elif (encoding_type=='U'):      # Okay
             rd = int(temp_inst[1])
-            imm = int(temp_inst[2])&(2**imm_width-1)&0xFFFFF000
-            m_code = opcode |  rd<<7 | imm
+            imm = int(temp_inst[2])
+            m_code = opcode |  rd<<7 | ((imm << 12) & 0xFFFFF000)
         
         elif (encoding_type=='J'):
             rd = int(temp_inst[1])
@@ -317,7 +325,7 @@ def assemble(instructions, labels, instmem):
             else:
                 rd_rs1_ = int(temp_inst[1])
                 rs2_ = int(temp_inst[2])
-            m_code = opcode |  rs2_<<2 | rd_rs1_<<7 | (imm&0x38)<<10 | funct4<<12
+            m_code = opcode |  rs2_<<2 | rd_rs1_<<7 | funct4<<12
         
         elif (encoding_type=='CI'):     # Okay
             rd = int(temp_inst[1])
@@ -328,17 +336,32 @@ def assemble(instructions, labels, instmem):
             rd_rs2_ = int(temp_inst[1])
             imm = int(temp_inst[2])&(2**imm_width-1)
             rs1_ = int(temp_inst[3])
+            if (rs1_ < 8 | rs1_ > 16):
+                print('Warning: Rs1 {} truncated to {}'.format(rs1_, (0x08) | (rs1_ & 0x07)))
+            rs1_ = (rs1_ & 0x07)
+            if (rd_rs2_ < 8 | rd_rs2_ > 16):
+                print('Warning: Rs2 {} truncated to {}'.format(rd_rs2_, (0x08) | (rd_rs2_ & 0x07)))
+            rd_rs2_ = (rd_rs2_ & 0x07)
             m_code = opcode |  rd_rs2_<<2 | (imm&0x40)>>1 | (imm&0x4)<<4 | rs1_<<7 | (imm&0x38)<<7 | funct3<<13
 
         elif (encoding_type=='CB'):     # Okay
             rs1_ = int(temp_inst[1])
             label_address = labels[temp_inst[2]]
             imm = (label_address-inst_address)
-            m_code = opcode | (imm&0x20)>>2 | (imm&0x6)<<2 | (imm&0xC)>>1 | rs1_<<7 | (imm&0x18)<<7 | (imm&0x100)<<4 | funct3<<13
+            if (rs1_ < 8 | rs1_ > 16):
+                print('Warning: Rs1 {} truncated to {}'.format(rs1_, (0x08) | (rs1_ & 0x07)))
+            rs1_ = (rs1_ & 0x07)
+            m_code = opcode | (imm&0x20)>>2 | (imm&0x6)<<2 | (imm&0xC)<<1 | rs1_<<7 | (imm&0x18)<<7 | (imm&0x100)<<4 | funct3<<13
 
         elif (encoding_type=='CA'):     # Okay
             rs2_ = int(temp_inst[2])
             rd_rs1_ = int(temp_inst[1])
+            if (rd_rs1_ < 8 | rd_rs1_ > 16):
+                print('Warning: Rd/Rs1 {} truncated to {}'.format(rd_rs1_, (0x08) | (rd_rs1_ & 0x07)))
+            rd_rs1_ = (rd_rs1_ & 0x07)
+            if (rs2_ < 8 | rs2_ > 16):
+                print('Warning: Rs2 {} truncated to {}'.format(rs2_, (0x08) | (rs2_ & 0x07)))
+            rs2_ = (rs2_ & 0x07)
             m_code = opcode |  rs2_<<2 | funct2<<5 | rd_rs1_<<7 | funct6<<10
 
         elif (encoding_type=='CH'):     # Okay
@@ -350,11 +373,14 @@ def assemble(instructions, labels, instmem):
             label_address = labels[temp_inst[1]]
             imm = (label_address-inst_address)
             # 5|3:1|7|6|10|9:8|4|11
-            m_code = opcode | (imm&0x20)>>2 | (imm&0xE)>>2 | (imm&0x80)>>1 | (imm&0x40)<<1 | (imm&0x400)>>2 | (imm&0x30)>>1 | (imm&0x10)<<8 | (imm&0x800)<<1 | funct3<<13
+            m_code = opcode | (imm&0x20)>>2 | (imm&0xE)<<2 | (imm&0x80)>>1 | (imm&0x40)<<1 | (imm&0x400)>>2 | (imm&0x30)>>1 | (imm&0x10)<<8 | (imm&0x800)<<1 | funct3<<13
 
         elif (encoding_type=='CIW'):     # Okay
             rd_ = int(temp_inst[1])
             imm = int(temp_inst[2])<<2
+            if (rd_ < 8 | rd_ > 16):
+                print('Warning: Rd {} truncated to {}'.format(rd_, (0x08) | (rd_ & 0x07)))
+            rd_ = (rd_ & 0x07)
             m_code = opcode |  rd_<<2 | (imm&0x8)<<2 | (imm&0x4)<<4 | (imm&0x3C0)<<1 | (imm&0x30)<<7 | funct3<<13
 
         elif (encoding_type=='C16'):    # Okay
@@ -365,26 +391,60 @@ def assemble(instructions, labels, instmem):
             print('Work in progress')
             m_code = 1
         
-        
+        if (opt[0] == 'C'):
+            out = (hex(m_code)[2:].zfill(4))
+            if (comp_buffer_en == 'True'):
+                print('loli')
+                if (compressed_counter == 0):
+                    out_buffer = out
+                    compressed_counter = 1
+                else:
+                    print(out + out_buffer + '\n')
+                    instmem.write(out + out_buffer + '\n')
+                    compressed_counter = 0
+                    out_buffer = ''
+            else:
+                out = (hex(0x10000 | m_code)[2:].zfill(8))      # insert an upper nop
+                instmem.write(out + '\n')
+        else:
+            full_inst = (hex(m_code)[2:].zfill(8))
+            print(full_inst)
+            if (out_buffer):
+                instmem.write(full_inst[4:8] + out_buffer + '\n')
+                out_buffer = full_inst[0:4]
+            else:
+                instmem.write(full_inst + '\n')
+
+        '''
         if (opt[0]=='C'):
             out = (hex(m_code)[2:].zfill(4))
             print(out)
-            if (compressed_counter==0):
-                out_buffer = out
-                compressed_counter += 1
+            print(comp_buffer_en)
+            if (comp_buffer_en):
+                if (compressed_counter==0):
+                    out_buffer = out
+                    compressed_counter += 1
+                else:
+                    print(out + out_buffer + '\n')
+                    instmem.write(out + out_buffer + '\n')
+                    compressed_counter = 0
+                    out_buffer = {}
             else:
-                instmem.write(out + out_buffer + '\n')
-                compressed_counter = 0
-                out_buffer = {}
+                print('loli')
+                out = (hex(0x10000 | m_code)[2:].zfill(8))      # insert an upper nop
+                instmem.write(out + '\n')
         else:
             if (out_buffer):
+                print('loli2')
                 (hex(m_code)[2:].zfill(4))
                 instmem.write((hex(1)[2:].zfill(4)) + out_buffer + '\n')
+                out_buffer = ''
             out = (hex(m_code)[2:].zfill(8))
             print(out)
             instmem.write(out +'\n')
             #print(bin(m_code)[2:].zfill(32))
         out = {}
+        '''
         print('-------------------------------------------------')
 
     return
