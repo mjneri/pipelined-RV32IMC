@@ -23,6 +23,8 @@ module branchpredictor(
 	input nrst,
 	input en,
 
+	input stall,
+
 	// Inputs
 	input [9:0] if_PC,
 
@@ -294,7 +296,7 @@ module branchpredictor(
 				history_table[i] <= 19'b0;
 			end
 
-		end else if(en) begin
+		end else if(en && !stall) begin
 
 			if( (id_is_btype || id_is_jump) && (id_iseq == 4'h0) ) begin
 				// Write to table if (Branch or Jump) AND the input is not in the table yet

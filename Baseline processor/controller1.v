@@ -66,7 +66,7 @@ module controller1(
     //assign output_element condition ? value_if_true : value_if_false;
     
     assign sel_opA = (opcode == auipc_inst) ? 1'h0 : 1'h1;  
-    //sel_opA = 0 if inst is AUIPC or JAL
+    //sel_opA = 0 if inst is AUIPC
     // 0: select PC as operand
     // 1: select rfoutA as operand
 

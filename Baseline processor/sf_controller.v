@@ -25,49 +25,61 @@ module sf_controller(
     //input [31:0] if_inst,       // -- current instmem output
     //input buffer_stall,         // checks if compressed buffer calls stall
 
-    // ID stage
-    input [31:0] id_inst,       // ID stage inst
-    //input is_jump,              // uses controller1 to find if jump or not (low-asserted)
+    // ID stage inputs
+    //input [6:0] id_opcode,
+    //input [4:0] id_rsA,
+    //input [4:0] id_rsB,
+    //input is_jump,			// uses controller1 to find if jump or not (low-asserted)
     //input is_nop,
     
-    // EXE stage
-    //input branch_flush,         // branch unit tells if IF/ID are flushed
-    input [1:0] exe_sel_data,   // for checking if a load inst
-    input exe_wr_en,
-    input [4:0] exe_rd,
+    // EXE stage inputs
+    //input [6:0] exe_opcode,		// for checking if a load inst
+    //input exe_wr_en,
+    //input [4:0] exe_rd,
     
-    // forwarding signals
-    input fw_mem_to_exe_A,
-    input fw_mem_to_exe_B,
+    //-=-=-=-=-=-=-=-=-=-=-=-
+    input branch_flush,			// Output flush signal from BHT
 
-    // clocks
-    output if_en,               // controls PC + instmem stall
-    output id_en,               // controls IF/ID pipeline register stall
-    output exe_en,         // controls ID/EXE pipeline register stall due to LOAD use hazards excluding jalr
-    output exe_jalr_stall,         // controls ID/EXE pipeline register stall due to LOAD -> JALR hazards
-    output mem_en              // controls EXE/MEM pipeline register and datamem stall
-    //output wb_en,               // controls MEM/WB pipeline register clock
-    //output rf_en                // controls RF clock
+    // Load-use hazards
+    input hzd_exe_to_id_A,		// determines LOAD@EXE>JALR@ID hazards
+    input hzd_mem_to_exe_A,		// determines LOAD@MEM>EXE hazards
+    input hzd_mem_to_exe_B,		// determines LOAD@MEM>EXE hazards
+
+    // Divider status
+    //input [1:0] div_status, 	// determines status of Divider unit
+
+    // Stalls/Enables
+	output if_stall,			// controls PC + instmem stall
+	output id_stall,			// controls IF/ID pipeline register stall
+	output exe_stall,			// controls ID/EXE pipeline register stall
+	output mem_stall,			// controls EXE/MEM pipeline register and datamem stall
+	output wb_stall,			// controls MEM/WB pipeline register stall
+	//output rf_stall,			// controls RF stall
+
+	// Flushes/Resets (flushes act as active-high resets)
+	output if_flush,			// controls PC flush
+	output id_flush,			// controls IF/ID pipeline register flush
+	output exe_flush,			// controls ID/EXE pipeline register flush
+	output mem_flush,			// controls EXE/MEM pipeline register flush
+	output wb_flush 			// controls MEM/WB pipeline register flush
+	// output exe_jalr_stall,		// controls ID/EXE pipeline register stall due to LOAD -> JALR hazards
 );
-
-    wire exe_load = (exe_sel_data == 2'd3);
-
-    //wire [6:0] if_opcode = if_inst[6:0];
-    wire [6:0] id_opcode = id_inst[6:0];
-    wire [4:0] id_rs1 = id_inst[19:15];
-    wire [4:0] id_rs2 = id_inst[24:20];
-
-    // LOAD -> JALR will result in a one-cycle stall for IF and ID stages
-    wire jalr_stall = (exe_load && exe_wr_en && id_opcode == 7'h67 && id_rs1 == exe_rd);
     
-    // LOAD -> Other instruction
-    wire load_stall = (fw_mem_to_exe_A || fw_mem_to_exe_B);
+    wire jalr_hazard = hzd_exe_to_id_A;							// LOAD -> JALR will result in a one-cycle stall for IF and ID stages
+    wire load_hazard = (hzd_mem_to_exe_A || hzd_mem_to_exe_B);	// LOAD -> Other instruction
     
-    assign if_en = !(load_stall || jalr_stall);	// Acts as clock enable for both load-use cases
-    assign id_en = !(load_stall || jalr_stall);	// Acts as clock enable for both load-use cases
-    assign exe_en = !(load_stall);			// Acts as clock enable for LOAD use hazards excluding JALR
-    assign exe_jalr_stall = jalr_stall;			// Acts as flush for LOAD -> JALR hazards
-    assign mem_en   = !(load_stall);			// Acts as flush for LOAD use hazards excluding JALR
-    // assign wb_en = 1'b1;
-    // assign rf_en = 1'b1;
+    // Stalls/Enables
+    assign if_stall = load_hazard || jalr_hazard;		// Acts as clock enable for both load-use cases
+    assign id_stall = load_hazard || jalr_hazard;		// Acts as clock enable for both load-use cases
+    assign exe_stall = load_hazard;						// Acts as clock enable for LOAD use hazards excluding JALR
+    assign mem_stall = 1'b0;
+    assign wb_stall = 1'b0;
+    //assign rf_stall = 1'b0;
+
+    // Flushes/Resets
+    assign if_flush = 1'b0;
+    assign id_flush = 1'b0;
+    assign exe_flush = jalr_hazard || branch_flush;	// Acts as flush for LOAD -> JALR hazards
+    assign mem_flush = load_hazard;					// Acts as flush for LOAD use hazards excluding JALR
+    assign wb_flush = 1'b0;
 endmodule

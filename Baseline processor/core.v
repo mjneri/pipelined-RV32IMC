@@ -183,7 +183,7 @@ module core(
 // Signals for BHT =================================================
 	wire if_prediction;				// Input to sel_PC mux
 	wire [1:0] exe_correction;		// input to sel_PC mux
-	wire flush;
+	wire branch_flush;				// Input to sf_controller
 	wire [9:0] if_PBT;				// Predicted branch target
 	wire [9:0] exe_PBT;				// Predicted branch target
 	wire [9:0] exe_CNI;				// Correct Next Instruction
@@ -196,32 +196,49 @@ module core(
 // Data Forwarding Control Signals ================================
 	wire fw_exe_to_id_A;
     wire fw_exe_to_id_B;
+
     wire fw_mem_to_id_A;
     wire fw_mem_to_id_B;
+
 	wire fw_wb_to_id_A;
     wire fw_wb_to_id_B;
-	wire fw_mem_to_exe_A;
-    wire fw_mem_to_exe_B;
+
     wire fw_wb_to_exe_A;
     wire fw_wb_to_exe_B;
+
+    wire hzd_exe_to_id_A;
+	wire hzd_mem_to_exe_A;
+    wire hzd_mem_to_exe_B;
 // &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 
 
 
 
 
-// Clock Gating ====================================================
-	wire if_clk;			// CLK input to PC
-	wire if_clk_en;
-	wire id_clk;			// CLK input to IF/ID pipereg
-	wire id_clk_en;
-	wire exe_clk;			// CLK input to ID/EXE pipereg
-	wire exe_clk_en;
-	wire exe_stall;			// Stall for LOAD->JALR hazards
-	wire mem_clk;			// CLK input to EXE/MEM pipereg
-	wire mem_clk_en;
+// Clock Gating + SF_Controller=====================================
+	// wire if_clk;			// CLK input to PC
+	// wire if_clk_en;
+	// wire id_clk;			// CLK input to IF/ID pipereg
+	// wire id_clk_en;
+	// wire exe_clk;			// CLK input to ID/EXE pipereg
+	// wire exe_clk_en;
+	// wire exe_stall;			// Stall for LOAD->JALR hazards
+	// wire mem_clk;			// CLK input to EXE/MEM pipereg
+	// wire mem_clk_en;
 	// wire wb_clk;			// CLK input to MEM/WB pipereg
 	// wire wb_clk_en;
+	wire if_stall;			// Controls PC + Instmem stall
+	wire id_stall;			// Controls IF/ID + BHT stall
+	wire exe_stall; 		// Controls ID/EXE stall
+	wire mem_stall;			// Controls EXE/MEM + Datamem stall
+	wire wb_stall; 			// Controls MEM/WB stall
+	// wire rf_stall;		// Controls RF stall
+
+	wire if_flush;			// Controls PC flush
+	wire id_flush;			// Controls IF/ID flush
+	wire exe_flush; 		// Controls ID/EXE flush
+	wire mem_flush; 		// Controls EXE/MEM flush
+	wire wb_flush; 			// Controls MEM/WB flush
 // &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 
 
@@ -231,30 +248,23 @@ module core(
 /******************************* DATAPATH (INSTANTIATING MODULES) ******************************/
 // CLOCKS ========================================================
 	sf_controller SF_CONTROLLER(
-		// .clk(CLK),
-		// .nrst(nrst),
-		//.if_inst(if_inst),
-		//.buffer_stall(buffer_stall),
+		.branch_flush(branch_flush),
 
-		.id_inst(id_inst),
-		//.is_jump(id_is_jump),
-		//.is_nop(),
+		.hzd_exe_to_id_A(hzd_exe_to_id_A),
+		.hzd_mem_to_exe_A(hzd_mem_to_exe_A),
+		.hzd_mem_to_exe_B(hzd_mem_to_exe_B),
 
-		//.branch_flush(flush),
-		.exe_sel_data(exe_sel_data),
-		.exe_wr_en(exe_wr_en),
-		.exe_rd(exe_rd),
+		.if_stall(if_stall),
+		.id_stall(id_stall),
+		.exe_stall(exe_stall),
+		.mem_stall(mem_stall),
+		.wb_stall(wb_stall),
 
-		.fw_mem_to_exe_A(fw_mem_to_exe_A),
-		.fw_mem_to_exe_B(fw_mem_to_exe_B),
-
-		.if_en(if_clk_en),
-		.id_en(id_clk_en),
-		.exe_en(exe_clk_en),
-		.exe_jalr_stall(exe_stall),
-		.mem_en(mem_clk_en)
-		//.wb_en(wb_clk_en),
-		//.rf_en()
+		.if_flush(if_flush),
+		.id_flush(id_flush),
+		.exe_flush(exe_flush),
+		.mem_flush(mem_flush),
+		.wb_flush(wb_flush)
 	);
 
 	// BUFGCE en_if (
@@ -293,7 +303,11 @@ module core(
 	pc PC( 
 		.clk(CLK),
 		.nrst(nrst),
-		.en(if_clk_en),
+		.en(/*if_clk_en*/1'b1),
+
+		.flush(if_flush),
+		.stall(if_stall),
+
 		.addr_in(if_pcnew),
 		.inst_addr(if_PC)
 	);
@@ -335,7 +349,10 @@ module core(
 	pipereg_if_id IF_ID(
 		.clk(CLK),
 		.nrst(nrst),
-		.en(id_clk_en),
+		.en(/*id_clk_en*/1'b1),
+
+		.flush(id_flush),
+		.stall(id_stall),
 
 		.if_pc4(if_pc4), 	.id_pc4(id_pc4),
 		.if_inst(if_inst), 	.id_inst(id_inst),
@@ -451,16 +468,18 @@ module core(
 	assign id_branchtarget = id_brOP + id_imm;
 
 	forwarding_unit FWD(
-		// Inputs
+		// Source registers
 		.id_rsA(id_rsA),
 		.id_rsB(id_rsB),
 		.exe_rsA(exe_rsA),
 		.exe_rsB(exe_rsB),
 
+		// Destination registers
 		.exe_rd(exe_rd),
 		.mem_rd(mem_rd),
 		.wb_rd(wb_rd),
 
+		// Control signals
 		.exe_wr_en(exe_wr_en),
 		.mem_wr_en(mem_wr_en),
 		.wb_wr_en(wb_wr_en),
@@ -478,29 +497,32 @@ module core(
 
 		.id_imm_select(id_imm_select),
 
+		.id_opcode(id_opcode),
 		.exe_opcode(exe_opcode),
 
 		// Outputs
 		.fw_exe_to_id_A(fw_exe_to_id_A),
 		.fw_exe_to_id_B(fw_exe_to_id_B),
-
 		.fw_mem_to_id_A(fw_mem_to_id_A),
 		.fw_mem_to_id_B(fw_mem_to_id_B),
-
 		.fw_wb_to_id_A(fw_wb_to_id_A),
 		.fw_wb_to_id_B(fw_wb_to_id_B),
 
-		.fw_mem_to_exe_A(fw_mem_to_exe_A),
-		.fw_mem_to_exe_B(fw_mem_to_exe_B),
 		.fw_wb_to_exe_A(fw_wb_to_exe_A),
-		.fw_wb_to_exe_B(fw_wb_to_exe_B)
+		.fw_wb_to_exe_B(fw_wb_to_exe_B),
+
+		.hzd_exe_to_id_A(hzd_exe_to_id_A),
+		.hzd_mem_to_exe_A(hzd_mem_to_exe_A),
+		.hzd_mem_to_exe_B(hzd_mem_to_exe_B)
 	);
 
 	pipereg_id_exe ID_EXE(
 		.clk(CLK),
-		.nrst(nrst),
-		.flush(flush | exe_stall),
-		.en(exe_clk_en),
+		.nrst(nrst),		
+		.en(/*exe_clk_en*/1'b1),
+
+		.flush(exe_flush),
+		.stall(exe_stall),
 
 		.id_pc4(id_pc4),					.exe_pc4(exe_pc4),
 		.id_fwdopA(id_fwdopA),				.exe_fwdopA(exe_fwdopA),
@@ -535,7 +557,6 @@ module core(
 	assign exe_rstore = (fw_wb_to_exe_B && exe_is_stype)? wb_loaddata : exe_fwdstore;
 
 	alu ALU(
-		//.CLK(CLK),
 		.op_a(opA),
 		.op_b(opB),
 		.ALU_op(exe_ALU_op),
@@ -547,7 +568,9 @@ module core(
 	branchpredictor BHT(
 		.CLK(CLK),
 		.nrst(nrst),
-		.en(id_clk_en),
+		.en(/*id_clk_en*/ 1'b1),
+
+		.stall(id_stall),
 
 		.if_PC(if_PC[11:2]),
 
@@ -565,7 +588,7 @@ module core(
 		.if_prediction(if_prediction),
 		.exe_correction(exe_correction),
 		
-		.flush(flush),
+		.flush(branch_flush),
 		.id_jump_in_bht(id_jump_in_bht),
 
 		.if_PBT(if_PBT),
@@ -585,7 +608,10 @@ module core(
 	pipereg_exe_mem EXE_MEM(
 		.clk(CLK),
 		.nrst(nrst),
-		.stall(!mem_clk_en),
+		.en(/*mem_clk_en*/1'b1),
+
+		.flush(mem_flush),
+		.stall(mem_stall),
 
 		.exe_pc4(exe_pc4),					.mem_pc4(mem_pc4),
 		.exe_inst(exe_inst),				.mem_inst(mem_inst),
@@ -630,6 +656,10 @@ module core(
 	pipereg_mem_wb MEM_WB(
 		.clk(CLK),
 		.nrst(nrst),
+		.en(/*wb_clk_en*/1'b1),
+
+		.flush(wb_flush),
+		.stall(wb_stall),
 
 		.mem_pc4(mem_pc4),					.wb_pc4(wb_pc4),
 		.mem_inst(mem_inst),				.wb_inst(wb_inst),

@@ -3,8 +3,10 @@
 module pipereg_id_exe(
 	input clk,
 	input nrst,
-	input flush,
 	input en,
+
+	input flush,
+	input stall,
 
 	// PC +4
 	input [11:0] id_pc4,
@@ -65,7 +67,7 @@ module pipereg_id_exe(
 );
 
 	always@(posedge clk) begin
-		if(!nrst) begin
+		if(!nrst || flush) begin
 			exe_pc4 <= 0;
 			exe_fwdopA <= 0;
 			exe_fwdopB <= 0;
@@ -85,26 +87,7 @@ module pipereg_id_exe(
 			exe_sel_data <= 0;
 			exe_store_select <= 0;
 		end else begin
-			if(flush) begin
-				exe_pc4 <= 0;
-				exe_fwdopA <= 0;
-				exe_fwdopB <= 0;
-				exe_inst <= 0;
-				exe_fwdstore <= 0;
-				exe_imm <= 0;
-				exe_rd <= 0;
-				exe_PC <= 0;
-
-				// Control signals
-				exe_ALU_op <= 0;
-				// exe_sel_opA <= 0;
-				// exe_sel_opB <= 0;
-				exe_is_stype <= 0;
-				exe_wr_en <= 0;
-				exe_dm_select <= 0;
-				exe_sel_data <= 0;
-				exe_store_select <= 0;
-			end else if(en) begin
+			if(en && !stall) begin
 				exe_pc4 <= id_pc4;
 				exe_fwdopA <= id_fwdopA;
 				exe_fwdopB <= id_fwdopB;
