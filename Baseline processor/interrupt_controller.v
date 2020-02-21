@@ -29,9 +29,9 @@ module interrupt_controller(
     assign ISR_flush = 0;
 
     wire save_PC_en;
-    assign save_PC_en = (!interrupt_signal & ISR_en) || // Capture first clock edge
-                        (ISR_stall & ((exe_correction!=0) | if_prediction | (id_sel_pc & !id_jump_in_bht))); // Catch any change in PC while pipeline finishes
-
+    assign save_PC_en = ((!interrupt_signal & ISR_en) || // Capture first clock edge
+                        (ISR_stall & ((exe_correction!=0) | if_prediction | (id_sel_pc & !id_jump_in_bht))))  // Catch any change in PC while pipeline finishes
+                        & !(ISR_running);   //should not assert when isr still running
     always@(posedge clk) begin
         if(!nrst)begin
             sel_ISR <= 0;
