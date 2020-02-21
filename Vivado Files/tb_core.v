@@ -4,23 +4,32 @@ module tb_core();
 	
 	reg CLK;
 	reg nrst;
-    reg SW;
+    reg int_sig;
+    
+    reg [3:0] btn_in;
+    reg [2:0] switch_in; 
 
 	reg [3:0] con_write;
 	reg [9:0] con_addr;
 	reg [31:0] con_in;
 	wire [31:0] con_out;
+    wire [3:0] LED_out;
 
 	core CORE(
 		.CLK(CLK),
 		.nrst(nrst),
-		.int_sig(SW),
-
+		.int_sig(int_sig),
+		
+		.btn_in(btn_in),
+		.switch_in(switch_in),
+		
 		.con_write(con_write),
 		.con_addr(con_addr),
 		.con_in(con_in),
 
-		.con_out(con_out)
+		.con_out(con_out),
+		.LED_out(LED_out)
+		
 	);
 
 	answerkey AK();
@@ -43,10 +52,13 @@ module tb_core();
 	initial begin
 		CLK = 0;
 		nrst = 0;
-        SW = 1;
+        //SW = 1;
+        int_sig = 1;
+        btn_in = 4'b0;
+        switch_in = 3'b0;
     
 		con_write = 0;
-		con_addr = 0;
+		con_addr = 10'h0;
 		con_in = 0;
 
 		done = 0;
@@ -55,13 +67,33 @@ module tb_core();
 		i = 0;
 		#40;
 		nrst = 1;
-		#1580
-		SW = 0;
+		#50
+		//btn_in = 4'b0010;
+		switch_in = 3'b100;
+		int_sig = 0;
+		//SW = 0;
+		#50
+		//btn_in = 4'b0;
+		int_sig = 1;
+		//SW = 1;
+		#2000
+		//btn_in = 4'b0;
+		switch_in = 3'b0;
+		#2000
+		btn_in = 4'b0100;
+		//switch_in = 3'b100;
+		int_sig = 0;
+		#50
+		int_sig = 1;
+		#2000
+		btn_in = 4'b0;
 		#200
-		SW = 1;
+		nrst = 0;
+
+		
 	end
 
-	// Checking for 10 NOPs in a row
+	// Checking for 10 NOPs/looping jals in a row
 	always@(posedge CLK) begin
 		if(INST == 32'h00000013) begin
 			check = check + 1;
@@ -107,33 +139,31 @@ module tb_core();
 	// The following code snippet is for checking the contents
 	// of BLOCKMEM
 	always@(posedge done) begin
-		$display("===| SUMMARY |===");
-		$display("Actual  \tExpected");
-		$display("========\t========");			
+		$display("---------| SUMMARY |---------");
+		$display("Address\t  Actual  \tExpected ");
+		$display("=======\t==========\t==========");			
 	end
 
 	always@(negedge CLK) begin
 		if(done) begin	
 			if(con_out == AK.memory[con_addr]) begin
-				$display("%X\t%X\tPass", con_out, AK.memory[con_addr]);
+				$display("0x%3X\t0x%X\t0x%X\tPass", con_addr, con_out, AK.memory[con_addr]);
 				pass = pass + 1;
 			end else begin
-				$display("%X\t%X\tFail", con_out, AK.memory[con_addr]);
+				$display("0x%3X\t0x%X\t0x%X\tFail", con_addr, con_out, AK.memory[con_addr]);
 			end
 
-			con_addr = con_addr + 1;
 			i = i + 1;
+
+			if(con_addr == 1023) begin			
+				$display("\n");
+				$display("Passed %d/%d test cases.\nClock cycles: %d\n=================", pass, i, clock_counter);
+				$finish;
+			end
+			
+			con_addr = con_addr + 1;
 		end
 	end
-
-	always@(posedge CLK) begin
-		if(con_addr == 32) begin			
-			$display("\n");
-			$display("Passed %d/%d test cases.\nClock cycles: %d\n=================", pass, i, clock_counter);
-			$finish;
-		end
-	end
-
 endmodule
 
 // ANSWER KEY
