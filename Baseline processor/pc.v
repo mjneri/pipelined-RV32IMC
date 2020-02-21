@@ -9,7 +9,8 @@ module pc(
 	
 	output reg [11:0] inst_addr
 );
-
+	reg int_nrst;
+	
 	always@(posedge clk)
 		if(!nrst)
 			inst_addr <= 12'h0;
