@@ -40,6 +40,8 @@ module sf_controller(
     //-=-=-=-=-=-=-=-=-=-=-=-
     input branch_flush,			// Output flush signal from BHT
 
+    input div_running,			// Status of Divider unit
+
     // Load-use hazards
     input hzd_exe_to_id_A,		// determines LOAD@EXE>JALR@ID hazards
     input hzd_mem_to_exe_A,		// determines LOAD@MEM>EXE hazards
@@ -62,16 +64,15 @@ module sf_controller(
 	output exe_flush,			// controls ID/EXE pipeline register flush
 	output mem_flush,			// controls EXE/MEM pipeline register flush
 	output wb_flush 			// controls MEM/WB pipeline register flush
-	// output exe_jalr_stall,		// controls ID/EXE pipeline register stall due to LOAD -> JALR hazards
 );
     
     wire jalr_hazard = hzd_exe_to_id_A;							// LOAD -> JALR will result in a one-cycle stall for IF and ID stages
     wire load_hazard = (hzd_mem_to_exe_A || hzd_mem_to_exe_B);	// LOAD -> Other instruction
     
     // Stalls/Enables
-    assign if_stall = load_hazard || jalr_hazard;		// Acts as clock enable for both load-use cases
-    assign id_stall = load_hazard || jalr_hazard;		// Acts as clock enable for both load-use cases
-    assign exe_stall = load_hazard;						// Acts as clock enable for LOAD use hazards excluding JALR
+    assign if_stall = load_hazard || jalr_hazard || div_running;
+    assign id_stall = load_hazard || jalr_hazard || div_running;
+    assign exe_stall = load_hazard || div_running;					
     assign mem_stall = 1'b0;
     assign wb_stall = 1'b0;
     //assign rf_stall = 1'b0;
@@ -79,7 +80,7 @@ module sf_controller(
     // Flushes/Resets
     assign if_flush = 1'b0;
     assign id_flush = 1'b0;
-    assign exe_flush = jalr_hazard || branch_flush;	// Acts as flush for LOAD -> JALR hazards
-    assign mem_flush = load_hazard;					// Acts as flush for LOAD use hazards excluding JALR
+    assign exe_flush = jalr_hazard || branch_flush;
+    assign mem_flush = load_hazard || div_running;
     assign wb_flush = 1'b0;
 endmodule

@@ -17,6 +17,9 @@ module pipereg_mem_wb(
 	input [31:0] mem_ALUout,
 	output reg [31:0] wb_ALUout,
 
+	input [31:0] mem_DIVout,
+	output reg [31:0] wb_DIVout,
+
 	input [31:0] mem_loaddata,
 	output reg [31:0] wb_loaddata,
 
@@ -33,8 +36,8 @@ module pipereg_mem_wb(
 	input mem_wr_en,
 	output reg wb_wr_en,
 
-	input [1:0] mem_sel_data,
-	output reg [1:0] wb_sel_data
+	input [2:0] mem_sel_data,
+	output reg [2:0] wb_sel_data
 );
 
 	always@(posedge clk) begin
@@ -42,6 +45,7 @@ module pipereg_mem_wb(
 			wb_pc4 <= 0;
 			wb_inst <= 0;
 			wb_ALUout <= 0;
+			wb_DIVout <= 0;
 			wb_loaddata <= 0;
 			wb_imm <= 0;
 			wb_rd <= 0;
@@ -56,6 +60,7 @@ module pipereg_mem_wb(
 			wb_pc4 <= mem_pc4;
 			wb_inst <= mem_inst;
 			wb_ALUout <= mem_ALUout;
+			wb_DIVout <= mem_DIVout;
 			wb_loaddata <= mem_loaddata;
 			wb_imm <= mem_imm;
 			wb_rd <= mem_rd;

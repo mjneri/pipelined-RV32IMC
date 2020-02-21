@@ -17,6 +17,9 @@ module pipereg_exe_mem(
 	input [31:0] exe_ALUout,
 	output reg [31:0] mem_ALUout,
 
+	input [31:0] exe_DIVout,
+	output reg [31:0] mem_DIVout,
+
 	input [31:0] exe_storedata,
 	output reg [31:0] mem_storedata,
 
@@ -39,8 +42,8 @@ module pipereg_exe_mem(
 	input [2:0] exe_dm_select,
 	output reg [2:0] mem_dm_select,
 
-	input [1:0] exe_sel_data,
-	output reg [1:0] mem_sel_data
+	input [2:0] exe_sel_data,
+	output reg [2:0] mem_sel_data
 );
 
 	always@(posedge clk) begin
@@ -48,6 +51,7 @@ module pipereg_exe_mem(
 			mem_pc4 <= 0;
 			mem_inst <= 0;			
 			mem_ALUout <= 0;
+			mem_DIVout <= 0;
 			mem_storedata <= 0;
 			mem_imm <= 0;
 			mem_rd <= 0;
@@ -64,6 +68,7 @@ module pipereg_exe_mem(
 			mem_pc4 <= exe_pc4;
 			mem_inst <= exe_inst;
 			mem_ALUout <= exe_ALUout;
+			mem_DIVout <= exe_DIVout;
 			mem_storedata <= exe_storedata;
 			mem_imm <= exe_imm;
 			mem_rd <= exe_rd;

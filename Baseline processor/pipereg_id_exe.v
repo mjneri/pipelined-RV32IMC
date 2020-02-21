@@ -44,6 +44,12 @@ module pipereg_id_exe(
 	input [3:0] id_ALU_op,
 	output reg [3:0] exe_ALU_op,
 
+	input id_div_valid,
+	output reg exe_div_valid,
+
+	input [1:0] id_div_op,
+	output reg [1:0] exe_div_op,
+
 	// input id_sel_opA,
 	// output reg exe_sel_opA,
 
@@ -59,8 +65,8 @@ module pipereg_id_exe(
 	input [2:0] id_dm_select,
 	output reg [2:0] exe_dm_select,
 
-	input [1:0] id_sel_data,
-	output reg [1:0] exe_sel_data,
+	input [2:0] id_sel_data,
+	output reg [2:0] exe_sel_data,
 
 	input [1:0] id_store_select,
 	output reg [1:0] exe_store_select
@@ -79,6 +85,8 @@ module pipereg_id_exe(
 
 			// Control signals
 			exe_ALU_op <= 0;
+			exe_div_valid <= 0;
+			exe_div_op <= 0;
 			// exe_sel_opA <= 0;
 			// exe_sel_opB <= 0;
 			exe_is_stype <= 0;
@@ -99,6 +107,8 @@ module pipereg_id_exe(
 
 				// Control signals
 				exe_ALU_op <= id_ALU_op;
+				exe_div_valid <= id_div_valid;
+				exe_div_op <= id_div_op;
 				// exe_sel_opA <= id_sel_opA;
 				// exe_sel_opB <= id_sel_opB;
 				exe_is_stype <= id_is_stype;
