@@ -49,14 +49,14 @@ module tb_top();
 		
 
 		#100 nrst = 1;
-		#50000
+		#100
 		btn_in = 4'b0001;
-		#2100
+		/*#2100
 		btn_in = 4'b0;
 		#1000000
 		btn_in = 4'b0100;
 		#2100
-		btn_in = 4'b0;
+		btn_in = 4'b0;*/
 		
 		
 	end

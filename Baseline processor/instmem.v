@@ -30,7 +30,7 @@ module instmem(
 	// Instmem that was coded s.t. Vivado generates an RTL_ROM
 	// Asynchronous read
 	/*reg [31:0] memory [0:1023];
-	/*reg [31:0] memory [0:511];
+	reg [31:0] memory [0:511];
 	initial begin
 		$readmemh("instmem.mem", memory);
 		$readmemh("interrupt.mem", int_mem);
