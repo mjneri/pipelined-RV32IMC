@@ -7,8 +7,8 @@ args = argparser.parse_args(sys.argv[1:])
 flines = open(args.file)
 line_list = []
 for line in flines:
-    line_list.append(line[0:4])
     line_list.append(line[4:8])
+    line_list.append(line[0:4])
 
 flines.close()
 

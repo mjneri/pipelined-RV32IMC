@@ -8,6 +8,7 @@ module tb_core();
 	reg [3:0] con_write;
 	reg [9:0] con_addr;
 	reg [31:0] con_in;
+	reg [31:0] last_inst;
 	wire [31:0] con_out;
 
 	core CORE(
@@ -45,6 +46,7 @@ module tb_core();
 		con_write = 0;
 		con_addr = 10'h3ff;
 		con_in = 0;
+		last_inst = 32'h0;
 
 		done = 0;
 		check = 0;
@@ -56,9 +58,11 @@ module tb_core();
 
 	// Checking for 10 NOPs in a row
 	always@(posedge CLK) begin
-		if(INST == 32'h00000013) begin
+		if(INST == last_inst) begin
 			check = check + 1;
-		end else begin
+		end
+		else begin
+			last_inst <= INST;
 			check = 0;
 		end
 	end
