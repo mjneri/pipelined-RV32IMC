@@ -88,14 +88,15 @@ module divider_unit(
 	wire div_unsigned_out_tvalid;
 
 	// Assigning tvalid inputs
-	// assert tvalid for one divider module only (depending if the operation is signed/unsigned)
-	assign div_signed_input_tvalid = div_valid & (div_op == DIV || div_op == REM);
-	assign div_unsigned_input_tvalid = div_valid & (div_op == DIVU || div_op == REMU);
-
-	// Instantiating Divider generator modules
+	// assert tvalid for one divider module only (depending if the operation is signed/unsigned)	
 	// Note: the tvalid inputs are ANDed w/ div_state == WAIT because
 	// we want them to be asserted for only one clock cycle during WAIT.
-	// We want them to be asserted by the next cycle (starting at state DIVIDING).
+	// (We want them to be asserted by the next cycle (starting at state DIVIDING))
+	assign div_signed_input_tvalid = div_valid & (div_op == DIV || div_op == REM) & (div_state == WAIT);
+	assign div_unsigned_input_tvalid = div_valid & (div_op == DIVU || div_op == REMU) & (div_state == WAIT);
+
+	// Instantiating Divider generator modules
+	// NOTE: aresetn should be active for at least 2 cycles.
 	div_gen_signed DIVREM(
 		.aclk(CLK),
 		.aclken(1'b1),
@@ -103,11 +104,11 @@ module divider_unit(
 		
 		.s_axis_dividend_tdata(opA),
 		.s_axis_dividend_tready(div_signed_dividend_tready),
-		.s_axis_dividend_tvalid(div_signed_input_tvalid & (div_state == WAIT)),
+		.s_axis_dividend_tvalid(div_signed_input_tvalid),
 
 		.s_axis_divisor_tdata(opB),
 		.s_axis_divisor_tready(div_signed_divisor_tready),
-		.s_axis_divisor_tvalid(div_signed_input_tvalid & (div_state == WAIT)),
+		.s_axis_divisor_tvalid(div_signed_input_tvalid),
 
 		.m_axis_dout_tdata(div_signed_out_tdata),
 		.m_axis_dout_tvalid(div_signed_out_tvalid)
@@ -120,11 +121,11 @@ module divider_unit(
 		
 		.s_axis_dividend_tdata(opA),
 		.s_axis_dividend_tready(div_unsigned_dividend_tready),
-		.s_axis_dividend_tvalid(div_unsigned_input_tvalid & (div_state == WAIT)),
+		.s_axis_dividend_tvalid(div_unsigned_input_tvalid),
 
 		.s_axis_divisor_tdata(opB),
 		.s_axis_divisor_tready(div_unsigned_divisor_tready),
-		.s_axis_divisor_tvalid(div_unsigned_input_tvalid & (div_state == WAIT)),
+		.s_axis_divisor_tvalid(div_unsigned_input_tvalid),
 
 		.m_axis_dout_tdata(div_unsigned_out_tdata),
 		.m_axis_dout_tvalid(div_unsigned_out_tvalid)
@@ -134,16 +135,6 @@ module divider_unit(
 //-=-				DIV_STATE CONTROL 			 =-=//
 //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
 
-	// Next state logic (states described above)
-	always@(*) begin
-		case(div_state)
-			RESET: div_nstate = WAIT;
-			WAIT: div_nstate = (div_valid)? DIVIDING : WAIT;
-			DIVIDING: div_nstate = (div_unsigned_out_tvalid || div_signed_out_tvalid)? DONE : DIVIDING;
-			DONE: div_nstate = WAIT;
-		endcase
-	end
-
 	// Next state transition
 	always@(posedge CLK) begin
 		if(!nrst)
@@ -152,7 +143,34 @@ module divider_unit(
 			div_state <= div_nstate;
 	end
 
+	// Next state logic (states described above)
+	always@(*) begin
+		case(div_state)
+			RESET: div_nstate = WAIT;
+			WAIT: begin
+				if(div_valid)
+					div_nstate = DIVIDING;
+				else
+					div_nstate = WAIT;
+			end
+			DIVIDING: begin
+				if(div_unsigned_out_tvalid || div_signed_out_tvalid)
+					div_nstate = DONE;
+				else
+					div_nstate = DIVIDING;
+			end
+			DONE: div_nstate = WAIT;
+		endcase
+	end
+
 	// This controls div_running
+	// Note: the reason we assert div_running at WAIT state instead of asserting it
+	// at DIVIDING state is because when div_valid is asserted at WAIT, it means that a
+	// division instruction is now in the EXE stage, and we want the pipeline to stall
+	// immediately at the next cycle. Since we tied div_running to the stall signals through
+	// sf_controller.v, we set it up such that it is already asserted 1 cycle before
+	// the divider actually starts executing.
+	// An equivalent condition for this would be 'case(div_nstate); DIVIDING: div_running = 1'
 	always@(*) begin
 		case(div_state)
 			RESET: div_running = 0;
@@ -163,15 +181,22 @@ module divider_unit(
 	end
 
 	// This controls DIVout. DIVout is set only once division is done
+	// NOTE: Quotient is out_tdata[63:32], Remainder is out_tdata[31:0].
+	// Just like div_running, we 'set' DIVout one cycle before div_state
+	// transitions to DONE, so that when div_state goes to DONE at the next clock cycle,
+	// DIVout is already set to the expected answer.
+	// An equivalent condition for this would be 'if(div_nstate == DONE)'.
 	always@(posedge CLK) begin
 		if(!nrst)
 			DIVout <= 0;
-		else if(div_state == DIVIDING && (div_unsigned_out_tvalid || div_signed_out_tvalid))
-			case(div_op)
-				DIV: DIVout = div_signed_out_tdata[63:32];
-				REM: DIVout = div_signed_out_tdata[31:0];
-				DIVU: DIVout = div_unsigned_out_tdata[63:32];
-				REMU: DIVout = div_unsigned_out_tdata[31:0];
-			endcase
+		else begin
+			if(div_state == DIVIDING && (div_unsigned_out_tvalid || div_signed_out_tvalid))
+				case(div_op)
+					DIV: DIVout <= div_signed_out_tdata[63:32];
+					REM: DIVout <= div_signed_out_tdata[31:0];
+					DIVU: DIVout <= div_unsigned_out_tdata[63:32];
+					REMU: DIVout <= div_unsigned_out_tdata[31:0];
+				endcase
+		end
 	end
 endmodule
