@@ -1,9 +1,9 @@
 00000001
 ffffffff
-00000000
-00000010
-fffffffc
-00000010
+ffffffff
+0000000f
+fffffffd
+00000002
 00000000
 fffffffb
 00000014
@@ -13,7 +13,7 @@ ffffffff
 00000001
 ffffffff
 00000000
-fffffffd
+fffffffe
 00000010
 fffffff0
 0000001f

@@ -46,9 +46,9 @@ sw x9, 48(x0)
 sw x10, 52(x0)
 
 and:
-c.addi x8, -3
+c.addi x8, -3   # x8 = -2
 c.and x9, x8 # x9 = 0 
-c.and x10, x8 # x10 = -3
+c.and x10, x8 # x10 = -2
 sw x9, 56(x0)
 sw x10, 60(x0)
 
@@ -85,7 +85,6 @@ c.beqz x8, _bnez # taken
 c.addi x8, 12
 
 _bnez:
-c.andi x8, 0
 c.addi x8, 10 # x8 = 10
 sw x8, 88(x0)
 c.addi x8, -10
@@ -102,7 +101,7 @@ c.addi x8, -25
 
 _jr: # jump to address in x1
 sw x8, 100(x0)
-addi x1, x0, 220 # x1 = 220
+addi x1, x0, 220 # x1 = 218
 c.jr x1
 addi x1, x0, 0
 

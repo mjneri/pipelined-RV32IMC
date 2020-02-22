@@ -124,7 +124,7 @@ module tb_core();
 	end
 
 	always@(posedge CLK) begin
-		if(con_addr == 100) begin			
+		if(con_addr == 30) begin			
 			$display("\n");
 			$display("Passed %d/%d test cases.\nClock cycles: %d\n=================", pass, i, clock_counter);
 			$finish;
