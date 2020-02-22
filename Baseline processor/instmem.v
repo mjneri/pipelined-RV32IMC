@@ -9,10 +9,17 @@ module instmem(
 	// Instmem that uses BLOCKMEM from Vivado IP Catalog
 	// Generate as Single port ROM
 	// Synchronous read
+	wire [10:0] addr_2 = addr[11:1] + 11'd1;
+
 	blk_mem_gen_instmem BLOCKMEM(
 		.clka(~clk),
-		.addra(addr[11:2]),
-		.douta(inst)
+		.addra({addr[11:1]}),
+		.douta(inst[15:0]),
+		.ena(1'b1),
+		.clkb(~clk),
+		.addrb({addr_2[10:0]}),
+		.doutb(inst[31:16]),
+		.enb(1'b1)
 	);
 
 

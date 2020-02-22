@@ -184,9 +184,9 @@ module core(
 	wire if_prediction;				// Input to sel_PC mux
 	wire [1:0] exe_correction;		// input to sel_PC mux
 	wire flush;
-	wire [9:0] if_PBT;				// Predicted branch target
-	wire [9:0] exe_PBT;				// Predicted branch target
-	wire [9:0] exe_CNI;				// Correct Next Instruction
+	wire [10:0] if_PBT;				// Predicted branch target
+	wire [10:0] exe_PBT;				// Predicted branch target
+	wire [10:0] exe_CNI;				// Correct Next Instruction
 // &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 
 
@@ -230,8 +230,7 @@ module core(
 
 //Compressed Instructions ======================================
     wire [31:0] if_rc_inst;  // Determined Instruction
-    wire if_not_comp;           // Compressed or not
-    wire buff_stall;        //Stall for case where
+    wire if_not_comp = (if_inst[1:0] == 2'd3);           // Compressed or not
     wire id_is_comp;
 	wire exe_is_comp;
 	// compressed control signals
@@ -242,6 +241,8 @@ module core(
     wire [3:0] id_c_alu_op;
     wire id_c_sel_opA;
     wire id_c_sel_opB;
+	wire [1:0] id_c_sel_pc;
+	wire id_c_sel_opBR;
     wire id_c_is_stype;
     wire id_c_wr_en;
 	wire [1:0] id_c_btype;
@@ -249,6 +250,9 @@ module core(
 	wire id_c_use_B;
 	wire id_c_is_jump;
 	wire id_c_is_btype;
+	// base control signal counterparts
+	wire [1:0] id_base_sel_pc;
+	wire id_base_sel_opBR;
 	// registers and immediates
     wire [4:0] id_c_rsA;
     wire [4:0] id_c_rsB;
@@ -352,6 +356,7 @@ module core(
 		.inst(if_inst)
 	);
 
+	/*
     compressed_buffer C_BUFFER(
         .clk(CLK),
         .nrst(nrst),
@@ -361,9 +366,10 @@ module core(
         .buff_stall(buff_stall),
         .out_inst(if_rc_inst)
     );
+	*/
     
 	// PC + 4
-	assign if_pc4 = buff_stall ? if_PC : if_PC + 12'd4;
+	assign if_pc4 = if_PC + (if_not_comp ? 4 : 2); // buff_stall ? if_PC : if_PC + 12'd4;
 
 	// PC Selection
 	// 3'b000 = PC+4
@@ -376,11 +382,11 @@ module core(
 	// 3'b111 = exePBT
 	always@(*) begin
 		case({exe_correction, if_prediction})
-			3'b001: if_pcnew = {if_PBT, 2'h0};
-			3'b100: if_pcnew = {exe_CNI, 2'h0};
-			3'b101: if_pcnew = {exe_CNI, 2'h0};
-			3'b110: if_pcnew = {exe_PBT, 2'h0};
-			3'b111: if_pcnew = {exe_PBT, 2'h0};
+			3'b001: if_pcnew = {if_PBT, 1'h0};
+			3'b100: if_pcnew = {exe_CNI, 1'h0};
+			3'b101: if_pcnew = {exe_CNI, 1'h0};
+			3'b110: if_pcnew = {exe_PBT, 1'h0};
+			3'b111: if_pcnew = {exe_PBT, 1'h0};
 			default: begin
 				case({id_jump_in_bht, id_sel_pc})
 					3'b001: if_pcnew = id_branchtarget;
@@ -396,7 +402,7 @@ module core(
 		.en(id_clk_en),
 
 		.if_pc4(if_pc4), 	.id_pc4(id_pc4),
-		.if_inst(if_rc_inst), 	.id_inst(id_inst),
+		.if_inst(if_inst), 	.id_inst(id_inst),
 		.if_PC(if_PC), 		.id_PC(id_PC)
 	);
 
@@ -467,10 +473,10 @@ module core(
 		.wr_en(id_wr_en),
 		.dm_select(id_dm_select),
 		.imm_select(id_imm_select),
-		.sel_pc(id_sel_pc),
+		.sel_pc(id_base_sel_pc),
 		.sel_data(id_sel_data),
 		.store_select(id_store_select),
-		.sel_opBR(id_sel_opBR)
+		.sel_opBR(id_base_sel_opBR)
 	);
 
 	regfile RF(
@@ -493,6 +499,8 @@ module core(
 
 	// Branch target address computation
 	// id_brOP = rfoutA for JALR only
+	
+	/*
 	assign id_brOP = (fw_exe_to_id_A && id_opcode == 7'h67)?
 					 	(exe_sel_data == 2'd2)? exe_imm			:
 					 	(exe_sel_data == 2'd1)? exe_ALUout		:
@@ -505,7 +513,8 @@ module core(
 					 (fw_wb_to_id_A  && id_opcode == 7'h67)? 
 					 					wb_wr_data				:
 					 (id_sel_opBR)? id_rfoutA : id_PC;
-
+	*/
+	assign id_brOP = (id_sel_opBR) ? id_fwdopA : id_PC;
 	assign id_branchtarget = id_brOP + (id_is_comp ? id_c_jt : id_imm);
 
 	forwarding_unit FWD(
@@ -572,6 +581,8 @@ module core(
         .alu_op(id_c_alu_op),
         .sel_opA(id_c_sel_opA),
         .sel_opB(id_c_sel_opB),
+		.sel_opBR(id_c_sel_opBR),
+		.sel_pc(id_c_sel_pc),
         .is_stype(id_c_is_stype),
         .wr_en(id_c_wr_en),
 		.btype(id_c_btype),
@@ -600,6 +611,8 @@ module core(
     assign id_rc_rsB = id_is_comp ? id_c_rsB : id_rsB;
     assign id_rc_sel_opA = id_is_comp ? id_c_sel_opA : id_sel_opA;
     assign id_rc_sel_opB = id_is_comp ? id_c_sel_opB : id_sel_opB;
+	assign id_sel_opBR = id_is_comp ? id_c_sel_opBR : id_base_sel_opBR;
+	assign id_sel_pc = id_is_comp ? id_c_sel_pc : id_base_sel_pc;
 	assign id_rc_is_jump = id_is_comp ? id_c_is_jump : id_is_jump;
 	assign id_rc_is_btype = id_is_comp ? id_c_is_btype : id_is_btype;
 	assign id_rc_imm_select = id_is_comp ? id_c_imm_select : id_imm_select;
@@ -661,14 +674,14 @@ module core(
 		.nrst(nrst),
 		.en(id_clk_en),
 
-		.if_PC(if_PC[11:2]),
+		.if_PC(if_PC[11:1]),
 
-		.id_PC(id_PC[11:2]),
-		.id_branchtarget(id_branchtarget[11:2]),
+		.id_PC(id_PC[11:1]),
+		.id_branchtarget(id_branchtarget[11:1]),
 		.id_is_jump(id_rc_is_jump),
 		.id_is_btype(id_rc_is_btype),
 
-		.exe_PC(exe_PC[11:2]),
+		.exe_PC(exe_PC[11:1]),
 		.exe_z(exe_z),
 		.exe_less(exe_less),
 		.exe_btype(exe_btype),

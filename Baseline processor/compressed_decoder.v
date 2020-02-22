@@ -23,6 +23,8 @@ module compressed_decoder(
     output [3:0] alu_op,
     output sel_opA,
     output sel_opB,
+    output sel_opBR,
+    output [1:0] sel_pc,
     output is_stype,
     output wr_en,
     output [1:0] btype,
@@ -322,11 +324,11 @@ module compressed_decoder(
 
     assign store_select = (store_inst) ? 2'h2 : 2'h0;
     assign dm_select = (load_inst) ? 2'h2 : 2'h0;
-    assign sel_opA = (lui_type || jr_type) ? 1'b0 : 1'b1;
+    assign sel_opA = (lui_type || j_type) ? 1'b0 : 1'b1;
     assign sel_opB = (r_type || b_type) ? 1'h0 : 1'h1;          //sel_opB = 0 if R-type inst or B-type inst
     assign wr_en = !(store_inst || b_type || inst==16'd0);
-    assign imm_select = (jr_type || j_type) ? 3'h4 : (b_type) ? 3'h3 : (lui_type) ? 3'h2 : (store_inst) ? 3'h1 : 3'h0;
-    assign sel_data = (jr_type) ? 2'h0 : (lui_type) ? 2'h2 : (load_inst) ? 2'h3 : 2'h1;
+    assign imm_select = (j_type) ? 3'h4 : (b_type) ? 3'h3 : (lui_type) ? 3'h2 : (store_inst) ? 3'h1 : 3'h0;
+    assign sel_data = (j_type || jr_type) ? 2'h0 : (lui_type) ? 2'h2 : (load_inst) ? 2'h3 : 2'h1;
     assign alu_op = temp_op;
     assign rs1 = temp_rs1;
     assign rs2 = temp_rs2;
@@ -400,6 +402,9 @@ module compressed_decoder(
     assign btype[0] = (opcode == 2'd1) && (funct3 == 3'd7); // BNEZ
     assign use_A = !(rs1 == 5'd0);
     assign use_B = !(rs2 == 5'd0);
+    assign sel_pc[1] = b_type;
+    assign sel_pc[0] = j_type || jr_type;
+    assign sel_opBR = jr_type;
     
 
 endmodule

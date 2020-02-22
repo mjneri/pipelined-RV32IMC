@@ -26,12 +26,13 @@ module datamem(
 		.addra(data_addr),
 		.dina(data_in),
 		.douta(data_out),
-
+        .ena(1'b1),
 		.clkb(~clk),
 		.web(con_write),
 		.addrb(con_addr),
 		.dinb(con_in),
-		.doutb(con_out)
+		.doutb(con_out),
+		.enb(1'b1)
 	);
 	
 	// For this part:
