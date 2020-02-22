@@ -126,6 +126,10 @@ loop:
 	mulh x14, x1, x2
 	mulhsu x15, x1, x2
 	mulhu x16, x1, x2
+	div x17, x1, x2
+	divu x18, x1, x2
+	rem x19, x1, x2
+	remu x23, x1, x2
 
 	sw x3, 0(x22)
 	sw x4, 4(x22)
@@ -141,14 +145,24 @@ loop:
 	sw x14, 44(x22)
 	sw x15, 48(x22)
 	sw x16, 52(x22)
+	sw x17, 56(x22)
+	sw x18, 60(x22)
+	sw x19, 64(x22)
+	sw x23, 68(x22)
 
 	addi x20, x20, 4
 	addi x21, x21, 4
-	addi x22, x22, 56
+	addi x22, x22, 72
 	addi x31, x31, -1
 	bne x31, x0, loop
 
-end:
+	lui x25, 0xade1b
+	addi x25, x25, 0x055
+	addi x26, x0, 0x3ff
+	slli x26, x26, 2
+	sw x25, 0(x26)
+	
+end:	jal x0, end
 	addi x0, x0, 0
 	addi x0, x0, 0
 	addi x0, x0, 0

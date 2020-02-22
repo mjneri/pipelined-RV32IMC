@@ -37,7 +37,6 @@ module sf_controller(
     //input exe_wr_en,
     //input [4:0] exe_rd,
     
-    //-=-=-=-=-=-=-=-=-=-=-=-
     input branch_flush,			// Output flush signal from BHT
 
     input div_running,			// Status of Divider unit

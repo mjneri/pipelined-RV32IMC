@@ -47,6 +47,42 @@ module tb_divider();
 		.DIVout(DIVout)
 	);
 
+	// Define parameters for div_op
+	parameter DIV = 2'd0;
+	parameter DIVU = 2'd1;
+	parameter REM = 2'd2;
+	parameter REMU = 2'd3;
+
+	// Task for generating stimulus
+	task test_op();
+		input [31:0] A, B;
+		begin
+			opA = A;
+			opB = B;
+			$strobe("A: %X, B: %X", opA, opB);
+
+			div_op = DIV;
+			div_valid = 1;
+			#20 div_valid = 0;
+			#1000 $strobe("OP: DIV, RES: %X", DIVout);
+
+			div_op = DIVU;
+			div_valid = 1;
+			#20 div_valid = 0;
+			#1000 $strobe("OP: DIVU, RES: %X", DIVout);
+
+			div_op = REM;
+			div_valid = 1;
+			#20 div_valid = 0;
+			#1000 $strobe("OP: REM, RES: %X", DIVout);
+
+			div_op = REMU;
+			div_valid = 1;
+			#20 div_valid = 0;
+			#1000 $strobe("OP: REMU, RES: %X", DIVout);
+		end
+	endtask
+
 	always #10 CLK = ~CLK;
 
 	always@(posedge CLK) begin
@@ -69,7 +105,16 @@ module tb_divider();
 		#100;
 		nrst = 1;
 
-		#40;
+		#100 test_op(32'hc0e19800, 32'heee19000);
+
+		// Random inputs
+		#10 test_op($random, $random);
+		#10 test_op($random, $random);
+		#10 test_op($urandom, $urandom);
+		#10 test_op($urandom, $urandom);
+		#10 test_op($urandom, $urandom);
+
+		/*#40;
 		opA = 32'd12;
 		// dividend_valid = 1;
 
@@ -110,6 +155,6 @@ module tb_divider();
 		opB = 0;
 		div_valid = 1;
 		#20;
-		div_valid = 0;
+		div_valid = 0;*/
 	end
 endmodule

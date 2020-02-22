@@ -1,12 +1,24 @@
+//-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+// top.v -- Container for the RISC-V Core + other modules
+//-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+// Author: Microlab 198 Pipelined RISC-V Group (2SAY1920)
+//-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+//
+//-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+// Module Name: top.v
+// Description: This module will instantiate the required modules
+//				for the project, which include the RISC-V Core, the
+//				Clocking Wizard, and the Protocol Controllers.
+//				The XDC file will be based on the io ports of this module
+//
+// Revision:
+// Revision 0.01 - File Created
+// Additional Comments:
+// 
+//-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+
+
 `timescale 1ns / 1ps
-
-/*
-	This module will instantiate the required modules
-	for the project, which include the RISC-V Core, the
-	Clocking Wizard, and the Protocol Controllers.
-	The XDC file will be based on the io ports of this module
-*/
-
 module top(
 	input CLK100MHZ,
 	input nrst,
