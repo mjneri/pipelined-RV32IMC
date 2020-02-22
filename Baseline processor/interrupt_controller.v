@@ -31,7 +31,7 @@ module interrupt_controller(
     wire save_PC_en;
     assign save_PC_en = ((!interrupt_signal & ISR_en) || // Capture first clock edge
                         (ISR_stall & ((exe_correction!=0) | if_prediction | (id_sel_pc & !id_jump_in_bht)))) // Catch any change in PC while pipeline finishes
-                        & !(ISR_running);   //Di massave PC during ISR
+                         & !(ISR_running);   //Di massave PC during ISR
 
     always@(posedge clk) begin
         if(!nrst)begin

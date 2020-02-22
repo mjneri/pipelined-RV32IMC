@@ -76,16 +76,16 @@ module tb_core();
 		//btn_in = 4'b0;
 		int_sig = 1;
 		//SW = 1;
-		#2000
+		#2200
 		//btn_in = 4'b0;
 		switch_in = 3'b0;
-		#2000
+		#20000
 		btn_in = 4'b0100;
 		//switch_in = 3'b100;
 		int_sig = 0;
 		#50
 		int_sig = 1;
-		#2000
+		#2200
 		btn_in = 4'b0;
 		#200
 		nrst = 0;
