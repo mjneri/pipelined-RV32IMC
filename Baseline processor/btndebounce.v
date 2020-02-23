@@ -34,7 +34,7 @@ module btndebounce(
 	// one counter means only one input can be debounced.
 	reg [20:0] count;		// 21 bit counter
 	wire in = |btn;			// asserts if any button is pressed
-	wire max = count[4];	// determine if first 20 bits exceeded max value (20ms passed)
+	wire max = count[20];	// determine if first 20 bits exceeded max value (20ms passed)
 	
 	// counter behavior
 	always@(posedge CLK) begin
