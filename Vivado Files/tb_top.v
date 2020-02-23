@@ -51,11 +51,11 @@ module tb_top();
 		#100 nrst = 1;
 		#500
 		btn_in = 4'b0001;
-		#1000
-		btn_in = 4'b0;
 		#10000
+		btn_in = 4'b0;
+		#30000
 		switch_in = 3'b001;
-		#500
+		#10000
 		switch_in = 3'b0;
 		
 		
