@@ -49,6 +49,7 @@ module tb_top();
 		
 
 		#100 nrst = 1;
+		
 		#1000 btn_in[0] = ~btn_in[0];
 		#4 btn_in[0] = ~btn_in[0];
 		#3 btn_in[0] = ~btn_in[0];
@@ -58,12 +59,16 @@ module tb_top();
 		#10 btn_in[0] = ~btn_in[0];
 		#10 btn_in[0] = ~btn_in[0];
 		#10 btn_in[0] = ~btn_in[0];
+
 		/*#2100
+		#500
+		btn_in = 4'b0001;
+		#10000
 		btn_in = 4'b0;
-		#1000000
-		btn_in = 4'b0100;
-		#2100
-		btn_in = 4'b0;*/
+		#30000
+		switch_in = 3'b001;
+		#10000
+		switch_in = 3'b0;
 		
 		
 	end
