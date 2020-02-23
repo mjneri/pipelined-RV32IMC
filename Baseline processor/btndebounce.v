@@ -18,7 +18,7 @@
 // Additional Comments: 
 //
 //////////////////////////////////////////////////////////////////////////////////
-module btn_debounce(
+module btndebounce(
 	// 50MHz clock is expected
     input CLK,
     input nrst,
@@ -29,20 +29,23 @@ module btn_debounce(
     );
 
 	// assume each input becomes stable after ~20ms
-	
+	// assume only one button press at a time
+	// note: debouncing multiple inputs requires multiple counters.
+	// one counter means only one input can be debounced.
 	reg [20:0] count;		// 21 bit counter
 	wire in = |btn;			// asserts if any button is pressed
-	wire max = count[20];	// determine if first 20 bits exceeded max value (20ms passed)
+	wire max = count[4];	// determine if first 20 bits exceeded max value (20ms passed)
 	
 	// counter behavior
 	always@(posedge CLK) begin
 		if(!nrst)
 			count <= 0;
 		else
-			if(in && !max)
-				count <= count + 1;
-		    else if(!in)
-		        	count <= 0;
+			case({in, max})
+				2'b10: count <= count + 1;
+				2'b01: count <= count + 1;
+				2'b00: count <= 0;
+			endcase
 	end
 	
 	// output assignment
@@ -51,8 +54,10 @@ module btn_debounce(
 			db_btn <= 0;
 		end
 		else begin
-			if(max)
-				db_btn <= btn;
+			case({in, max})
+				2'b11: db_btn <= btn;
+				2'b00: db_btn <= btn;
+			endcase
 		end
 	end
 	
