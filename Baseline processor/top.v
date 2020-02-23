@@ -75,7 +75,7 @@ module top(
 	);
 
 	// Button debouncing
-	btn_debounce DEBOUNCE(
+	btndebounce DEBOUNCE(
 		.CLK(CLKIP_OUT),
 		.nrst(nrst & locked),
 

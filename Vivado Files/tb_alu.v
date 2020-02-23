@@ -37,8 +37,10 @@ module tb_alu();
 	parameter MULHU =	4'd14;
 
 	// Task for generating stimulus
-	task test_op();
-		input [31:0] A, B;
+	task test_op(
+		input [31:0] A,
+		input [31:0] B
+	);
 		begin
 			opA = A;
 			opB = B;
