@@ -331,7 +331,14 @@ def assemble(instructions, labels, instmem):
         elif (encoding_type=='CI'):     # Okay
             rd = int(temp_inst[1])
             imm = int(temp_inst[2])&(2**imm_width-1)
-            m_code = opcode | (imm&0x1F)<<2 | rd<<7 | (imm&0x20)<<7 | funct3<<13
+            if (temp_inst[0] == 'C.LWSP'):
+                imm = imm << 2
+                m_code = opcode | (imm&0x1C)<<2 | rd<<7 | (imm&0x20)<<7 | (imm&0xC0)>>4 | funct3<<13            # different format for lwsp
+            elif (temp_inst[0] == 'C.SWSP'):
+                imm = imm << 2
+                m_code = opcode | (imm&0x3C)<<7 | rd<<2 | (imm&0xC0)<<1 | funct3<<13               # also different format for swsp                
+            else:
+                m_code = opcode | (imm&0x1F)<<2 | rd<<7 | (imm&0x20)<<7 | funct3<<13
         
         elif (encoding_type=='CLS'):    # Okay
             rd_rs2_ = int(temp_inst[1])
@@ -413,7 +420,9 @@ def assemble(instructions, labels, instmem):
             else:
                 instmem.write(full_inst + '\n')
         print('-------------------------------------------------')
-
+    if (out_buffer):
+        instmem.write(hex(0x0001)[2:].zfill(4))
+        instmem.write(out_buffer + '\n')
     return
 
 # Running Code

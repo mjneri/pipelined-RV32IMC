@@ -388,7 +388,7 @@ module compressed_decoder(
                  (lui_type) ? 1'd0 : ((spn_imm) ? inst[8] : (sp_imm ? inst[3] : sign)),   // bit 7
                  (lui_type) ? 1'd0 : (lssp_imm ? (load_inst ? inst[2] : inst[7]) : (spn_imm ? inst[7] : ((sp_imm || load_inst || store_inst) ? inst[5] : sign))), // bit 6
                  (lui_type) ? 1'd0 : (sp_imm ? inst[2] : inst[12]), // bit 5
-                 (lui_type) ? 1'd0 : ((load_inst || store_inst || spn_imm) ? inst[11] : inst[6]), // bit 4
+                 (lui_type) ? 1'd0 : (((load_inst && ~lssp_imm) || store_inst || spn_imm) ? inst[11] : inst[6]), // bit 4
                  (lui_type || sp_imm) ? 1'd0 : ((store_inst || (load_inst && !lssp_imm)) ? inst[10] : inst[5]), // bit 3
                  (lui_type || sp_imm || (lssp_imm && store_inst)) ? 1'd0 : ((store_inst && lssp_imm) ? inst[9] : (spn_imm || load_inst || store_inst) ? inst[6] : inst[4]), // bit 2
                  (lui_type || sp_imm || spn_imm || load_inst || store_inst) ? 2'd0 : inst[3:2]  // bits 1:0
@@ -402,7 +402,7 @@ module compressed_decoder(
     assign btype[0] = (opcode == 2'd1) && (funct3 == 3'd7); // BNEZ
     assign use_A = !(rs1 == 5'd0);
     assign use_B = !(rs2 == 5'd0);
-    assign sel_pc[1] = b_type;
+    assign sel_pc[1] = 1'b0;        // b-type only if branch taken
     assign sel_pc[0] = j_type || jr_type;
     assign sel_opBR = jr_type;
     

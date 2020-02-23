@@ -101,7 +101,7 @@ c.addi x8, -25
 
 _jr: # jump to address in x1
 sw x8, 100(x0)
-addi x1, x0, 220 # x1 = 218
+addi x1, x0, 218 # x1 = 218
 c.jr x1
 addi x1, x0, 0
 
@@ -112,7 +112,7 @@ c.lwsp x8, 20 # x8 = 35
 
 c.jal jalr
 jalr:
-addi x1, x0, 8
+addi x1, x1, 8
 c.jalr x1
 c.addi x1, 10
 

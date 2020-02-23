@@ -504,7 +504,7 @@ module core(
 					 (id_sel_opBR)? id_rfoutA : id_PC;
 	*/
 	assign id_brOP = (id_sel_opBR) ? id_fwdopA : id_PC;
-	assign id_branchtarget = id_brOP + (id_is_comp ? id_c_jt : id_imm);
+	assign id_branchtarget = id_brOP + (id_is_comp ? (id_sel_opBR ? 32'd0: id_c_jt) : id_imm);
 
 	forwarding_unit FWD(
 		// Inputs
