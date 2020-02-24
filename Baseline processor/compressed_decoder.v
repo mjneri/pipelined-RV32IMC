@@ -263,7 +263,7 @@ module compressed_decoder(
                     end
                     3'd6: begin
                         // SWSP
-                        temp_rd = rd7;
+                        temp_rs2 = rs2_full;
                         temp_rs1 = 5'd2;
                         store_inst = 1'b1;
                         temp_op = 4'd1;
@@ -366,9 +366,9 @@ module compressed_decoder(
 
     assign jt = {{20{sign}},                             // bits 31:12
                 (j_type) ? jump_upper : {3{sign}},      // bits 11:9
-                inst[9],                                // bit 8
+                (j_type) ? inst[9]: inst[12],           // bit 8
                 inst[6],                                // bit 7
-                (j_type) ? inst[7] : inst[3],           // bit 6
+                (j_type) ? inst[7] : inst[5],           // bit 6
                 inst[2],                                // bit 5
                 inst[11],                               // bit 4
                 (j_type) ? inst[5] : inst[10],          // bit 3
@@ -390,7 +390,7 @@ module compressed_decoder(
                  (lui_type) ? 1'd0 : (sp_imm ? inst[2] : inst[12]), // bit 5
                  (lui_type) ? 1'd0 : (((load_inst && ~lssp_imm) || store_inst || spn_imm) ? inst[11] : inst[6]), // bit 4
                  (lui_type || sp_imm) ? 1'd0 : ((store_inst || (load_inst && !lssp_imm)) ? inst[10] : inst[5]), // bit 3
-                 (lui_type || sp_imm || (lssp_imm && store_inst)) ? 1'd0 : ((store_inst && lssp_imm) ? inst[9] : (spn_imm || load_inst || store_inst) ? inst[6] : inst[4]), // bit 2
+                 (lui_type || sp_imm) ? 1'd0 : ((store_inst && lssp_imm) ? inst[9] : (spn_imm || (load_inst && ~lssp_imm) || store_inst) ? inst[6] : inst[4]), // bit 2
                  (lui_type || sp_imm || spn_imm || load_inst || store_inst) ? 2'd0 : inst[3:2]  // bits 1:0
                 };
 

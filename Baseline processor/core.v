@@ -278,6 +278,7 @@ module core(
 	wire id_rc_is_btype;
 	wire exe_comp_use_A;
 	wire exe_comp_use_B;
+	wire [1:0] exe_c_btype;
 // &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&    
     
 /******************************* DATAPATH (INSTANTIATING MODULES) ******************************/

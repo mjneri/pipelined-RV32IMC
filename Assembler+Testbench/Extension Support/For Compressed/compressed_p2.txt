@@ -87,11 +87,11 @@ c.addi x8, 12
 _bnez:
 c.addi x8, 10 # x8 = 10
 sw x8, 88(x0)
-c.addi x8, -10
+c.andi x8, 0
 c.bnez x8, _bnez # not taken
 c.addi x8, 1
-c.bnez x22, _jump # taken
-sw x8, 92(x0)
+c.bnez x8, _jump # taken
+sw x8, 92(x0) # x8 = 1
 _jump:
 c.addi x8, 12 # x8 = 13
 sw x8, 96(x0)
@@ -100,19 +100,19 @@ c.j _jr
 c.addi x8, -25
 
 _jr: # jump to address in x1
-sw x8, 100(x0)
+sw x8, 100(x0) # x8 = 25
 addi x1, x0, 218 # x1 = 218
 c.jr x1
 addi x1, x0, 0
 
 lwsp:
-sw x1, 104(x0)
+sw x1, 104(x0) # x1 = 218
 addi x2, x0, 0
 c.lwsp x8, 20 # x8 = 35
 
 c.jal jalr
 jalr:
-addi x1, x1, 8
+addi x1, x1, 8 # x1 = 242
 c.jalr x1
 c.addi x1, 10
 

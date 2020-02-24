@@ -348,7 +348,7 @@ module branchpredictor(
 			flush = 1;
 			flush_state = 0;
 		end else begin
-			if(|exe_btype && !is_pred_correct) begin
+			if((|exe_btype || |exe_c_btype) && !is_pred_correct) begin
 				flush_state = 1;
 				flush = 1;
 			end else begin
