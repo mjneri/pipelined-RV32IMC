@@ -50,7 +50,7 @@ module top(
 	core RISCVCORE(
 		.CLK(CLKIP_OUT),
 		.nrst(nrst & locked),
-        .int_sig(!int_sig),
+        	.int_sig(!int_sig),
 
 		.btn_in(db_btn),
 		.switch_in(switch_in),
