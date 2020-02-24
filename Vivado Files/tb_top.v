@@ -69,7 +69,7 @@ module tb_top();
 		switch_in = 3'b001;
 		#10000
 		switch_in = 3'b0;
-		
+		*/
 		
 	end
 endmodule
