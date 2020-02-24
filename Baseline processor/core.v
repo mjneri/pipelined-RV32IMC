@@ -626,6 +626,9 @@ module core(
 
 		// Control signals go here
 		.id_ALU_op(id_rc_alu_op),				.exe_ALU_op(exe_ALU_op),
+
+		.id_c_btype(id_c_btype),				.exe_c_btype(exe_c_btype),
+
 		// .id_sel_opA(id_sel_opA),				.exe_sel_opA(exe_sel_opA),
 		// .id_sel_opB(id_sel_opB),				.exe_sel_opB(exe_sel_opB),
 		.id_is_stype(id_rc_is_stype),			.exe_is_stype(exe_is_stype),
@@ -674,6 +677,7 @@ module core(
 		.exe_z(exe_z),
 		.exe_less(exe_less),
 		.exe_btype(exe_btype),
+		.exe_c_btype(exe_c_btype),
 		
 		// Outputs
 		.if_prediction(if_prediction),

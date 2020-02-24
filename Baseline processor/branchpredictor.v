@@ -42,6 +42,9 @@ module branchpredictor(
 								// exe_btype[1]: is_bltu
 								// exe_btype[0]: is_bgeu
 
+	input [1:0] exe_c_btype,	// exe_c_btype[1]: is_beqz
+								// exe_c_btype[0]: is_bnez
+
 	// Outputs
 	output if_prediction,
 	output [1:0] exe_correction,
@@ -205,12 +208,17 @@ module branchpredictor(
 	assign is_bltu = exe_btype[1];
 	assign is_bgeu = exe_btype[0];
 
+	assign is_beqz = exe_c_btype[1];
+	assign is_bnez = exe_c_btype[0];
+
 	assign feedback =   (is_beq && exe_z)? 1'b1 :
 						(is_bne && !exe_z)? 1'b1 : 
 						(is_blt && exe_less)? 1'b1 :
 						(is_bge && !exe_less)? 1'b1 :
 						(is_bltu && exe_less)? 1'b1 :
 						(is_bgeu && !exe_less)? 1'b1 :
+						(is_beqz && exe_z)? 1'b1 :
+						(is_bnez && !exe_z)? 1'b1 :
 						1'b0;
 
 	// Searching the table

@@ -42,6 +42,9 @@ module pipereg_id_exe(
 	input [3:0] id_ALU_op,
 	output reg [3:0] exe_ALU_op,
 
+	input [1:0] id_c_btype,
+	output reg [1:0] exe_c_btype,
+
 	// input id_sel_opA,
 	// output reg exe_sel_opA,
 
@@ -92,6 +95,9 @@ module pipereg_id_exe(
 
 			// Control signals
 			exe_ALU_op <= 0;
+
+			exe_c_btype <= 0;
+
 			// exe_sel_opA <= 0;
 			// exe_sel_opB <= 0;
 			exe_is_stype <= 0;
@@ -117,6 +123,9 @@ module pipereg_id_exe(
 
 				// Control signals
 				exe_ALU_op <= 0;
+
+				exe_c_btype <= 0;
+
 				// exe_sel_opA <= 0;
 				// exe_sel_opB <= 0;
 				exe_is_stype <= 0;
@@ -141,6 +150,9 @@ module pipereg_id_exe(
 
 				// Control signals
 				exe_ALU_op <= id_ALU_op;
+
+				exe_c_btype <= id_c_btype;
+
 				// exe_sel_opA <= id_sel_opA;
 				// exe_sel_opB <= id_sel_opB;
 				exe_is_stype <= id_is_stype;
