@@ -23,6 +23,8 @@ module branchpredictor(
 	input nrst,
 	input en,
 
+	input ISR_running,
+
 	input stall,
 
 	// Inputs
@@ -64,13 +66,14 @@ module branchpredictor(
 	// Declaring memory for BHT
 	/*  format of each line in reg history_table
 		========================================================================
-		| Valid bit | Tag[5:0] | Branch target[9:0] | Saturating Counter [1:0] |
-		| ht[18]    | ht[17:12]| ht[11:2]           | ht[1:0]				   |
+		| Valid bit | Tag[6:0] | Branch target[9:0] | Saturating Counter [1:0] |
+		| ht[19]    | ht[18:12]| ht[11:2]           | ht[1:0]				   |
 		========================================================================
 		Where ht = history_table
+		*MSB of tag bits = ISR_running
 	*/
 
-	reg [18:0] history_table [0:63];
+	reg [19:0] history_table [0:63];
 
 
 	////////////////////////////////////////////////////////////////////////////
@@ -100,15 +103,15 @@ module branchpredictor(
 	assign if_entry[2] = history_table[{if_PC[3:0], 2'b10}];
 	assign if_entry[3] = history_table[{if_PC[3:0], 2'b11}];
 
-	assign if_valid[0] = if_entry0[18];
-	assign if_valid[1] = if_entry1[18];
-	assign if_valid[2] = if_entry2[18];
-	assign if_valid[3] = if_entry3[18];
+	assign if_valid[0] = if_entry0[19];
+	assign if_valid[1] = if_entry1[19];
+	assign if_valid[2] = if_entry2[19];
+	assign if_valid[3] = if_entry3[19];
 
-	assign if_iseqto[0] = (if_entry0[17:12] == if_PC[9:4]) && if_valid[0];
-	assign if_iseqto[1] = (if_entry1[17:12] == if_PC[9:4]) && if_valid[1];
-	assign if_iseqto[2] = (if_entry2[17:12] == if_PC[9:4]) && if_valid[2];
-	assign if_iseqto[3] = (if_entry3[17:12] == if_PC[9:4]) && if_valid[3];
+	assign if_iseqto[0] = (if_entry0[18:12] == {ISR_running, if_PC[9:4]}) && if_valid[0];
+	assign if_iseqto[1] = (if_entry1[18:12] == {ISR_running, if_PC[9:4]}) && if_valid[1];
+	assign if_iseqto[2] = (if_entry2[18:12] == {ISR_running, if_PC[9:4]}) && if_valid[2];
+	assign if_iseqto[3] = (if_entry3[18:12] == {ISR_running, if_PC[9:4]}) && if_valid[3];
 
 	always@(*) begin
 		case(if_iseqto)
@@ -116,7 +119,7 @@ module branchpredictor(
 			4'b0100: if_loadentry = if_entry[2];
 			4'b0010: if_loadentry = if_entry[1];
 			4'b0001: if_loadentry = if_entry[0];
-			default: if_loadentry = 19'b0;
+			default: if_loadentry = 20'b0;
 		endcase
 	end
 
@@ -159,15 +162,15 @@ module branchpredictor(
 	assign id_entry[2] = history_table[{id_set, 2'b10}];
 	assign id_entry[3] = history_table[{id_set, 2'b11}];
 
-	assign id_valid[0] = id_entry0[18];
-	assign id_valid[1] = id_entry1[18];
-	assign id_valid[2] = id_entry2[18];
-	assign id_valid[3] = id_entry3[18];
+	assign id_valid[0] = id_entry0[19];
+	assign id_valid[1] = id_entry1[19];
+	assign id_valid[2] = id_entry2[19];
+	assign id_valid[3] = id_entry3[19];
 
-	assign id_iseqto[0] = (id_entry0[17:12] == id_tag) && id_valid[0];
-	assign id_iseqto[1] = (id_entry1[17:12] == id_tag) && id_valid[1];
-	assign id_iseqto[2] = (id_entry2[17:12] == id_tag) && id_valid[2];
-	assign id_iseqto[3] = (id_entry3[17:12] == id_tag) && id_valid[3];
+	assign id_iseqto[0] = (id_entry0[18:12] == {ISR_running, id_tag}) && id_valid[0];
+	assign id_iseqto[1] = (id_entry1[18:12] == {ISR_running, id_tag}) && id_valid[1];
+	assign id_iseqto[2] = (id_entry2[18:12] == {ISR_running, id_tag}) && id_valid[2];
+	assign id_iseqto[3] = (id_entry3[18:12] == {ISR_running, id_tag}) && id_valid[3];
 
 	// Saturating counter default states. Branches: WNT | Jumps: ST
 	assign sat_counter = (id_is_jump)? 2'b11 : 2'b01;
@@ -223,35 +226,45 @@ module branchpredictor(
 	wire [18:0] exe_entry [0:3];
 	wire [3:0] exe_valid;
 	wire [3:0] exe_iseqto;
-	wire [18:0] exe_loadentry;
+	reg [18:0] exe_loadentry;
 	wire is_pred_correct;
-	wire [1:0] exe_setoffset;
+	reg [1:0] exe_setoffset;
 
 	assign exe_entry[0] = history_table[{exe_set, 2'b00}];
 	assign exe_entry[1] = history_table[{exe_set, 2'b01}];
 	assign exe_entry[2] = history_table[{exe_set, 2'b10}];
 	assign exe_entry[3] = history_table[{exe_set, 2'b11}];
 
-	assign exe_valid[0] = exe_entry0[18];
-	assign exe_valid[1] = exe_entry1[18];
-	assign exe_valid[2] = exe_entry2[18];
-	assign exe_valid[3] = exe_entry3[18];
+	assign exe_valid[0] = exe_entry0[19];
+	assign exe_valid[1] = exe_entry1[19];
+	assign exe_valid[2] = exe_entry2[19];
+	assign exe_valid[3] = exe_entry3[19];
 
-	assign exe_iseqto[0] = (exe_entry0[17:12] == exe_tag) && exe_valid[0];
-	assign exe_iseqto[1] = (exe_entry1[17:12] == exe_tag) && exe_valid[1];
-	assign exe_iseqto[2] = (exe_entry2[17:12] == exe_tag) && exe_valid[2];
-	assign exe_iseqto[3] = (exe_entry3[17:12] == exe_tag) && exe_valid[3];
+	assign exe_iseqto[0] = (exe_entry0[18:12] == {ISR_running, exe_tag}) && exe_valid[0];
+	assign exe_iseqto[1] = (exe_entry1[18:12] == {ISR_running, exe_tag}) && exe_valid[1];
+	assign exe_iseqto[2] = (exe_entry2[18:12] == {ISR_running, exe_tag}) && exe_valid[2];
+	assign exe_iseqto[3] = (exe_entry3[18:12] == {ISR_running, exe_tag}) && exe_valid[3];
 
-	assign exe_loadentry =  (exe_iseqto == 4'b1000)? exe_entry3 :
-							(exe_iseqto == 4'b0100)? exe_entry2 :
-							(exe_iseqto == 4'b0010)? exe_entry1 :
-							(exe_iseqto == 4'b0001)? exe_entry0 :
-							19'h0;
-	assign exe_setoffset =  (exe_iseqto == 4'b1000)? 2'h3 :
-							(exe_iseqto == 4'b0100)? 2'h2 :
-							(exe_iseqto == 4'b0010)? 2'h1 :
-							(exe_iseqto == 4'b0001)? 2'h0 :
-							2'h0;
+	always@(*) begin
+		case(exe_iseqto)
+			4'b1000: exe_loadentry = exe_entry[3];
+			4'b0100: exe_loadentry = exe_entry[2];
+			4'b0010: exe_loadentry = exe_entry[1];
+			4'b0001: exe_loadentry = exe_entry[0];
+			default: exe_loadentry = 20'b0;
+		endcase
+	end
+
+	always@(*) begin
+		case(exe_iseqto)
+			4'b1000: exe_setoffset = 2'h3;
+			4'b0100: exe_setoffset = 2'h2;
+			4'b0010: exe_setoffset = 2'h1;
+			4'b0001: exe_setoffset = 2'h0;
+			default: exe_setoffset = 2'h0;
+		endcase
+	end
+
 	// Assign outputs
 	assign exe_PBT = exe_loadentry[11:2];
 	assign exe_CNI = {exe_loadentry[17:12], exe_set} + 10'b1;
@@ -287,15 +300,15 @@ module branchpredictor(
 				fifo_counter[i] <= 2'b0;
 			end
 			for(i = 0; i < 64; i=i+1) begin
-				history_table[i] <= 19'b0;
+				history_table[i] <= 20'b0;
 			end
 
 		end else if(en && !stall) begin
 
 			if( (id_is_btype || id_is_jump) && (id_iseqto == 4'h0) ) begin
 				// Write to table if (Branch or Jump) AND the input is not in the table yet
-				history_table[{id_set, fifo_counter[id_set]}] <= {1'b1, id_tag, id_branchtarget, sat_counter};
-				//increment counter; if = 3 na, equate to zero
+				history_table[{id_set, fifo_counter[id_set]}] <= {1'b1, ISR_running, id_tag, id_branchtarget, sat_counter};
+				//increment counter
 				fifo_counter[id_set] <= fifo_counter[id_set] + 2'b01;
 			end
 
