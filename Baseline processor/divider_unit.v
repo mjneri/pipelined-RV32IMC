@@ -134,6 +134,11 @@ module divider_unit(
 //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
 //-=-				DIV_STATE CONTROL 			 =-=//
 //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=//
+	initial begin
+		div_state = RESET;
+		DIVout = 0;
+	end
+	
 
 	// Next state transition
 	always@(posedge CLK) begin

@@ -40,6 +40,22 @@ module pipereg_mem_wb(
 	output reg [2:0] wb_sel_data
 );
 
+	initial begin
+		wb_pc4 <= 0;
+		wb_inst <= 0;
+		wb_ALUout <= 0;
+		wb_DIVout <= 0;
+		wb_loaddata <= 0;
+		wb_imm <= 0;
+		wb_rd <= 0;
+
+		wb_PC <= 0;
+
+		// Control signals
+		wb_wr_en <= 0;
+		wb_sel_data <= 0;
+	end
+
 	always@(posedge clk) begin
 		if(!nrst || flush) begin
 			wb_pc4 <= 0;

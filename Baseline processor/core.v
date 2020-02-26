@@ -4,6 +4,12 @@ module core(
 	input CLK,
 	input nrst,
 
+	// Interrupt related signals
+	input int_sig,				// Interrupt signal
+	input [3:0] BTN,			// Button input
+	input [2:0] SW,				// Switch input
+	output [3:0] LED,			// LED output
+
 	// inputs from protocol controllers
 	input [3:0] con_write,
 	input [9:0] con_addr,
@@ -228,13 +234,14 @@ module core(
 	// wire if_clk_en;
 	// wire id_clk;			// CLK input to IF/ID pipereg
 	// wire id_clk_en;
-	// wire exe_clk;			// CLK input to ID/EXE pipereg
+	// wire exe_clk;		// CLK input to ID/EXE pipereg
 	// wire exe_clk_en;
-	// wire exe_stall;			// Stall for LOAD->JALR hazards
-	// wire mem_clk;			// CLK input to EXE/MEM pipereg
+	// wire exe_stall;		// Stall for LOAD->JALR hazards
+	// wire mem_clk;		// CLK input to EXE/MEM pipereg
 	// wire mem_clk_en;
 	// wire wb_clk;			// CLK input to MEM/WB pipereg
 	// wire wb_clk_en;
+	
 	wire if_stall;			// Controls PC + Instmem stall
 	wire id_stall;			// Controls IF/ID + BHT stall
 	wire exe_stall; 		// Controls ID/EXE stall
@@ -253,9 +260,24 @@ module core(
 
 
 
+// Interrupt Controller Signals=====================================
+    wire ISR_stall;
+	wire ISR_flush;
+	wire sel_ISR;
+    wire ret_ISR;
+	wire ISR_en;
+	wire ISR_running;
+    wire [11:0] save_PC;
+// &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+
+
+
+
+
 /******************************* DATAPATH (INSTANTIATING MODULES) ******************************/
 // CLOCKS ========================================================
 	sf_controller SF_CONTROLLER(
+		.ISR_flush(ISR_flush),
 		.branch_flush(branch_flush),
 		.div_running(exe_div_running),
 
@@ -323,8 +345,34 @@ module core(
 
 	instmem INSTMEM( 
 		.clk(CLK),
+		.sel_ISR(sel_ISR),
+
 		.addr(if_PC),
 		.inst(if_inst)
+	);
+
+	interrupt_controller INT_CON(
+		.clk(CLK),
+		.nrst(nrst),
+		.stall(if_stall),
+
+		.PC(if_pcnew),
+		.if_opcode(if_inst[6:0]),
+		.int_sig(int_sig),
+
+		.if_prediction(if_prediction),
+		.exe_correction(exe_correction),
+		.id_jump_in_bht(id_jump_in_bht),
+		.id_sel_pc(id_sel_pc),
+
+		//.ISR_stall(ISR_stall),
+		.ISR_flush(ISR_flush),
+		.sel_ISR(sel_ISR),
+		.ret_ISR(ret_ISR),
+		//.ISR_en(ISR_en),
+
+		.ISR_running(ISR_running),
+		.save_PC(save_PC)
 	);
 
 	// PC + 4
@@ -340,19 +388,21 @@ module core(
 	// 3'b110 = exePBT
 	// 3'b111 = exePBT
 	always@(*) begin
-		case({exe_correction, if_prediction})
-			3'b001: if_pcnew = {if_PBT, 2'h0};
-			3'b100: if_pcnew = {exe_CNI, 2'h0};
-			3'b101: if_pcnew = {exe_CNI, 2'h0};
-			3'b110: if_pcnew = {exe_PBT, 2'h0};
-			3'b111: if_pcnew = {exe_PBT, 2'h0};
-			default: begin
-				case({id_jump_in_bht, id_sel_pc})
-					3'b001: if_pcnew = id_branchtarget;
-					default: if_pcnew = if_pc4;
-				endcase
-			end
-		endcase
+		if(ret_ISR)
+			if_pcnew = save_PC;
+		else begin
+			case({exe_correction, if_prediction})
+				3'b001: if_pcnew = {if_PBT, 2'h0};
+				3'b10x: if_pcnew = {exe_CNI, 2'h0};
+				3'b11x: if_pcnew = {exe_PBT, 2'h0};
+				default: begin
+					case({id_jump_in_bht, id_sel_pc})
+						3'b001: if_pcnew = id_branchtarget;
+						default: if_pcnew = if_pc4;
+					endcase
+				end
+			endcase
+		end
 	end
 
 	pipereg_if_id IF_ID(
@@ -605,6 +655,8 @@ module core(
 		.nrst(nrst),
 		.en(/*id_clk_en*/ 1'b1),
 
+		.ISR_running(ISR_running),
+
 		.stall(id_stall),
 
 		.if_PC(if_PC[11:2]),
@@ -671,8 +723,12 @@ module core(
 		.clk(CLK),
 
 		.dm_write(mem_dm_write),
-		.data_addr(mem_ALUout[11:2]),
+		.data_addr(mem_ALUout[12:2]),
 		.data_in(mem_storedata),
+
+		.BTN(BTN),
+		.SW(SW),
+		.LED(LED),
 
 		.con_write(con_write),
 		.con_addr(con_addr),

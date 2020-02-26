@@ -45,7 +45,25 @@ module pipereg_exe_mem(
 	input [2:0] exe_sel_data,
 	output reg [2:0] mem_sel_data
 );
+	
+	initial begin
+		mem_pc4 <= 0;
+		mem_inst <= 0;			
+		mem_ALUout <= 0;
+		mem_DIVout <= 0;
+		mem_storedata <= 0;
+		mem_imm <= 0;
+		mem_rd <= 0;
 
+		mem_PC <= 0;
+
+		// Control signals
+		mem_dm_write <= 0;
+		mem_wr_en <= 0;
+		mem_dm_select <= 0;
+		mem_sel_data <= 0;
+	end
+	
 	always@(posedge clk) begin
 		if(!nrst || flush) begin
 			mem_pc4 <= 0;

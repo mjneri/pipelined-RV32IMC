@@ -12,6 +12,9 @@ module pc(
 	
 	output reg [11:0] inst_addr
 );
+	initial begin
+		inst_addr = 12'h0;
+	end
 
 	always@(posedge clk)
 		if(!nrst || flush)

@@ -3,36 +3,50 @@
     Interrupt Controller Module
 */
 module interrupt_controller(
-    input clk,
-    input nrst,
-    input [11:0] PC,            // Input from PC module
-    input [6:0] if_opcode,         // Used to catch URET Instructionz
-	input interrupt_signal,
-    input [1:0] exe_correction,
-    input if_prediction,
-    input id_jump_in_bht,
-    input id_sel_pc,
-    input if_clk_en,
-    output ISR_stall,
-    output ISR_flush,
+	input clk,
+	input nrst,
+	input stall,				// Input from sf_controller
+
+	input [11:0] PC,			// Input to PC (if_pcnew)
+	input [6:0] if_opcode,		// Used to catch URET Instruction
+	input int_sig,
+
+	input if_prediction,
+	input [1:0] exe_correction,
+	input id_jump_in_bht,
+	input id_sel_pc,
+
+	//output ISR_stall,
+	output ISR_flush,
 	output reg sel_ISR,
-    output reg ret_ISR,
-    output reg ISR_en,
-    output reg ISR_running,
-    output reg [11:0] save_PC
+	output reg ret_ISR,
+	//output reg ISR_en,
+
+	output reg ISR_running,		// Determines if the ISR is running
+	output reg [11:0] save_PC
 );
 
     reg [2:0] ISR_stall_counter;
-    assign ISR_stall = (ISR_stall_counter!=0) ||    // Stall for 5 cycles
-                        (if_opcode==7'h73);         // Catch URET instruction
+    reg ISR_en;
+    wire ISR_stall = (ISR_stall_counter!=0) ||    	// Stall for 5 cycles
+                        (if_opcode==7'h73);			// Catch URET instruction
 
-    assign ISR_flush = 0;
+    assign ISR_flush = ISR_stall & !ret_ISR;
 
     wire save_PC_en;
-    assign save_PC_en = ((!interrupt_signal & ISR_en) || // Capture first clock edge
+    assign save_PC_en = ((!int_sig & ISR_en) || // Capture first clock edge
                         (ISR_stall & ((exe_correction!=0) | if_prediction | (id_sel_pc & !id_jump_in_bht)))) // Catch any change in PC while pipeline finishes
                          & !(ISR_running);   //Di massave PC during ISR
 
+	initial begin
+		sel_ISR <= 0;
+		ret_ISR <= 0;
+		ISR_en <= 1;
+		save_PC <= 12'd0;
+		ISR_running <= 0;
+		ISR_stall_counter <= 0;
+	end
+	
     always@(posedge clk) begin
         if(!nrst)begin
             sel_ISR <= 0;
@@ -42,10 +56,10 @@ module interrupt_controller(
             ISR_running <= 0;
             ISR_stall_counter <= 0;
         end else begin
-            if(!interrupt_signal & !(sel_ISR | !ISR_en)) begin
+            if(!int_sig & !(sel_ISR | !ISR_en)) begin
                 ISR_stall_counter <= 1;
                 ISR_en <= 0;
-            end else if(interrupt_signal & !(ISR_running | ISR_stall))
+            end else if(int_sig & !(ISR_running | ISR_stall))
                 ISR_en <= 1;
 
             if(if_opcode==7'h73) begin
@@ -61,7 +75,7 @@ module interrupt_controller(
             end
 
             if(ISR_stall_counter!=0) begin
-                if(if_clk_en)
+                if(!stall)
                     ISR_stall_counter <= ISR_stall_counter+1;
             end
 
