@@ -293,6 +293,15 @@ module branchpredictor(
 	////////////////////////////////////////////////////////////////////////////
 	// Write back to the table
 	integer i;	// Used for resetting fifo_counter & history_table
+	initial begin
+		for(i = 0; i < 16; i=i+1) begin
+			fifo_counter[i] <= 2'b0;
+		end
+		for(i = 0; i < 64; i=i+1) begin
+			history_table[i] <= 20'b0;
+		end
+	end
+	
 	always@(posedge CLK) begin
 		if(!nrst) begin
 

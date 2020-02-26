@@ -20,6 +20,13 @@ module pipereg_if_id(
 	input [11:0] if_PC,
 	output reg [11:0] id_PC
 );
+	
+	initial begin
+		id_pc4 <= 0;
+		id_inst <= 0;
+
+		id_PC <= 0;
+	end
 
 	always@(posedge clk) begin
 		if(!nrst || flush) begin

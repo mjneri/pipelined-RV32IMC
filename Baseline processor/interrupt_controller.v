@@ -38,6 +38,15 @@ module interrupt_controller(
                         (ISR_stall & ((exe_correction!=0) | if_prediction | (id_sel_pc & !id_jump_in_bht)))) // Catch any change in PC while pipeline finishes
                          & !(ISR_running);   //Di massave PC during ISR
 
+	initial begin
+		sel_ISR <= 0;
+		ret_ISR <= 0;
+		ISR_en <= 1;
+		save_PC <= 12'd0;
+		ISR_running <= 0;
+		ISR_stall_counter <= 0;
+	end
+	
     always@(posedge clk) begin
         if(!nrst)begin
             sel_ISR <= 0;

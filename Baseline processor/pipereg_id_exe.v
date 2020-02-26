@@ -71,6 +71,29 @@ module pipereg_id_exe(
 	input [1:0] id_store_select,
 	output reg [1:0] exe_store_select
 );
+	
+	initial begin
+		exe_pc4 <= 0;
+		exe_fwdopA <= 0;
+		exe_fwdopB <= 0;
+		exe_inst <= 0;
+		exe_fwdstore <= 0;
+		exe_imm <= 0;
+		exe_rd <= 0;
+		exe_PC <= 0;
+
+		// Control signals
+		exe_ALU_op <= 0;
+		exe_div_valid <= 0;
+		exe_div_op <= 0;
+		// exe_sel_opA <= 0;
+		// exe_sel_opB <= 0;
+		exe_is_stype <= 0;
+		exe_wr_en <= 0;
+		exe_dm_select <= 0;
+		exe_sel_data <= 0;
+		exe_store_select <= 0;
+	end
 
 	always@(posedge clk) begin
 		if(!nrst || flush) begin

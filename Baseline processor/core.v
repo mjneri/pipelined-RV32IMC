@@ -241,6 +241,7 @@ module core(
 	// wire mem_clk_en;
 	// wire wb_clk;			// CLK input to MEM/WB pipereg
 	// wire wb_clk_en;
+	
 	wire if_stall;			// Controls PC + Instmem stall
 	wire id_stall;			// Controls IF/ID + BHT stall
 	wire exe_stall; 		// Controls ID/EXE stall
