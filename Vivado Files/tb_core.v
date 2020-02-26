@@ -54,6 +54,21 @@ module tb_core();
 		nrst = 1;
 	end
 
+	/*
+	reg [31:0] exe_inst, mem_inst, wb_inst;
+	always@(posedge CLK) begin
+		if(!nrst) begin
+			exe_inst <= 0;
+			mem_inst <= 0;
+			wb_inst <= 0;
+		end else begin
+			exe_inst <= CORE.id_inst;
+			mem_inst <= exe_inst;
+			wb_inst <= mem_inst;
+		end
+	end
+	*/
+
 	// Checking for 10 NOPs/looping jals in a row
 	always@(posedge CLK) begin
 		if(INST == 32'h0000006f) begin

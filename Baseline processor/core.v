@@ -393,8 +393,10 @@ module core(
 		else begin
 			case({exe_correction, if_prediction})
 				3'b001: if_pcnew = {if_PBT, 2'h0};
-				3'b10x: if_pcnew = {exe_CNI, 2'h0};
-				3'b11x: if_pcnew = {exe_PBT, 2'h0};
+				3'b100: if_pcnew = {exe_CNI, 2'h0};
+				3'b101: if_pcnew = {exe_CNI, 2'h0};
+				3'b110: if_pcnew = {exe_PBT, 2'h0};
+				3'b111: if_pcnew = {exe_PBT, 2'h0};
 				default: begin
 					case({id_jump_in_bht, id_sel_pc})
 						3'b001: if_pcnew = id_branchtarget;
