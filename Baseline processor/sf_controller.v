@@ -37,6 +37,8 @@ module sf_controller(
     //input exe_wr_en,
     //input [4:0] exe_rd,
     
+    input ISR_flush,            // Output flush signal of interrupt controller
+
     input branch_flush,			// Output flush signal from BHT
 
     input div_running,			// Status of Divider unit
@@ -77,8 +79,8 @@ module sf_controller(
     //assign rf_stall = 1'b0;
 
     // Flushes/Resets
-    assign if_flush = 1'b0;
-    assign id_flush = 1'b0;
+    assign if_flush = ISR_flush;
+    assign id_flush = ISR_flush;
     assign exe_flush = jalr_hazard || branch_flush;
     assign mem_flush = load_hazard || div_running;
     assign wb_flush = 1'b0;
