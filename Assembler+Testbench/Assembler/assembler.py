@@ -377,7 +377,7 @@ def assemble(instructions, labels, instmem):
             label_address = labels[temp_inst[1]]
             imm = (label_address-inst_address)
             # 5|3:1|7|6|10|9:8|4|11
-            m_code = opcode | (imm&0x20)>>2 | (imm&0xE)<<2 | (imm&0x80)>>1 | (imm&0x40)<<1 | (imm&0x400)>>2 | (imm&0x30)>>1 | (imm&0x10)<<8 | (imm&0x800)<<1 | funct3<<13
+            m_code = opcode | (imm&0x20)>>2 | (imm&0xE)<<2 | (imm&0x80)>>1 | (imm&0x40)<<1 | (imm&0x400)>>2 | (imm&0x300)<<1 | (imm&0x10)<<7 | (imm&0x800)<<1 | funct3<<13
 
         elif (encoding_type=='CIW'):     # Okay
             rd_ = int(temp_inst[1])
