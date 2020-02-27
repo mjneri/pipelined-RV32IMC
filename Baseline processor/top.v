@@ -22,10 +22,6 @@
 module top(
 	input CLK100MHZ,
 	input nrst,
-	//input SW,
-
-	input [3:0] btn_in,
-	input [2:0] switch_in,
 
 	// FPGA I/O pins
 	input [3:0] BTN,
@@ -34,14 +30,10 @@ module top(
 
 	// This will be the output of the protocol controllers
 	// and will be mapped to the IO pins of the FPGA
-	output [3:0] LED_out,
 	output UART_TX
 );
 
-//-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-//
-//				DECLARING WIRES					//
-//-=-=-=-=-=-=-=-=-=-=-=-=-=-==-=-=-=-=-=-=-=-=-//
-
+// DECLARING WIRES
 	wire CLKIP_OUT;			// Output of CLKIP module
 	wire locked;			// determines stability of CLKIP output
 	wire [3:0] db_btn;		// Debounced button inputs
@@ -68,10 +60,6 @@ module top(
 	core RISCVCORE(
 		.CLK(CLKIP_OUT),
 		.nrst(nrst & locked),
-        .int_sig(int_sig),
-
-		.btn_in(db_btn),
-		.switch_in(switch_in),
 
 		.int_sig(int_sig),
 		.BTN(BTN),
@@ -82,8 +70,7 @@ module top(
 		.con_addr(con_addr),
 		.con_in(32'h0),
 
-		.con_out(con_out),
-		.LED_out(LED_out)
+		.con_out(con_out)
 	);
 
 	// Protocol Controllers OR UART Controller

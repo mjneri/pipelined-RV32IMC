@@ -24,11 +24,6 @@ module datamem(
 	output [31:0] con_out		// data output to protocol controller
 );
 	
-	wire [31:0] blkmem_data_out;
-	reg [31:0] btn_reg;
-	reg [31:0] switch_reg;
-	reg [31:0] LED_reg;
-
 	// Datamem that uses BLOCKMEM from Vivado IP Catalog
 	// Blockmem generated as TRUE DUAL PORT RAM
 	// Synchronous read
@@ -47,60 +42,6 @@ module datamem(
 		.dinb(con_in),
 		.doutb(con_out)
 	);
-
-	// assign LED_out = LED_reg[3:0];
-
-
-	// // synchronous read/write for the I/O;
-
-	// // writes (btn and switch)
-	// // 0x1000
-	// always@(posedge clk) begin
-	// 	//switch
-	// 	if(!nrst) begin
-	// 		switch_reg <= 0;
-	// 		btn_reg <= 0;
-	// 	end else begin
-	// 		switch_reg <= {29'h0, switch_in};
-	// 		btn_reg <= {28'h0, btn_in};	
-	// 	end
-	// end
-
-	// // write to LED
-	// always@(posedge clk) begin
-	// 	if(!nrst) begin
-	// 		LED_reg <= 0;
-	// 	end else begin
-	// 		if (data_addr==11'h402) begin
-	// 			case(dm_write)
-	// 				// SW
-	// 				4'b1111: LED_reg <= data_in;
-
-	// 				// SH
-	// 				4'b0011: LED_reg <= (LED_reg & 32'hffff0000) | (data_in & 32'h0000ffff);
-	// 				4'b1100: LED_reg <= (LED_reg & 32'h0000ffff) | (data_in & 32'hffff0000);
-
-	// 				// SB
-	// 				4'b0001: LED_reg <= (LED_reg & 32'hffffff00) | (data_in & 32'h000000ff);
-	// 				4'b0010: LED_reg <= (LED_reg & 32'hffff00ff) | (data_in & 32'h0000ff00);
-	// 				4'b0100: LED_reg <= (LED_reg & 32'hff00ffff) | (data_in & 32'h00ff0000);
-	// 				4'b1000: LED_reg <= (LED_reg & 32'h00ffffff) | (data_in & 32'hff000000);
-	// 			endcase
-	// 		end
-	// 	end
-	// end
-
-	// // reads ng btn and switch
-	// always@(*) begin
-	// 	case(data_addr)
-	// 		11'h400: data_out <= btn_reg; //btn 
-	// 		11'h401: data_out <= switch_reg; //switch
-	// 		11'h402: data_out <= LED_out;
-	// 		default: data_out <= blkmem_data_out;
-	// 	endcase
-	// end
-
-
 	
 	// Memory mapping FPGA I/O to registers. (Directly mapped to registers)
 	// Word-aligned Addresses:

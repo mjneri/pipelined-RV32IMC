@@ -29,6 +29,7 @@ except:
     - strip stuff from lines
     to-do:
     - tokenize all instructions, registers, and things of that nature
+
     return variables:
     - dict: instructions (contains all instructions)
     - dict: labels (contains all labels and symbols)

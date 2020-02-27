@@ -3,11 +3,6 @@
 module core(
 	input CLK,
 	input nrst,
-	input int_sig,
-	
-	input [3:0] btn_in,
-	input [2:0] switch_in,
-
 
 	// Interrupt related signals
 	input int_sig,				// Interrupt signal
@@ -19,8 +14,7 @@ module core(
 	input [3:0] con_write,
 	input [9:0] con_addr,
 	input [31:0] con_in,
-	output [31:0] con_out,		// Ouput of DATAMEM connected to Protocol controllers
-	output [3:0] LED_out
+	output [31:0] con_out		// Ouput of DATAMEM connected to Protocol controllers
 );
 	
 /******************************* DECLARING WIRES ******************************/
@@ -30,22 +24,6 @@ module core(
 	wire [11:0] if_PC;			// Output of PC, input to INSTMEM
 	wire [11:0] if_pc4;			// PC + 4
 	wire [31:0] if_inst;		// INSTMEM Output
-	wire [6:0] if_opcode;
-
-	// PC + 4
-	assign if_pc4 = if_PC + 12'd4;
-	assign if_opcode = if_inst[6:0];
-
-	// Outputs of Interrupt Controller
-    wire ISR_stall;
-	wire ISR_flush;
-	wire sel_ISR;
-    wire ret_ISR;
-	wire ISR_en;
-	wire ISR_running;
-    wire [11:0] save_PC;
-	
-	wire flush;
 // &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 
 
@@ -175,7 +153,6 @@ module core(
 	wire [31:0] mem_imm;			// 32bit Immediate
 	wire [4:0]  mem_rd;				// Destination register
 	wire [11:0] mem_PC;				// PC
-	
 
 	// Control signals
 	wire [3:0] mem_dm_write;		// For MEM stage
@@ -188,11 +165,6 @@ module core(
 
 	// Inputs to MEM/WB Pipereg
 	wire [31:0] mem_loaddata;		// Output of LOAD BLOCK
-
-	// I/O stuff
-	//wire [31:0] LED;
-	//wire [31:0] switch;
-
 // &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 
 
@@ -376,7 +348,6 @@ module core(
 		.sel_ISR(sel_ISR),
 
 		.addr(if_PC),
-		.sel_ISR(sel_ISR),
 		.inst(if_inst)
 	);
 
@@ -407,7 +378,6 @@ module core(
 	// PC + 4
 	assign if_pc4 = if_PC + 12'd4;
 
-	//add logic for interrupt save PC handling
 	// PC Selection
 	// 3'b000 = PC+4
 	// 3'b001 = Prediction
@@ -753,7 +723,6 @@ module core(
 // MEM Stage ========================================================
 	datamem DATAMEM(
 		.clk(CLK),
-		.nrst(nrst),
 
 		.dm_write(mem_dm_write),
 		.data_addr(mem_ALUout[12:2]),
@@ -768,9 +737,7 @@ module core(
 		.con_in(con_in),
 
 		.data_out(mem_DATAMEMout),
-		.con_out(con_out),
-		.LED_out(LED_out)
-
+		.con_out(con_out)
 	);
 
 	loadblock LOADBLOCK(

@@ -32,12 +32,10 @@ module instmem(
 	// Instmem that was coded s.t. Vivado generates an RTL_ROM
 	// Asynchronous read
 	/*reg [31:0] memory [0:1023];
-	/*reg [31:0] memory [0:511];
 	initial begin
 		$readmemh("instmem.mem", memory);
-		$readmemh("interrupt.mem", int_mem);
 	end
 
-	assign inst = sel_ISR? int_mem[addr[11:2]] :  memory[addr[11:2]];*/
+	assign inst = memory[addr[11:2]];*/
 
 endmodule
