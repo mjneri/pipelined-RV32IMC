@@ -1,6 +1,8 @@
 `timescale 1ns / 1ps
 
 module alu(
+	//input CLK,
+
 	input [31:0] op_a,
 	input [31:0] op_b,
 	input [3:0] ALU_op,
@@ -41,21 +43,42 @@ module alu(
 	assign less	=	op_a < op_b;
 
 	assign signed_res = signed_a >>> signed_b[4:0];
+	// assign mul_res = op_a * op_b;
+
+	/*assign res	=	ALU_op == alu_add	?	op_a + op_b 			:
+					ALU_op == alu_sub	?	op_a - op_b 			:
+					ALU_op == alu_and	?	op_a & op_b 			:
+					ALU_op == alu_or	?	op_a | op_b 			:
+					ALU_op == alu_xor	?	op_a ^ op_b 			:
+					ALU_op == alu_slt	?	signed_a < signed_b 	:
+					ALU_op == alu_sltu	?	op_a < op_b 			:
+					ALU_op == alu_sll	?	op_a << op_b[4:0] 		:
+					ALU_op == alu_srl	?	op_a >> op_b[4:0] 		:
+					ALU_op == alu_sra	?	signed_res 				:
+
+					ALU_op == alu_mul 	?	mul_res[31:0]			:
+					ALU_op == alu_mulh 	?	signed_mult_res[63:32]	:
+					ALU_op == alu_mulhsu?	hsu_mult_res[63:32]		:
+					ALU_op == alu_mulhu ?	mul_res[63:32]			:
+											32'h0;*/
 
 	// Instantiating Multiplier IPs
 	mult_gen_hsu MULHSU(
+		//.CLK(~CLK),
 		.A(signed_a),
 		.B(op_b),
 		.P(mulhsu_res)
 	);
 
 	mult_gen_signed MULH(
+		//.CLK(~CLK),
 		.A(signed_a),
 		.B(signed_b),
 		.P(mulh_res)
 	);
 
 	mult_gen_u MULHU(
+		//.CLK(~CLK),
 		.A(op_a),
 		.B(op_b),
 		.P(mulhu_res)

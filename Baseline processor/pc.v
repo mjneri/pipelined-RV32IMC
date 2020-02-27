@@ -4,21 +4,16 @@ module pc(
 	input clk,
 	input nrst,
 	input en,
-
-	input flush,
-	input stall,
 	
 	input [11:0] addr_in,
 	
 	output reg [11:0] inst_addr
 );
-	initial begin
-		inst_addr = 12'h0;
-	end
-
+	reg int_nrst;
+	
 	always@(posedge clk)
-		if(!nrst || flush)
+		if(!nrst)
 			inst_addr <= 12'h0;
-		else if(en && !stall)
+		else if(en)
 			inst_addr <= addr_in;
 endmodule

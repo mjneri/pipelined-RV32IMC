@@ -3,10 +3,8 @@
 module pipereg_id_exe(
 	input clk,
 	input nrst,
-	input en,
-
 	input flush,
-	input stall,
+	input en,
 
 	// PC +4
 	input [11:0] id_pc4,
@@ -44,12 +42,6 @@ module pipereg_id_exe(
 	input [3:0] id_ALU_op,
 	output reg [3:0] exe_ALU_op,
 
-	input id_div_valid,
-	output reg exe_div_valid,
-
-	input [1:0] id_div_op,
-	output reg [1:0] exe_div_op,
-
 	// input id_sel_opA,
 	// output reg exe_sel_opA,
 
@@ -65,38 +57,15 @@ module pipereg_id_exe(
 	input [2:0] id_dm_select,
 	output reg [2:0] exe_dm_select,
 
-	input [2:0] id_sel_data,
-	output reg [2:0] exe_sel_data,
+	input [1:0] id_sel_data,
+	output reg [1:0] exe_sel_data,
 
 	input [1:0] id_store_select,
 	output reg [1:0] exe_store_select
 );
-	
-	initial begin
-		exe_pc4 <= 0;
-		exe_fwdopA <= 0;
-		exe_fwdopB <= 0;
-		exe_inst <= 0;
-		exe_fwdstore <= 0;
-		exe_imm <= 0;
-		exe_rd <= 0;
-		exe_PC <= 0;
-
-		// Control signals
-		exe_ALU_op <= 0;
-		exe_div_valid <= 0;
-		exe_div_op <= 0;
-		// exe_sel_opA <= 0;
-		// exe_sel_opB <= 0;
-		exe_is_stype <= 0;
-		exe_wr_en <= 0;
-		exe_dm_select <= 0;
-		exe_sel_data <= 0;
-		exe_store_select <= 0;
-	end
 
 	always@(posedge clk) begin
-		if(!nrst || flush) begin
+		if(!nrst) begin
 			exe_pc4 <= 0;
 			exe_fwdopA <= 0;
 			exe_fwdopB <= 0;
@@ -108,8 +77,6 @@ module pipereg_id_exe(
 
 			// Control signals
 			exe_ALU_op <= 0;
-			exe_div_valid <= 0;
-			exe_div_op <= 0;
 			// exe_sel_opA <= 0;
 			// exe_sel_opB <= 0;
 			exe_is_stype <= 0;
@@ -118,7 +85,26 @@ module pipereg_id_exe(
 			exe_sel_data <= 0;
 			exe_store_select <= 0;
 		end else begin
-			if(en && !stall) begin
+			if(flush) begin
+				exe_pc4 <= 0;
+				exe_fwdopA <= 0;
+				exe_fwdopB <= 0;
+				exe_inst <= 0;
+				exe_fwdstore <= 0;
+				exe_imm <= 0;
+				exe_rd <= 0;
+				exe_PC <= 0;
+
+				// Control signals
+				exe_ALU_op <= 0;
+				// exe_sel_opA <= 0;
+				// exe_sel_opB <= 0;
+				exe_is_stype <= 0;
+				exe_wr_en <= 0;
+				exe_dm_select <= 0;
+				exe_sel_data <= 0;
+				exe_store_select <= 0;
+			end else if(en) begin
 				exe_pc4 <= id_pc4;
 				exe_fwdopA <= id_fwdopA;
 				exe_fwdopB <= id_fwdopB;
@@ -130,8 +116,6 @@ module pipereg_id_exe(
 
 				// Control signals
 				exe_ALU_op <= id_ALU_op;
-				exe_div_valid <= id_div_valid;
-				exe_div_op <= id_div_op;
 				// exe_sel_opA <= id_sel_opA;
 				// exe_sel_opB <= id_sel_opB;
 				exe_is_stype <= id_is_stype;

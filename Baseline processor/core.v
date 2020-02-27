@@ -9,12 +9,6 @@ module core(
 	input [2:0] switch_in,
 
 
-	// Interrupt related signals
-	input int_sig,				// Interrupt signal
-	input [3:0] BTN,			// Button input
-	input [2:0] SW,				// Switch input
-	output [3:0] LED,			// LED output
-
 	// inputs from protocol controllers
 	input [3:0] con_write,
 	input [9:0] con_addr,
@@ -78,8 +72,6 @@ module core(
 
 	// Control signals //////////////////////////////////
 	wire [3:0] id_ALU_op;			// For EXE stage 	/
-	wire id_div_valid;				// For EXE stage 	/
-	wire [1:0] id_div_op;			// For EXE stage 	/
 	wire id_sel_opA, id_sel_opB;	// For EXE stage 	/ 
 	wire id_is_stype;				// For EXE stage 	/
 	wire id_is_jump;				// For ID stage 	/
@@ -88,7 +80,7 @@ module core(
 	wire [2:0] id_dm_select;		// For MEM stage 	/
 	wire [2:0] id_imm_select;		// For ID stage 	/
 	wire [1:0] id_sel_pc;			// For EXE stage 	/ 
-	wire [2:0] id_sel_data;			// For WB stage 	/
+	wire [1:0] id_sel_data;			// For WB stage 	/
 	wire [1:0] id_store_select;		// For EXE stage 	/
 	wire id_sel_opBR;				// For ID stage 	/
 	/////////////////////////////////////////////////////
@@ -119,10 +111,9 @@ module core(
 	wire [11:0] exe_PC;				// PC
 
 	// Other wires used inside EXE stage
-	wire [31:0] opA;				// Input opA to ALU & Divider
-	wire [31:0] opB;				// Input opB to ALU & Divider
+	wire [31:0] opA;				// Input opA to ALU
+	wire [31:0] opB;				// Input opB to ALU
 	wire [31:0] exe_rstore;			// Input data to STOREBLOCK
-	wire exe_div_running;			// (From Divider) Input to SF controller
 
 	wire [4:0] exe_rsA;				// Source register A
 	wire [4:0] exe_rsB;				// Source register B
@@ -145,19 +136,16 @@ module core(
 
 	// Control signals
 	wire [3:0] exe_ALU_op;			// For EXE stage
-	wire exe_div_valid;				// For EXE stage
-	wire [1:0] exe_div_op;			// For EXE stage
 	//wire exe_sel_opA, exe_sel_opB;	// For EXE stage 
 	wire exe_is_stype;				// For EXE stage
 	wire [3:0] exe_dm_write;		// For MEM stage
 	wire exe_wr_en;					// For WB stage
 	wire [2:0] exe_dm_select;		// For MEM stage
-	wire [2:0] exe_sel_data;		// For WB stage
+	wire [1:0] exe_sel_data;		// For WB stage
 	wire [1:0] exe_store_select;	// For EXE stage
 
 	// Inputs to EXE/MEM Pipereg
 	wire [31:0] exe_ALUout;			// ALU output
-	wire [31:0] exe_DIVout;			// Divider output
 	wire [31:0] exe_storedata;		// Output of STORE BLOCK
 // &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 
@@ -170,7 +158,6 @@ module core(
 	wire [11:0] mem_pc4;			// PC + 4
 	wire [31:0] mem_inst;			// 32bit instruction
 	wire [31:0] mem_ALUout;			// ALU output
-	wire [31:0] mem_DIVout;			// Divider output
 	wire [31:0] mem_storedata;		// Input data to DATAMEM
 	wire [31:0] mem_imm;			// 32bit Immediate
 	wire [4:0]  mem_rd;				// Destination register
@@ -181,7 +168,7 @@ module core(
 	wire [3:0] mem_dm_write;		// For MEM stage
 	wire mem_wr_en;					// For WB stage
 	wire [2:0] mem_dm_select;		// For MEM stage
-	wire [2:0] mem_sel_data;		// For WB stage
+	wire [1:0] mem_sel_data;		// For WB stage
 
 	// MEM Stage Datapath Signals
 	wire[31:0] mem_DATAMEMout;		// Output of DATAMEM
@@ -204,7 +191,6 @@ module core(
 	wire [11:0] wb_pc4;				// PC + 4
 	wire [31:0] wb_inst;			// 32bit instruction
 	wire [31:0] wb_ALUout;			// ALU output
-	wire [31:0] wb_DIVout;			// Divider output
 	wire [31:0] wb_loaddata;		// Output of LOAD BLOCK
 	wire [31:0] wb_imm;				// 32bit Immediate
 	wire [4:0] wb_rd;				// Destination register
@@ -212,7 +198,7 @@ module core(
 
 	// Control signals
 	wire wb_wr_en;					// For WB stage
-	wire [2:0] wb_sel_data;			// For WB stage
+	wire [1:0] wb_sel_data;			// For WB stage
 
 	// Datapath signals
 	wire [31:0] wb_wr_data;
@@ -225,7 +211,7 @@ module core(
 // Signals for BHT =================================================
 	wire if_prediction;				// Input to sel_PC mux
 	wire [1:0] exe_correction;		// input to sel_PC mux
-	wire branch_flush;				// Input to sf_controller
+	wire branch_flush;
 	wire [9:0] if_PBT;				// Predicted branch target
 	wire [9:0] exe_PBT;				// Predicted branch target
 	wire [9:0] exe_CNI;				// Correct Next Instruction
@@ -238,64 +224,32 @@ module core(
 // Data Forwarding Control Signals ================================
 	wire fw_exe_to_id_A;
     wire fw_exe_to_id_B;
-
     wire fw_mem_to_id_A;
     wire fw_mem_to_id_B;
-
 	wire fw_wb_to_id_A;
     wire fw_wb_to_id_B;
-
+	wire fw_mem_to_exe_A;
+    wire fw_mem_to_exe_B;
     wire fw_wb_to_exe_A;
     wire fw_wb_to_exe_B;
-
-    wire hzd_exe_to_id_A;
-	wire hzd_mem_to_exe_A;
-    wire hzd_mem_to_exe_B;
 // &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 
 
 
 
 
-// Clock Gating + SF_Controller=====================================
-	// wire if_clk;			// CLK input to PC
-	// wire if_clk_en;
-	// wire id_clk;			// CLK input to IF/ID pipereg
-	// wire id_clk_en;
-	// wire exe_clk;		// CLK input to ID/EXE pipereg
-	// wire exe_clk_en;
-	// wire exe_stall;		// Stall for LOAD->JALR hazards
-	// wire mem_clk;		// CLK input to EXE/MEM pipereg
-	// wire mem_clk_en;
+// Clock Gating ====================================================
+	wire if_clk;			// CLK input to PC
+	wire if_clk_en;
+	wire id_clk;			// CLK input to IF/ID pipereg
+	wire id_clk_en;
+	wire exe_clk;			// CLK input to ID/EXE pipereg
+	wire exe_clk_en;
+	wire exe_stall;			// Stall for LOAD->JALR hazards
+	wire mem_clk;			// CLK input to EXE/MEM pipereg
+	wire mem_clk_en;
 	// wire wb_clk;			// CLK input to MEM/WB pipereg
 	// wire wb_clk_en;
-	
-	wire if_stall;			// Controls PC + Instmem stall
-	wire id_stall;			// Controls IF/ID + BHT stall
-	wire exe_stall; 		// Controls ID/EXE stall
-	wire mem_stall;			// Controls EXE/MEM + Datamem stall
-	wire wb_stall; 			// Controls MEM/WB stall
-	// wire rf_stall;		// Controls RF stall
-
-	wire if_flush;			// Controls PC flush
-	wire id_flush;			// Controls IF/ID flush
-	wire exe_flush; 		// Controls ID/EXE flush
-	wire mem_flush; 		// Controls EXE/MEM flush
-	wire wb_flush; 			// Controls MEM/WB flush
-// &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
-
-
-
-
-
-// Interrupt Controller Signals=====================================
-    wire ISR_stall;
-	wire ISR_flush;
-	wire sel_ISR;
-    wire ret_ISR;
-	wire ISR_en;
-	wire ISR_running;
-    wire [11:0] save_PC;
 // &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 
 
@@ -305,25 +259,34 @@ module core(
 /******************************* DATAPATH (INSTANTIATING MODULES) ******************************/
 // CLOCKS ========================================================
 	sf_controller SF_CONTROLLER(
-		.ISR_flush(ISR_flush),
+		// .clk(CLK),
+		// .nrst(nrst),
+		//.if_inst(if_inst),
+		//.buffer_stall(buffer_stall),
+
+		.id_inst(id_inst),
+		//.is_jump(id_is_jump),
+		//.is_nop(),
+
+		.exe_sel_data(exe_sel_data),
+		.exe_wr_en(exe_wr_en),
+		.exe_rd(exe_rd),
+
+		.fw_mem_to_exe_A(fw_mem_to_exe_A),
+		.fw_mem_to_exe_B(fw_mem_to_exe_B),
+
 		.branch_flush(branch_flush),
-		.div_running(exe_div_running),
-
-		.hzd_exe_to_id_A(hzd_exe_to_id_A),
-		.hzd_mem_to_exe_A(hzd_mem_to_exe_A),
-		.hzd_mem_to_exe_B(hzd_mem_to_exe_B),
-
-		.if_stall(if_stall),
-		.id_stall(id_stall),
 		.exe_stall(exe_stall),
-		.mem_stall(mem_stall),
-		.wb_stall(wb_stall),
+		.ISR_flush(ISR_flush),
+		.flush(flush),
 
-		.if_flush(if_flush),
-		.id_flush(id_flush),
-		.exe_flush(exe_flush),
-		.mem_flush(mem_flush),
-		.wb_flush(wb_flush)
+		.if_en(if_clk_en),
+		.id_en(id_clk_en),
+		.exe_en(exe_clk_en),
+		.exe_jalr_stall(exe_stall),
+		.mem_en(mem_clk_en)
+		//.wb_en(wb_clk_en),
+		//.rf_en()
 	);
 
 	// BUFGCE en_if (
@@ -361,51 +324,40 @@ module core(
 // IF Stage ========================================================
 	pc PC( 
 		.clk(CLK),
-		.nrst(nrst),
-		.en(/*if_clk_en*/1'b1),
-
-		.flush(if_flush),
-		.stall(if_stall),
-
+		.nrst(nrst & (!ISR_stall | ret_ISR)),
+		.en(if_clk_en),
 		.addr_in(if_pcnew),
 		.inst_addr(if_PC)
 	);
 
 	instmem INSTMEM( 
 		.clk(CLK),
-		.sel_ISR(sel_ISR),
-
 		.addr(if_PC),
 		.sel_ISR(sel_ISR),
 		.inst(if_inst)
 	);
 
+	// Insert interrupts stuff here
 	interrupt_controller INT_CON(
 		.clk(CLK),
 		.nrst(nrst),
-		.stall(if_stall),
-
 		.PC(if_pcnew),
-		.if_opcode(if_inst[6:0]),
-		.int_sig(int_sig),
-
+		.if_opcode(if_opcode),
+		.interrupt_signal(int_sig),
 		.if_prediction(if_prediction),
 		.exe_correction(exe_correction),
 		.id_jump_in_bht(id_jump_in_bht),
 		.id_sel_pc(id_sel_pc),
-
-		//.ISR_stall(ISR_stall),
+		.if_clk_en(if_clk_en),
+		.ISR_stall(ISR_stall),
 		.ISR_flush(ISR_flush),
 		.sel_ISR(sel_ISR),
 		.ret_ISR(ret_ISR),
-		//.ISR_en(ISR_en),
-
+		.ISR_en(ISR_en),
 		.ISR_running(ISR_running),
 		.save_PC(save_PC)
 	);
 
-	// PC + 4
-	assign if_pc4 = if_PC + 12'd4;
 
 	//add logic for interrupt save PC handling
 	// PC Selection
@@ -439,11 +391,8 @@ module core(
 
 	pipereg_if_id IF_ID(
 		.clk(CLK),
-		.nrst(nrst),
-		.en(/*id_clk_en*/1'b1),
-
-		.flush(id_flush),
-		.stall(id_stall),
+		.nrst(nrst & !ISR_stall),
+		.en(id_clk_en),
 
 		.if_pc4(if_pc4), 	.id_pc4(id_pc4),
 		.if_inst(if_inst), 	.id_inst(id_inst),
@@ -457,15 +406,13 @@ module core(
 	// Selecting operands
 	// id_fwdopA is passed through ID/EXE pipeline register to the ALU
 	assign id_fwdopA = fw_exe_to_id_A?
-							(exe_sel_data == 3'd4)? exe_DIVout		:
-							(exe_sel_data == 3'd2)? exe_imm			: 
-							(exe_sel_data == 3'd1)? exe_ALUout		:
+							(exe_sel_data == 2'd2)? exe_imm			: 
+							(exe_sel_data == 2'd1)? exe_ALUout		:
 													exe_pc4			:												 
 					   fw_mem_to_id_A?
-					   		(mem_sel_data == 3'd4)? mem_DIVout		:
-					   		(mem_sel_data == 3'd3)? mem_loaddata	:
-					   		(mem_sel_data == 3'd2)? mem_imm			:
-					   		(mem_sel_data == 3'd1)? mem_ALUout		:
+					   		(mem_sel_data == 2'd3)? mem_loaddata	:
+					   		(mem_sel_data == 2'd2)? mem_imm			:
+					   		(mem_sel_data == 2'd1)? mem_ALUout		:
 					   								mem_pc4			:
 					   fw_wb_to_id_A?
 					   		wb_wr_data								:
@@ -473,16 +420,14 @@ module core(
 					   		id_rfoutA : id_PC;
 
 	// id_fwdopB is passed through ID/EXE pipeline register to the ALU
-	assign id_fwdopB = (fw_exe_to_id_B && !id_is_stype)?
-							(exe_sel_data == 3'd4)? exe_DIVout		:             
-							(exe_sel_data == 3'd2)? exe_imm			: 
-							(exe_sel_data == 3'd1)? exe_ALUout 		:
+	assign id_fwdopB = (fw_exe_to_id_B && !id_is_stype)?             
+							(exe_sel_data == 2'd2)? exe_imm			: 
+							(exe_sel_data == 2'd1)? exe_ALUout 		:
 													exe_pc4			:
 					   (fw_mem_to_id_B && !id_is_stype)?
-					   		(mem_sel_data == 3'd4)? mem_DIVout		:
-					   		(mem_sel_data == 3'd3)? mem_loaddata	:
-					   		(mem_sel_data == 3'd2)? mem_imm			:
-					   		(mem_sel_data == 3'd1)? mem_ALUout		:
+					   		(mem_sel_data == 2'd3)? mem_loaddata	:
+					   		(mem_sel_data == 2'd2)? mem_imm			:
+					   		(mem_sel_data == 2'd1)? mem_ALUout		:
 					   								mem_pc4			:
 					   (fw_wb_to_id_B && !id_is_stype)?
 					   		wb_wr_data								:                 
@@ -491,15 +436,13 @@ module core(
 	
 	// id_fwdstore is passed through ID/EXE pipeline register & is sent to STOREBLOCK
 	assign id_fwdstore = (fw_exe_to_id_B && id_is_stype)?
-							(exe_sel_data == 3'd4)? exe_DIVout		:
-							(exe_sel_data == 3'd2)? exe_imm			: 
-							(exe_sel_data == 3'd1)? exe_ALUout 		:
+							(exe_sel_data == 2'd2)? exe_imm			: 
+							(exe_sel_data == 2'd1)? exe_ALUout 		:
 													exe_pc4			:
 						 (fw_mem_to_id_B && id_is_stype)?
-						 	(mem_sel_data == 3'd4)? mem_DIVout 		:
-						 	(mem_sel_data == 3'd3)? mem_loaddata	:
-						 	(mem_sel_data == 3'd2)? mem_imm			:
-						 	(mem_sel_data == 3'd1)? mem_ALUout		:
+						 	(mem_sel_data == 2'd3)? mem_loaddata	:
+						 	(mem_sel_data == 2'd2)? mem_imm			:
+						 	(mem_sel_data == 2'd1)? mem_ALUout		:
 						 							mem_pc4			:
 						 (fw_wb_to_id_B && id_is_stype)?
 						 	wb_wr_data : id_rfoutB;
@@ -513,8 +456,6 @@ module core(
 
 		// Outputs
 		.ALU_op(id_ALU_op),
-		.div_valid(id_div_valid),
-		.div_op(id_div_op),
 		.sel_opA(id_sel_opA),
 		.sel_opB(id_sel_opB),
 		.is_stype(id_is_stype),
@@ -552,15 +493,13 @@ module core(
 	// Branch target address computation
 	// id_brOP = rfoutA for JALR only
 	assign id_brOP = (fw_exe_to_id_A && id_opcode == 7'h67)?
-						(exe_sel_data == 3'd4)? exe_DIVout		:
-					 	(exe_sel_data == 3'd2)? exe_imm			:
-					 	(exe_sel_data == 3'd1)? exe_ALUout		:
+					 	(exe_sel_data == 2'd2)? exe_imm			:
+					 	(exe_sel_data == 2'd1)? exe_ALUout		:
 					 							exe_pc4			:
-					 (fw_mem_to_id_A  && id_opcode == 7'h67)?
-					 	(mem_sel_data == 3'd4)? mem_DIVout		: 
-						(mem_sel_data == 3'd3)? mem_loaddata 	:
-						(mem_sel_data == 3'd2)? mem_imm 		:
-						(mem_sel_data == 3'd1)? mem_ALUout		:
+					 (fw_mem_to_id_A  && id_opcode == 7'h67)? 
+						(mem_sel_data == 2'd3)? mem_loaddata 	:
+						(mem_sel_data == 2'd2)? mem_imm 		:
+						(mem_sel_data == 2'd1)? mem_ALUout		:
 												mem_pc4			:
 					 (fw_wb_to_id_A  && id_opcode == 7'h67)? 
 					 					wb_wr_data				:
@@ -569,18 +508,16 @@ module core(
 	assign id_branchtarget = id_brOP + id_imm;
 
 	forwarding_unit FWD(
-		// Source registers
+		// Inputs
 		.id_rsA(id_rsA),
 		.id_rsB(id_rsB),
 		.exe_rsA(exe_rsA),
 		.exe_rsB(exe_rsB),
 
-		// Destination registers
 		.exe_rd(exe_rd),
 		.mem_rd(mem_rd),
 		.wb_rd(wb_rd),
 
-		// Control signals
 		.exe_wr_en(exe_wr_en),
 		.mem_wr_en(mem_wr_en),
 		.wb_wr_en(wb_wr_en),
@@ -594,36 +531,33 @@ module core(
 		.wb_sel_data(wb_sel_data),
 
 		.id_is_stype(id_is_stype),
-		//.exe_is_stype(exe_is_stype),
+		.exe_is_stype(exe_is_stype),
 
 		.id_imm_select(id_imm_select),
 
-		.id_opcode(id_opcode),
 		.exe_opcode(exe_opcode),
 
 		// Outputs
 		.fw_exe_to_id_A(fw_exe_to_id_A),
 		.fw_exe_to_id_B(fw_exe_to_id_B),
+
 		.fw_mem_to_id_A(fw_mem_to_id_A),
 		.fw_mem_to_id_B(fw_mem_to_id_B),
+
 		.fw_wb_to_id_A(fw_wb_to_id_A),
 		.fw_wb_to_id_B(fw_wb_to_id_B),
 
+		.fw_mem_to_exe_A(fw_mem_to_exe_A),
+		.fw_mem_to_exe_B(fw_mem_to_exe_B),
 		.fw_wb_to_exe_A(fw_wb_to_exe_A),
-		.fw_wb_to_exe_B(fw_wb_to_exe_B),
-
-		.hzd_exe_to_id_A(hzd_exe_to_id_A),
-		.hzd_mem_to_exe_A(hzd_mem_to_exe_A),
-		.hzd_mem_to_exe_B(hzd_mem_to_exe_B)
+		.fw_wb_to_exe_B(fw_wb_to_exe_B)
 	);
 
 	pipereg_id_exe ID_EXE(
 		.clk(CLK),
-		.nrst(nrst),		
-		.en(/*exe_clk_en*/1'b1),
-
-		.flush(exe_flush),
-		.stall(exe_stall),
+		.nrst(nrst),
+		.flush(flush),
+		.en(exe_clk_en),
 
 		.id_pc4(id_pc4),					.exe_pc4(exe_pc4),
 		.id_fwdopA(id_fwdopA),				.exe_fwdopA(exe_fwdopA),
@@ -639,8 +573,6 @@ module core(
 
 		// Control signals go here
 		.id_ALU_op(id_ALU_op),				.exe_ALU_op(exe_ALU_op),
-		.id_div_valid(id_div_valid),		.exe_div_valid(exe_div_valid),
-		.id_div_op(id_div_op),				.exe_div_op(exe_div_op),
 		// .id_sel_opA(id_sel_opA),			.exe_sel_opA(exe_sel_opA),
 		// .id_sel_opB(id_sel_opB),			.exe_sel_opB(exe_sel_opB),
 		.id_is_stype(id_is_stype),			.exe_is_stype(exe_is_stype),
@@ -660,6 +592,7 @@ module core(
 	assign exe_rstore = (fw_wb_to_exe_B && exe_is_stype)? wb_loaddata : exe_fwdstore;
 
 	alu ALU(
+		//.CLK(CLK),
 		.op_a(opA),
 		.op_b(opB),
 		.ALU_op(exe_ALU_op),
@@ -668,29 +601,11 @@ module core(
 		.less(exe_less)
 	);
 
-	divider_unit DIVIDER(
-		.CLK(CLK),
-		.nrst(nrst),
-
-		.opA(opA),
-		.opB(opB),
-
-		.div_valid(exe_div_valid),
-		.div_op(exe_div_op),
-
-		.div_running(exe_div_running),
-		.DIVout(exe_DIVout)
-	);
-
 	branchpredictor BHT(
 		.CLK(CLK),
 		.nrst(nrst),
-		.en(/*id_clk_en*/ 1'b1),
-
+		.en(id_clk_en),
 		.ISR_running(ISR_running),
-
-		.stall(id_stall),
-
 		.if_PC(if_PC[11:2]),
 
 		.id_PC(id_PC[11:2]),
@@ -707,7 +622,7 @@ module core(
 		.if_prediction(if_prediction),
 		.exe_correction(exe_correction),
 		
-		.flush(branch_flush),
+		.branch_flush(branch_flush),
 		.id_jump_in_bht(id_jump_in_bht),
 
 		.if_PBT(if_PBT),
@@ -727,15 +642,11 @@ module core(
 	pipereg_exe_mem EXE_MEM(
 		.clk(CLK),
 		.nrst(nrst),
-		.en(/*mem_clk_en*/1'b1),
-
-		.flush(mem_flush),
-		.stall(mem_stall),
+		.stall(!mem_clk_en),
 
 		.exe_pc4(exe_pc4),					.mem_pc4(mem_pc4),
 		.exe_inst(exe_inst),				.mem_inst(mem_inst),
 		.exe_ALUout(exe_ALUout),			.mem_ALUout(mem_ALUout),
-		.exe_DIVout(exe_DIVout),			.mem_DIVout(mem_DIVout),
 		.exe_storedata(exe_storedata),		.mem_storedata(mem_storedata),
 		.exe_imm(exe_imm),					.mem_imm(mem_imm),
 		.exe_rd(exe_rd),					.mem_rd(mem_rd),
@@ -759,9 +670,8 @@ module core(
 		.data_addr(mem_ALUout[12:2]),
 		.data_in(mem_storedata),
 
-		.BTN(BTN),
-		.SW(SW),
-		.LED(LED),
+		.btn_in(btn_in),
+		.switch_in(switch_in),
 
 		.con_write(con_write),
 		.con_addr(con_addr),
@@ -783,15 +693,10 @@ module core(
 	pipereg_mem_wb MEM_WB(
 		.clk(CLK),
 		.nrst(nrst),
-		.en(/*wb_clk_en*/1'b1),
-
-		.flush(wb_flush),
-		.stall(wb_stall),
 
 		.mem_pc4(mem_pc4),					.wb_pc4(wb_pc4),
 		.mem_inst(mem_inst),				.wb_inst(wb_inst),
 		.mem_ALUout(mem_ALUout),			.wb_ALUout(wb_ALUout),
-		.mem_DIVout(mem_DIVout),			.wb_DIVout(wb_DIVout),
 		.mem_loaddata(mem_loaddata),		.wb_loaddata(wb_loaddata),
 		.mem_imm(mem_imm),					.wb_imm(wb_imm),
 		.mem_rd(mem_rd),					.wb_rd(wb_rd),
@@ -806,9 +711,9 @@ module core(
 
 // WB Stage ========================================================
 	// Selector MUX
-	assign wb_wr_data = (wb_sel_data == 3'd0) ? wb_pc4 : 
-						(wb_sel_data == 3'd1) ? wb_ALUout : 
-						(wb_sel_data == 3'd2) ? wb_imm :
-						(wb_sel_data == 3'd4) ? wb_DIVout :
-						wb_loaddata;
+	assign wb_wr_data = (wb_sel_data == 2'd0) ? wb_pc4 : (wb_sel_data == 2'd1) ? wb_ALUout : (wb_sel_data == 2'd2) ? wb_imm : wb_loaddata;
+	
+///////////////////////////////////////////////////////////////////////////////////////////////////	
+// Assign outputs
+	//assign con_out = mem_DATAMEMout;	// output already tied to DATAMEM
 endmodule

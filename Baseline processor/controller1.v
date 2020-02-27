@@ -26,8 +26,6 @@ module controller1(
     input [6:0] funct7,
 
     output [3:0] ALU_op,        // Input to ALU
-    output div_valid,			// Input to Divider unit (based on tvalid input of Divider IP Module)
-    output [1:0] div_op,		// Input to Divider unit
     output sel_opA,             // Input to opA selection mux
     output sel_opB,             // Input to opB selection mux
     output is_stype,            // Input to STOREBLOCK
@@ -39,7 +37,7 @@ module controller1(
     output [2:0] dm_select,     // Input to LOADBLOCK
     output [2:0] imm_select,    // Input to SHIFTSIGNSHUFF block
     output [1:0] sel_pc,        // Input to PC selection MUX
-    output [2:0] sel_data,      // Input to WB data selection MUX
+    output [1:0] sel_data,      // Input to WB data selection MUX
     output [1:0] store_select,  // Input to STOREBLOCK
     output sel_opBR             // Input to Branch target computation MUX
 );
@@ -68,7 +66,7 @@ module controller1(
     //assign output_element condition ? value_if_true : value_if_false;
     
     assign sel_opA = (opcode == auipc_inst) ? 1'h0 : 1'h1;  
-    //sel_opA = 0 if inst is AUIPC
+    //sel_opA = 0 if inst is AUIPC or JAL
     // 0: select PC as operand
     // 1: select rfoutA as operand
 
@@ -104,17 +102,13 @@ module controller1(
     // 2 if B-type inst AND branch taken
     // 0 if R-type, I-type, S-type, U-type inst (PC+4)
 
-    assign sel_data = (opcode == jal_inst || opcode == jalr_inst) ? 3'h1 : 
-					  (opcode == lui_inst) ? 3'h2 : 
-					  (opcode == load_inst) ? 3'h3 :
-					  (opcode == r_type && funct7 == 7'h1 && funct3[2] == 1)? 3'h4 :
-					  3'h1;
+    assign sel_data = (opcode == jal_inst || opcode == jalr_inst) ? 2'h0 : 
+					  (opcode == lui_inst) ? 2'h2 : (opcode == load_inst) ? 2'h3 : 2'h1;
     //sel_data
     // 0 if J-type inst (select PC+4)
     // 1 if R-type, I-type arithmetic, AUIPC (select ALUout)
     // 2 if LUI (select Immediate)
     // 3 if I-type inst [load] (select Loaddata)
-    // 4 if DIV[U]/REM[U] (select DIVout)
 
     assign store_select = (opcode == s_type && funct3 == 3'h0) ? 2'h0 : 
     					  (opcode == s_type && funct3 == 3'h1) ? 2'h1 : 2'h2; 
@@ -154,17 +148,6 @@ module controller1(
     // 12 if MULH
     // 13 if MULHSU
     // 14 if MULHU
-
-    assign div_op = (funct3 == 3'h4 && funct7 == 7'h1 && opcode == r_type)? 2'd0	:
-    				(funct3 == 3'h5 && funct7 == 7'h1 && opcode == r_type)? 2'd1	:
-    				(funct3 == 3'h6 && funct7 == 7'h1 && opcode == r_type)? 2'd2	:
-    				2'd3;
-    // div_op
-    // 0 if DIV, 1 if DIVU, 2 if REM, 3 (REMU) by 'default'
-
-    assign div_valid = ((funct3 == 3'h4 || funct3 == 3'h5 || funct3 == 3'h6 || funct3 == 3'h7) && funct7 == 7'h1 && opcode == r_type);
-    // div_valid
-    // assert if the instruction is DIV[U]/REM[U]
 
     assign sel_opBR = (opcode == jalr_inst)? 1'h1 : 1'h0;   // if jalr, select rfoutA, else select PC
     

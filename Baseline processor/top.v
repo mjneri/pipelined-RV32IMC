@@ -1,24 +1,12 @@
-//-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-// top.v -- Container for the RISC-V Core + other modules
-//-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-// Author: Microlab 198 Pipelined RISC-V Group (2SAY1920)
-//-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-//
-//-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-// Module Name: top.v
-// Description: This module will instantiate the required modules
-//				for the project, which include the RISC-V Core, the
-//				Clocking Wizard, and the Protocol Controllers.
-//				The XDC file will be based on the io ports of this module
-//
-// Revision:
-// Revision 0.01 - File Created
-// Additional Comments:
-// 
-//-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-
-
 `timescale 1ns / 1ps
+
+/*
+	This module will instantiate the required modules
+	for the project, which include the RISC-V Core, the
+	Clocking Wizard, and the Protocol Controllers.
+	The XDC file will be based on the io ports of this module
+*/
+
 module top(
 	input CLK100MHZ,
 	input nrst,
@@ -26,11 +14,6 @@ module top(
 
 	input [3:0] btn_in,
 	input [2:0] switch_in,
-
-	// FPGA I/O pins
-	input [3:0] BTN,
-	input [2:0] SW,
-	output [3:0] LED,
 
 	// This will be the output of the protocol controllers
 	// and will be mapped to the IO pins of the FPGA
@@ -46,7 +29,6 @@ module top(
 	wire locked;			// determines stability of CLKIP output
 	wire [3:0] db_btn;		// Debounced button inputs
 	wire int_sig;			// Interrupt signal
-	assign int_sig = (|db_btn) | (|SW);
 
 	// Uncomment the following if needed:
 	wire [9:0] con_addr;	// Output datamem address from protocol controllers or uartdump
@@ -73,11 +55,6 @@ module top(
 		.btn_in(db_btn),
 		.switch_in(switch_in),
 
-		.int_sig(int_sig),
-		.BTN(BTN),
-		.SW(SW),
-		.LED(LED),
-
 		.con_write(4'h0),
 		.con_addr(con_addr),
 		.con_in(32'h0),
@@ -98,12 +75,15 @@ module top(
 	);
 
 	// Button debouncing
-	btndebounce DEBOUNCE(
+	btn_debounce DEBOUNCE(
 		.CLK(CLKIP_OUT),
-		.nrst(nrst & locked),
+		.nrst(nrst),
 
-		.btn(BTN),
+		.btn(btn_in),
 		.db_btn(db_btn)
 	);
+
+	// interrupt signal
+	assign int_sig = (|db_btn | |switch_in);	//add debounce to button
 
 endmodule
