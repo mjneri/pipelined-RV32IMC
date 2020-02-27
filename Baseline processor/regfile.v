@@ -18,6 +18,10 @@ module regfile(
 	assign src2_out		= regfile[src2_addr];
    
 	integer i;
+	initial begin
+		for(i = 0; i < 32; i = i + 1)
+			regfile[i]	<=	32'd0;
+	end
 	
 	//wire rf_clk = wr_en & !clk;
 	

@@ -12,10 +12,10 @@ args = argparser.parse_args(sys.argv[1:])
 
 global comp_buffer_en
 comp_buffer_en = args.comp_buffer
-print(comp_buffer_en)
+#print(comp_buffer_en)
 
 filename = args.file
-print(filename)
+#print(filename)
 
 try:
     inst_file = open(filename)
@@ -330,17 +330,20 @@ def assemble(instructions, labels, instmem):
         elif (encoding_type=='CI'):     # Okay
             rd = int(temp_inst[1])
             imm = int(temp_inst[2])&(2**imm_width-1)
-            m_code = opcode | (imm&0x1F)<<2 | rd<<7 | (imm&0x20)<<7 | funct3<<13
+            if (temp_inst[0] == 'C.LWSP'):
+                imm = imm << 2
+                m_code = opcode | (imm&0x1C)<<2 | rd<<7 | (imm&0x20)<<7 | (imm&0xC0)>>4 | funct3<<13            # different format for lwsp
+            elif (temp_inst[0] == 'C.SWSP'):
+                imm = imm << 2
+                m_code = opcode | (imm&0x3C)<<7 | rd<<2 | (imm&0xC0)<<1 | funct3<<13               # also different format for swsp                
+            else:
+                m_code = opcode | (imm&0x1F)<<2 | rd<<7 | (imm&0x20)<<7 | funct3<<13
         
         elif (encoding_type=='CLS'):    # Okay
             rd_rs2_ = int(temp_inst[1])
             imm = int(temp_inst[2])&(2**imm_width-1)
             rs1_ = int(temp_inst[3])
-            if (rs1_ < 8 | rs1_ > 16):
-                print('Warning: Rs1 {} truncated to {}'.format(rs1_, (0x08) | (rs1_ & 0x07)))
             rs1_ = (rs1_ & 0x07)
-            if (rd_rs2_ < 8 | rd_rs2_ > 16):
-                print('Warning: Rs2 {} truncated to {}'.format(rd_rs2_, (0x08) | (rd_rs2_ & 0x07)))
             rd_rs2_ = (rd_rs2_ & 0x07)
             m_code = opcode |  rd_rs2_<<2 | (imm&0x40)>>1 | (imm&0x4)<<4 | rs1_<<7 | (imm&0x38)<<7 | funct3<<13
 
@@ -385,21 +388,22 @@ def assemble(instructions, labels, instmem):
 
         elif (encoding_type=='C16'):    # Okay
             imm = int(temp_inst[1])<<4
-            m_code = opcode | (imm&0x20)>>3 | (imm&0x18)>>4 | (imm&0x40)>>1 | (imm&0x10)<<2 | 2<<7 | (imm&0x200)<<4 | funct3<<13
+            m_code = opcode | (imm&0x20)>>3 | (imm&0x180)>>4 | (imm&0x40)>>1 | (imm&0x10)<<2 | 2<<7 | (imm&0x200)<<3 | funct3<<13
 
         else:
             print('Work in progress')
             m_code = 1
+
+        print(hex(m_code))
         
         if (opt[0] == 'C'):
             out = (hex(m_code)[2:].zfill(4))
             if (comp_buffer_en == 'True'):
-                print('loli')
                 if (compressed_counter == 0):
                     out_buffer = out
                     compressed_counter = 1
                 else:
-                    print(out + out_buffer + '\n')
+                    # print(out + out_buffer + '\n')
                     instmem.write(out + out_buffer + '\n')
                     compressed_counter = 0
                     out_buffer = ''
@@ -408,45 +412,16 @@ def assemble(instructions, labels, instmem):
                 instmem.write(out + '\n')
         else:
             full_inst = (hex(m_code)[2:].zfill(8))
-            print(full_inst)
+            # print(full_inst)
             if (out_buffer):
                 instmem.write(full_inst[4:8] + out_buffer + '\n')
                 out_buffer = full_inst[0:4]
             else:
                 instmem.write(full_inst + '\n')
-
-        '''
-        if (opt[0]=='C'):
-            out = (hex(m_code)[2:].zfill(4))
-            print(out)
-            print(comp_buffer_en)
-            if (comp_buffer_en):
-                if (compressed_counter==0):
-                    out_buffer = out
-                    compressed_counter += 1
-                else:
-                    print(out + out_buffer + '\n')
-                    instmem.write(out + out_buffer + '\n')
-                    compressed_counter = 0
-                    out_buffer = {}
-            else:
-                print('loli')
-                out = (hex(0x10000 | m_code)[2:].zfill(8))      # insert an upper nop
-                instmem.write(out + '\n')
-        else:
-            if (out_buffer):
-                print('loli2')
-                (hex(m_code)[2:].zfill(4))
-                instmem.write((hex(1)[2:].zfill(4)) + out_buffer + '\n')
-                out_buffer = ''
-            out = (hex(m_code)[2:].zfill(8))
-            print(out)
-            instmem.write(out +'\n')
-            #print(bin(m_code)[2:].zfill(32))
-        out = {}
-        '''
         print('-------------------------------------------------')
-
+    if (out_buffer):
+        instmem.write(hex(0x0001)[2:].zfill(4))
+        instmem.write(out_buffer + '\n')
     return
 
 # Running Code

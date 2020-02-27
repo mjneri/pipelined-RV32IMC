@@ -1,7 +1,6 @@
 `timescale 1ns / 1ps
 
 module tb_alu();
-	//reg CLK;
 
 	reg [31:0] opA, opB;
 	reg [3:0] aluop;
@@ -9,7 +8,6 @@ module tb_alu();
 	wire z, less;
 	
 	alu uut(
-		//.CLK(CLK),
 		.op_a(opA),
 		.op_b(opB),
 		.ALU_op(aluop),
