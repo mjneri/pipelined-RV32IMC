@@ -8,7 +8,7 @@ module tb_core();
 	reg int_sig;
 	reg [3:0] BTN;
 	reg [2:0] SW;
-	reg [3:0] LED;
+	wire [3:0] LED;
 
 	reg [3:0] con_write;
 	reg [9:0] con_addr;
@@ -18,6 +18,11 @@ module tb_core();
 	core CORE(
 		.CLK(CLK),
 		.nrst(nrst),
+
+		.int_sig(int_sig),
+		.BTN(BTN),
+		.SW(SW),
+		.LED(LED),
 
 		.con_write(con_write),
 		.con_addr(con_addr),
@@ -50,7 +55,6 @@ module tb_core();
 		int_sig = 1;
 		BTN = 0;
 		SW = 0;
-		LED = 0;
 
 		con_write = 0;
 		con_addr = 10'h0;
@@ -101,6 +105,18 @@ module tb_core();
 				clock_counter <= clock_counter + 1;
 	end
 
+	always@(posedge CLK) begin
+		if(clock_counter == 7) begin
+			#3 BTN[1] = ~BTN[1];
+			int_sig = 0;	
+		end
+		
+		if(clock_counter == 4971) begin
+			#3 BTN[1] = ~BTN[1];
+			int_sig = 0;	
+		end
+	end
+
 	// The following code snippet is for checking the contents of
 	// the memory when RTL_RAM is used (if it was coded in Verilog)
 	// Displaying Memory contents
@@ -127,7 +143,7 @@ module tb_core();
 	always@(posedge done) begin
 		$display("---------| SUMMARY |---------");
 		$display("Address\t  Actual  \tExpected ");
-		$display("=======\t==========\t==========");			
+		$display("=======\t==========\t==========");	
 	end
 
 	always@(negedge CLK) begin
@@ -141,7 +157,7 @@ module tb_core();
 
 			i = i + 1;
 
-			if(con_addr == 63) begin			
+			if(con_addr == 1023) begin			
 				$display("\n");
 				$display("Passed %d/%d test cases.\nClock cycles: %d\n=================", pass, i, clock_counter);
 				$finish;
