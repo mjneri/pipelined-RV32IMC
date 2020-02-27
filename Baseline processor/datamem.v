@@ -25,9 +25,9 @@ module datamem(
 );
 	
 	wire [31:0] blkmem_data_out;
-	reg [31:0] btn_reg;
-	reg [31:0] switch_reg;
-	reg [31:0] LED_reg;
+	// reg [31:0] btn_reg;
+	// reg [31:0] switch_reg;
+	// reg [31:0] LED_reg;
 
 	// Datamem that uses BLOCKMEM from Vivado IP Catalog
 	// Blockmem generated as TRUE DUAL PORT RAM
