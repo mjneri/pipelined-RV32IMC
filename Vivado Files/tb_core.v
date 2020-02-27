@@ -9,6 +9,11 @@ module tb_core();
     reg [3:0] btn_in;
     reg [2:0] switch_in; 
 
+    reg int_sig;
+    reg [3:0] BTN;
+    reg [2:0] SW;
+    reg [3:0] LED;
+
 	reg [3:0] con_write;
 	reg [9:0] con_addr;
 	reg [31:0] con_in;
@@ -52,11 +57,10 @@ module tb_core();
 	initial begin
 		CLK = 0;
 		nrst = 0;
-        //SW = 1;
         int_sig = 1;
-        btn_in = 4'b0;
-        switch_in = 3'b0;
-    
+        BTN = 0;
+        SW = 0;
+        LED = 0;
 		con_write = 0;
 		con_addr = 10'h0;
 		con_in = 0;
@@ -92,6 +96,21 @@ module tb_core();
 
 		
 	end
+
+	/*
+	reg [31:0] exe_inst, mem_inst, wb_inst;
+	always@(posedge CLK) begin
+		if(!nrst) begin
+			exe_inst <= 0;
+			mem_inst <= 0;
+			wb_inst <= 0;
+		end else begin
+			exe_inst <= CORE.id_inst;
+			mem_inst <= exe_inst;
+			wb_inst <= mem_inst;
+		end
+	end
+	*/
 
 	// Checking for 10 NOPs/looping jals in a row
 	always@(posedge CLK) begin
@@ -155,7 +174,7 @@ module tb_core();
 
 			i = i + 1;
 
-			if(con_addr == 1023) begin			
+			if(con_addr == 64) begin			
 				$display("\n");
 				$display("Passed %d/%d test cases.\nClock cycles: %d\n=================", pass, i, clock_counter);
 				$finish;

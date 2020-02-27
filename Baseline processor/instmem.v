@@ -2,29 +2,31 @@
 
 module instmem(
 	input clk,
-	input [11:0] addr,
 	input sel_ISR,
+
+	input [11:0] addr, 
 	output [31:0] inst
 );
-	wire [31:0] inst_mem;
-	wire [31:0] inst_isr;
+	
+	wire [31:0] prog;
+	wire [31:0] isr;
 
 	// Instmem that uses BLOCKMEM from Vivado IP Catalog
-	// Generate as Single port ROM
+	// Generate as DUAL port ROM
 	// Synchronous read
 	blk_mem_gen_instmem INSTMEM(
 		.clka(~clk),
 		.addra(addr[11:2]),
-		.douta(inst_mem)
+		.douta(prog)
 	);
 
 	blk_mem_gen_isr INT_MEM(
 		.clka(~clk),
 		.addra(addr[11:2]),
-		.douta(inst_isr)
+		.douta(isr)
 	);
 
-	assign inst = sel_ISR? inst_isr : inst_mem;
+	assign inst = sel_ISR? isr : prog;
 
 	// For this part:
 	// Instmem that was coded s.t. Vivado generates an RTL_ROM

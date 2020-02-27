@@ -113,23 +113,23 @@ loop:
 	lw x2, 0(x21)
 
 	add x3, x1, x2
-	sub x4, x1, x2
+	div x4, x1, x2
 	and x5, x1, x2
 	or x6, x1, x2
 	xor x7, x1, x2
 	slt x8, x1, x2
-	sltu x9, x1, x2
+	remu x9, x1, x2
 	sll x10, x1, x2
 	srl x11, x1, x2
 	sra x12, x1, x2
 	mul x13, x1, x2
-	mulh x14, x1, x2
+	rem x14, x1, x2
 	mulhsu x15, x1, x2
 	mulhu x16, x1, x2
-	div x17, x1, x2
+	sub x17, x1, x2
 	divu x18, x1, x2
-	rem x19, x1, x2
-	remu x23, x1, x2
+	mulh x19, x1, x2
+	sltu x23, x1, x2
 
 	sw x3, 0(x22)
 	sw x4, 4(x22)
