@@ -10,7 +10,6 @@
 module top(
 	input CLK100MHZ,
 	input nrst,
-	//input SW,
 
 	input [3:0] btn_in,
 	input [2:0] switch_in,

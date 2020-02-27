@@ -70,12 +70,6 @@ xor x26, x6, x12
 sb x26, 0(x3)
 jal x0, end
 
-# sw4:
-# xor x27, x7, x12
-# sb x27, 0(x3)
-# jal x0, end
-
-
 end:
 uret
 
