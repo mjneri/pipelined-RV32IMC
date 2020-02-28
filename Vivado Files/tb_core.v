@@ -37,7 +37,7 @@ module tb_core();
 		#10 CLK = ~CLK;		// 50MHz clock
 
 	integer i, check, done, pass;
-	integer clock_counter;
+	integer clock_counter, stall_counter, cumulative_stall_counter;
 
 	// For checking instructions loaded
 	wire [31:0] INST;
@@ -105,17 +105,56 @@ module tb_core();
 				clock_counter <= clock_counter + 1;
 	end
 
+	// Tracking how many cycles each stall takes
 	always@(posedge CLK) begin
-		if(clock_counter == 7) begin
-			#3 BTN[1] = ~BTN[1];
-			int_sig = 0;	
-		end
-		
-		if(clock_counter == 4971) begin
-			#3 BTN[1] = ~BTN[1];
-			int_sig = 0;	
-		end
+		if(!nrst)
+			stall_counter <= 0;
+		else
+			if(CORE.if_stall)
+				stall_counter <= stall_counter + 1;
+			else
+				stall_counter <= 0;
 	end
+
+	// Tracking total clock cycles the pipeline was stalled
+	always@(posedge CLK) begin
+		if(!nrst)
+			cumulative_stall_counter <= 0;
+		else if(CORE.if_stall)
+			cumulative_stall_counter <= cumulative_stall_counter + 1;
+	end
+
+	/*always@(posedge CLK) begin
+		if(clock_counter == 6) begin
+			#3 BTN[1] = 1;
+			int_sig = 0;	
+		end
+
+		if(clock_counter == 100) begin
+			#3 BTN[1] = 0;
+			int_sig = 1;	
+		end
+
+		if(clock_counter == 4976) begin
+			#3 BTN[2] = 1;
+			int_sig = 0;	
+		end
+
+		if(clock_counter == 5100) begin
+			#3 BTN[2] = 0;
+			int_sig = 1;	
+		end
+
+		if(clock_counter == 7400) begin
+			#3 BTN[3] = 1;
+			int_sig = 0;	
+		end
+
+		if(clock_counter == 7500) begin
+			#3 BTN[3] = 0;
+			int_sig = 1;	
+		end
+	end*/
 
 	// The following code snippet is for checking the contents of
 	// the memory when RTL_RAM is used (if it was coded in Verilog)
