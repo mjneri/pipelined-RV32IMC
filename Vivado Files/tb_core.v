@@ -38,6 +38,7 @@ module tb_core();
 
 	integer i, check, done, pass;
 	integer clock_counter, stall_counter, cumulative_stall_counter;
+	integer cumulative_flush_counter;
 
 	// For checking instructions loaded
 	wire [31:0] INST;
