@@ -728,10 +728,12 @@ module core(
 // MEM Stage ========================================================
 	datamem DATAMEM(
 		.clk(CLK),
+		.nrst(nrst),
 
-		.dm_write(mem_dm_write),
-		.data_addr(mem_ALUout[12:2]),
-		.data_in(mem_storedata),
+		.dm_write(exe_dm_write),
+		.exe_data_addr(exe_ALUout[12:2]),
+		.mem_data_addr(mem_ALUout[12:2]),
+		.data_in(exe_storedata),
 
 		.BTN(BTN),
 		.SW(SW),

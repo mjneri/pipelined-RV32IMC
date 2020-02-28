@@ -6,7 +6,8 @@ module datamem(
 
 	// Inputs from within the core
 	input [3:0] dm_write,
-	input [10:0] data_addr,
+	input [10:0] exe_data_addr,
+	input [10:0] mem_data_addr,
 	input [31:0] data_in,
 
 	// Ports for FPGA I/O
@@ -30,13 +31,13 @@ module datamem(
 	// Addresses 0x000 - 0x3FF (Word-aligned addresses)
 	wire [31:0] blk_mem_douta;
 	blk_mem_gen_datamem BLOCKMEM(
-		.clka(~clk),
+		.clka(clk),
 		.wea(dm_write),
-		.addra(data_addr[9:0]),
+		.addra(exe_data_addr[9:0]),
 		.dina(data_in),
 		.douta(blk_mem_douta),
 
-		.clkb(~clk),
+		.clkb(clk),
 		.web(con_write),
 		.addrb(con_addr),
 		.dinb(con_in),
@@ -72,7 +73,7 @@ module datamem(
 		if(!nrst)
 			FPGAIO[2] <= 0;
 		else begin
-			if(data_addr == 11'h402) begin
+			if(exe_data_addr == 11'h402) begin
 				case(dm_write)
 					// SW
 					4'b1111: FPGAIO[2] <= data_in;
@@ -93,7 +94,7 @@ module datamem(
 
 	// Assigning data_out
 	always@(*) begin
-		case(data_addr)
+		case(mem_data_addr)
 			11'h400: data_out = FPGAIO[0];
 			11'h401: data_out = FPGAIO[1];
 			11'h402: data_out = FPGAIO[2];
