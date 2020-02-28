@@ -9,7 +9,6 @@
 	BHT is implemented as a 4-way Set Associative Cache with 64 entries
 	Replacement policy is FIFO
 	id_PC[9:0] = {Tag[5:0], Set[3:0]}
-
 	For selecting next PC:
 	format of selection bits: {exe_correction[1:0], if_prediction}
 		default selection: PC+4
@@ -69,7 +68,6 @@ module branchpredictor(
 		| ht[19]    | ht[18:13]| ht[12:2]           | ht[1:0]				   |
 		========================================================================
 		Where ht = history_table
-
 	*/
 	reg [19:0] history_table [0:63];
 
@@ -82,7 +80,6 @@ module branchpredictor(
 		- output if_prediction (1 if taken, 0 if not taken)
 			- kukunin sa ht[1]
 		- output if_PBT (nakukuha from ht[12:2]) is the predicted branch target
-
 		- problem: simulan muna ung table access 
 	*/
 
@@ -181,10 +178,8 @@ module branchpredictor(
 		makes changes to the saturating counter.
 		Also outputs the corresponding PBT and CNI
 		and corresponding correction output.
-
 		Inputs: exe_PC, z, less, branchtype
 		Outputs: exe_correction, exe_PBT, exe_CNI
-
 		Check if prediction is correct -> inc/dec counter, output correction
 	*/
 
@@ -282,7 +277,7 @@ module branchpredictor(
 	// 2'b00 or 2'b01: No correction needed - next PC address would be PC+4
 	// 2'b10: Need to select [C]orrect [N]ext [I]nstruction (CNI)
 	// 2'b11: Need to select PBT
-	assign exe_correction = (|exe_btype)?
+	assign exe_correction = (|exe_btype || |exe_c_btype)?
 								(is_pred_correct)? 2'b00 		:	// If prediction was correct, no need to change PC again
 									(feedback == 1'b0)? 2'b10 	:	// branch should not have been taken, so CNI should be next PC addr
 									(feedback == 1'b1)? 2'b11	:	// branch should have been taken, so PBT should be next PC addr
@@ -311,7 +306,7 @@ module branchpredictor(
 				fifo_counter[id_set] <= fifo_counter[id_set] + 2'b01;
 			end
 
-			else if(|exe_btype) begin
+			else if(|exe_btype || |exe_c_btype) begin
 				if(feedback == 1'h1) begin
 					if(exe_loadentry[1:0] != 2'h3)
 						history_table[{exe_set, exe_setoffset}] <= exe_loadentry + 2'b1;
