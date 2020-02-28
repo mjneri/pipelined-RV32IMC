@@ -103,7 +103,7 @@ module controller1(
     // 1 if JAL/JALR
     // 0 if R-type, I-type, S-type, U-type inst (PC+4)
 
-    assign sel_data = (opcode == jal_inst || opcode == jalr_inst) ? 3'h1 : 
+    assign sel_data = (opcode == jal_inst || opcode == jalr_inst) ? 3'h0 : 
 					  (opcode == lui_inst) ? 3'h2 : 
 					  (opcode == load_inst) ? 3'h3 :
 					  (opcode == r_type && funct7 == 7'h1 && funct3[2] == 1)? 3'h4 :
