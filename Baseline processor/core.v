@@ -12,7 +12,7 @@ module core(
 
 	// inputs from protocol controllers
 	input [3:0] con_write,
-	input [9:0] con_addr,
+	input [9:0] con_addr,		// Word-aligned data address
 	input [31:0] con_in,
 	output [31:0] con_out		// Ouput of DATAMEM connected to Protocol controllers
 );
@@ -65,7 +65,7 @@ module core(
 	wire id_wr_en;					// For WB stage 	/
 	wire [2:0] id_dm_select;		// For MEM stage 	/
 	wire [2:0] id_imm_select;		// For ID stage 	/
-	wire [1:0] id_sel_pc;			// For EXE stage 	/ 
+	wire id_sel_pc;					// For EXE stage 	/ 
 	wire [2:0] id_sel_data;			// For WB stage 	/
 	wire [1:0] id_store_select;		// For EXE stage 	/
 	wire id_sel_opBR;				// For ID stage 	/
@@ -262,7 +262,8 @@ module core(
 
 // Interrupt Controller Signals=====================================
     wire ISR_stall;
-	wire ISR_flush;
+	wire ISR_PC_flush;
+	wire ISR_pipe_flush;
 	wire sel_ISR;
     wire ret_ISR;
 	wire ISR_en;
@@ -277,7 +278,9 @@ module core(
 /******************************* DATAPATH (INSTANTIATING MODULES) ******************************/
 // CLOCKS ========================================================
 	sf_controller SF_CONTROLLER(
-		.ISR_flush(ISR_flush),
+		.ISR_PC_flush(ISR_PC_flush),
+		.ISR_pipe_flush(ISR_pipe_flush),
+		
 		.branch_flush(branch_flush),
 		.div_running(exe_div_running),
 
@@ -356,7 +359,8 @@ module core(
 		.nrst(nrst),
 		.stall(if_stall),
 
-		.PC(if_pcnew),
+		.if_pcnew(if_pcnew),
+		.if_PC(if_PC),
 		.if_opcode(if_inst[6:0]),
 		.int_sig(int_sig),
 
@@ -366,7 +370,8 @@ module core(
 		.id_sel_pc(id_sel_pc),
 
 		//.ISR_stall(ISR_stall),
-		.ISR_flush(ISR_flush),
+		.ISR_PC_flush(ISR_PC_flush),
+		.ISR_pipe_flush(ISR_pipe_flush),
 		.sel_ISR(sel_ISR),
 		.ret_ISR(ret_ISR),
 		//.ISR_en(ISR_en),
@@ -399,7 +404,7 @@ module core(
 				3'b111: if_pcnew = {exe_PBT, 2'h0};
 				default: begin
 					case({id_jump_in_bht, id_sel_pc})
-						3'b001: if_pcnew = id_branchtarget;
+						2'b01: if_pcnew = id_branchtarget;
 						default: if_pcnew = if_pc4;
 					endcase
 				end

@@ -38,7 +38,7 @@ module controller1(
     output wr_en,               // Input to regfile
     output [2:0] dm_select,     // Input to LOADBLOCK
     output [2:0] imm_select,    // Input to SHIFTSIGNSHUFF block
-    output [1:0] sel_pc,        // Input to PC selection MUX
+    output sel_pc,				// Input to PC selection MUX
     output [2:0] sel_data,      // Input to WB data selection MUX
     output [1:0] store_select,  // Input to STOREBLOCK
     output sel_opBR             // Input to Branch target computation MUX
@@ -98,10 +98,9 @@ module controller1(
     // 3 if B-type inst
     // 4 if JAL
 
-    assign sel_pc = (opcode == jal_inst || opcode == jalr_inst) ? 2'h1 : 2'h0;
+    assign sel_pc = (opcode == jal_inst || opcode == jalr_inst) ? 1'h1 : 1'h0;
     //sel_pc:
-    // 1 if J-type inst
-    // 2 if B-type inst AND branch taken
+    // 1 if JAL/JALR
     // 0 if R-type, I-type, S-type, U-type inst (PC+4)
 
     assign sel_data = (opcode == jal_inst || opcode == jalr_inst) ? 3'h1 : 

@@ -28,13 +28,13 @@ module datamem(
 	// Blockmem generated as TRUE DUAL PORT RAM
 	// Synchronous read
 	// Addresses 0x000 - 0x3FF (Word-aligned addresses)
-	wire [31:0] blk_mem_data_out;
+	wire [31:0] blk_mem_douta;
 	blk_mem_gen_datamem BLOCKMEM(
 		.clka(~clk),
 		.wea(dm_write),
 		.addra(data_addr[9:0]),
 		.dina(data_in),
-		.douta(blk_mem_data_out),
+		.douta(blk_mem_douta),
 
 		.clkb(~clk),
 		.web(con_write),
@@ -97,7 +97,7 @@ module datamem(
 			11'h400: data_out = FPGAIO[0];
 			11'h401: data_out = FPGAIO[1];
 			11'h402: data_out = FPGAIO[2];
-			default: data_out = blk_mem_data_out;
+			default: data_out = blk_mem_douta;
 		endcase
 	end
 

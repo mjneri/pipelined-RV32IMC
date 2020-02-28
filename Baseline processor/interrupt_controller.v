@@ -7,7 +7,8 @@ module interrupt_controller(
 	input nrst,
 	input stall,				// Input from sf_controller
 
-	input [11:0] PC,			// Input to PC (if_pcnew)
+	input [11:0] if_pcnew,		// Input to PC (if_pcnew)
+	input [11:0] if_PC,			// current PC
 	input [6:0] if_opcode,		// Used to catch URET Instruction
 	input int_sig,
 
@@ -17,7 +18,8 @@ module interrupt_controller(
 	input id_sel_pc,
 
 	//output ISR_stall,
-	output ISR_flush,
+	output ISR_PC_flush,
+    output ISR_pipe_flush,
 	output reg sel_ISR,
 	output reg ret_ISR,
 	//output reg ISR_en,
@@ -31,7 +33,8 @@ module interrupt_controller(
     wire ISR_stall = (ISR_stall_counter!=0) ||    	// Stall for 5 cycles
                         (if_opcode==7'h73);			// Catch URET instruction
 
-    assign ISR_flush = ISR_stall & !ret_ISR;
+    assign ISR_PC_flush = (ISR_stall & !ret_ISR) & !stall & (!(ISR_stall_counter < 3'd2) | (save_PC == if_PC));
+    assign ISR_pipe_flush = (ISR_stall) & !stall & ((!(ISR_stall_counter < 3'd2) & !ret_ISR) | ret_ISR  | (save_PC == if_PC));
 
     wire save_PC_en;
     assign save_PC_en = ((!int_sig & ISR_en) || // Capture first clock edge
@@ -69,9 +72,7 @@ module interrupt_controller(
             end
 
             if(save_PC_en) begin
-                save_PC <= PC;
-            end else begin
-                save_PC <= save_PC;
+                save_PC <= if_pcnew;
             end
 
             if(ISR_stall_counter!=0) begin
@@ -79,11 +80,11 @@ module interrupt_controller(
                     ISR_stall_counter <= ISR_stall_counter+1;
             end
 
-            if((ISR_stall_counter == 3'd3) & !ISR_running) begin
+            if((ISR_stall_counter == 3'd5) & !ISR_running) begin
                 ISR_stall_counter <= 0;
                 ISR_running <= 1;
                 sel_ISR <= 1;
-            end else if((ISR_stall_counter == 3'd2) & ISR_running) begin
+            end else if((ISR_stall_counter == 3'd5) & ISR_running) begin
                 ISR_stall_counter <= 0;
                 ISR_running <= 0;
                 ret_ISR <= 0;
