@@ -86,7 +86,7 @@ module tb_core();
 
 	// Checking for 10 NOPs/looping jals in a row
 	always@(posedge CLK) begin
-		if(INST == 32'h0000006f) begin
+		if(INST == 32'h0000006f || INST == 32'h00000013) begin
 			check = check + 1;
 		end else begin
 			check = 0;

@@ -156,10 +156,10 @@ module branchpredictor(
 	assign id_tag = id_PC[9:4];
 
 	// Checking each entry within the set to see if the input is already in the table
-	assign id_entry[0] = history_table[{id_set, 2'b00}];
-	assign id_entry[1] = history_table[{id_set, 2'b01}];
-	assign id_entry[2] = history_table[{id_set, 2'b10}];
-	assign id_entry[3] = history_table[{id_set, 2'b11}];
+	assign id_entry0 = history_table[{id_set, 2'b00}];
+	assign id_entry1 = history_table[{id_set, 2'b01}];
+	assign id_entry2 = history_table[{id_set, 2'b10}];
+	assign id_entry3 = history_table[{id_set, 2'b11}];
 
 	assign id_valid0 = id_entry0[19];
 	assign id_valid1 = id_entry1[19];
@@ -171,8 +171,8 @@ module branchpredictor(
 	assign id_iseqto2 = (id_entry2[18:13] == id_tag) && id_valid2;
 	assign id_iseqto3 = (id_entry3[18:13] == id_tag) && id_valid3;
 
-	wire [3:0] id_iseq;
-	assign id_iseq = {id_iseqto3, id_iseqto2, id_iseqto1, id_iseqto0};	// if id_iseq = 0, then input is not in table yet
+	wire [3:0] id_iseqto;
+	assign id_iseqto = {id_iseqto3, id_iseqto2, id_iseqto1, id_iseqto0};	// if id_iseq = 0, then input is not in table yet
 
 	// Saturating counter default states. Branches: WNT | Jumps: ST
 	assign sat_counter = (id_is_jump)? 2'b11 : 2'b01;
