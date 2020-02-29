@@ -233,7 +233,6 @@ module core(
 	wire id_clk_en;
 	//wire exe_clk;			// CLK input to ID/EXE pipereg
 	wire exe_clk_en;
-	wire exe_stall;			// Stall for LOAD->JALR hazards
 	//wire mem_clk;			// CLK input to EXE/MEM pipereg
 	wire mem_clk_en;
 	// wire wb_clk;			// CLK input to MEM/WB pipereg
@@ -322,24 +321,6 @@ module core(
 	wire [1:0] exe_c_btype;
 // &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&    
     
-/******************************* DATAPATH (INSTANTIATING MODULES) ******************************/
-// CLOCKS ========================================================
-	sf_controller SF_CONTROLLER(
-		// .clk(CLK),
-		// .nrst(nrst),
-		//.if_inst(if_inst),
-		//.buffer_stall(buff_stall),
-// Interrupt Controller Signals=====================================
-    wire ISR_stall;
-	wire ISR_PC_flush;
-	wire ISR_pipe_flush;
-	wire sel_ISR;
-    wire ret_ISR;
-	wire ISR_en;
-	wire ISR_running;
-    wire [11:0] save_PC;
-// &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
-
 
 
 
@@ -500,51 +481,51 @@ module core(
 	
 	// Selecting operands
 	// id_fwdopA is passed through ID/EXE pipeline register to the ALU
-	assign id_fwdopA = fw_exe_to_id_A?
+	assign id_fwdopA = fw_exe_to_id_A?(
 							(exe_sel_data == 3'd4)? exe_DIVout		:
 							(exe_sel_data == 3'd2)? exe_imm			: 
 							(exe_sel_data == 3'd1)? exe_ALUout		:
-													exe_pc4			:												 
-					   fw_mem_to_id_A?
+													exe_pc4)		:												 
+					   fw_mem_to_id_A?(
 					   		(mem_sel_data == 3'd4)? mem_DIVout		:
 					   		(mem_sel_data == 3'd3)? mem_loaddata	:
 					   		(mem_sel_data == 3'd2)? mem_imm			:
 					   		(mem_sel_data == 3'd1)? mem_ALUout		:
-					   								mem_pc4			:
+					   								mem_pc4)		:
 					   fw_wb_to_id_A?
 					   		wb_wr_data								:
 					   id_sel_opA?
 					   		id_rfoutA : id_PC;
 
 	// id_fwdopB is passed through ID/EXE pipeline register to the ALU
-	assign id_fwdopB = (fw_exe_to_id_B && !id_is_stype)?
+	assign id_fwdopB = (fw_exe_to_id_B && !id_is_stype)?(
 							(exe_sel_data == 3'd4)? exe_DIVout		:             
 							(exe_sel_data == 3'd2)? exe_imm			: 
 							(exe_sel_data == 3'd1)? exe_ALUout 		:
-													exe_pc4			:
-					   (fw_mem_to_id_B && !id_is_stype)?
+													exe_pc4)		:
+					   (fw_mem_to_id_B && !id_is_stype)?(
 					   		(mem_sel_data == 3'd4)? mem_DIVout		:
 					   		(mem_sel_data == 3'd3)? mem_loaddata	:
 					   		(mem_sel_data == 3'd2)? mem_imm			:
 					   		(mem_sel_data == 3'd1)? mem_ALUout		:
-					   								mem_pc4			:
+					   								mem_pc4)		:
 					   (fw_wb_to_id_B && !id_is_stype)?
 					   		wb_wr_data								:                 
                     	id_sel_opB?
 	                    	id_imm : id_rfoutB;
 	
 	// id_fwdstore is passed through ID/EXE pipeline register & is sent to STOREBLOCK
-	assign id_fwdstore = (fw_exe_to_id_B && id_is_stype)?
+	assign id_fwdstore = (fw_exe_to_id_B && id_is_stype)?(
 							(exe_sel_data == 3'd4)? exe_DIVout		:
 							(exe_sel_data == 3'd2)? exe_imm			: 
 							(exe_sel_data == 3'd1)? exe_ALUout 		:
-													exe_pc4			:
-						 (fw_mem_to_id_B && id_is_stype)?
+													exe_pc4)			:
+						 (fw_mem_to_id_B && id_is_stype)?(
 						 	(mem_sel_data == 3'd4)? mem_DIVout 		:
 						 	(mem_sel_data == 3'd3)? mem_loaddata	:
 						 	(mem_sel_data == 3'd2)? mem_imm			:
 						 	(mem_sel_data == 3'd1)? mem_ALUout		:
-						 							mem_pc4			:
+						 							mem_pc4)			:
 						 (fw_wb_to_id_B)?
 						 	wb_wr_data : id_rfoutB;
 	
@@ -570,9 +551,9 @@ module core(
 		.sel_pc(id_base_sel_pc),
 		.sel_data(id_base_sel_data),
 		.store_select(id_base_store_select),
-		.sel_opBR(id_base_sel_opBR)
+		.sel_opBR(id_base_sel_opBR),
 		.div_valid(id_div_valid),
-		.div_op(id_div_op),
+		.div_op(id_div_op)
 	);
 
 	regfile RF(
@@ -597,17 +578,17 @@ module core(
 	// id_brOP = rfoutA for JALR only
 	
 	/*
-	assign id_brOP = (fw_exe_to_id_A && id_opcode == 7'h67)?
+	assign id_brOP = (fw_exe_to_id_A && id_opcode == 7'h67)?(
 						(exe_sel_data == 3'd4)? exe_DIVout		:
 					 	(exe_sel_data == 3'd2)? exe_imm			:
 					 	(exe_sel_data == 3'd1)? exe_ALUout		:
-					 							exe_pc4			:
-					 (fw_mem_to_id_A  && id_opcode == 7'h67)?
+					 							exe_pc4)		:
+					 (fw_mem_to_id_A  && id_opcode == 7'h67)?(
 					 	(mem_sel_data == 3'd4)? mem_DIVout		: 
 						(mem_sel_data == 3'd3)? mem_loaddata 	:
 						(mem_sel_data == 3'd2)? mem_imm 		:
 						(mem_sel_data == 3'd1)? mem_ALUout		:
-												mem_pc4			:
+												mem_pc4)		:
 					 (fw_wb_to_id_A  && id_opcode == 7'h67)? 
 					 					wb_wr_data				:
 					 (id_sel_opBR)? id_rfoutA : id_PC;
