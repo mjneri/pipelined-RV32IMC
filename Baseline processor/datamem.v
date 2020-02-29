@@ -41,7 +41,8 @@ module datamem(
 		.web(con_write),
 		.addrb(con_addr),
 		.dinb(con_in),
-		.doutb(con_out)
+		.doutb(con_out),
+		.enb(1'b1)
 	);
 	
 	// Memory mapping FPGA I/O to registers. (Directly mapped to registers)

@@ -355,7 +355,7 @@ def assemble(instructions, labels, instmem):
             if (rs1_ < 8 | rs1_ > 16):
                 print('Warning: Rs1 {} truncated to {}'.format(rs1_, (0x08) | (rs1_ & 0x07)))
             rs1_ = (rs1_ & 0x07)
-            m_code = opcode | (imm&0x20)>>2 | (imm&0x6)<<2 | (imm&0xC)<<1 | rs1_<<7 | (imm&0x18)<<7 | (imm&0x100)<<4 | funct3<<13
+            m_code = opcode | (imm&0x20)>>3 | (imm&0x6)<<2 | (imm&0xC0)>>1 | rs1_<<7 | (imm&0x18)<<7 | (imm&0x100)<<4 | funct3<<13
 
         elif (encoding_type=='CA'):     # Okay
             rs2_ = int(temp_inst[2])
@@ -377,7 +377,7 @@ def assemble(instructions, labels, instmem):
             label_address = labels[temp_inst[1]]
             imm = (label_address-inst_address)
             # 5|3:1|7|6|10|9:8|4|11
-            m_code = opcode | (imm&0x20)>>2 | (imm&0xE)<<2 | (imm&0x80)>>1 | (imm&0x40)<<1 | (imm&0x400)>>2 | (imm&0x30)>>1 | (imm&0x10)<<8 | (imm&0x800)<<1 | funct3<<13
+            m_code = opcode | (imm&0x20)>>3 | (imm&0xE)<<2 | (imm&0x80)>>1 | (imm&0x40)<<1 | (imm&0x400)>>2 | (imm&0x300)<<1 | (imm&0x10)<<7 | (imm&0x800)<<1 | funct3<<13
 
         elif (encoding_type=='CIW'):     # Okay
             rd_ = int(temp_inst[1])

@@ -1,0 +1,276 @@
+:
+
+addi
+di x
+c.ad
+di x
+c.ad
+di x
+c.ad
+di x
+c.ad
+di, 
+c.ad
+1, 0
+sw x
+2, 4
+sw x
+3, 8
+sw x
+4, 1
+sw x
+5, 1
+sw x
+
+
+
+
+
+sub:
+di x
+c.ad
+di x
+c.ad
+di x
+c.ad
+di x
+c.ad
+di x
+c.ad
+b x8
+c.su
+b x9
+c.su
+b x1
+c.su
+b x1
+c.su
+b x1
+c.su
+8, 2
+sw x
+9, 2
+sw x
+10, 
+sw x
+11, 
+sw x
+12, 
+sw x
+
+
+
+
+
+xor:
+di x
+c.ad
+di x
+c.ad
+di x
+c.ad
+r x9
+c.xo
+r x1
+c.xo
+9, 4
+sw x
+10, 
+sw x
+
+
+
+
+or:
+
+di x
+c.ad
+di x
+c.ad
+di x
+c.ad
+ x9,
+c.or
+ x10
+c.or
+9, 4
+sw x
+10, 
+sw x
+
+
+
+
+
+and:
+di x
+c.ad
+d x9
+c.an
+d x1
+c.an
+9, 5
+sw x
+10, 
+sw x
+
+
+
+:
+
+slli
+li x
+c.sl
+li x
+c.sl
+1, 6
+sw x
+2, 6
+sw x
+
+
+
+
+mv:
+
+di x
+c.ad
+ x19
+c.mv
+19, 
+sw x
+
+
+
+
+
+add:
+di x
+c.ad
+di x
+c.ad
+di x
+c.ad
+di x
+c.ad
+di x
+c.ad
+di x
+c.ad
+d x2
+c.ad
+d x2
+c.ad
+d x2
+c.ad
+20, 
+sw x
+21, 
+sw x
+22, 
+sw x
+
+
+
+z:
+
+_beq
+qz x
+c.be
+addi
+# c.
+di x
+c.an
+qz x
+c.be
+di x
+c.ad
+
+
+
+z:
+
+_bne
+di x
+c.ad
+8, 8
+sw x
+di x
+c.ad
+ez x
+c.bn
+di x
+c.ad
+ez x
+c.bn
+8, 9
+sw x
+p:
+
+_jum
+di x
+c.ad
+8, 9
+sw x
+di x
+c.ad
+_jr
+
+c.j 
+di x
+c.ad
+
+
+
+ # j
+_jr:
+8, 1
+sw x
+ x1,
+addi
+ x1
+
+c.jr
+ x1,
+addi
+
+
+
+:
+
+lwsp
+1, 1
+sw x
+ x2,
+addi
+sp x
+c.lw
+
+
+
+l ja
+c.ja
+:
+
+jalr
+ x1,
+addi
+lr x
+c.ja
+di x
+c.ad
+
+
+
+:
+
+swsp
+sp x
+c.sw
+
+
+
+ump:
+___j
+___j
+c.j 

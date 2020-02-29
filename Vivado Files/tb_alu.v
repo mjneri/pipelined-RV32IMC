@@ -1,7 +1,6 @@
 `timescale 1ns / 1ps
 
 module tb_alu();
-
 	reg [31:0] opA, opB;
 	reg [3:0] aluop;
 	wire [31:0] res;

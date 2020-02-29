@@ -50,9 +50,6 @@ module core(
 	assign id_opcode = id_inst[6:0];
 	assign id_funct3 = id_inst[14:12];
 	assign id_funct7 = id_inst[31:25];
-	assign id_rsA = id_inst[19:15];
-	assign id_rsB = id_inst[24:20];
-	assign id_rd = id_inst[11:7];
 
 	// Control signals //////////////////////////////////
 	wire [3:0] id_ALU_op;			// For EXE stage 	/
@@ -104,8 +101,8 @@ module core(
 
 	wire [4:0] exe_rsA;				// Source register A
 	wire [4:0] exe_rsB;				// Source register B
-	assign exe_rsA = exe_inst[19:15];
-	assign exe_rsB = exe_inst[24:20];
+	// assign exe_rsA = exe_inst[19:15];
+	// assign exe_rsB = exe_inst[24:20];
 
 	wire exe_z;						// Output of ALU; used for evaluating Branches
 	wire exe_less;					// Output of ALU; used for evaluating Branches
@@ -197,10 +194,10 @@ module core(
 // Signals for BHT =================================================
 	wire if_prediction;				// Input to sel_PC mux
 	wire [1:0] exe_correction;		// input to sel_PC mux
-	wire branch_flush;				// Input to sf_controller
-	wire [9:0] if_PBT;				// Predicted branch target
-	wire [9:0] exe_PBT;				// Predicted branch target
-	wire [9:0] exe_CNI;				// Correct Next Instruction
+	wire flush;
+	wire [10:0] if_PBT;				// Predicted branch target
+	wire [10:0] exe_PBT;				// Predicted branch target
+	wire [10:0] exe_CNI;				// Correct Next Instruction
 // &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 
 
@@ -229,16 +226,16 @@ module core(
 
 
 
-// Clock Gating + SF_Controller=====================================
-	// wire if_clk;			// CLK input to PC
-	// wire if_clk_en;
-	// wire id_clk;			// CLK input to IF/ID pipereg
-	// wire id_clk_en;
-	// wire exe_clk;		// CLK input to ID/EXE pipereg
-	// wire exe_clk_en;
-	// wire exe_stall;		// Stall for LOAD->JALR hazards
-	// wire mem_clk;		// CLK input to EXE/MEM pipereg
-	// wire mem_clk_en;
+// Clock Gating ====================================================
+	//wire if_clk;			// CLK input to PC
+	wire if_clk_en;
+	//wire id_clk;			// CLK input to IF/ID pipereg
+	wire id_clk_en;
+	//wire exe_clk;			// CLK input to ID/EXE pipereg
+	wire exe_clk_en;
+	wire exe_stall;			// Stall for LOAD->JALR hazards
+	//wire mem_clk;			// CLK input to EXE/MEM pipereg
+	wire mem_clk_en;
 	// wire wb_clk;			// CLK input to MEM/WB pipereg
 	// wire wb_clk_en;
 	
@@ -260,6 +257,78 @@ module core(
 
 
 
+// ID Baseline Instructions ========================================
+    wire [2:0] id_base_dm_select;
+    wire [2:0] id_base_imm_select;
+    wire [1:0] id_base_sel_data;
+    wire [1:0] id_base_store_select;
+    wire [3:0] id_base_ALU_op;
+    wire id_base_sel_opA;
+    wire id_base_sel_opB;
+    wire id_base_is_stype;
+    wire id_base_wr_en;
+    wire [4:0] id_base_rsA;
+    wire [4:0] id_base_rsB;
+    wire [4:0] id_base_rd;
+    wire [31:0] id_base_imm;
+    wire [31:0] id_base_jt;    
+	wire id_base_is_jump;
+	wire id_base_is_btype;
+	wire [1:0] id_base_sel_pc;
+	wire id_base_sel_opBR;
+	
+	assign id_base_rsA = id_inst[19:15];
+	assign id_base_rsB = id_inst[24:20];
+	assign id_base_rd = id_inst[11:7];
+// &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+
+
+
+
+
+// Compressed Instructions ==========================================
+    wire if_not_comp = (if_inst[1:0] == 2'd3);           // Compressed or not
+    wire id_is_comp;
+	wire exe_is_comp;
+	
+	// compressed control signals
+    wire [2:0] id_c_dm_select;
+    wire [2:0] id_c_imm_select;
+    wire [1:0] id_c_sel_data;
+    wire [1:0] id_c_store_select;
+    wire [3:0] id_c_alu_op;
+    wire id_c_sel_opA;
+    wire id_c_sel_opB;
+	wire [1:0] id_c_sel_pc;
+	wire id_c_sel_opBR;
+    wire id_c_is_stype;
+    wire id_c_wr_en;
+	wire [1:0] id_c_btype;
+	wire id_c_use_A;
+	wire id_c_use_B;
+	wire id_c_is_jump;
+	wire id_c_is_btype;
+
+	// registers and immediates
+    wire [4:0] id_c_rsA;
+    wire [4:0] id_c_rsB;
+    wire [4:0] id_c_rd;
+    wire [31:0] id_c_imm;
+    wire [31:0] id_c_jt;
+    
+	// signals for later stages
+	wire exe_comp_use_A;
+	wire exe_comp_use_B;
+	wire [1:0] exe_c_btype;
+// &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&    
+    
+/******************************* DATAPATH (INSTANTIATING MODULES) ******************************/
+// CLOCKS ========================================================
+	sf_controller SF_CONTROLLER(
+		// .clk(CLK),
+		// .nrst(nrst),
+		//.if_inst(if_inst),
+		//.buffer_stall(buff_stall),
 // Interrupt Controller Signals=====================================
     wire ISR_stall;
 	wire ISR_PC_flush;
@@ -381,7 +450,7 @@ module core(
 	);
 
 	// PC + 4
-	assign if_pc4 = if_PC + 12'd4;
+	assign if_pc4 = if_PC + (if_not_comp ? 4 : 2); // buff_stall ? if_PC : if_PC + 12'd4;
 
 	// PC Selection
 	// 3'b000 = PC+4
@@ -476,9 +545,9 @@ module core(
 						 	(mem_sel_data == 3'd2)? mem_imm			:
 						 	(mem_sel_data == 3'd1)? mem_ALUout		:
 						 							mem_pc4			:
-						 (fw_wb_to_id_B && id_is_stype)?
+						 (fw_wb_to_id_B)?
 						 	wb_wr_data : id_rfoutB;
-
+	
 	// Control Unit
 	controller1 CONTROL(
 		// Inputs
@@ -487,23 +556,23 @@ module core(
 		.funct7(id_funct7),
 
 		// Outputs
-		.ALU_op(id_ALU_op),
+		.ALU_op(id_base_ALU_op),
+		.sel_opA(id_base_sel_opA),
+		.sel_opB(id_base_sel_opB),
+		.is_stype(id_base_is_stype),
+
+		.is_jump(id_base_is_jump),
+		.is_btype(id_base_is_btype),
+
+		.wr_en(id_base_wr_en),
+		.dm_select(id_base_dm_select),
+		.imm_select(id_base_imm_select),
+		.sel_pc(id_base_sel_pc),
+		.sel_data(id_base_sel_data),
+		.store_select(id_base_store_select),
+		.sel_opBR(id_base_sel_opBR)
 		.div_valid(id_div_valid),
 		.div_op(id_div_op),
-		.sel_opA(id_sel_opA),
-		.sel_opB(id_sel_opB),
-		.is_stype(id_is_stype),
-
-		.is_jump(id_is_jump),
-		.is_btype(id_is_btype),
-
-		.wr_en(id_wr_en),
-		.dm_select(id_dm_select),
-		.imm_select(id_imm_select),
-		.sel_pc(id_sel_pc),
-		.sel_data(id_sel_data),
-		.store_select(id_store_select),
-		.sel_opBR(id_sel_opBR)
 	);
 
 	regfile RF(
@@ -519,13 +588,15 @@ module core(
 	);
 
 	shiftsignshuff SHIFTSIGNSHUFF(
-		.imm_select(id_imm_select),
+		.imm_select(id_base_imm_select),
 		.inst(id_inst[31:7]),
-		.imm(id_imm)
+		.imm(id_base_imm)
 	);
 
 	// Branch target address computation
 	// id_brOP = rfoutA for JALR only
+	
+	/*
 	assign id_brOP = (fw_exe_to_id_A && id_opcode == 7'h67)?
 						(exe_sel_data == 3'd4)? exe_DIVout		:
 					 	(exe_sel_data == 3'd2)? exe_imm			:
@@ -540,8 +611,9 @@ module core(
 					 (fw_wb_to_id_A  && id_opcode == 7'h67)? 
 					 					wb_wr_data				:
 					 (id_sel_opBR)? id_rfoutA : id_PC;
-
-	assign id_branchtarget = id_brOP + id_imm;
+	*/
+	assign id_brOP = (id_sel_opBR) ? id_fwdopA : id_PC;
+	assign id_branchtarget = id_brOP + (id_is_comp ? (id_sel_opBR ? 32'd0: id_c_jt) : id_base_imm);
 
 	forwarding_unit FWD(
 		// Source registers
@@ -575,6 +647,9 @@ module core(
 
 		.id_opcode(id_opcode),
 		.exe_opcode(exe_opcode),
+		.exe_comp_use_A(exe_comp_use_A),
+		.exe_comp_use_B(exe_comp_use_B),
+		.exe_is_comp(exe_is_comp),
 
 		// Outputs
 		.fw_exe_to_id_A(fw_exe_to_id_A),
@@ -592,6 +667,57 @@ module core(
 		.hzd_mem_to_exe_B(hzd_mem_to_exe_B)
 	);
 
+    compressed_decoder C_DECODER (
+        // Input
+        .inst(id_inst[15:0]),
+        
+        // Type indicator (output)
+        .is_compressed(id_is_comp),
+        
+        // Control signals (output)
+        .dm_select(id_c_dm_select),
+        .imm_select(id_c_imm_select),
+        .sel_data(id_c_sel_data),
+        .store_select(id_c_store_select),
+        .alu_op(id_c_alu_op),
+        .sel_opA(id_c_sel_opA),
+        .sel_opB(id_c_sel_opB),
+		.sel_opBR(id_c_sel_opBR),
+		.sel_pc(id_c_sel_pc),
+        .is_stype(id_c_is_stype),
+        .wr_en(id_c_wr_en),
+		.btype(id_c_btype),
+		.use_A(id_c_use_A),
+		.use_B(id_c_use_B),
+		.is_jump(id_c_is_jump),
+		.is_btype(id_c_is_btype),
+        
+        // Results (output)
+        .rs1(id_c_rsA),
+        .rs2(id_c_rsB),
+        .rd(id_c_rd),
+        .imm(id_c_imm),
+        .jt(id_c_jt)
+    );
+    
+    assign id_dm_select = id_is_comp ? id_c_dm_select : id_base_dm_select; 
+    assign id_sel_data = id_is_comp ? id_c_sel_data : id_base_sel_data;
+    assign id_store_select = id_is_comp ? id_c_store_select : id_base_store_select;
+    assign id_ALU_op = id_is_comp ? id_c_alu_op : id_base_ALU_op;
+    assign id_is_stype = id_is_comp ? id_c_is_stype : id_base_is_stype;
+    assign id_wr_en = id_is_comp ? id_c_wr_en : id_base_wr_en;
+    assign id_imm = id_is_comp ? id_c_imm : id_base_imm;
+    assign id_rd = id_is_comp ? id_c_rd : id_base_rd;
+    assign id_rsA = id_is_comp ? id_c_rsA: id_base_rsA;
+    assign id_rsB = id_is_comp ? id_c_rsB : id_base_rsB;
+    assign id_sel_opA = id_is_comp ? id_c_sel_opA : id_base_sel_opA;
+    assign id_sel_opB = id_is_comp ? id_c_sel_opB : id_base_sel_opB;
+	assign id_sel_opBR = id_is_comp ? id_c_sel_opBR : id_base_sel_opBR;
+	assign id_sel_pc = id_is_comp ? id_c_sel_pc : id_base_sel_pc;
+	assign id_is_jump = id_is_comp ? id_c_is_jump : id_base_is_jump;
+	assign id_is_btype = id_is_comp ? id_c_is_btype : id_base_is_btype;
+	assign id_imm_select = id_is_comp ? id_c_imm_select : id_base_imm_select;
+    
 	pipereg_id_exe ID_EXE(
 		.clk(CLK),
 		.nrst(nrst),		
@@ -614,15 +740,25 @@ module core(
 
 		// Control signals go here
 		.id_ALU_op(id_ALU_op),				.exe_ALU_op(exe_ALU_op),
+
+		.id_c_btype(id_c_btype),				.exe_c_btype(exe_c_btype),
+
+		// .id_sel_opA(id_sel_opA),				.exe_sel_opA(exe_sel_opA),
+		// .id_sel_opB(id_sel_opB),				.exe_sel_opB(exe_sel_opB),
 		.id_div_valid(id_div_valid),		.exe_div_valid(exe_div_valid),
 		.id_div_op(id_div_op),				.exe_div_op(exe_div_op),
 		// .id_sel_opA(id_sel_opA),			.exe_sel_opA(exe_sel_opA),
 		// .id_sel_opB(id_sel_opB),			.exe_sel_opB(exe_sel_opB),
 		.id_is_stype(id_is_stype),			.exe_is_stype(exe_is_stype),
-		.id_wr_en(id_wr_en),				.exe_wr_en(exe_wr_en),
-		.id_dm_select(id_dm_select),		.exe_dm_select(exe_dm_select),
+		.id_wr_en(id_wr_en),					.exe_wr_en(exe_wr_en),
+		.id_dm_select(id_dm_select),			.exe_dm_select(exe_dm_select),
 		.id_sel_data(id_sel_data),			.exe_sel_data(exe_sel_data),
-		.id_store_select(id_store_select), 	.exe_store_select(exe_store_select)
+		.id_store_select(id_store_select), 	.exe_store_select(exe_store_select),
+		.id_comp_use_A(id_c_use_A),				.exe_comp_use_A(exe_comp_use_A),
+		.id_comp_use_B(id_c_use_B),				.exe_comp_use_B(exe_comp_use_B),
+		.id_is_comp(id_is_comp),				.exe_is_comp(exe_is_comp),
+		.id_rs1(id_rsA),						.exe_rs1(exe_rsA),
+		.id_rs2(id_rsB),						.exe_rs2(exe_rsB)
 	);
 
 
@@ -666,17 +802,18 @@ module core(
 
 		.stall(id_stall),
 
-		.if_PC(if_PC[11:2]),
+		.if_PC(if_PC[11:1]),
 
-		.id_PC(id_PC[11:2]),
-		.id_branchtarget(id_branchtarget[11:2]),
+		.id_PC(id_PC[11:1]),
+		.id_branchtarget(id_branchtarget[11:1]),
 		.id_is_jump(id_is_jump),
 		.id_is_btype(id_is_btype),
 
-		.exe_PC(exe_PC[11:2]),
+		.exe_PC(exe_PC[11:1]),
 		.exe_z(exe_z),
 		.exe_less(exe_less),
 		.exe_btype(exe_btype),
+		.exe_c_btype(exe_c_btype),
 		
 		// Outputs
 		.if_prediction(if_prediction),
