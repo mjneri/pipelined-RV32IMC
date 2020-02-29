@@ -22,6 +22,10 @@ module branchpredictor(
 	input nrst,
 	input en,
 
+	input ISR_running,
+
+	input stall,
+
 	// Inputs
 	input [10:0] if_PC,
 
@@ -60,7 +64,7 @@ module branchpredictor(
 	// Correct Next Instruction = CNI
 	output [10:0] exe_CNI
 );
-	
+	// NOTE: PC ADDRESSES HERE ARE WORD ADDRESSES, NOT BYTE ADDRESSES.
 	// Declaring memory for BHT
 	/*  new format of each line in reg history_table (halfword ver.)
 		========================================================================
@@ -68,6 +72,7 @@ module branchpredictor(
 		| ht[19]    | ht[18:13]| ht[12:2]           | ht[1:0]				   |
 		========================================================================
 		Where ht = history_table
+		*MSB of tag bits = ISR_running
 	*/
 	reg [19:0] history_table [0:63];
 
@@ -151,10 +156,10 @@ module branchpredictor(
 	assign id_tag = id_PC[9:4];
 
 	// Checking each entry within the set to see if the input is already in the table
-	assign id_entry0 = history_table[{id_set, 2'b00}];
-	assign id_entry1 = history_table[{id_set, 2'b01}];
-	assign id_entry2 = history_table[{id_set, 2'b10}];
-	assign id_entry3 = history_table[{id_set, 2'b11}];
+	assign id_entry[0] = history_table[{id_set, 2'b00}];
+	assign id_entry[1] = history_table[{id_set, 2'b01}];
+	assign id_entry[2] = history_table[{id_set, 2'b10}];
+	assign id_entry[3] = history_table[{id_set, 2'b11}];
 
 	assign id_valid0 = id_entry0[19];
 	assign id_valid1 = id_entry1[19];
@@ -287,6 +292,15 @@ module branchpredictor(
 	////////////////////////////////////////////////////////////////////////////
 	// Write back to the table
 	integer i;	// Used for resetting fifo_counter & history_table
+	initial begin
+		for(i = 0; i < 16; i=i+1) begin
+			fifo_counter[i] <= 2'b0;
+		end
+		for(i = 0; i < 64; i=i+1) begin
+			history_table[i] <= 20'b0;
+		end
+	end
+	
 	always@(posedge CLK) begin
 		if(!nrst) begin
 
@@ -294,15 +308,15 @@ module branchpredictor(
 				fifo_counter[i] <= 2'b0;
 			end
 			for(i = 0; i < 64; i=i+1) begin
-				history_table[i] <= 19'b0;
+				history_table[i] <= 20'b0;
 			end
 
-		end else if(en) begin
+		end else if(en && !stall) begin
 
-			if( (id_is_btype || id_is_jump) && (id_iseq == 4'h0) ) begin
+			if( (id_is_btype || id_is_jump) && (id_iseqto == 4'h0) ) begin
 				// Write to table if (Branch or Jump) AND the input is not in the table yet
-				history_table[{id_set, fifo_counter[id_set]}] <= {1'b1, id_tag, id_branchtarget, sat_counter};
-				//increment counter; if = 3 na, equate to zero
+				history_table[{id_set, fifo_counter[id_set]}] <= {1'b1, ISR_running, id_tag, id_branchtarget, sat_counter};
+				//increment counter
 				fifo_counter[id_set] <= fifo_counter[id_set] + 2'b01;
 			end
 
@@ -348,7 +362,7 @@ module branchpredictor(
 				flush = 1;
 			end else begin
 				flush = 0;
-				if(id_is_jump && id_iseq == 4'h0)
+				if(id_is_jump && id_iseqto == 4'h0)
 					flush_state = 1;
 				else
 					flush_state = 0;
@@ -357,7 +371,7 @@ module branchpredictor(
 	end
 	
 	always@(*) begin
-		if(id_is_jump == 1'b1 && id_iseq != 4'h0)
+		if(id_is_jump == 1'b1 && id_iseqto != 4'h0)
 			id_jump_in_bht = 1'b1;
 		else 
 			id_jump_in_bht = 1'b0;

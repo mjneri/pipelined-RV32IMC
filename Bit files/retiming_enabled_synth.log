@@ -1,0 +1,1016 @@
+
+*** Running vivado
+    with args -log top.vds -m64 -product Vivado -mode batch -messageDb vivado.pb -notrace -source top.tcl
+
+
+****** Vivado v2019.2 (64-bit)
+  **** SW Build 2708876 on Wed Nov  6 21:40:23 MST 2019
+  **** IP Build 2700528 on Thu Nov  7 00:09:20 MST 2019
+    ** Copyright 1986-2019 Xilinx, Inc. All Rights Reserved.
+
+source top.tcl -notrace
+Command: synth_design -top top -part xc7a35ticsg324-1L -retiming
+Starting synth_design
+Attempting to get a license for feature 'Synthesis' and/or device 'xc7a35ti'
+INFO: [Common 17-349] Got license for feature 'Synthesis' and/or device 'xc7a35ti'
+INFO: [Device 21-403] Loading part xc7a35ticsg324-1L
+INFO: Launching helper process for spawning children vivado processes
+INFO: Helper process launched with PID 8476 
+---------------------------------------------------------------------------------
+Starting RTL Elaboration : Time (s): cpu = 00:00:08 ; elapsed = 00:00:09 . Memory (MB): peak = 804.168 ; gain = 233.461
+---------------------------------------------------------------------------------
+INFO: [Synth 8-6157] synthesizing module 'top' [C:/Users/MJ/Documents/UP Diliman/5th Year/2nd Sem/CoE 198/pipelined-RV32IMC/Baseline processor/top.v:22]
+INFO: [Synth 8-6157] synthesizing module 'clk_wiz_0' [C:/Users/MJ/Documents/Vivado/pipelined-RV32IMC/pipelined-RV32IMC.runs/retiming_enabled/.Xil/Vivado-6212-Kouzui/realtime/clk_wiz_0_stub.v:5]
+INFO: [Synth 8-6155] done synthesizing module 'clk_wiz_0' (1#1) [C:/Users/MJ/Documents/Vivado/pipelined-RV32IMC/pipelined-RV32IMC.runs/retiming_enabled/.Xil/Vivado-6212-Kouzui/realtime/clk_wiz_0_stub.v:5]
+INFO: [Synth 8-6157] synthesizing module 'core' [C:/Users/MJ/Documents/UP Diliman/5th Year/2nd Sem/CoE 198/pipelined-RV32IMC/Baseline processor/core.v:3]
+INFO: [Synth 8-6157] synthesizing module 'sf_controller' [C:/Users/MJ/Documents/UP Diliman/5th Year/2nd Sem/CoE 198/pipelined-RV32IMC/Baseline processor/sf_controller.v:19]
+INFO: [Synth 8-6155] done synthesizing module 'sf_controller' (2#1) [C:/Users/MJ/Documents/UP Diliman/5th Year/2nd Sem/CoE 198/pipelined-RV32IMC/Baseline processor/sf_controller.v:19]
+INFO: [Synth 8-6157] synthesizing module 'pc' [C:/Users/MJ/Documents/UP Diliman/5th Year/2nd Sem/CoE 198/pipelined-RV32IMC/Baseline processor/pc.v:3]
+INFO: [Synth 8-6155] done synthesizing module 'pc' (3#1) [C:/Users/MJ/Documents/UP Diliman/5th Year/2nd Sem/CoE 198/pipelined-RV32IMC/Baseline processor/pc.v:3]
+INFO: [Synth 8-6157] synthesizing module 'instmem' [C:/Users/MJ/Documents/UP Diliman/5th Year/2nd Sem/CoE 198/pipelined-RV32IMC/Baseline processor/instmem.v:3]
+INFO: [Synth 8-6157] synthesizing module 'blk_mem_gen_instmem' [C:/Users/MJ/Documents/Vivado/pipelined-RV32IMC/pipelined-RV32IMC.runs/retiming_enabled/.Xil/Vivado-6212-Kouzui/realtime/blk_mem_gen_instmem_stub.v:6]
+INFO: [Synth 8-6155] done synthesizing module 'blk_mem_gen_instmem' (4#1) [C:/Users/MJ/Documents/Vivado/pipelined-RV32IMC/pipelined-RV32IMC.runs/retiming_enabled/.Xil/Vivado-6212-Kouzui/realtime/blk_mem_gen_instmem_stub.v:6]
+INFO: [Synth 8-6155] done synthesizing module 'instmem' (5#1) [C:/Users/MJ/Documents/UP Diliman/5th Year/2nd Sem/CoE 198/pipelined-RV32IMC/Baseline processor/instmem.v:3]
+INFO: [Synth 8-6157] synthesizing module 'pipereg_if_id' [C:/Users/MJ/Documents/UP Diliman/5th Year/2nd Sem/CoE 198/pipelined-RV32IMC/Baseline processor/pipereg_if_id.v:3]
+INFO: [Synth 8-6155] done synthesizing module 'pipereg_if_id' (6#1) [C:/Users/MJ/Documents/UP Diliman/5th Year/2nd Sem/CoE 198/pipelined-RV32IMC/Baseline processor/pipereg_if_id.v:3]
+INFO: [Synth 8-6157] synthesizing module 'controller1' [C:/Users/MJ/Documents/UP Diliman/5th Year/2nd Sem/CoE 198/pipelined-RV32IMC/Baseline processor/controller1.v:22]
+	Parameter lui_inst bound to: 7'b0110111 
+	Parameter auipc_inst bound to: 7'b0010111 
+	Parameter jal_inst bound to: 7'b1101111 
+	Parameter jalr_inst bound to: 7'b1100111 
+	Parameter b_type bound to: 7'b1100011 
+	Parameter i_type bound to: 7'b0010011 
+	Parameter s_type bound to: 7'b0100011 
+	Parameter r_type bound to: 7'b0110011 
+	Parameter load_inst bound to: 7'b0000011 
+INFO: [Synth 8-6155] done synthesizing module 'controller1' (7#1) [C:/Users/MJ/Documents/UP Diliman/5th Year/2nd Sem/CoE 198/pipelined-RV32IMC/Baseline processor/controller1.v:22]
+INFO: [Synth 8-6157] synthesizing module 'regfile' [C:/Users/MJ/Documents/UP Diliman/5th Year/2nd Sem/CoE 198/pipelined-RV32IMC/Baseline processor/regfile.v:3]
+INFO: [Synth 8-6155] done synthesizing module 'regfile' (8#1) [C:/Users/MJ/Documents/UP Diliman/5th Year/2nd Sem/CoE 198/pipelined-RV32IMC/Baseline processor/regfile.v:3]
+INFO: [Synth 8-6157] synthesizing module 'shiftsignshuff' [C:/Users/MJ/Documents/UP Diliman/5th Year/2nd Sem/CoE 198/pipelined-RV32IMC/Baseline processor/shiftsignshuff.v:15]
+	Parameter ITYPE bound to: 3'b000 
+	Parameter STYPE bound to: 3'b001 
+	Parameter UTYPE bound to: 3'b010 
+	Parameter BTYPE bound to: 3'b011 
+	Parameter JTYPE bound to: 3'b100 
+INFO: [Synth 8-6155] done synthesizing module 'shiftsignshuff' (9#1) [C:/Users/MJ/Documents/UP Diliman/5th Year/2nd Sem/CoE 198/pipelined-RV32IMC/Baseline processor/shiftsignshuff.v:15]
+INFO: [Synth 8-6157] synthesizing module 'forwarding_unit' [C:/Users/MJ/Documents/UP Diliman/5th Year/2nd Sem/CoE 198/pipelined-RV32IMC/Baseline processor/forwarding_unit.v:18]
+INFO: [Synth 8-6155] done synthesizing module 'forwarding_unit' (10#1) [C:/Users/MJ/Documents/UP Diliman/5th Year/2nd Sem/CoE 198/pipelined-RV32IMC/Baseline processor/forwarding_unit.v:18]
+INFO: [Synth 8-6157] synthesizing module 'pipereg_id_exe' [C:/Users/MJ/Documents/UP Diliman/5th Year/2nd Sem/CoE 198/pipelined-RV32IMC/Baseline processor/pipereg_id_exe.v:3]
+INFO: [Synth 8-6155] done synthesizing module 'pipereg_id_exe' (11#1) [C:/Users/MJ/Documents/UP Diliman/5th Year/2nd Sem/CoE 198/pipelined-RV32IMC/Baseline processor/pipereg_id_exe.v:3]
+INFO: [Synth 8-6157] synthesizing module 'alu' [C:/Users/MJ/Documents/UP Diliman/5th Year/2nd Sem/CoE 198/pipelined-RV32IMC/Baseline processor/alu.v:3]
+	Parameter alu_add bound to: 4'b0001 
+	Parameter alu_sub bound to: 4'b0010 
+	Parameter alu_and bound to: 4'b0011 
+	Parameter alu_or bound to: 4'b0100 
+	Parameter alu_xor bound to: 4'b0101 
+	Parameter alu_slt bound to: 4'b0110 
+	Parameter alu_sltu bound to: 4'b0111 
+	Parameter alu_sll bound to: 4'b1000 
+	Parameter alu_srl bound to: 4'b1001 
+	Parameter alu_sra bound to: 4'b1010 
+	Parameter alu_mul bound to: 4'b1011 
+	Parameter alu_mulh bound to: 4'b1100 
+	Parameter alu_mulhsu bound to: 4'b1101 
+	Parameter alu_mulhu bound to: 4'b1110 
+INFO: [Synth 8-6157] synthesizing module 'mult_gen_hsu' [C:/Users/MJ/Documents/Vivado/pipelined-RV32IMC/pipelined-RV32IMC.runs/retiming_enabled/.Xil/Vivado-6212-Kouzui/realtime/mult_gen_hsu_stub.v:6]
+INFO: [Synth 8-6155] done synthesizing module 'mult_gen_hsu' (12#1) [C:/Users/MJ/Documents/Vivado/pipelined-RV32IMC/pipelined-RV32IMC.runs/retiming_enabled/.Xil/Vivado-6212-Kouzui/realtime/mult_gen_hsu_stub.v:6]
+INFO: [Synth 8-6157] synthesizing module 'mult_gen_signed' [C:/Users/MJ/Documents/Vivado/pipelined-RV32IMC/pipelined-RV32IMC.runs/retiming_enabled/.Xil/Vivado-6212-Kouzui/realtime/mult_gen_signed_stub.v:6]
+INFO: [Synth 8-6155] done synthesizing module 'mult_gen_signed' (13#1) [C:/Users/MJ/Documents/Vivado/pipelined-RV32IMC/pipelined-RV32IMC.runs/retiming_enabled/.Xil/Vivado-6212-Kouzui/realtime/mult_gen_signed_stub.v:6]
+INFO: [Synth 8-6157] synthesizing module 'mult_gen_u' [C:/Users/MJ/Documents/Vivado/pipelined-RV32IMC/pipelined-RV32IMC.runs/retiming_enabled/.Xil/Vivado-6212-Kouzui/realtime/mult_gen_u_stub.v:6]
+INFO: [Synth 8-6155] done synthesizing module 'mult_gen_u' (14#1) [C:/Users/MJ/Documents/Vivado/pipelined-RV32IMC/pipelined-RV32IMC.runs/retiming_enabled/.Xil/Vivado-6212-Kouzui/realtime/mult_gen_u_stub.v:6]
+INFO: [Synth 8-6155] done synthesizing module 'alu' (15#1) [C:/Users/MJ/Documents/UP Diliman/5th Year/2nd Sem/CoE 198/pipelined-RV32IMC/Baseline processor/alu.v:3]
+INFO: [Synth 8-6157] synthesizing module 'divider_unit' [C:/Users/MJ/Documents/UP Diliman/5th Year/2nd Sem/CoE 198/pipelined-RV32IMC/Baseline processor/divider_unit.v:25]
+	Parameter DIV bound to: 2'b00 
+	Parameter DIVU bound to: 2'b01 
+	Parameter REM bound to: 2'b10 
+	Parameter REMU bound to: 2'b11 
+	Parameter RESET bound to: 2'b00 
+	Parameter WAIT bound to: 2'b01 
+	Parameter DIVIDING bound to: 2'b10 
+	Parameter DONE bound to: 2'b11 
+INFO: [Synth 8-6157] synthesizing module 'div_gen_signed' [C:/Users/MJ/Documents/Vivado/pipelined-RV32IMC/pipelined-RV32IMC.runs/retiming_enabled/.Xil/Vivado-6212-Kouzui/realtime/div_gen_signed_stub.v:6]
+INFO: [Synth 8-6155] done synthesizing module 'div_gen_signed' (16#1) [C:/Users/MJ/Documents/Vivado/pipelined-RV32IMC/pipelined-RV32IMC.runs/retiming_enabled/.Xil/Vivado-6212-Kouzui/realtime/div_gen_signed_stub.v:6]
+WARNING: [Synth 8-7023] instance 'DIVREM' of module 'div_gen_signed' has 12 connections declared, but only 11 given [C:/Users/MJ/Documents/UP Diliman/5th Year/2nd Sem/CoE 198/pipelined-RV32IMC/Baseline processor/divider_unit.v:100]
+INFO: [Synth 8-6157] synthesizing module 'div_gen_unsigned' [C:/Users/MJ/Documents/Vivado/pipelined-RV32IMC/pipelined-RV32IMC.runs/retiming_enabled/.Xil/Vivado-6212-Kouzui/realtime/div_gen_unsigned_stub.v:6]
+INFO: [Synth 8-6155] done synthesizing module 'div_gen_unsigned' (17#1) [C:/Users/MJ/Documents/Vivado/pipelined-RV32IMC/pipelined-RV32IMC.runs/retiming_enabled/.Xil/Vivado-6212-Kouzui/realtime/div_gen_unsigned_stub.v:6]
+WARNING: [Synth 8-7023] instance 'DIVUREMU' of module 'div_gen_unsigned' has 12 connections declared, but only 11 given [C:/Users/MJ/Documents/UP Diliman/5th Year/2nd Sem/CoE 198/pipelined-RV32IMC/Baseline processor/divider_unit.v:117]
+INFO: [Synth 8-6155] done synthesizing module 'divider_unit' (18#1) [C:/Users/MJ/Documents/UP Diliman/5th Year/2nd Sem/CoE 198/pipelined-RV32IMC/Baseline processor/divider_unit.v:25]
+INFO: [Synth 8-6157] synthesizing module 'branchpredictor' [C:/Users/MJ/Documents/UP Diliman/5th Year/2nd Sem/CoE 198/pipelined-RV32IMC/Baseline processor/branchpredictor.v:21]
+INFO: [Synth 8-6155] done synthesizing module 'branchpredictor' (19#1) [C:/Users/MJ/Documents/UP Diliman/5th Year/2nd Sem/CoE 198/pipelined-RV32IMC/Baseline processor/branchpredictor.v:21]
+INFO: [Synth 8-6157] synthesizing module 'storeblock' [C:/Users/MJ/Documents/UP Diliman/5th Year/2nd Sem/CoE 198/pipelined-RV32IMC/Baseline processor/storeblock.v:23]
+	Parameter sw bound to: 2'b10 
+	Parameter sh bound to: 2'b01 
+	Parameter sb bound to: 2'b00 
+INFO: [Synth 8-6155] done synthesizing module 'storeblock' (20#1) [C:/Users/MJ/Documents/UP Diliman/5th Year/2nd Sem/CoE 198/pipelined-RV32IMC/Baseline processor/storeblock.v:23]
+INFO: [Synth 8-6157] synthesizing module 'pipereg_exe_mem' [C:/Users/MJ/Documents/UP Diliman/5th Year/2nd Sem/CoE 198/pipelined-RV32IMC/Baseline processor/pipereg_exe_mem.v:3]
+INFO: [Synth 8-6155] done synthesizing module 'pipereg_exe_mem' (21#1) [C:/Users/MJ/Documents/UP Diliman/5th Year/2nd Sem/CoE 198/pipelined-RV32IMC/Baseline processor/pipereg_exe_mem.v:3]
+INFO: [Synth 8-6157] synthesizing module 'datamem' [C:/Users/MJ/Documents/UP Diliman/5th Year/2nd Sem/CoE 198/pipelined-RV32IMC/Baseline processor/datamem.v:3]
+INFO: [Synth 8-6157] synthesizing module 'blk_mem_gen_datamem' [C:/Users/MJ/Documents/Vivado/pipelined-RV32IMC/pipelined-RV32IMC.runs/retiming_enabled/.Xil/Vivado-6212-Kouzui/realtime/blk_mem_gen_datamem_stub.v:6]
+INFO: [Synth 8-6155] done synthesizing module 'blk_mem_gen_datamem' (22#1) [C:/Users/MJ/Documents/Vivado/pipelined-RV32IMC/pipelined-RV32IMC.runs/retiming_enabled/.Xil/Vivado-6212-Kouzui/realtime/blk_mem_gen_datamem_stub.v:6]
+INFO: [Synth 8-6155] done synthesizing module 'datamem' (23#1) [C:/Users/MJ/Documents/UP Diliman/5th Year/2nd Sem/CoE 198/pipelined-RV32IMC/Baseline processor/datamem.v:3]
+INFO: [Synth 8-6157] synthesizing module 'loadblock' [C:/Users/MJ/Documents/UP Diliman/5th Year/2nd Sem/CoE 198/pipelined-RV32IMC/Baseline processor/loadblock.v:3]
+	Parameter LB bound to: 3'b000 
+	Parameter LH bound to: 3'b001 
+	Parameter LW bound to: 3'b010 
+	Parameter LBU bound to: 3'b100 
+	Parameter LHU bound to: 3'b101 
+INFO: [Synth 8-6155] done synthesizing module 'loadblock' (24#1) [C:/Users/MJ/Documents/UP Diliman/5th Year/2nd Sem/CoE 198/pipelined-RV32IMC/Baseline processor/loadblock.v:3]
+INFO: [Synth 8-6157] synthesizing module 'pipereg_mem_wb' [C:/Users/MJ/Documents/UP Diliman/5th Year/2nd Sem/CoE 198/pipelined-RV32IMC/Baseline processor/pipereg_mem_wb.v:3]
+INFO: [Synth 8-6155] done synthesizing module 'pipereg_mem_wb' (25#1) [C:/Users/MJ/Documents/UP Diliman/5th Year/2nd Sem/CoE 198/pipelined-RV32IMC/Baseline processor/pipereg_mem_wb.v:3]
+INFO: [Synth 8-6155] done synthesizing module 'core' (26#1) [C:/Users/MJ/Documents/UP Diliman/5th Year/2nd Sem/CoE 198/pipelined-RV32IMC/Baseline processor/core.v:3]
+INFO: [Synth 8-6157] synthesizing module 'uart_datamemdump' [C:/Users/MJ/Documents/UP Diliman/5th Year/2nd Sem/CoE 198/pipelined-RV32IMC/Baseline processor/uart_datamemdump.v:17]
+	Parameter RESET bound to: 4'b0000 
+	Parameter WAIT_SEND bound to: 4'b0001 
+	Parameter LD_TESTPROGNAME bound to: 4'b0010 
+	Parameter SEND_CHAR bound to: 4'b0011 
+	Parameter RDY_LOW bound to: 4'b0100 
+	Parameter WAIT_RDY bound to: 4'b0101 
+	Parameter LD_LINE1 bound to: 4'b0110 
+	Parameter LD_LINE2 bound to: 4'b0111 
+	Parameter LD_LINE3 bound to: 4'b1000 
+	Parameter CHECK_ANSKEY bound to: 4'b1001 
+	Parameter LD_ANSWER bound to: 4'b1010 
+	Parameter CHECK_RESULT bound to: 4'b1011 
+	Parameter LD_RESULT bound to: 4'b1100 
+	Parameter LD_CLOCKCYCLES bound to: 4'b1101 
+	Parameter LD_ENDLINE bound to: 4'b1110 
+	Parameter DONE bound to: 4'b1111 
+	Parameter MAX_STR_LEN bound to: 36 - type: integer 
+	Parameter RESET_CTR_MAX bound to: 18'b011000011010100000 
+	Parameter TESTPROGNAME_STR_LEN bound to: 12 - type: integer 
+	Parameter LINE1_STR_LEN bound to: 33 - type: integer 
+	Parameter LINE2_STR_LEN bound to: 31 - type: integer 
+	Parameter LINE3_STR_LEN bound to: 31 - type: integer 
+	Parameter ANSWER_STR_LEN bound to: 36 - type: integer 
+	Parameter RESULT_STR_LEN bound to: 35 - type: integer 
+	Parameter CLOCKCYCLES_STR_LEN bound to: 26 - type: integer 
+	Parameter ENDLINE_STR_LEN bound to: 36 - type: integer 
+	Parameter TRIGGER_DATA bound to: -1377718187 - type: integer 
+	Parameter MAPPED_ADDR bound to: 10'b1111111111 
+INFO: [Synth 8-5534] Detected attribute (* dont_touch = "yes" *) [C:/Users/MJ/Documents/UP Diliman/5th Year/2nd Sem/CoE 198/pipelined-RV32IMC/Baseline processor/uart_datamemdump.v:40]
+INFO: [Synth 8-3876] $readmem data file 'answerkey.mem' is read successfully [C:/Users/MJ/Documents/UP Diliman/5th Year/2nd Sem/CoE 198/pipelined-RV32IMC/Baseline processor/uart_datamemdump.v:379]
+INFO: [Synth 8-638] synthesizing module 'UART_TX' [C:/Users/MJ/Documents/UP Diliman/5th Year/2nd Sem/CoE 198/pipelined-RV32IMC/Baseline processor/UART_TX.vhd:50]
+INFO: [Synth 8-256] done synthesizing module 'UART_TX' (27#1) [C:/Users/MJ/Documents/UP Diliman/5th Year/2nd Sem/CoE 198/pipelined-RV32IMC/Baseline processor/UART_TX.vhd:50]
+INFO: [Synth 8-155] case statement is not full and has no default [C:/Users/MJ/Documents/UP Diliman/5th Year/2nd Sem/CoE 198/pipelined-RV32IMC/Baseline processor/uart_datamemdump.v:656]
+INFO: [Synth 8-6155] done synthesizing module 'uart_datamemdump' (28#1) [C:/Users/MJ/Documents/UP Diliman/5th Year/2nd Sem/CoE 198/pipelined-RV32IMC/Baseline processor/uart_datamemdump.v:17]
+INFO: [Synth 8-6155] done synthesizing module 'top' (29#1) [C:/Users/MJ/Documents/UP Diliman/5th Year/2nd Sem/CoE 198/pipelined-RV32IMC/Baseline processor/top.v:22]
+WARNING: [Synth 8-3331] design instmem has unconnected port addr[1]
+WARNING: [Synth 8-3331] design instmem has unconnected port addr[0]
+---------------------------------------------------------------------------------
+Finished RTL Elaboration : Time (s): cpu = 00:00:13 ; elapsed = 00:00:14 . Memory (MB): peak = 908.809 ; gain = 338.102
+---------------------------------------------------------------------------------
+
+Report Check Netlist: 
++------+------------------+-------+---------+-------+------------------+
+|      |Item              |Errors |Warnings |Status |Description       |
++------+------------------+-------+---------+-------+------------------+
+|1     |multi_driven_nets |      0|        0|Passed |Multi driven nets |
++------+------------------+-------+---------+-------+------------------+
+---------------------------------------------------------------------------------
+Start Handling Custom Attributes
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Handling Custom Attributes : Time (s): cpu = 00:00:15 ; elapsed = 00:00:16 . Memory (MB): peak = 908.809 ; gain = 338.102
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished RTL Optimization Phase 1 : Time (s): cpu = 00:00:15 ; elapsed = 00:00:16 . Memory (MB): peak = 908.809 ; gain = 338.102
+---------------------------------------------------------------------------------
+Netlist sorting complete. Time (s): cpu = 00:00:01 ; elapsed = 00:00:00.265 . Memory (MB): peak = 908.809 ; gain = 0.000
+INFO: [Project 1-570] Preparing netlist for logic optimization
+
+Processing XDC Constraints
+Initializing timing engine
+Parsing XDC File [c:/Users/MJ/Documents/Vivado/pipelined-RV32IMC/pipelined-RV32IMC.srcs/sources_1/ip/div_gen_signed/div_gen_signed/div_gen_signed_in_context.xdc] for cell 'RISCVCORE/DIVIDER/DIVREM'
+Finished Parsing XDC File [c:/Users/MJ/Documents/Vivado/pipelined-RV32IMC/pipelined-RV32IMC.srcs/sources_1/ip/div_gen_signed/div_gen_signed/div_gen_signed_in_context.xdc] for cell 'RISCVCORE/DIVIDER/DIVREM'
+Parsing XDC File [c:/Users/MJ/Documents/Vivado/pipelined-RV32IMC/pipelined-RV32IMC.srcs/sources_1/ip/blk_mem_gen_instmem/blk_mem_gen_instmem/blk_mem_gen_instmem_in_context.xdc] for cell 'RISCVCORE/INSTMEM/BLOCKMEM'
+Finished Parsing XDC File [c:/Users/MJ/Documents/Vivado/pipelined-RV32IMC/pipelined-RV32IMC.srcs/sources_1/ip/blk_mem_gen_instmem/blk_mem_gen_instmem/blk_mem_gen_instmem_in_context.xdc] for cell 'RISCVCORE/INSTMEM/BLOCKMEM'
+Parsing XDC File [c:/Users/MJ/Documents/Vivado/pipelined-RV32IMC/pipelined-RV32IMC.srcs/sources_1/ip/blk_mem_gen_datamem/blk_mem_gen_datamem/blk_mem_gen_datamem_in_context.xdc] for cell 'RISCVCORE/DATAMEM/BLOCKMEM'
+Finished Parsing XDC File [c:/Users/MJ/Documents/Vivado/pipelined-RV32IMC/pipelined-RV32IMC.srcs/sources_1/ip/blk_mem_gen_datamem/blk_mem_gen_datamem/blk_mem_gen_datamem_in_context.xdc] for cell 'RISCVCORE/DATAMEM/BLOCKMEM'
+Parsing XDC File [c:/Users/MJ/Documents/Vivado/pipelined-RV32IMC/pipelined-RV32IMC.srcs/sources_1/ip/clk_wiz_0/clk_wiz_0/clk_wiz_0_in_context.xdc] for cell 'CLKIP'
+Finished Parsing XDC File [c:/Users/MJ/Documents/Vivado/pipelined-RV32IMC/pipelined-RV32IMC.srcs/sources_1/ip/clk_wiz_0/clk_wiz_0/clk_wiz_0_in_context.xdc] for cell 'CLKIP'
+Parsing XDC File [c:/Users/MJ/Documents/Vivado/pipelined-RV32IMC/pipelined-RV32IMC.srcs/sources_1/ip/mult_gen_u/mult_gen_u/mult_gen_u_in_context.xdc] for cell 'RISCVCORE/ALU/MULHU'
+Finished Parsing XDC File [c:/Users/MJ/Documents/Vivado/pipelined-RV32IMC/pipelined-RV32IMC.srcs/sources_1/ip/mult_gen_u/mult_gen_u/mult_gen_u_in_context.xdc] for cell 'RISCVCORE/ALU/MULHU'
+Parsing XDC File [c:/Users/MJ/Documents/Vivado/pipelined-RV32IMC/pipelined-RV32IMC.srcs/sources_1/ip/mult_gen_hsu/mult_gen_hsu/mult_gen_hsu_in_context.xdc] for cell 'RISCVCORE/ALU/MULHSU'
+Finished Parsing XDC File [c:/Users/MJ/Documents/Vivado/pipelined-RV32IMC/pipelined-RV32IMC.srcs/sources_1/ip/mult_gen_hsu/mult_gen_hsu/mult_gen_hsu_in_context.xdc] for cell 'RISCVCORE/ALU/MULHSU'
+Parsing XDC File [c:/Users/MJ/Documents/Vivado/pipelined-RV32IMC/pipelined-RV32IMC.srcs/sources_1/ip/mult_gen_signed/mult_gen_signed/mult_gen_signed_in_context.xdc] for cell 'RISCVCORE/ALU/MULH'
+Finished Parsing XDC File [c:/Users/MJ/Documents/Vivado/pipelined-RV32IMC/pipelined-RV32IMC.srcs/sources_1/ip/mult_gen_signed/mult_gen_signed/mult_gen_signed_in_context.xdc] for cell 'RISCVCORE/ALU/MULH'
+Parsing XDC File [c:/Users/MJ/Documents/Vivado/pipelined-RV32IMC/pipelined-RV32IMC.srcs/sources_1/ip/div_gen_unsigned/div_gen_unsigned/div_gen_unsigned_in_context.xdc] for cell 'RISCVCORE/DIVIDER/DIVUREMU'
+Finished Parsing XDC File [c:/Users/MJ/Documents/Vivado/pipelined-RV32IMC/pipelined-RV32IMC.srcs/sources_1/ip/div_gen_unsigned/div_gen_unsigned/div_gen_unsigned_in_context.xdc] for cell 'RISCVCORE/DIVIDER/DIVUREMU'
+Parsing XDC File [C:/Users/MJ/Documents/UP Diliman/5th Year/2nd Sem/CoE 198/pipelined-RV32IMC/Vivado Files/arty7_a35t.xdc]
+WARNING: [Vivado 12-508] No pins matched 'CLKIP/inst/plle2_adv_inst/CLKOUT0'. [C:/Users/MJ/Documents/UP Diliman/5th Year/2nd Sem/CoE 198/pipelined-RV32IMC/Vivado Files/arty7_a35t.xdc:12]
+WARNING: [Vivado 12-508] No pins matched 'CLKIP/inst/plle2_adv_inst/CLKOUT0'. [C:/Users/MJ/Documents/UP Diliman/5th Year/2nd Sem/CoE 198/pipelined-RV32IMC/Vivado Files/arty7_a35t.xdc:13]
+INFO: [Constraints 18-483] create_clock: no pin(s)/port(s)/net(s) specified as objects, only virtual clock 'VIRTUAL_clk_out1_clk_wiz_0_1' will be created. If you don't want this, please specify pin(s)/ports(s)/net(s) as objects to the command. [C:/Users/MJ/Documents/UP Diliman/5th Year/2nd Sem/CoE 198/pipelined-RV32IMC/Vivado Files/arty7_a35t.xdc:15]
+Finished Parsing XDC File [C:/Users/MJ/Documents/UP Diliman/5th Year/2nd Sem/CoE 198/pipelined-RV32IMC/Vivado Files/arty7_a35t.xdc]
+WARNING: [Project 1-498] One or more constraints failed evaluation while reading constraint file [C:/Users/MJ/Documents/UP Diliman/5th Year/2nd Sem/CoE 198/pipelined-RV32IMC/Vivado Files/arty7_a35t.xdc] and the design contains unresolved black boxes. These constraints will be read post-synthesis (as long as their source constraint file is marked as used_in_implementation) and should be applied correctly then. You should review the constraints listed in the file [.Xil/top_propImpl.xdc] and check the run log file to verify that these constraints were correctly applied.
+INFO: [Project 1-236] Implementation specific constraints were found while reading constraint file [C:/Users/MJ/Documents/UP Diliman/5th Year/2nd Sem/CoE 198/pipelined-RV32IMC/Vivado Files/arty7_a35t.xdc]. These constraints will be ignored for synthesis but will be used in implementation. Impacted constraints are listed in the file [.Xil/top_propImpl.xdc].
+Resolution: To avoid this warning, move constraints listed in [.Xil/top_propImpl.xdc] to another XDC file and exclude this new file from synthesis with the used_in_synthesis property (File Properties dialog in GUI) and re-run elaboration/synthesis.
+Parsing XDC File [C:/Users/MJ/Documents/Vivado/pipelined-RV32IMC/pipelined-RV32IMC.runs/retiming_enabled/dont_touch.xdc]
+Finished Parsing XDC File [C:/Users/MJ/Documents/Vivado/pipelined-RV32IMC/pipelined-RV32IMC.runs/retiming_enabled/dont_touch.xdc]
+Completed Processing XDC Constraints
+
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.003 . Memory (MB): peak = 1037.996 ; gain = 0.000
+INFO: [Project 1-111] Unisim Transformation Summary:
+No Unisim elements were transformed.
+
+Constraint Validation Runtime : Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.115 . Memory (MB): peak = 1037.996 ; gain = 0.000
+WARNING: [Timing 38-316] Clock period '1000.000' specified during out-of-context synthesis of instance 'RISCVCORE/DIVIDER/DIVREM' at clock pin 'aclk' is different from the actual clock period '20.000', this can lead to different synthesis results.
+WARNING: [Timing 38-316] Clock period '1000.000' specified during out-of-context synthesis of instance 'RISCVCORE/DIVIDER/DIVUREMU' at clock pin 'aclk' is different from the actual clock period '20.000', this can lead to different synthesis results.
+---------------------------------------------------------------------------------
+Finished Constraint Validation : Time (s): cpu = 00:00:32 ; elapsed = 00:00:33 . Memory (MB): peak = 1038.996 ; gain = 468.289
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Loading Part and Timing Information
+---------------------------------------------------------------------------------
+Loading part: xc7a35ticsg324-1L
+---------------------------------------------------------------------------------
+Finished Loading Part and Timing Information : Time (s): cpu = 00:00:32 ; elapsed = 00:00:33 . Memory (MB): peak = 1038.996 ; gain = 468.289
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Applying 'set_property' XDC Constraints
+---------------------------------------------------------------------------------
+Applied set_property IO_BUFFER_TYPE = NONE for CLK100MHZ. (constraint file  c:/Users/MJ/Documents/Vivado/pipelined-RV32IMC/pipelined-RV32IMC.srcs/sources_1/ip/clk_wiz_0/clk_wiz_0/clk_wiz_0_in_context.xdc, line 3).
+Applied set_property CLOCK_BUFFER_TYPE = NONE for CLK100MHZ. (constraint file  c:/Users/MJ/Documents/Vivado/pipelined-RV32IMC/pipelined-RV32IMC.srcs/sources_1/ip/clk_wiz_0/clk_wiz_0/clk_wiz_0_in_context.xdc, line 4).
+Applied set_property DONT_TOUCH = true for RISCVCORE/DIVIDER/DIVREM. (constraint file  auto generated constraint, line ).
+Applied set_property DONT_TOUCH = true for RISCVCORE/INSTMEM/BLOCKMEM. (constraint file  auto generated constraint, line ).
+Applied set_property DONT_TOUCH = true for RISCVCORE/DATAMEM/BLOCKMEM. (constraint file  auto generated constraint, line ).
+Applied set_property DONT_TOUCH = true for CLKIP. (constraint file  auto generated constraint, line ).
+Applied set_property DONT_TOUCH = true for RISCVCORE/ALU/MULHU. (constraint file  auto generated constraint, line ).
+Applied set_property DONT_TOUCH = true for RISCVCORE/ALU/MULHSU. (constraint file  auto generated constraint, line ).
+Applied set_property DONT_TOUCH = true for RISCVCORE/ALU/MULH. (constraint file  auto generated constraint, line ).
+Applied set_property DONT_TOUCH = true for RISCVCORE/DIVIDER/DIVUREMU. (constraint file  auto generated constraint, line ).
+---------------------------------------------------------------------------------
+Finished applying 'set_property' XDC Constraints : Time (s): cpu = 00:00:32 ; elapsed = 00:00:33 . Memory (MB): peak = 1038.996 ; gain = 468.289
+---------------------------------------------------------------------------------
+INFO: [Synth 8-802] inferred FSM for state register 'div_state_reg' in module 'divider_unit'
+INFO: [Synth 8-5818] HDL ADVISOR - The operator resource <adder> is shared. To prevent sharing consider applying a KEEP on the output of the operator [C:/Users/MJ/Documents/UP Diliman/5th Year/2nd Sem/CoE 198/pipelined-RV32IMC/Baseline processor/branchpredictor.v:309]
+INFO: [Synth 8-5544] ROM "dm_write" won't be mapped to Block RAM because address size (3) smaller than threshold (5)
+INFO: [Synth 8-802] inferred FSM for state register 'txState_reg' in module 'UART_TX'
+INFO: [Synth 8-4471] merging register 'ANSWER_STR_reg[6][7:0]' into 'ANSWER_STR_reg[5][7:0]' [C:/Users/MJ/Documents/UP Diliman/5th Year/2nd Sem/CoE 198/pipelined-RV32IMC/Baseline processor/uart_datamemdump.v:531]
+INFO: [Synth 8-4471] merging register 'ANSWER_STR_reg[8][7:0]' into 'ANSWER_STR_reg[0][7:0]' [C:/Users/MJ/Documents/UP Diliman/5th Year/2nd Sem/CoE 198/pipelined-RV32IMC/Baseline processor/uart_datamemdump.v:531]
+INFO: [Synth 8-4471] merging register 'ANSWER_STR_reg[9][7:0]' into 'ANSWER_STR_reg[1][7:0]' [C:/Users/MJ/Documents/UP Diliman/5th Year/2nd Sem/CoE 198/pipelined-RV32IMC/Baseline processor/uart_datamemdump.v:531]
+INFO: [Synth 8-4471] merging register 'ANSWER_STR_reg[18][7:0]' into 'ANSWER_STR_reg[7][7:0]' [C:/Users/MJ/Documents/UP Diliman/5th Year/2nd Sem/CoE 198/pipelined-RV32IMC/Baseline processor/uart_datamemdump.v:531]
+INFO: [Synth 8-4471] merging register 'ANSWER_STR_reg[19][7:0]' into 'ANSWER_STR_reg[0][7:0]' [C:/Users/MJ/Documents/UP Diliman/5th Year/2nd Sem/CoE 198/pipelined-RV32IMC/Baseline processor/uart_datamemdump.v:531]
+INFO: [Synth 8-4471] merging register 'ANSWER_STR_reg[20][7:0]' into 'ANSWER_STR_reg[1][7:0]' [C:/Users/MJ/Documents/UP Diliman/5th Year/2nd Sem/CoE 198/pipelined-RV32IMC/Baseline processor/uart_datamemdump.v:531]
+INFO: [Synth 8-4471] merging register 'ANSWER_STR_reg[29][7:0]' into 'ANSWER_STR_reg[7][7:0]' [C:/Users/MJ/Documents/UP Diliman/5th Year/2nd Sem/CoE 198/pipelined-RV32IMC/Baseline processor/uart_datamemdump.v:531]
+INFO: [Synth 8-4471] merging register 'RESULT_STR_reg[5][7:0]' into 'RESULT_STR_reg[4][7:0]' [C:/Users/MJ/Documents/UP Diliman/5th Year/2nd Sem/CoE 198/pipelined-RV32IMC/Baseline processor/uart_datamemdump.v:579]
+INFO: [Synth 8-4471] merging register 'RESULT_STR_reg[16][7:0]' into 'RESULT_STR_reg[10][7:0]' [C:/Users/MJ/Documents/UP Diliman/5th Year/2nd Sem/CoE 198/pipelined-RV32IMC/Baseline processor/uart_datamemdump.v:579]
+INFO: [Synth 8-4471] merging register 'RESULT_STR_reg[17][7:0]' into 'RESULT_STR_reg[11][7:0]' [C:/Users/MJ/Documents/UP Diliman/5th Year/2nd Sem/CoE 198/pipelined-RV32IMC/Baseline processor/uart_datamemdump.v:579]
+INFO: [Synth 8-4471] merging register 'RESULT_STR_reg[21][7:0]' into 'RESULT_STR_reg[9][7:0]' [C:/Users/MJ/Documents/UP Diliman/5th Year/2nd Sem/CoE 198/pipelined-RV32IMC/Baseline processor/uart_datamemdump.v:579]
+INFO: [Synth 8-4471] merging register 'RESULT_STR_reg[23][7:0]' into 'RESULT_STR_reg[6][7:0]' [C:/Users/MJ/Documents/UP Diliman/5th Year/2nd Sem/CoE 198/pipelined-RV32IMC/Baseline processor/uart_datamemdump.v:579]
+INFO: [Synth 8-4471] merging register 'RESULT_STR_reg[24][7:0]' into 'RESULT_STR_reg[4][7:0]' [C:/Users/MJ/Documents/UP Diliman/5th Year/2nd Sem/CoE 198/pipelined-RV32IMC/Baseline processor/uart_datamemdump.v:579]
+INFO: [Synth 8-4471] merging register 'RESULT_STR_reg[25][7:0]' into 'RESULT_STR_reg[22][7:0]' [C:/Users/MJ/Documents/UP Diliman/5th Year/2nd Sem/CoE 198/pipelined-RV32IMC/Baseline processor/uart_datamemdump.v:579]
+INFO: [Synth 8-4471] merging register 'RESULT_STR_reg[26][7:0]' into 'RESULT_STR_reg[9][7:0]' [C:/Users/MJ/Documents/UP Diliman/5th Year/2nd Sem/CoE 198/pipelined-RV32IMC/Baseline processor/uart_datamemdump.v:579]
+INFO: [Synth 8-4471] merging register 'RESULT_STR_reg[28][7:0]' into 'RESULT_STR_reg[3][7:0]' [C:/Users/MJ/Documents/UP Diliman/5th Year/2nd Sem/CoE 198/pipelined-RV32IMC/Baseline processor/uart_datamemdump.v:579]
+INFO: [Synth 8-4471] merging register 'RESULT_STR_reg[29][7:0]' into 'RESULT_STR_reg[4][7:0]' [C:/Users/MJ/Documents/UP Diliman/5th Year/2nd Sem/CoE 198/pipelined-RV32IMC/Baseline processor/uart_datamemdump.v:579]
+INFO: [Synth 8-4471] merging register 'RESULT_STR_reg[30][7:0]' into 'RESULT_STR_reg[6][7:0]' [C:/Users/MJ/Documents/UP Diliman/5th Year/2nd Sem/CoE 198/pipelined-RV32IMC/Baseline processor/uart_datamemdump.v:579]
+INFO: [Synth 8-4471] merging register 'RESULT_STR_reg[31][7:0]' into 'RESULT_STR_reg[4][7:0]' [C:/Users/MJ/Documents/UP Diliman/5th Year/2nd Sem/CoE 198/pipelined-RV32IMC/Baseline processor/uart_datamemdump.v:579]
+INFO: [Synth 8-4471] merging register 'RESULT_STR_reg[33][7:0]' into 'RESULT_STR_reg[0][7:0]' [C:/Users/MJ/Documents/UP Diliman/5th Year/2nd Sem/CoE 198/pipelined-RV32IMC/Baseline processor/uart_datamemdump.v:579]
+INFO: [Synth 8-4471] merging register 'RESULT_STR_reg[34][7:0]' into 'RESULT_STR_reg[1][7:0]' [C:/Users/MJ/Documents/UP Diliman/5th Year/2nd Sem/CoE 198/pipelined-RV32IMC/Baseline processor/uart_datamemdump.v:579]
+INFO: [Synth 8-4471] merging register 'CLOCKCYCLES_STR_reg[6][7:0]' into 'CLOCKCYCLES_STR_reg[3][7:0]' [C:/Users/MJ/Documents/UP Diliman/5th Year/2nd Sem/CoE 198/pipelined-RV32IMC/Baseline processor/uart_datamemdump.v:617]
+INFO: [Synth 8-4471] merging register 'CLOCKCYCLES_STR_reg[8][7:0]' into 'CLOCKCYCLES_STR_reg[3][7:0]' [C:/Users/MJ/Documents/UP Diliman/5th Year/2nd Sem/CoE 198/pipelined-RV32IMC/Baseline processor/uart_datamemdump.v:617]
+INFO: [Synth 8-4471] merging register 'CLOCKCYCLES_STR_reg[9][7:0]' into 'CLOCKCYCLES_STR_reg[1][7:0]' [C:/Users/MJ/Documents/UP Diliman/5th Year/2nd Sem/CoE 198/pipelined-RV32IMC/Baseline processor/uart_datamemdump.v:617]
+INFO: [Synth 8-4471] merging register 'CLOCKCYCLES_STR_reg[13][7:0]' into 'CLOCKCYCLES_STR_reg[5][7:0]' [C:/Users/MJ/Documents/UP Diliman/5th Year/2nd Sem/CoE 198/pipelined-RV32IMC/Baseline processor/uart_datamemdump.v:617]
+---------------------------------------------------------------------------------------------------
+                   State |                     New Encoding |                Previous Encoding 
+---------------------------------------------------------------------------------------------------
+                   RESET |                             0001 |                               00
+                    WAIT |                             0010 |                               01
+                DIVIDING |                             0100 |                               10
+                    DONE |                             1000 |                               11
+---------------------------------------------------------------------------------------------------
+INFO: [Synth 8-3354] encoded FSM with state register 'div_state_reg' using encoding 'one-hot' in module 'divider_unit'
+---------------------------------------------------------------------------------------------------
+                   State |                     New Encoding |                Previous Encoding 
+---------------------------------------------------------------------------------------------------
+                     rdy |                               00 |                               00
+                load_bit |                               01 |                               01
+                send_bit |                               10 |                               10
+---------------------------------------------------------------------------------------------------
+INFO: [Synth 8-3354] encoded FSM with state register 'txState_reg' using encoding 'sequential' in module 'UART_TX'
+---------------------------------------------------------------------------------
+Finished RTL Optimization Phase 2 : Time (s): cpu = 00:00:38 ; elapsed = 00:00:40 . Memory (MB): peak = 1038.996 ; gain = 468.289
+---------------------------------------------------------------------------------
+
+Report RTL Partitions: 
++-+--------------+------------+----------+
+| |RTL Partition |Replication |Instances |
++-+--------------+------------+----------+
++-+--------------+------------+----------+
+---------------------------------------------------------------------------------
+Start RTL Component Statistics 
+---------------------------------------------------------------------------------
+Detailed RTL Component Info : 
++---Adders : 
+	   2 Input     32 Bit       Adders := 1     
+	   3 Input     32 Bit       Adders := 1     
+	   2 Input     19 Bit       Adders := 1     
+	   2 Input     12 Bit       Adders := 2     
+	   2 Input     10 Bit       Adders := 4     
+	   2 Input      6 Bit       Adders := 1     
+	   2 Input      2 Bit       Adders := 1     
++---XORs : 
+	   2 Input     32 Bit         XORs := 1     
++---Registers : 
+	               32 Bit    Registers := 49    
+	               19 Bit    Registers := 64    
+	               12 Bit    Registers := 9     
+	               10 Bit    Registers := 5     
+	                8 Bit    Registers := 109   
+	                6 Bit    Registers := 2     
+	                5 Bit    Registers := 3     
+	                4 Bit    Registers := 4     
+	                3 Bit    Registers := 5     
+	                2 Bit    Registers := 18    
+	                1 Bit    Registers := 8     
++---ROMs : 
+	                              ROMs := 1     
++---Muxes : 
+	   4 Input     32 Bit        Muxes := 3     
+	   2 Input     32 Bit        Muxes := 10    
+	   2 Input     19 Bit        Muxes := 1     
+	   2 Input     16 Bit        Muxes := 2     
+	   2 Input     12 Bit        Muxes := 5     
+	   2 Input     10 Bit        Muxes := 2     
+	   4 Input      8 Bit        Muxes := 1     
+	   2 Input      8 Bit        Muxes := 7     
+	   9 Input      8 Bit        Muxes := 10    
+	   2 Input      7 Bit        Muxes := 3     
+	   9 Input      6 Bit        Muxes := 1     
+	   2 Input      5 Bit        Muxes := 3     
+	  14 Input      4 Bit        Muxes := 1     
+	   4 Input      4 Bit        Muxes := 1     
+	   2 Input      4 Bit        Muxes := 4     
+	   3 Input      4 Bit        Muxes := 1     
+	   8 Input      4 Bit        Muxes := 1     
+	  11 Input      4 Bit        Muxes := 1     
+	   2 Input      3 Bit        Muxes := 4     
+	   3 Input      3 Bit        Muxes := 2     
+	   4 Input      2 Bit        Muxes := 2     
+	   2 Input      2 Bit        Muxes := 6     
+	   3 Input      2 Bit        Muxes := 3     
+	   2 Input      1 Bit        Muxes := 272   
+	   4 Input      1 Bit        Muxes := 1     
+	   6 Input      1 Bit        Muxes := 1     
+	   3 Input      1 Bit        Muxes := 65    
+	   9 Input      1 Bit        Muxes := 6     
+---------------------------------------------------------------------------------
+Finished RTL Component Statistics 
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start RTL Hierarchical Component Statistics 
+---------------------------------------------------------------------------------
+Hierarchical RTL Component report 
+Module pc 
+Detailed RTL Component Info : 
++---Registers : 
+	               12 Bit    Registers := 1     
+Module pipereg_if_id 
+Detailed RTL Component Info : 
++---Registers : 
+	               32 Bit    Registers := 1     
+	               12 Bit    Registers := 2     
+Module controller1 
+Detailed RTL Component Info : 
++---Muxes : 
+	  14 Input      4 Bit        Muxes := 1     
+	   2 Input      3 Bit        Muxes := 4     
+	   3 Input      3 Bit        Muxes := 2     
+	   4 Input      2 Bit        Muxes := 1     
+	   2 Input      2 Bit        Muxes := 1     
+	   3 Input      2 Bit        Muxes := 2     
+	   2 Input      1 Bit        Muxes := 4     
+Module regfile 
+Detailed RTL Component Info : 
++---Registers : 
+	               32 Bit    Registers := 32    
++---Muxes : 
+	   2 Input      1 Bit        Muxes := 32    
+Module pipereg_id_exe 
+Detailed RTL Component Info : 
++---Registers : 
+	               32 Bit    Registers := 5     
+	               12 Bit    Registers := 2     
+	                5 Bit    Registers := 1     
+	                4 Bit    Registers := 1     
+	                3 Bit    Registers := 2     
+	                2 Bit    Registers := 2     
+	                1 Bit    Registers := 3     
+Module alu 
+Detailed RTL Component Info : 
++---Adders : 
+	   2 Input     32 Bit       Adders := 1     
+	   3 Input     32 Bit       Adders := 1     
++---XORs : 
+	   2 Input     32 Bit         XORs := 1     
+Module divider_unit 
+Detailed RTL Component Info : 
++---Registers : 
+	               32 Bit    Registers := 1     
++---Muxes : 
+	   4 Input     32 Bit        Muxes := 1     
+	   4 Input      4 Bit        Muxes := 1     
+	   2 Input      4 Bit        Muxes := 2     
+	   4 Input      1 Bit        Muxes := 1     
+Module branchpredictor 
+Detailed RTL Component Info : 
++---Adders : 
+	   2 Input     19 Bit       Adders := 1     
+	   2 Input     10 Bit       Adders := 1     
+	   2 Input      2 Bit       Adders := 1     
++---Registers : 
+	               19 Bit    Registers := 64    
+	                2 Bit    Registers := 16    
+	                1 Bit    Registers := 1     
++---Muxes : 
+	   2 Input     19 Bit        Muxes := 1     
+	   2 Input      2 Bit        Muxes := 4     
+	   4 Input      2 Bit        Muxes := 1     
+	   6 Input      1 Bit        Muxes := 1     
+	   2 Input      1 Bit        Muxes := 210   
+	   3 Input      1 Bit        Muxes := 64    
+Module storeblock 
+Detailed RTL Component Info : 
++---Muxes : 
+	   2 Input     32 Bit        Muxes := 2     
+	   2 Input      4 Bit        Muxes := 2     
+	   3 Input      4 Bit        Muxes := 1     
+	   8 Input      4 Bit        Muxes := 1     
+Module pipereg_exe_mem 
+Detailed RTL Component Info : 
++---Registers : 
+	               32 Bit    Registers := 5     
+	               12 Bit    Registers := 2     
+	                5 Bit    Registers := 1     
+	                4 Bit    Registers := 1     
+	                3 Bit    Registers := 2     
+	                1 Bit    Registers := 1     
+Module loadblock 
+Detailed RTL Component Info : 
++---Muxes : 
+	   4 Input     32 Bit        Muxes := 1     
+	   2 Input     32 Bit        Muxes := 2     
+	   2 Input     16 Bit        Muxes := 2     
+	   4 Input      8 Bit        Muxes := 1     
+Module pipereg_mem_wb 
+Detailed RTL Component Info : 
++---Registers : 
+	               32 Bit    Registers := 5     
+	               12 Bit    Registers := 2     
+	                5 Bit    Registers := 1     
+	                3 Bit    Registers := 1     
+	                1 Bit    Registers := 1     
+Module core 
+Detailed RTL Component Info : 
++---Adders : 
+	   2 Input     12 Bit       Adders := 2     
++---Muxes : 
+	   4 Input     32 Bit        Muxes := 1     
+	   2 Input     32 Bit        Muxes := 6     
+	   2 Input     12 Bit        Muxes := 5     
+	   2 Input      1 Bit        Muxes := 12    
+Module UART_TX 
+Detailed RTL Component Info : 
++---Registers : 
+	               10 Bit    Registers := 1     
+	                1 Bit    Registers := 1     
++---Muxes : 
+	   3 Input      2 Bit        Muxes := 1     
+	   2 Input      2 Bit        Muxes := 1     
+	   2 Input      1 Bit        Muxes := 3     
+	   3 Input      1 Bit        Muxes := 1     
+Module uart_datamemdump 
+Detailed RTL Component Info : 
++---Adders : 
+	   2 Input     10 Bit       Adders := 3     
+	   2 Input      6 Bit       Adders := 1     
++---Registers : 
+	               10 Bit    Registers := 4     
+	                8 Bit    Registers := 109   
+	                6 Bit    Registers := 2     
+	                4 Bit    Registers := 2     
+	                1 Bit    Registers := 1     
++---ROMs : 
+	                              ROMs := 1     
++---Muxes : 
+	   2 Input     10 Bit        Muxes := 2     
+	   2 Input      8 Bit        Muxes := 7     
+	   9 Input      8 Bit        Muxes := 10    
+	   2 Input      7 Bit        Muxes := 3     
+	   9 Input      6 Bit        Muxes := 1     
+	   2 Input      5 Bit        Muxes := 3     
+	  11 Input      4 Bit        Muxes := 1     
+	   2 Input      1 Bit        Muxes := 11    
+	   9 Input      1 Bit        Muxes := 6     
+---------------------------------------------------------------------------------
+Finished RTL Hierarchical Component Statistics
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Part Resource Summary
+---------------------------------------------------------------------------------
+Part Resources:
+DSPs: 90 (col length:60)
+BRAMs: 100 (col length: RAMB18 60 RAMB36 30)
+---------------------------------------------------------------------------------
+Finished Part Resource Summary
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Cross Boundary and Area Optimization
+---------------------------------------------------------------------------------
+Warning: Parallel synthesis criteria is not met 
+INFO: [Synth 8-3886] merging instance 'RISCVCORE/ID_EXE/exe_dm_select_reg[0]' (FDRE) to 'RISCVCORE/ID_EXE/exe_inst_reg[12]'
+INFO: [Synth 8-3886] merging instance 'RISCVCORE/ID_EXE/exe_dm_select_reg[2]' (FDRE) to 'RISCVCORE/ID_EXE/exe_inst_reg[14]'
+INFO: [Synth 8-3886] merging instance 'RISCVCORE/ID_EXE/exe_dm_select_reg[1]' (FDRE) to 'RISCVCORE/ID_EXE/exe_inst_reg[13]'
+INFO: [Synth 8-3886] merging instance 'RISCVCORE/IF_ID/id_pc4_reg[0]' (FDRE) to 'RISCVCORE/IF_ID/id_PC_reg[0]'
+INFO: [Synth 8-3886] merging instance 'RISCVCORE/ID_EXE/exe_inst_reg[31]' (FDRE) to 'RISCVCORE/ID_EXE/exe_imm_reg[31]'
+INFO: [Synth 8-3886] merging instance 'RISCVCORE/ID_EXE/exe_PC_reg[0]' (FDRE) to 'RISCVCORE/ID_EXE/exe_pc4_reg[0]'
+INFO: [Synth 8-3886] merging instance 'RISCVCORE/ID_EXE/exe_inst_reg[10]' (FDRE) to 'RISCVCORE/ID_EXE/exe_rd_reg[3]'
+INFO: [Synth 8-3886] merging instance 'RISCVCORE/ID_EXE/exe_inst_reg[11]' (FDRE) to 'RISCVCORE/ID_EXE/exe_rd_reg[4]'
+INFO: [Synth 8-3886] merging instance 'RISCVCORE/ID_EXE/exe_inst_reg[7]' (FDRE) to 'RISCVCORE/ID_EXE/exe_rd_reg[0]'
+INFO: [Synth 8-3886] merging instance 'RISCVCORE/ID_EXE/exe_inst_reg[8]' (FDRE) to 'RISCVCORE/ID_EXE/exe_rd_reg[1]'
+INFO: [Synth 8-3886] merging instance 'RISCVCORE/ID_EXE/exe_inst_reg[9]' (FDRE) to 'RISCVCORE/ID_EXE/exe_rd_reg[2]'
+INFO: [Synth 8-3886] merging instance 'UARTDUMP/ANSWER_STR_reg[35][0]' (FDRE) to 'UARTDUMP/ANSWER_STR_reg[35][2]'
+INFO: [Synth 8-3886] merging instance 'UARTDUMP/ANSWER_STR_reg[34][0]' (FDSE) to 'UARTDUMP/ANSWER_STR_reg[35][1]'
+INFO: [Synth 8-3886] merging instance 'UARTDUMP/ANSWER_STR_reg[33][0]' (FDSE) to 'UARTDUMP/ANSWER_STR_reg[33][1]'
+INFO: [Synth 8-3886] merging instance 'UARTDUMP/ANSWER_STR_reg[32][0]' (FDSE) to 'UARTDUMP/ANSWER_STR_reg[32][5]'
+INFO: [Synth 8-3886] merging instance 'UARTDUMP/RESULT_STR_reg[32][0]' (FDRE) to 'UARTDUMP/RESULT_STR_reg[32][4]'
+INFO: [Synth 8-3886] merging instance 'UARTDUMP/ANSWER_STR_reg[31][0]' (FDSE) to 'UARTDUMP/ANSWER_STR_reg[35][1]'
+INFO: [Synth 8-3886] merging instance 'UARTDUMP/ANSWER_STR_reg[30][0]' (FDRE) to 'UARTDUMP/ANSWER_STR_reg[30][3]'
+INFO: [Synth 8-3886] merging instance 'UARTDUMP/RESULT_STR_reg[27][0]' (FDSE) to 'UARTDUMP/RESULT_STR_reg[32][1]'
+INFO: [Synth 8-3886] merging instance 'UARTDUMP/CLOCKCYCLES_STR_reg[25][0]' (FDRE) to 'UARTDUMP/CLOCKCYCLES_STR_reg[25][2]'
+INFO: [Synth 8-3886] merging instance 'UARTDUMP/CLOCKCYCLES_STR_reg[24][0]' (FDSE) to 'UARTDUMP/CLOCKCYCLES_STR_reg[25][1]'
+INFO: [Synth 8-3886] merging instance 'UARTDUMP/RESULT_STR_reg[22][0]' (FDRE) to 'UARTDUMP/RESULT_STR_reg[32][4]'
+INFO: [Synth 8-3886] merging instance 'UARTDUMP/CLOCKCYCLES_STR_reg[15][0]' (FDRE) to 'UARTDUMP/CLOCKCYCLES_STR_reg[25][2]'
+INFO: [Synth 8-3886] merging instance 'UARTDUMP/RESULT_STR_reg[15][0]' (FDSE) to 'UARTDUMP/RESULT_STR_reg[32][1]'
+INFO: [Synth 8-3886] merging instance 'UARTDUMP/CLOCKCYCLES_STR_reg[14][0]' (FDRE) to 'UARTDUMP/CLOCKCYCLES_STR_reg[25][2]'
+INFO: [Synth 8-3886] merging instance 'UARTDUMP/CLOCKCYCLES_STR_reg[12][0]' (FDRE) to 'UARTDUMP/CLOCKCYCLES_STR_reg[25][2]'
+INFO: [Synth 8-3886] merging instance 'UARTDUMP/CLOCKCYCLES_STR_reg[11][0]' (FDSE) to 'UARTDUMP/CLOCKCYCLES_STR_reg[25][1]'
+INFO: [Synth 8-3886] merging instance 'UARTDUMP/RESULT_STR_reg[11][0]' (FDRE) to 'UARTDUMP/RESULT_STR_reg[32][4]'
+INFO: [Synth 8-3886] merging instance 'UARTDUMP/CLOCKCYCLES_STR_reg[10][0]' (FDSE) to 'UARTDUMP/CLOCKCYCLES_STR_reg[25][1]'
+INFO: [Synth 8-3886] merging instance 'UARTDUMP/RESULT_STR_reg[10][0]' (FDRE) to 'UARTDUMP/RESULT_STR_reg[32][4]'
+INFO: [Synth 8-3886] merging instance 'UARTDUMP/RESULT_STR_reg[9][0]' (FDRE) to 'UARTDUMP/RESULT_STR_reg[32][4]'
+INFO: [Synth 8-3886] merging instance 'UARTDUMP/RESULT_STR_reg[8][0]' (FDRE) to 'UARTDUMP/RESULT_STR_reg[32][4]'
+INFO: [Synth 8-3886] merging instance 'UARTDUMP/CLOCKCYCLES_STR_reg[7][0]' (FDSE) to 'UARTDUMP/CLOCKCYCLES_STR_reg[25][1]'
+INFO: [Synth 8-3886] merging instance 'UARTDUMP/RESULT_STR_reg[7][0]' (FDRE) to 'UARTDUMP/RESULT_STR_reg[32][4]'
+INFO: [Synth 8-3886] merging instance 'UARTDUMP/ANSWER_STR_reg[7][0]' (FDSE) to 'UARTDUMP/ANSWER_STR_reg[35][1]'
+INFO: [Synth 8-3886] merging instance 'UARTDUMP/RESULT_STR_reg[6][0]' (FDSE) to 'UARTDUMP/RESULT_STR_reg[32][1]'
+INFO: [Synth 8-3886] merging instance 'UARTDUMP/CLOCKCYCLES_STR_reg[5][0]' (FDRE) to 'UARTDUMP/CLOCKCYCLES_STR_reg[25][2]'
+INFO: [Synth 8-3886] merging instance 'UARTDUMP/ANSWER_STR_reg[5][0]' (FDRE) to 'UARTDUMP/ANSWER_STR_reg[35][2]'
+INFO: [Synth 8-3886] merging instance 'UARTDUMP/CLOCKCYCLES_STR_reg[4][0]' (FDSE) to 'UARTDUMP/CLOCKCYCLES_STR_reg[25][1]'
+INFO: [Synth 8-3886] merging instance 'UARTDUMP/RESULT_STR_reg[4][0]' (FDSE) to 'UARTDUMP/RESULT_STR_reg[32][1]'
+INFO: [Synth 8-3886] merging instance 'UARTDUMP/CLOCKCYCLES_STR_reg[3][0]' (FDSE) to 'UARTDUMP/CLOCKCYCLES_STR_reg[25][1]'
+INFO: [Synth 8-3886] merging instance 'UARTDUMP/RESULT_STR_reg[3][0]' (FDSE) to 'UARTDUMP/RESULT_STR_reg[32][1]'
+INFO: [Synth 8-3886] merging instance 'UARTDUMP/CLOCKCYCLES_STR_reg[2][0]' (FDSE) to 'UARTDUMP/CLOCKCYCLES_STR_reg[25][1]'
+INFO: [Synth 8-3886] merging instance 'UARTDUMP/RESULT_STR_reg[2][0]' (FDRE) to 'UARTDUMP/RESULT_STR_reg[32][4]'
+INFO: [Synth 8-3886] merging instance 'UARTDUMP/CLOCKCYCLES_STR_reg[1][0]' (FDRE) to 'UARTDUMP/CLOCKCYCLES_STR_reg[25][2]'
+INFO: [Synth 8-3886] merging instance 'UARTDUMP/RESULT_STR_reg[1][0]' (FDRE) to 'UARTDUMP/RESULT_STR_reg[32][4]'
+INFO: [Synth 8-3886] merging instance 'UARTDUMP/ANSWER_STR_reg[1][0]' (FDRE) to 'UARTDUMP/ANSWER_STR_reg[35][2]'
+INFO: [Synth 8-3886] merging instance 'UARTDUMP/CLOCKCYCLES_STR_reg[0][0]' (FDSE) to 'UARTDUMP/CLOCKCYCLES_STR_reg[25][1]'
+INFO: [Synth 8-3886] merging instance 'UARTDUMP/RESULT_STR_reg[0][0]' (FDSE) to 'UARTDUMP/RESULT_STR_reg[32][1]'
+INFO: [Synth 8-3886] merging instance 'UARTDUMP/ANSWER_STR_reg[0][0]' (FDRE) to 'UARTDUMP/ANSWER_STR_reg[35][2]'
+INFO: [Synth 8-3886] merging instance 'UARTDUMP/ANSWER_STR_reg[35][1]' (FDSE) to 'UARTDUMP/ANSWER_STR_reg[35][3]'
+INFO: [Synth 8-3886] merging instance 'UARTDUMP/ANSWER_STR_reg[34][1]' (FDRE) to 'UARTDUMP/ANSWER_STR_reg[35][2]'
+INFO: [Synth 8-3886] merging instance 'UARTDUMP/ANSWER_STR_reg[33][1]' (FDSE) to 'UARTDUMP/ANSWER_STR_reg[33][4]'
+INFO: [Synth 8-3886] merging instance 'UARTDUMP/RESULT_STR_reg[32][1]' (FDSE) to 'UARTDUMP/RESULT_STR_reg[32][2]'
+INFO: [Synth 8-3886] merging instance 'UARTDUMP/ANSWER_STR_reg[32][1]' (FDSE) to 'UARTDUMP/ANSWER_STR_reg[32][4]'
+INFO: [Synth 8-3886] merging instance 'UARTDUMP/ANSWER_STR_reg[31][1]' (FDRE) to 'UARTDUMP/ANSWER_STR_reg[35][2]'
+INFO: [Synth 8-3886] merging instance 'UARTDUMP/ANSWER_STR_reg[30][1]' (FDRE) to 'UARTDUMP/ANSWER_STR_reg[30][2]'
+INFO: [Synth 8-3886] merging instance 'UARTDUMP/RESULT_STR_reg[27][1]' (FDSE) to 'UARTDUMP/RESULT_STR_reg[32][2]'
+INFO: [Synth 8-3886] merging instance 'UARTDUMP/CLOCKCYCLES_STR_reg[25][1]' (FDSE) to 'UARTDUMP/CLOCKCYCLES_STR_reg[25][3]'
+INFO: [Synth 8-3886] merging instance 'UARTDUMP/CLOCKCYCLES_STR_reg[24][1]' (FDRE) to 'UARTDUMP/CLOCKCYCLES_STR_reg[25][2]'
+INFO: [Synth 8-3886] merging instance 'UARTDUMP/RESULT_STR_reg[22][1]' (FDRE) to 'UARTDUMP/RESULT_STR_reg[32][4]'
+INFO: [Synth 8-3886] merging instance 'UARTDUMP/CLOCKCYCLES_STR_reg[15][1]' (FDRE) to 'UARTDUMP/CLOCKCYCLES_STR_reg[25][2]'
+INFO: [Synth 8-3886] merging instance 'UARTDUMP/RESULT_STR_reg[15][1]' (FDSE) to 'UARTDUMP/RESULT_STR_reg[32][2]'
+INFO: [Synth 8-3886] merging instance 'UARTDUMP/CLOCKCYCLES_STR_reg[14][1]' (FDRE) to 'UARTDUMP/CLOCKCYCLES_STR_reg[25][2]'
+INFO: [Synth 8-3886] merging instance 'UARTDUMP/CLOCKCYCLES_STR_reg[12][1]' (FDSE) to 'UARTDUMP/CLOCKCYCLES_STR_reg[25][3]'
+INFO: [Synth 8-3886] merging instance 'UARTDUMP/CLOCKCYCLES_STR_reg[11][1]' (FDSE) to 'UARTDUMP/CLOCKCYCLES_STR_reg[25][3]'
+INFO: [Synth 8-3886] merging instance 'UARTDUMP/RESULT_STR_reg[11][1]' (FDRE) to 'UARTDUMP/RESULT_STR_reg[32][4]'
+INFO: [Synth 8-3886] merging instance 'UARTDUMP/CLOCKCYCLES_STR_reg[10][1]' (FDRE) to 'UARTDUMP/CLOCKCYCLES_STR_reg[25][2]'
+INFO: [Synth 8-3886] merging instance 'UARTDUMP/RESULT_STR_reg[10][1]' (FDRE) to 'UARTDUMP/RESULT_STR_reg[32][4]'
+INFO: [Synth 8-3886] merging instance 'UARTDUMP/RESULT_STR_reg[9][1]' (FDRE) to 'UARTDUMP/RESULT_STR_reg[32][4]'
+INFO: [Synth 8-3886] merging instance 'UARTDUMP/RESULT_STR_reg[8][1]' (FDSE) to 'UARTDUMP/RESULT_STR_reg[32][2]'
+INFO: [Synth 8-3886] merging instance 'UARTDUMP/CLOCKCYCLES_STR_reg[7][1]' (FDRE) to 'UARTDUMP/CLOCKCYCLES_STR_reg[25][2]'
+INFO: [Synth 8-3886] merging instance 'UARTDUMP/RESULT_STR_reg[7][1]' (FDRE) to 'UARTDUMP/RESULT_STR_reg[32][4]'
+INFO: [Synth 8-3886] merging instance 'UARTDUMP/ANSWER_STR_reg[7][1]' (FDRE) to 'UARTDUMP/ANSWER_STR_reg[35][2]'
+INFO: [Synth 8-3886] merging instance 'UARTDUMP/RESULT_STR_reg[6][1]' (FDRE) to 'UARTDUMP/RESULT_STR_reg[32][4]'
+INFO: [Synth 8-3886] merging instance 'UARTDUMP/CLOCKCYCLES_STR_reg[5][1]' (FDRE) to 'UARTDUMP/CLOCKCYCLES_STR_reg[25][2]'
+INFO: [Synth 8-3886] merging instance 'UARTDUMP/ANSWER_STR_reg[5][1]' (FDRE) to 'UARTDUMP/ANSWER_STR_reg[35][2]'
+INFO: [Synth 8-3886] merging instance 'UARTDUMP/CLOCKCYCLES_STR_reg[4][1]' (FDSE) to 'UARTDUMP/CLOCKCYCLES_STR_reg[25][3]'
+INFO: [Synth 8-3886] merging instance 'UARTDUMP/RESULT_STR_reg[4][1]' (FDSE) to 'UARTDUMP/RESULT_STR_reg[32][2]'
+INFO: [Synth 8-3886] merging instance 'UARTDUMP/CLOCKCYCLES_STR_reg[3][1]' (FDSE) to 'UARTDUMP/CLOCKCYCLES_STR_reg[25][3]'
+INFO: [Synth 8-3886] merging instance 'UARTDUMP/RESULT_STR_reg[3][1]' (FDRE) to 'UARTDUMP/RESULT_STR_reg[32][4]'
+INFO: [Synth 8-3886] merging instance 'UARTDUMP/CLOCKCYCLES_STR_reg[2][1]' (FDSE) to 'UARTDUMP/CLOCKCYCLES_STR_reg[25][3]'
+INFO: [Synth 8-3886] merging instance 'UARTDUMP/RESULT_STR_reg[2][1]' (FDRE) to 'UARTDUMP/RESULT_STR_reg[32][4]'
+INFO: [Synth 8-3886] merging instance 'UARTDUMP/CLOCKCYCLES_STR_reg[1][1]' (FDRE) to 'UARTDUMP/CLOCKCYCLES_STR_reg[25][2]'
+INFO: [Synth 8-3886] merging instance 'UARTDUMP/RESULT_STR_reg[1][1]' (FDSE) to 'UARTDUMP/RESULT_STR_reg[32][2]'
+INFO: [Synth 8-3886] merging instance 'UARTDUMP/ANSWER_STR_reg[1][1]' (FDRE) to 'UARTDUMP/ANSWER_STR_reg[35][2]'
+INFO: [Synth 8-3886] merging instance 'UARTDUMP/CLOCKCYCLES_STR_reg[0][1]' (FDSE) to 'UARTDUMP/CLOCKCYCLES_STR_reg[25][3]'
+INFO: [Synth 8-3886] merging instance 'UARTDUMP/RESULT_STR_reg[0][1]' (FDRE) to 'UARTDUMP/RESULT_STR_reg[32][4]'
+INFO: [Synth 8-3886] merging instance 'UARTDUMP/ANSWER_STR_reg[0][1]' (FDRE) to 'UARTDUMP/ANSWER_STR_reg[35][2]'
+INFO: [Synth 8-3886] merging instance 'UARTDUMP/ANSWER_STR_reg[35][2]' (FDRE) to 'UARTDUMP/ANSWER_STR_reg[35][4]'
+INFO: [Synth 8-3886] merging instance 'UARTDUMP/ANSWER_STR_reg[34][2]' (FDSE) to 'UARTDUMP/ANSWER_STR_reg[35][3]'
+INFO: [Synth 8-3886] merging instance 'UARTDUMP/ANSWER_STR_reg[33][2]' (FDRE) to 'UARTDUMP/ANSWER_STR_reg[33][3]'
+INFO: [Synth 8-3886] merging instance 'UARTDUMP/ANSWER_STR_reg[32][2]' (FDRE) to 'UARTDUMP/ANSWER_STR_reg[32][7]'
+INFO: [Synth 8-3886] merging instance 'UARTDUMP/RESULT_STR_reg[32][2]' (FDSE) to 'UARTDUMP/RESULT_STR_reg[32][3]'
+INFO: [Synth 8-3886] merging instance 'UARTDUMP/ANSWER_STR_reg[31][2]' (FDRE) to 'UARTDUMP/ANSWER_STR_reg[35][4]'
+INFO: [Synth 8-3886] merging instance 'UARTDUMP/RESULT_STR_reg[27][2]' (FDRE) to 'UARTDUMP/RESULT_STR_reg[32][4]'
+INFO: [Synth 8-3886] merging instance 'UARTDUMP/CLOCKCYCLES_STR_reg[25][2]' (FDRE) to 'UARTDUMP/CLOCKCYCLES_STR_reg[25][4]'
+INFO: [Synth 8-3886] merging instance 'UARTDUMP/CLOCKCYCLES_STR_reg[24][2]' (FDSE) to 'UARTDUMP/CLOCKCYCLES_STR_reg[25][3]'
+INFO: [Synth 8-3886] merging instance 'UARTDUMP/RESULT_STR_reg[22][2]' (FDSE) to 'UARTDUMP/RESULT_STR_reg[32][3]'
+INFO: [Synth 8-3886] merging instance 'UARTDUMP/RESULT_STR_reg[18][2]' (FDE) to 'UARTDUMP/RESULT_STR_reg[18][3]'
+INFO: [Common 17-14] Message 'Synth 8-3886' appears 100 times and further instances of the messages will be disabled. Use the Tcl command set_msg_config to change the current settings.
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (\UARTDUMP/RESULT_STR_reg[12][6] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (\UARTDUMP/ANSWER_STR_reg[2][6] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (\UARTDUMP/ANSWER_STR_reg[33][7] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (\UARTDUMP/ANSWER_STR_reg[32][7] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (\UARTDUMP/ANSWER_STR_reg[30][7] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (\UARTDUMP/CLOCKCYCLES_STR_reg[16][7] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (\UARTDUMP/RESULT_STR_reg[12][7] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (\UARTDUMP/ANSWER_STR_reg[2][7] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (\UARTDUMP/CLOCKCYCLES_STR_reg[0][7] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (\UARTDUMP/RESULT_STR_reg[0][7] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (\UARTDUMP/ANSWER_STR_reg[0][7] )
+INFO: [Synth 8-3333] propagating constant 1 across sequential element (\UARTDUMP/UART_TX/txData_reg[9] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (\UARTDUMP/UART_TX/txData_reg[0] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (\UARTDUMP/sendStr_reg[35][7] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (\UARTDUMP/sendStr_reg[33][7] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (\UARTDUMP/sendStr_reg[31][7] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (\UARTDUMP/sendStr_reg[26][7] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (\UARTDUMP/sendStr_reg[12][7] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (\UARTDUMP/sendStr_reg[0][7] )
+---------------------------------------------------------------------------------
+Finished Cross Boundary and Area Optimization : Time (s): cpu = 00:02:01 ; elapsed = 00:02:30 . Memory (MB): peak = 1038.996 ; gain = 468.289
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start ROM, RAM, DSP and Shift Register Reporting
+---------------------------------------------------------------------------------
+
+ROM:
++-----------------+------------------+---------------+----------------+
+|Module Name      | RTL Object       | Depth x Width | Implemented As | 
++-----------------+------------------+---------------+----------------+
+|uart_datamemdump | con_addr_reg_rep | 1024x32       | Block RAM      | 
++-----------------+------------------+---------------+----------------+
+
+---------------------------------------------------------------------------------
+Finished ROM, RAM, DSP and Shift Register Reporting
+---------------------------------------------------------------------------------
+
+Report RTL Partitions: 
++-+--------------+------------+----------+
+| |RTL Partition |Replication |Instances |
++-+--------------+------------+----------+
++-+--------------+------------+----------+
+---------------------------------------------------------------------------------
+Start Applying XDC Timing Constraints
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Applying XDC Timing Constraints : Time (s): cpu = 00:02:22 ; elapsed = 00:03:05 . Memory (MB): peak = 1038.996 ; gain = 468.289
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Timing Optimization
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Timing Optimization : Time (s): cpu = 00:02:53 ; elapsed = 00:04:01 . Memory (MB): peak = 1085.945 ; gain = 515.238
+---------------------------------------------------------------------------------
+
+Report RTL Partitions: 
++-+--------------+------------+----------+
+| |RTL Partition |Replication |Instances |
++-+--------------+------------+----------+
++-+--------------+------------+----------+
+---------------------------------------------------------------------------------
+Start Technology Mapping
+---------------------------------------------------------------------------------
+RETIMING: forward move fails for register RISCVCORE/ID_EXE/exe_inst_reg[22] along load instance ID_EXE/i_3223
+RETIMING: forward move fails for register RISCVCORE/ID_EXE/exe_inst_reg[20] along load instance ID_EXE/i_3221
+RETIMING: forward move fails for register RISCVCORE/ID_EXE/exe_inst_reg[21] along load instance ID_EXE/i_3219
+INFO: [Synth 8-5816] Retiming module `top`
+	Numbers of forward move = 3, and backward move = 25
+
+	Retimed registers names:
+		RISCVCORE/ID_EXE/exe_inst_reg[1]_fret
+		RISCVCORE/MEM_WB/wb_rd_reg[1]_fret
+		RISCVCORE/MEM_WB/wb_wr_en_reg_fret
+		RISCVCORE/PC/inst_addr_reg[0]_bret
+		RISCVCORE/PC/inst_addr_reg[0]_bret__0
+		RISCVCORE/PC/inst_addr_reg[0]_bret__1
+		RISCVCORE/PC/inst_addr_reg[0]_bret__2
+		RISCVCORE/PC/inst_addr_reg[0]_bret__3
+		RISCVCORE/PC/inst_addr_reg[10]_bret__0
+		RISCVCORE/PC/inst_addr_reg[10]_bret__1
+		RISCVCORE/PC/inst_addr_reg[10]_bret__2
+		RISCVCORE/PC/inst_addr_reg[10]_bret__3
+		RISCVCORE/PC/inst_addr_reg[10]_bret__4
+		RISCVCORE/PC/inst_addr_reg[10]_bret_bret
+		RISCVCORE/PC/inst_addr_reg[10]_bret_bret__0
+		RISCVCORE/PC/inst_addr_reg[10]_bret_bret__2
+		RISCVCORE/PC/inst_addr_reg[10]_bret_bret__3
+		RISCVCORE/PC/inst_addr_reg[10]_bret_bret__4
+		RISCVCORE/PC/inst_addr_reg[10]_bret_bret_bret
+		RISCVCORE/PC/inst_addr_reg[10]_bret_bret_bret__0
+		RISCVCORE/PC/inst_addr_reg[10]_bret_bret_bret__1
+		RISCVCORE/PC/inst_addr_reg[11]_bret__0
+		RISCVCORE/PC/inst_addr_reg[11]_bret__1
+		RISCVCORE/PC/inst_addr_reg[11]_bret__2
+		RISCVCORE/PC/inst_addr_reg[11]_bret__3
+		RISCVCORE/PC/inst_addr_reg[11]_bret__4
+		RISCVCORE/PC/inst_addr_reg[11]_bret_bret
+		RISCVCORE/PC/inst_addr_reg[11]_bret_bret__0
+		RISCVCORE/PC/inst_addr_reg[11]_bret_bret__2
+		RISCVCORE/PC/inst_addr_reg[11]_bret_bret__3
+		RISCVCORE/PC/inst_addr_reg[11]_bret_bret__4
+		RISCVCORE/PC/inst_addr_reg[11]_bret_bret_bret
+		RISCVCORE/PC/inst_addr_reg[11]_bret_bret_bret__0
+		RISCVCORE/PC/inst_addr_reg[11]_bret_bret_bret__1
+		RISCVCORE/PC/inst_addr_reg[1]_bret
+		RISCVCORE/PC/inst_addr_reg[1]_bret__0
+		RISCVCORE/PC/inst_addr_reg[1]_bret__1
+		RISCVCORE/PC/inst_addr_reg[1]_bret__2
+		RISCVCORE/PC/inst_addr_reg[1]_bret__3
+		RISCVCORE/PC/inst_addr_reg[2]_bret
+		RISCVCORE/PC/inst_addr_reg[2]_bret__0
+		RISCVCORE/PC/inst_addr_reg[2]_bret__2
+		RISCVCORE/PC/inst_addr_reg[2]_bret__3
+		RISCVCORE/PC/inst_addr_reg[2]_bret__4
+		RISCVCORE/PC/inst_addr_reg[2]_bret_bret
+		RISCVCORE/PC/inst_addr_reg[2]_bret_bret__0
+		RISCVCORE/PC/inst_addr_reg[2]_bret_bret__1
+		RISCVCORE/PC/inst_addr_reg[3]_bret
+		RISCVCORE/PC/inst_addr_reg[3]_bret__0
+		RISCVCORE/PC/inst_addr_reg[3]_bret__2
+		RISCVCORE/PC/inst_addr_reg[3]_bret__3
+		RISCVCORE/PC/inst_addr_reg[3]_bret__4
+		RISCVCORE/PC/inst_addr_reg[3]_bret_bret
+		RISCVCORE/PC/inst_addr_reg[3]_bret_bret__0
+		RISCVCORE/PC/inst_addr_reg[3]_bret_bret__1
+		RISCVCORE/PC/inst_addr_reg[4]_bret
+		RISCVCORE/PC/inst_addr_reg[4]_bret__0
+		RISCVCORE/PC/inst_addr_reg[4]_bret__2
+		RISCVCORE/PC/inst_addr_reg[4]_bret__3
+		RISCVCORE/PC/inst_addr_reg[4]_bret__4
+		RISCVCORE/PC/inst_addr_reg[4]_bret_bret
+		RISCVCORE/PC/inst_addr_reg[4]_bret_bret__0
+		RISCVCORE/PC/inst_addr_reg[4]_bret_bret__1
+		RISCVCORE/PC/inst_addr_reg[5]_bret
+		RISCVCORE/PC/inst_addr_reg[5]_bret__0
+		RISCVCORE/PC/inst_addr_reg[5]_bret__2
+		RISCVCORE/PC/inst_addr_reg[5]_bret__3
+		RISCVCORE/PC/inst_addr_reg[5]_bret__4
+		RISCVCORE/PC/inst_addr_reg[5]_bret_bret
+		RISCVCORE/PC/inst_addr_reg[5]_bret_bret__0
+		RISCVCORE/PC/inst_addr_reg[5]_bret_bret__1
+		RISCVCORE/PC/inst_addr_reg[6]_bret
+		RISCVCORE/PC/inst_addr_reg[6]_bret__0
+		RISCVCORE/PC/inst_addr_reg[6]_bret__2
+		RISCVCORE/PC/inst_addr_reg[6]_bret__3
+		RISCVCORE/PC/inst_addr_reg[6]_bret__4
+		RISCVCORE/PC/inst_addr_reg[6]_bret_bret
+		RISCVCORE/PC/inst_addr_reg[6]_bret_bret__0
+		RISCVCORE/PC/inst_addr_reg[6]_bret_bret__1
+		RISCVCORE/PC/inst_addr_reg[7]_bret
+		RISCVCORE/PC/inst_addr_reg[7]_bret__0
+		RISCVCORE/PC/inst_addr_reg[7]_bret__2
+		RISCVCORE/PC/inst_addr_reg[7]_bret__3
+		RISCVCORE/PC/inst_addr_reg[7]_bret__4
+		RISCVCORE/PC/inst_addr_reg[7]_bret_bret
+		RISCVCORE/PC/inst_addr_reg[7]_bret_bret__0
+		RISCVCORE/PC/inst_addr_reg[7]_bret_bret__1
+		RISCVCORE/PC/inst_addr_reg[8]_bret
+		RISCVCORE/PC/inst_addr_reg[8]_bret__0
+		RISCVCORE/PC/inst_addr_reg[8]_bret__2
+		RISCVCORE/PC/inst_addr_reg[8]_bret__3
+		RISCVCORE/PC/inst_addr_reg[8]_bret__4
+		RISCVCORE/PC/inst_addr_reg[8]_bret_bret
+		RISCVCORE/PC/inst_addr_reg[8]_bret_bret__0
+		RISCVCORE/PC/inst_addr_reg[8]_bret_bret__1
+		RISCVCORE/PC/inst_addr_reg[9]_bret__0
+		RISCVCORE/PC/inst_addr_reg[9]_bret__1
+		RISCVCORE/PC/inst_addr_reg[9]_bret__2
+		RISCVCORE/PC/inst_addr_reg[9]_bret__3
+		RISCVCORE/PC/inst_addr_reg[9]_bret__4
+		RISCVCORE/PC/inst_addr_reg[9]_bret_bret
+		RISCVCORE/PC/inst_addr_reg[9]_bret_bret__0
+		RISCVCORE/PC/inst_addr_reg[9]_bret_bret__2
+		RISCVCORE/PC/inst_addr_reg[9]_bret_bret__3
+		RISCVCORE/PC/inst_addr_reg[9]_bret_bret__4
+		RISCVCORE/PC/inst_addr_reg[9]_bret_bret_bret
+		RISCVCORE/PC/inst_addr_reg[9]_bret_bret_bret__0
+		RISCVCORE/PC/inst_addr_reg[9]_bret_bret_bret__1
+ 
+
+INFO: [Synth 8-5816] Retiming module `top' done
+
+
+WARNING: [Synth 8-3332] Sequential element (RISCVCORE/PC/inst_addr_reg[11]_bret) is unused and will be removed from module top.
+WARNING: [Synth 8-3332] Sequential element (RISCVCORE/PC/inst_addr_reg[10]_bret) is unused and will be removed from module top.
+WARNING: [Synth 8-3332] Sequential element (RISCVCORE/PC/inst_addr_reg[9]_bret) is unused and will be removed from module top.
+WARNING: [Synth 8-3332] Sequential element (RISCVCORE/PC/inst_addr_reg[8]_bret__1) is unused and will be removed from module top.
+WARNING: [Synth 8-3332] Sequential element (RISCVCORE/PC/inst_addr_reg[11]_bret_bret__1) is unused and will be removed from module top.
+WARNING: [Synth 8-3332] Sequential element (RISCVCORE/PC/inst_addr_reg[10]_bret_bret__1) is unused and will be removed from module top.
+WARNING: [Synth 8-3332] Sequential element (RISCVCORE/PC/inst_addr_reg[9]_bret_bret__1) is unused and will be removed from module top.
+WARNING: [Synth 8-3332] Sequential element (RISCVCORE/PC/inst_addr_reg[7]_bret__1) is unused and will be removed from module top.
+WARNING: [Synth 8-3332] Sequential element (RISCVCORE/PC/inst_addr_reg[6]_bret__1) is unused and will be removed from module top.
+WARNING: [Synth 8-3332] Sequential element (RISCVCORE/PC/inst_addr_reg[5]_bret__1) is unused and will be removed from module top.
+WARNING: [Synth 8-3332] Sequential element (RISCVCORE/PC/inst_addr_reg[4]_bret__1) is unused and will be removed from module top.
+WARNING: [Synth 8-3332] Sequential element (RISCVCORE/PC/inst_addr_reg[3]_bret__1) is unused and will be removed from module top.
+WARNING: [Synth 8-3332] Sequential element (RISCVCORE/PC/inst_addr_reg[2]_bret__1) is unused and will be removed from module top.
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (\RISCVCORE/RF/regfile_reg[0][24] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (\RISCVCORE/RF/regfile_reg[0][16] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (\RISCVCORE/RF/regfile_reg[0][8] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (\RISCVCORE/RF/regfile_reg[0][25] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (\RISCVCORE/RF/regfile_reg[0][17] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (\RISCVCORE/RF/regfile_reg[0][9] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (\RISCVCORE/RF/regfile_reg[0][26] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (\RISCVCORE/RF/regfile_reg[0][18] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (\RISCVCORE/RF/regfile_reg[0][10] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (\RISCVCORE/RF/regfile_reg[0][27] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (\RISCVCORE/RF/regfile_reg[0][19] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (\RISCVCORE/RF/regfile_reg[0][11] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (\RISCVCORE/RF/regfile_reg[0][28] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (\RISCVCORE/RF/regfile_reg[0][20] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (\RISCVCORE/RF/regfile_reg[0][12] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (\RISCVCORE/RF/regfile_reg[0][29] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (\RISCVCORE/RF/regfile_reg[0][21] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (\RISCVCORE/RF/regfile_reg[0][13] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (\RISCVCORE/RF/regfile_reg[0][30] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (\RISCVCORE/RF/regfile_reg[0][22] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (\RISCVCORE/RF/regfile_reg[0][14] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (\RISCVCORE/RF/regfile_reg[0][31] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (\RISCVCORE/RF/regfile_reg[0][23] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (\RISCVCORE/RF/regfile_reg[0][15] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (\RISCVCORE/RF/regfile_reg[0][0] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (\RISCVCORE/RF/regfile_reg[0][1] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (\RISCVCORE/RF/regfile_reg[0][2] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (\RISCVCORE/RF/regfile_reg[0][3] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (\RISCVCORE/RF/regfile_reg[0][4] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (\RISCVCORE/RF/regfile_reg[0][5] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (\RISCVCORE/RF/regfile_reg[0][6] )
+INFO: [Synth 8-3333] propagating constant 0 across sequential element (\RISCVCORE/RF/regfile_reg[0][7] )
+WARNING: [Synth 8-3332] Sequential element (RISCVCORE/PC/inst_addr_reg[11]_bret_bret__2) is unused and will be removed from module top.
+WARNING: [Synth 8-3332] Sequential element (RISCVCORE/PC/inst_addr_reg[10]_bret_bret__2) is unused and will be removed from module top.
+WARNING: [Synth 8-3332] Sequential element (RISCVCORE/PC/inst_addr_reg[9]_bret_bret__2) is unused and will be removed from module top.
+INFO: [Synth 8-7053] The timing for the instance UARTDUMP/con_addr_reg_rep (implemented as a Block RAM) might be sub-optimal as no optional output register could be merged into the ram block. Providing additional output register may help in improving timing.
+---------------------------------------------------------------------------------
+Finished Technology Mapping : Time (s): cpu = 00:18:45 ; elapsed = 00:22:36 . Memory (MB): peak = 2872.250 ; gain = 2301.543
+---------------------------------------------------------------------------------
+
+Report RTL Partitions: 
++-+--------------+------------+----------+
+| |RTL Partition |Replication |Instances |
++-+--------------+------------+----------+
++-+--------------+------------+----------+
+---------------------------------------------------------------------------------
+Start IO Insertion
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Flattening Before IO Insertion
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Flattening Before IO Insertion
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Final Netlist Cleanup
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Final Netlist Cleanup
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished IO Insertion : Time (s): cpu = 00:18:58 ; elapsed = 00:22:49 . Memory (MB): peak = 2872.250 ; gain = 2301.543
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Renaming Generated Instances
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Renaming Generated Instances : Time (s): cpu = 00:18:58 ; elapsed = 00:22:49 . Memory (MB): peak = 2872.250 ; gain = 2301.543
+---------------------------------------------------------------------------------
+
+Report RTL Partitions: 
++-+--------------+------------+----------+
+| |RTL Partition |Replication |Instances |
++-+--------------+------------+----------+
++-+--------------+------------+----------+
+
+Report Check Netlist: 
++------+------------------+-------+---------+-------+------------------+
+|      |Item              |Errors |Warnings |Status |Description       |
++------+------------------+-------+---------+-------+------------------+
+|1     |multi_driven_nets |      0|        0|Passed |Multi driven nets |
++------+------------------+-------+---------+-------+------------------+
+---------------------------------------------------------------------------------
+Start Rebuilding User Hierarchy
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Rebuilding User Hierarchy : Time (s): cpu = 00:18:59 ; elapsed = 00:22:51 . Memory (MB): peak = 2872.250 ; gain = 2301.543
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Renaming Generated Ports
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Renaming Generated Ports : Time (s): cpu = 00:18:59 ; elapsed = 00:22:51 . Memory (MB): peak = 2872.250 ; gain = 2301.543
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Handling Custom Attributes
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Handling Custom Attributes : Time (s): cpu = 00:19:00 ; elapsed = 00:22:51 . Memory (MB): peak = 2872.250 ; gain = 2301.543
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Renaming Generated Nets
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Finished Renaming Generated Nets : Time (s): cpu = 00:19:00 ; elapsed = 00:22:51 . Memory (MB): peak = 2872.250 ; gain = 2301.543
+---------------------------------------------------------------------------------
+---------------------------------------------------------------------------------
+Start Writing Synthesis Report
+---------------------------------------------------------------------------------
+
+Report BlackBoxes: 
++------+--------------------+----------+
+|      |BlackBox name       |Instances |
++------+--------------------+----------+
+|1     |clk_wiz_0           |         1|
+|2     |mult_gen_hsu        |         1|
+|3     |mult_gen_signed     |         1|
+|4     |mult_gen_u          |         1|
+|5     |div_gen_signed      |         1|
+|6     |div_gen_unsigned    |         1|
+|7     |blk_mem_gen_datamem |         1|
+|8     |blk_mem_gen_instmem |         1|
++------+--------------------+----------+
+
+Report Cell Usage: 
++------+--------------------+------+
+|      |Cell                |Count |
++------+--------------------+------+
+|1     |blk_mem_gen_datamem |     1|
+|2     |blk_mem_gen_instmem |     1|
+|3     |clk_wiz_0           |     1|
+|4     |div_gen_signed      |     1|
+|5     |div_gen_unsigned    |     1|
+|6     |mult_gen_hsu        |     1|
+|7     |mult_gen_signed     |     1|
+|8     |mult_gen_u          |     1|
+|9     |CARRY4              |    66|
+|10    |LUT1                |    22|
+|11    |LUT2                |   101|
+|12    |LUT3                |   294|
+|13    |LUT4                |   360|
+|14    |LUT5                |   586|
+|15    |LUT6                |  2476|
+|16    |MUXF7               |   636|
+|17    |MUXF8               |   170|
+|18    |RAMB36E1            |     1|
+|19    |FDRE                |  3423|
+|20    |FDSE                |    36|
+|21    |IBUF                |     1|
+|22    |OBUF                |     1|
++------+--------------------+------+
+
+Report Instance Areas: 
++------+-------------------+-----------------+------+
+|      |Instance           |Module           |Cells |
++------+-------------------+-----------------+------+
+|1     |top                |                 |  8599|
+|2     |  RISCVCORE        |core             |  7401|
+|3     |    ALU            |alu              |   193|
+|4     |    DIVIDER        |divider_unit     |   207|
+|5     |    BHT            |branchpredictor  |  2672|
+|6     |    DATAMEM        |datamem          |   183|
+|7     |    EXE_MEM        |pipereg_exe_mem  |   234|
+|8     |    ID_EXE         |pipereg_id_exe   |  1210|
+|9     |    IF_ID          |pipereg_if_id    |   440|
+|10    |    INSTMEM        |instmem          |    32|
+|11    |    MEM_WB         |pipereg_mem_wb   |   281|
+|12    |    PC             |pc               |    91|
+|13    |    RF             |regfile          |  1825|
+|14    |    SF_CONTROLLER  |sf_controller    |     1|
+|15    |    SHIFTSIGNSHUFF |shiftsignshuff   |    32|
+|16    |  UARTDUMP         |uart_datamemdump |  1194|
+|17    |    UART_TX        |UART_TX          |    91|
++------+-------------------+-----------------+------+
+---------------------------------------------------------------------------------
+Finished Writing Synthesis Report : Time (s): cpu = 00:19:00 ; elapsed = 00:22:51 . Memory (MB): peak = 2872.250 ; gain = 2301.543
+---------------------------------------------------------------------------------
+Synthesis finished with 0 errors, 0 critical warnings and 16 warnings.
+Synthesis Optimization Runtime : Time (s): cpu = 00:18:37 ; elapsed = 00:22:44 . Memory (MB): peak = 2872.250 ; gain = 2171.355
+Synthesis Optimization Complete : Time (s): cpu = 00:19:00 ; elapsed = 00:22:51 . Memory (MB): peak = 2872.250 ; gain = 2301.543
+INFO: [Project 1-571] Translating synthesized netlist
+Netlist sorting complete. Time (s): cpu = 00:00:01 ; elapsed = 00:00:00.251 . Memory (MB): peak = 2872.250 ; gain = 0.000
+INFO: [Netlist 29-17] Analyzing 873 Unisim elements for replacement
+INFO: [Netlist 29-28] Unisim Transformation completed in 0 CPU seconds
+INFO: [Project 1-570] Preparing netlist for logic optimization
+INFO: [Opt 31-138] Pushed 0 inverter(s) to 0 load pin(s).
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.006 . Memory (MB): peak = 2872.250 ; gain = 0.000
+INFO: [Project 1-111] Unisim Transformation Summary:
+No Unisim elements were transformed.
+
+INFO: [Common 17-83] Releasing license: Synthesis
+260 Infos, 25 Warnings, 0 Critical Warnings and 0 Errors encountered.
+synth_design completed successfully
+synth_design: Time (s): cpu = 00:19:14 ; elapsed = 00:23:09 . Memory (MB): peak = 2872.250 ; gain = 2574.004
+Netlist sorting complete. Time (s): cpu = 00:00:00 ; elapsed = 00:00:00.004 . Memory (MB): peak = 2872.250 ; gain = 0.000
+WARNING: [Constraints 18-5210] No constraints selected for write.
+Resolution: This message can indicate that there are no constraints for the design, or it can indicate that the used_in flags are set such that the constraints are ignored. This later case is used when running synth_design to not write synthesis constraints to the resulting checkpoint. Instead, project constraints are read when the synthesized design is opened.
+INFO: [Common 17-1381] The checkpoint 'C:/Users/MJ/Documents/Vivado/pipelined-RV32IMC/pipelined-RV32IMC.runs/retiming_enabled/top.dcp' has been generated.
+INFO: [runtcl-4] Executing : report_utilization -file top_utilization_synth.rpt -pb top_utilization_synth.pb
+INFO: [Common 17-206] Exiting Vivado at Sun Feb 23 22:46:45 2020...
