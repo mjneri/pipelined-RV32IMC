@@ -19,10 +19,10 @@ module instmem(
 	blk_mem_gen_instmem INSTMEM(
 		.clka(~clk),
 		.addra({addr[11:1]}),
-		.douta(prog[31:16]),
+		.douta(prog[15:0]),
 		.clkb(~clk),
 		.addrb({addr2[10:0]}),
-		.doutb(prog[15:0])
+		.doutb(prog[31:16])
 	);
 
 	blk_mem_gen_isr ISR_MEM(
