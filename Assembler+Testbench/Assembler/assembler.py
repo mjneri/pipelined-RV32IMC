@@ -427,15 +427,19 @@ def assemble(instructions, labels, instmem):
 
 # Running Code
 instructions, labels = parse_file(inst_file)
+savefile = filename.split('.')[0] + '.coe'
 
 try:
-    instmem = open("instmem.txt", "w")
+    instmem = open(savefile, "w")
+    instmem.write("memory_initialization_radix=16;\n")
+    instmem.write("memory_initialization_vector=\n")
 except:
     print("Failed to create file")
-
 #print(instructions)
 #print(labels)
 
 assemble(instructions, labels, instmem)
+instmem.write(";")
+print('Saved to ' + savefile)
 
 exit()
