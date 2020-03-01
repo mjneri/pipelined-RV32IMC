@@ -507,22 +507,36 @@ module core(
 					   		id_rfoutA : id_PC;
 
 	// id_fwdopB is passed through ID/EXE pipeline register to the ALU
-	wire [31:0] id_fwdB_temp = 	(fw_exe_to_id_B)?(
-										(exe_sel_data == 3'd4)? exe_DIVout		:             
-										(exe_sel_data == 3'd2)? exe_imm			: 
-										(exe_sel_data == 3'd1)? exe_ALUout 		:
-																exe_pc4)		:
-								(fw_mem_to_id_B)?(
-										(mem_sel_data == 3'd4)? mem_DIVout		:
-										(mem_sel_data == 3'd3)? mem_loaddata	:
-										(mem_sel_data == 3'd2)? mem_imm			:
-										(mem_sel_data == 3'd1)? mem_ALUout		:
-																mem_pc4)		:
-								(fw_wb_to_id_B)?
-										wb_wr_data : 32'd0;
-	assign id_fwdopB = !id_is_stype ? id_fwdB_temp : (id_sel_opB ? id_imm : id_rfoutB);
-	assign id_fwdstore = id_fwdB_temp;
+	assign id_fwdopB = (fw_exe_to_id_B && !id_is_stype)?
+							(exe_sel_data == 3'd4)? exe_DIVout		:             
+							(exe_sel_data == 3'd2)? exe_imm			: 
+							(exe_sel_data == 3'd1)? exe_ALUout 		:
+													exe_pc4			:
+					   (fw_mem_to_id_B && !id_is_stype)?
+					   		(mem_sel_data == 3'd4)? mem_DIVout		:
+					   		(mem_sel_data == 3'd3)? mem_loaddata	:
+					   		(mem_sel_data == 3'd2)? mem_imm			:
+					   		(mem_sel_data == 3'd1)? mem_ALUout		:
+					   								mem_pc4			:
+					   (fw_wb_to_id_B && !id_is_stype)?
+					   		wb_wr_data								:                 
+                    	id_sel_opB?
+	                    	id_imm : id_rfoutB;
+	
 	// id_fwdstore is passed through ID/EXE pipeline register & is sent to STOREBLOCK
+	assign id_fwdstore = (fw_exe_to_id_B && id_is_stype)?
+							(exe_sel_data == 3'd4)? exe_DIVout		:
+							(exe_sel_data == 3'd2)? exe_imm			: 
+							(exe_sel_data == 3'd1)? exe_ALUout 		:
+													exe_pc4			:
+						 (fw_mem_to_id_B && id_is_stype)?
+						 	(mem_sel_data == 3'd4)? mem_DIVout 		:
+						 	(mem_sel_data == 3'd3)? mem_loaddata	:
+						 	(mem_sel_data == 3'd2)? mem_imm			:
+						 	(mem_sel_data == 3'd1)? mem_ALUout		:
+						 							mem_pc4			:
+						 (fw_wb_to_id_B && id_is_stype)?
+						 	wb_wr_data : id_rfoutB;
 	
 	// Control Unit
 	controller1 CONTROL(
