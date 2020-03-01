@@ -110,6 +110,11 @@ module pipereg_id_exe(
 		exe_dm_select <= 0;
 		exe_sel_data <= 0;
 		exe_store_select <= 0;
+		exe_comp_use_A <= 0;
+		exe_comp_use_B <= 0;
+		exe_is_comp <= 0;
+		exe_rs1 <= 0;
+		exe_rs2 <= 0;
 	end
 
 	always@(posedge clk) begin

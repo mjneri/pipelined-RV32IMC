@@ -24,7 +24,7 @@ module compressed_decoder(
     output sel_opA,
     output sel_opB,
     output sel_opBR,
-    output [1:0] sel_pc,
+    output sel_pc,
     output is_stype,
     output wr_en,
     output [1:0] btype,
@@ -402,8 +402,7 @@ module compressed_decoder(
     assign btype[0] = (opcode == 2'd1) && (funct3 == 3'd7); // BNEZ
     assign use_A = !(rs1 == 5'd0);
     assign use_B = !(rs2 == 5'd0);
-    assign sel_pc[1] = 1'b0;        // b-type only if branch taken
-    assign sel_pc[0] = j_type || jr_type;
+    assign sel_pc = j_type || jr_type;
     assign sel_opBR = jr_type;
     
 

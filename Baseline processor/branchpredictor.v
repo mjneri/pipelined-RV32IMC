@@ -68,7 +68,7 @@ module branchpredictor(
 	// Declaring memory for BHT
 	/*  new format of each line in reg history_table (halfword ver.)
 		========================================================================
-		| Valid bit | Tag[6:0] | Branch target[10:0] | Saturating Counter [1:0]|
+		| Valid bit | Tag[7:0] | Branch target[10:0] | Saturating Counter [1:0]|
 		| ht[21]    | ht[20:13]| ht[12:2]           | ht[1:0]				   |
 		========================================================================
 		Where ht = history_table
@@ -187,27 +187,18 @@ module branchpredictor(
 	*/
 
 	wire feedback;	// if feedback = 1, branch compare is correct
-	wire is_beq;
-	wire is_bne;
-	wire is_blt;
-	wire is_bge;
-	wire is_bltu;
-	wire is_bgeu;
+	wire is_beq = exe_btype[5];
+	wire is_bne = exe_btype[4];
+	wire is_blt = exe_btype[3];
+	wire is_bge = exe_btype[2];
+	wire is_bltu = exe_btype[1];
+	wire is_bgeu = exe_btype[0];
 
-	wire [6:0] exe_tag;
-	wire [3:0] exe_set;
-	assign exe_tag = exe_PC[10:4];
-	assign exe_set = exe_PC[3:0];
+	wire [6:0] exe_tag = exe_PC[10:4];
+	wire [3:0] exe_set = exe_PC[3:0];
 
-	assign is_beq = exe_btype[5];
-	assign is_bne = exe_btype[4];
-	assign is_blt = exe_btype[3];
-	assign is_bge = exe_btype[2];
-	assign is_bltu = exe_btype[1];
-	assign is_bgeu = exe_btype[0];
-
-	assign is_beqz = exe_c_btype[1];
-	assign is_bnez = exe_c_btype[0];
+	wire is_beqz = exe_c_btype[1];
+	wire is_bnez = exe_c_btype[0];
 
 	assign feedback =   (is_beq && exe_z)? 1'b1 :
 						(is_bne && !exe_z)? 1'b1 : 

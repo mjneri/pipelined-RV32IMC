@@ -16,7 +16,7 @@
 */
 
 module forwarding_unit(
-    // Source registers
+	// Source registers
 	input [4:0] id_rsA,
 	input [4:0] id_rsB,
 	input [4:0] exe_rsA,
@@ -45,11 +45,11 @@ module forwarding_unit(
 
 	input [2:0] id_imm_select,
 
-    input [6:0] exe_opcode,
-    input exe_comp_use_A,
-    input exe_comp_use_B,
-    input exe_is_comp,
 	input [6:0] id_opcode,
+	input [6:0] exe_opcode,
+	input exe_comp_use_A,
+	input exe_comp_use_B,
+	input exe_is_comp,
 
 	// Outputs
 	// Forwarding to ID stage
@@ -98,11 +98,10 @@ module forwarding_unit(
 							wb_wr_en && 
 							(!id_sel_opB || id_is_stype);
 
-    // EXE stage forwarding (memory load -> ALU operand/s)
 
     // base:
     // A: NOT lui/auipc/jal
-    wire base_use_A = !(exe_opcode == 7'h37 || exe_opcode == 7'h17 || exe_opcode == 7'h6F);					// if inst uses operand A
+    wire base_use_A = !(exe_opcode == 7'h37 || exe_opcode == 7'h17 || exe_opcode == 7'h6F);						// if inst uses operand A
     // B: conditions for A + r-type/b-type/store
     wire base_use_B = base_use_A && (exe_opcode == 7'h33 || exe_opcode == 7'h63 || exe_opcode == 7'h23);		// if inst uses operand B
     // compressed:
@@ -110,13 +109,15 @@ module forwarding_unit(
     wire fwd_A = exe_is_comp ? exe_comp_use_A : base_use_A;
     wire fwd_B = exe_is_comp ? exe_comp_use_B : base_use_B;
 
+	// EXE stage forwarding (memory load -> ALU operand/s)
     assign fw_wb_to_exe_A = (exe_rsA == wb_rd) && (exe_rsA != 0) && 
-							wb_wr_en && (wb_sel_data == 2'd3) &&
+							wb_wr_en && (wb_sel_data == 3'd3) &&
 							fwd_A;
 
     assign fw_wb_to_exe_B = (exe_rsB == wb_rd) && (exe_rsB != 0) && 
-							wb_wr_en && (wb_sel_data == 2'd3) &&
+							wb_wr_en && (wb_sel_data == 3'd3) &&
 							fwd_B;
+
     // Load-use hazard detection
     // (LOAD@EXE > JALR@ID)
     assign hzd_exe_to_id_A = (id_rsA == exe_rd) && (id_rsA != 0) &&
