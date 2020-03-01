@@ -15,6 +15,8 @@ module tb_core();
 	reg [31:0] con_in;
 	wire [31:0] con_out;
 
+	reg [31:0] last_inst;
+
 	core CORE(
 		.CLK(CLK),
 		.nrst(nrst),
@@ -56,11 +58,10 @@ module tb_core();
 		int_sig = 1;
 		BTN = 0;
 		SW = 0;
-
+		last_inst = 0;
 		con_write = 0;
 		con_addr = 10'h0;
 		con_in = 0;
-
 		done = 0;
 		check = 0;
 		pass = 0;
@@ -84,11 +85,13 @@ module tb_core();
 	end
 	*/
 
-	// Checking for 10 NOPs/looping jals in a row
+	// Checking for 10 NOPs/looping jumps in a row
 	always@(posedge CLK) begin
-		if(INST == 32'h0000006f || INST == 32'h00000013) begin
+		if (INST == last_inst) begin
 			check = check + 1;
-		end else begin
+		end
+		else begin
+			last_inst <= INST;
 			check = 0;
 		end
 	end

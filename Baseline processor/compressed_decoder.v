@@ -18,7 +18,7 @@ module compressed_decoder(
     // control signals
     output [2:0] dm_select,
     output [2:0] imm_select,
-    output [1:0] sel_data,
+    output [2:0] sel_data,
     output [1:0] store_select,
     output [3:0] alu_op,
     output sel_opA,
@@ -328,7 +328,7 @@ module compressed_decoder(
     assign sel_opB = (r_type || b_type) ? 1'h0 : 1'h1;          //sel_opB = 0 if R-type inst or B-type inst
     assign wr_en = !(store_inst || b_type || inst==16'd0);
     assign imm_select = (j_type) ? 3'h4 : (b_type) ? 3'h3 : (lui_type) ? 3'h2 : (store_inst) ? 3'h1 : 3'h0;
-    assign sel_data = (j_type || jr_type) ? 2'h0 : (lui_type) ? 2'h2 : (load_inst) ? 2'h3 : 2'h1;
+    assign sel_data = (j_type || jr_type) ? 3'h0 : (lui_type) ? 3'h2 : (load_inst) ? 3'h3 : 3'h1;
     assign alu_op = temp_op;
     assign rs1 = temp_rs1;
     assign rs2 = temp_rs2;

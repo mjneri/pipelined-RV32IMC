@@ -194,7 +194,6 @@ module core(
 // Signals for BHT =================================================
 	wire if_prediction;				// Input to sel_PC mux
 	wire [1:0] exe_correction;		// input to sel_PC mux
-	wire flush;
 	wire [10:0] if_PBT;				// Predicted branch target
 	wire [10:0] exe_PBT;				// Predicted branch target
 	wire [10:0] exe_CNI;				// Correct Next Instruction
@@ -259,7 +258,7 @@ module core(
 // ID Baseline Instructions ========================================
     wire [2:0] id_base_dm_select;
     wire [2:0] id_base_imm_select;
-    wire [1:0] id_base_sel_data;
+    wire [2:0] id_base_sel_data;
     wire [1:0] id_base_store_select;
     wire [3:0] id_base_ALU_op;
     wire id_base_sel_opA;
@@ -293,7 +292,7 @@ module core(
 	// compressed control signals
     wire [2:0] id_c_dm_select;
     wire [2:0] id_c_imm_select;
-    wire [1:0] id_c_sel_data;
+    wire [2:0] id_c_sel_data;
     wire [1:0] id_c_store_select;
     wire [3:0] id_c_alu_op;
     wire id_c_sel_opA;
@@ -321,7 +320,17 @@ module core(
 	wire [1:0] exe_c_btype;
 // &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&    
     
+// Interrupt Handler ===============================================
 
+	wire ISR_PC_flush;
+	wire ISR_pipe_flush;
+	wire branch_flush;
+	wire sel_ISR;
+	wire ret_ISR;
+	wire ISR_running;
+	wire [11:0] save_PC;
+
+// &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 
 
 
@@ -447,11 +456,11 @@ module core(
 			if_pcnew = save_PC;
 		else begin
 			case({exe_correction, if_prediction})
-				3'b001: if_pcnew = {if_PBT, 2'h0};
-				3'b100: if_pcnew = {exe_CNI, 2'h0};
-				3'b101: if_pcnew = {exe_CNI, 2'h0};
-				3'b110: if_pcnew = {exe_PBT, 2'h0};
-				3'b111: if_pcnew = {exe_PBT, 2'h0};
+				3'b001: if_pcnew = {if_PBT, 1'h0};
+				3'b100: if_pcnew = {exe_CNI, 1'h0};
+				3'b101: if_pcnew = {exe_CNI, 1'h0};
+				3'b110: if_pcnew = {exe_PBT, 1'h0};
+				3'b111: if_pcnew = {exe_PBT, 1'h0};
 				default: begin
 					case({id_jump_in_bht, id_sel_pc})
 						2'b01: if_pcnew = id_branchtarget;
@@ -498,36 +507,22 @@ module core(
 					   		id_rfoutA : id_PC;
 
 	// id_fwdopB is passed through ID/EXE pipeline register to the ALU
-	assign id_fwdopB = (fw_exe_to_id_B && !id_is_stype)?(
-							(exe_sel_data == 3'd4)? exe_DIVout		:             
-							(exe_sel_data == 3'd2)? exe_imm			: 
-							(exe_sel_data == 3'd1)? exe_ALUout 		:
-													exe_pc4)		:
-					   (fw_mem_to_id_B && !id_is_stype)?(
-					   		(mem_sel_data == 3'd4)? mem_DIVout		:
-					   		(mem_sel_data == 3'd3)? mem_loaddata	:
-					   		(mem_sel_data == 3'd2)? mem_imm			:
-					   		(mem_sel_data == 3'd1)? mem_ALUout		:
-					   								mem_pc4)		:
-					   (fw_wb_to_id_B && !id_is_stype)?
-					   		wb_wr_data								:                 
-                    	id_sel_opB?
-	                    	id_imm : id_rfoutB;
-	
+	wire [31:0] id_fwdB_temp = 	(fw_exe_to_id_B)?(
+										(exe_sel_data == 3'd4)? exe_DIVout		:             
+										(exe_sel_data == 3'd2)? exe_imm			: 
+										(exe_sel_data == 3'd1)? exe_ALUout 		:
+																exe_pc4)		:
+								(fw_mem_to_id_B)?(
+										(mem_sel_data == 3'd4)? mem_DIVout		:
+										(mem_sel_data == 3'd3)? mem_loaddata	:
+										(mem_sel_data == 3'd2)? mem_imm			:
+										(mem_sel_data == 3'd1)? mem_ALUout		:
+																mem_pc4)		:
+								(fw_wb_to_id_B)?
+										wb_wr_data : 32'd0;
+	assign id_fwdopB = !id_is_stype ? id_fwdB_temp : (id_sel_opB ? id_imm : id_rfoutB);
+	assign id_fwdstore = id_fwdB_temp;
 	// id_fwdstore is passed through ID/EXE pipeline register & is sent to STOREBLOCK
-	assign id_fwdstore = (fw_exe_to_id_B && id_is_stype)?(
-							(exe_sel_data == 3'd4)? exe_DIVout		:
-							(exe_sel_data == 3'd2)? exe_imm			: 
-							(exe_sel_data == 3'd1)? exe_ALUout 		:
-													exe_pc4)			:
-						 (fw_mem_to_id_B && id_is_stype)?(
-						 	(mem_sel_data == 3'd4)? mem_DIVout 		:
-						 	(mem_sel_data == 3'd3)? mem_loaddata	:
-						 	(mem_sel_data == 3'd2)? mem_imm			:
-						 	(mem_sel_data == 3'd1)? mem_ALUout		:
-						 							mem_pc4)			:
-						 (fw_wb_to_id_B)?
-						 	wb_wr_data : id_rfoutB;
 	
 	// Control Unit
 	controller1 CONTROL(
