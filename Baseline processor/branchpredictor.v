@@ -64,7 +64,7 @@ module branchpredictor(
 	// Correct Next Instruction = CNI
 	output [10:0] exe_CNI
 );
-	// NOTE: PC ADDRESSES HERE ARE WORD ADDRESSES, NOT BYTE ADDRESSES.
+	// NOTE: PC ADDRESSES HERE ARE HALFWORD ADDRESSES.
 	// Declaring memory for BHT
 	/*  new format of each line in reg history_table (halfword ver.)
 		========================================================================
@@ -342,7 +342,7 @@ module branchpredictor(
 		if(!nrst) begin
 			flush_state_reg <= 1'd0;
 		end
-		else if(en) begin
+		else if(en && !stall) begin
 			flush_state_reg <= flush_state;
 		end
 	end

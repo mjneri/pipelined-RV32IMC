@@ -50,6 +50,9 @@ module core(
 	assign id_opcode = id_inst[6:0];
 	assign id_funct3 = id_inst[14:12];
 	assign id_funct7 = id_inst[31:25];
+	// assign id_rsA = id_inst[19:15];
+	// assign id_rsB = id_inst[24:20];
+	// assign id_rd = id_inst[11:7];
 
 	// Control signals //////////////////////////////////
 	wire [3:0] id_ALU_op;			// For EXE stage 	/
@@ -225,15 +228,15 @@ module core(
 
 
 
-// Clock Gating ====================================================
-	//wire if_clk;			// CLK input to PC
-	wire if_clk_en;
-	//wire id_clk;			// CLK input to IF/ID pipereg
-	wire id_clk_en;
-	//wire exe_clk;			// CLK input to ID/EXE pipereg
-	wire exe_clk_en;
-	//wire mem_clk;			// CLK input to EXE/MEM pipereg
-	wire mem_clk_en;
+// Clock Gating + SF_Controller=====================================
+	// wire if_clk;			// CLK input to PC
+	// wire if_clk_en;
+	// wire id_clk;			// CLK input to IF/ID pipereg
+	// wire id_clk_en;
+	// wire exe_clk;		// CLK input to ID/EXE pipereg
+	// wire exe_clk_en;
+	// wire mem_clk;		// CLK input to EXE/MEM pipereg
+	// wire mem_clk_en;
 	// wire wb_clk;			// CLK input to MEM/WB pipereg
 	// wire wb_clk_en;
 	
@@ -265,19 +268,15 @@ module core(
     wire id_base_sel_opB;
     wire id_base_is_stype;
     wire id_base_wr_en;
-    wire [4:0] id_base_rsA;
-    wire [4:0] id_base_rsB;
-    wire [4:0] id_base_rd;
+    wire [4:0] id_base_rsA = id_inst[19:15];
+    wire [4:0] id_base_rsB = id_inst[24:20];
+    wire [4:0] id_base_rd = id_inst[11:7];
     wire [31:0] id_base_imm;
-    wire [31:0] id_base_jt;    
+    // wire [31:0] id_base_jt;   
 	wire id_base_is_jump;
 	wire id_base_is_btype;
-	wire [1:0] id_base_sel_pc;
+	wire id_base_sel_pc;
 	wire id_base_sel_opBR;
-	
-	assign id_base_rsA = id_inst[19:15];
-	assign id_base_rsB = id_inst[24:20];
-	assign id_base_rd = id_inst[11:7];
 // &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 
 
@@ -297,7 +296,7 @@ module core(
     wire [3:0] id_c_alu_op;
     wire id_c_sel_opA;
     wire id_c_sel_opB;
-	wire [1:0] id_c_sel_pc;
+	wire id_c_sel_pc;
 	wire id_c_sel_opBR;
     wire id_c_is_stype;
     wire id_c_wr_en;
@@ -320,7 +319,11 @@ module core(
 	wire [1:0] exe_c_btype;
 // &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&    
     
-// Interrupt Handler ===============================================
+
+
+
+
+// Interrupt Controller Signals=====================================
 
 	wire ISR_PC_flush;
 	wire ISR_pipe_flush;
@@ -440,7 +443,7 @@ module core(
 	);
 
 	// PC + 4
-	assign if_pc4 = if_PC + (if_not_comp ? 4 : 2); // buff_stall ? if_PC : if_PC + 12'd4;
+	assign if_pc4 = if_PC + (if_not_comp ? 12'd4 : 12'd2); // buff_stall ? if_PC : if_PC + 12'd4;
 
 	// PC Selection
 	// 3'b000 = PC+4
@@ -469,7 +472,7 @@ module core(
 				end
 			endcase
 		end
-	end
+		end
 
 	pipereg_if_id IF_ID(
 		.clk(CLK),
@@ -490,22 +493,40 @@ module core(
 	
 	// Selecting operands
 	// id_fwdopA is passed through ID/EXE pipeline register to the ALU
-	assign id_fwdopA = fw_exe_to_id_A?(
+	assign id_fwdopA = fw_exe_to_id_A?
 							(exe_sel_data == 3'd4)? exe_DIVout		:
 							(exe_sel_data == 3'd2)? exe_imm			: 
 							(exe_sel_data == 3'd1)? exe_ALUout		:
-													exe_pc4)		:												 
-					   fw_mem_to_id_A?(
+													exe_pc4			:												 
+					   fw_mem_to_id_A?
 					   		(mem_sel_data == 3'd4)? mem_DIVout		:
 					   		(mem_sel_data == 3'd3)? mem_loaddata	:
 					   		(mem_sel_data == 3'd2)? mem_imm			:
 					   		(mem_sel_data == 3'd1)? mem_ALUout		:
-					   								mem_pc4)		:
+					   								mem_pc4			:
 					   fw_wb_to_id_A?
 					   		wb_wr_data								:
 					   id_sel_opA?
 					   		id_rfoutA : id_PC;
+	/*
+	\
+	assign id_fwdstore = (fw_exe_to_id_B)?
+							(exe_sel_data == 3'd4)? exe_DIVout		:
+							(exe_sel_data == 3'd2)? exe_imm			: 
+							(exe_sel_data == 3'd1)? exe_ALUout 		:
+													exe_pc4			:
+						 (fw_mem_to_id_B)?
+						 	(mem_sel_data == 3'd4)? mem_DIVout 		:
+						 	(mem_sel_data == 3'd3)? mem_loaddata	:
+						 	(mem_sel_data == 3'd2)? mem_imm			:
+						 	(mem_sel_data == 3'd1)? mem_ALUout		:
+						 							mem_pc4			:
+						 (fw_wb_to_id_B)?
+						 	wb_wr_data : id_rfoutB; 
 
+	
+
+	*/
 	// id_fwdopB is passed through ID/EXE pipeline register to the ALU
 	assign id_fwdopB = (fw_exe_to_id_B && !id_is_stype)?
 							(exe_sel_data == 3'd4)? exe_DIVout		:             
@@ -547,6 +568,8 @@ module core(
 
 		// Outputs
 		.ALU_op(id_base_ALU_op),
+		.div_valid(id_div_valid),
+		.div_op(id_div_op),
 		.sel_opA(id_base_sel_opA),
 		.sel_opB(id_base_sel_opB),
 		.is_stype(id_base_is_stype),
@@ -560,9 +583,7 @@ module core(
 		.sel_pc(id_base_sel_pc),
 		.sel_data(id_base_sel_data),
 		.store_select(id_base_store_select),
-		.sel_opBR(id_base_sel_opBR),
-		.div_valid(id_div_valid),
-		.div_op(id_div_op)
+		.sel_opBR(id_base_sel_opBR)
 	);
 
 	regfile RF(
@@ -640,6 +661,7 @@ module core(
 		.exe_comp_use_A(exe_comp_use_A),
 		.exe_comp_use_B(exe_comp_use_B),
 		.exe_is_comp(exe_is_comp),
+		.id_sel_opBR(id_sel_opBR),
 
 		// Outputs
 		.fw_exe_to_id_A(fw_exe_to_id_A),
@@ -731,7 +753,7 @@ module core(
 		// Control signals go here
 		.id_ALU_op(id_ALU_op),				.exe_ALU_op(exe_ALU_op),
 
-		.id_c_btype(id_c_btype),				.exe_c_btype(exe_c_btype),
+		.id_c_btype(id_c_btype),			.exe_c_btype(exe_c_btype),
 
 		// .id_sel_opA(id_sel_opA),				.exe_sel_opA(exe_sel_opA),
 		// .id_sel_opB(id_sel_opB),				.exe_sel_opB(exe_sel_opB),
@@ -740,15 +762,15 @@ module core(
 		// .id_sel_opA(id_sel_opA),			.exe_sel_opA(exe_sel_opA),
 		// .id_sel_opB(id_sel_opB),			.exe_sel_opB(exe_sel_opB),
 		.id_is_stype(id_is_stype),			.exe_is_stype(exe_is_stype),
-		.id_wr_en(id_wr_en),					.exe_wr_en(exe_wr_en),
-		.id_dm_select(id_dm_select),			.exe_dm_select(exe_dm_select),
+		.id_wr_en(id_wr_en),				.exe_wr_en(exe_wr_en),
+		.id_dm_select(id_dm_select),		.exe_dm_select(exe_dm_select),
 		.id_sel_data(id_sel_data),			.exe_sel_data(exe_sel_data),
 		.id_store_select(id_store_select), 	.exe_store_select(exe_store_select),
-		.id_comp_use_A(id_c_use_A),				.exe_comp_use_A(exe_comp_use_A),
-		.id_comp_use_B(id_c_use_B),				.exe_comp_use_B(exe_comp_use_B),
-		.id_is_comp(id_is_comp),				.exe_is_comp(exe_is_comp),
-		.id_rs1(id_rsA),						.exe_rs1(exe_rsA),
-		.id_rs2(id_rsB),						.exe_rs2(exe_rsB)
+		.id_comp_use_A(id_c_use_A),			.exe_comp_use_A(exe_comp_use_A),
+		.id_comp_use_B(id_c_use_B),			.exe_comp_use_B(exe_comp_use_B),
+		.id_is_comp(id_is_comp),			.exe_is_comp(exe_is_comp),
+		.id_rs1(id_rsA),					.exe_rs1(exe_rsA),
+		.id_rs2(id_rsB),					.exe_rs2(exe_rsB)
 	);
 
 

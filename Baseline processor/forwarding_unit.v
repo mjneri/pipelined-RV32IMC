@@ -50,6 +50,7 @@ module forwarding_unit(
 	input exe_comp_use_A,
 	input exe_comp_use_B,
 	input exe_is_comp,
+	input id_sel_opBR,
 
 	// Outputs
 	// Forwarding to ID stage
@@ -122,7 +123,7 @@ module forwarding_unit(
     // (LOAD@EXE > JALR@ID)
     assign hzd_exe_to_id_A = (id_rsA == exe_rd) && (id_rsA != 0) &&
 							 exe_wr_en && (exe_sel_data == 3'd3) &&
-							 (id_opcode == 7'h67);
+							 (id_sel_opBR);
 
 	// assign hzd_exe_to_id_B
 
