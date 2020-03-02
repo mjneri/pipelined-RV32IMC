@@ -202,7 +202,7 @@ module tb_core();
 
 			i = i + 1;
 
-			if(con_addr == 128) begin			
+			if(con_addr == 49) begin			
 				$display("\n");
 				$display("Passed %d/%d test cases.\nClock cycles: %d\n=================", pass, i, clock_counter);
 				$finish;
