@@ -261,7 +261,7 @@ module branchpredictor(
 
 	// Assign outputs
 	assign exe_PBT = exe_loadentry[12:2];
-	assign exe_CNI = {exe_loadentry[19:13], exe_set} + 11'b1;
+	assign exe_CNI = (|exe_c_btype)? {exe_loadentry[19:13], exe_set} + 11'd1 : {exe_loadentry[19:13], exe_set} + 11'd2;
 
 	// Check if prediction is correct & output appropriate correction
 	// If sat_counter[1] and feedback are equal, then prediction is correct.
