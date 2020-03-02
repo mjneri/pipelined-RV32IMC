@@ -64,9 +64,6 @@ module pipereg_id_exe(
 	input id_wr_en,
 	output reg exe_wr_en,
 
-	input id_sel_opBR,
-	output reg exe_sel_opBR,
-
 	input [2:0] id_dm_select,
 	output reg [2:0] exe_dm_select,
 
@@ -108,7 +105,6 @@ module pipereg_id_exe(
 		exe_div_op <= 0;
 		// exe_sel_opA <= 0;
 		// exe_sel_opB <= 0;
-		exe_sel_opBR <= 0;
 		exe_is_stype <= 0;
 		exe_wr_en <= 0;
 		exe_dm_select <= 0;
@@ -126,7 +122,6 @@ module pipereg_id_exe(
 			exe_pc4 <= 0;
 			exe_fwdopA <= 0;
 			exe_fwdopB <= 0;
-			exe_sel_opBR <= 0;
 			exe_inst <= 0;
 			exe_fwdstore <= 0;
 			exe_imm <= 0;
@@ -172,7 +167,6 @@ module pipereg_id_exe(
 				exe_div_op <= id_div_op;
 				// exe_sel_opA <= id_sel_opA;
 				// exe_sel_opB <= id_sel_opB;
-				exe_sel_opBR <= id_sel_opBR;
 				exe_is_stype <= id_is_stype;
 				exe_wr_en <= id_wr_en;
 				exe_dm_select <= id_dm_select;

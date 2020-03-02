@@ -661,7 +661,7 @@ module core(
 		.exe_comp_use_A(exe_comp_use_A),
 		.exe_comp_use_B(exe_comp_use_B),
 		.exe_is_comp(exe_is_comp),
-		.exe_sel_opBR(exe_sel_opBR),
+		.id_sel_opBR(id_sel_opBR),
 
 		// Outputs
 		.fw_exe_to_id_A(fw_exe_to_id_A),
@@ -761,7 +761,6 @@ module core(
 		.id_div_op(id_div_op),				.exe_div_op(exe_div_op),
 		// .id_sel_opA(id_sel_opA),			.exe_sel_opA(exe_sel_opA),
 		// .id_sel_opB(id_sel_opB),			.exe_sel_opB(exe_sel_opB),
-		.id_sel_opBR(id_sel_opBR),			.exe_sel_opBR(exe_sel_opBR),
 		.id_is_stype(id_is_stype),			.exe_is_stype(exe_is_stype),
 		.id_wr_en(id_wr_en),				.exe_wr_en(exe_wr_en),
 		.id_dm_select(id_dm_select),		.exe_dm_select(exe_dm_select),
