@@ -1,5 +1,5 @@
 # This program writes the fibbonacci sequence into the memory.
-	addi x5, x0, 100
+	addi x5, x0, 200
 
 	sw x0, 0(x0)
 	addi x1, x0, 1

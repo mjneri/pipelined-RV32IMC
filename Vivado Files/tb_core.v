@@ -55,7 +55,7 @@ module tb_core();
 		CLK = 0;
 		nrst = 0;
 
-		int_sig = 1;
+		int_sig = 0;
 		BTN = 0;
 		SW = 0;
 		last_inst = 0;
@@ -68,6 +68,8 @@ module tb_core();
 		i = 0;
 		#100;
 		nrst = 1;
+		#2000
+		int_sig = 1;
 	end
 
 	/*
@@ -200,7 +202,7 @@ module tb_core();
 
 			i = i + 1;
 
-			if(con_addr == 1023) begin			
+			if(con_addr == 128) begin			
 				$display("\n");
 				$display("Passed %d/%d test cases.\nClock cycles: %d\n=================", pass, i, clock_counter);
 				$finish;
