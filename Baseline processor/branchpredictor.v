@@ -342,7 +342,7 @@ module branchpredictor(
 		if(!nrst) begin
 			flush_state_reg <= 1'd0;
 		end
-		else if(en) begin
+		else if(en && !stall) begin
 			flush_state_reg <= flush_state;
 		end
 	end
