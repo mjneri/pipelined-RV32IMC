@@ -472,7 +472,7 @@ module core(
 				end
 			endcase
 		end
-	end
+		end
 
 	pipereg_if_id IF_ID(
 		.clk(CLK),
@@ -508,7 +508,25 @@ module core(
 					   		wb_wr_data								:
 					   id_sel_opA?
 					   		id_rfoutA : id_PC;
+	/*
+	\
+	assign id_fwdstore = (fw_exe_to_id_B)?
+							(exe_sel_data == 3'd4)? exe_DIVout		:
+							(exe_sel_data == 3'd2)? exe_imm			: 
+							(exe_sel_data == 3'd1)? exe_ALUout 		:
+													exe_pc4			:
+						 (fw_mem_to_id_B)?
+						 	(mem_sel_data == 3'd4)? mem_DIVout 		:
+						 	(mem_sel_data == 3'd3)? mem_loaddata	:
+						 	(mem_sel_data == 3'd2)? mem_imm			:
+						 	(mem_sel_data == 3'd1)? mem_ALUout		:
+						 							mem_pc4			:
+						 (fw_wb_to_id_B)?
+						 	wb_wr_data : id_rfoutB; 
 
+	
+
+	*/
 	// id_fwdopB is passed through ID/EXE pipeline register to the ALU
 	assign id_fwdopB = (fw_exe_to_id_B && !id_is_stype)?
 							(exe_sel_data == 3'd4)? exe_DIVout		:             
@@ -643,6 +661,7 @@ module core(
 		.exe_comp_use_A(exe_comp_use_A),
 		.exe_comp_use_B(exe_comp_use_B),
 		.exe_is_comp(exe_is_comp),
+		.exe_sel_opBR(exe_sel_opBR),
 
 		// Outputs
 		.fw_exe_to_id_A(fw_exe_to_id_A),
@@ -742,6 +761,7 @@ module core(
 		.id_div_op(id_div_op),				.exe_div_op(exe_div_op),
 		// .id_sel_opA(id_sel_opA),			.exe_sel_opA(exe_sel_opA),
 		// .id_sel_opB(id_sel_opB),			.exe_sel_opB(exe_sel_opB),
+		.id_sel_opBR(id_sel_opBR),			.exe_sel_opBR(exe_sel_opBR),
 		.id_is_stype(id_is_stype),			.exe_is_stype(exe_is_stype),
 		.id_wr_en(id_wr_en),				.exe_wr_en(exe_wr_en),
 		.id_dm_select(id_dm_select),		.exe_dm_select(exe_dm_select),
