@@ -42,47 +42,65 @@ module tb_alu();
 		begin
 			opA = A;
 			opB = B;
-			aluop = ADD; $strobe("OP: %D, A: %X, B: %X, RES: %X", aluop, opA, opB, res);
-			#10 aluop = SUB; $strobe("OP: %D, A: %X, B: %X, RES: %X", aluop, opA, opB, res);
-			#10 aluop = AND; $strobe("OP: %D, A: %X, B: %X, RES: %X", aluop, opA, opB, res);
-			#10 aluop = OR; $strobe("OP: %D, A: %X, B: %X, RES: %X", aluop, opA, opB, res);
-			#10 aluop = XOR; $strobe("OP: %D, A: %X, B: %X, RES: %X", aluop, opA, opB, res);
-			#10 aluop = SLT; $strobe("OP: %D, A: %X, B: %X, RES: %X", aluop, opA, opB, res);
-			#10 aluop = SLTU; $strobe("OP: %D, A: %X, B: %X, RES: %X", aluop, opA, opB, res);
-			#10 aluop = SLL; $strobe("OP: %D, A: %X, B: %X, RES: %X", aluop, opA, opB, res);
-			#10 aluop = SRL; $strobe("OP: %D, A: %X, B: %X, RES: %X", aluop, opA, opB, res);
-			#10 aluop = SRA; $strobe("OP: %D, A: %X, B: %X, RES: %X", aluop, opA, opB, res);
-			#10 aluop = MUL; $strobe("OP: %D, A: %X, B: %X, RES: %X", aluop, opA, opB, res);
-			#10 aluop = MULH; $strobe("OP: %D, A: %X, B: %X, RES: %X", aluop, opA, opB, res);
-			#10 aluop = MULHSU; $strobe("OP: %D, A: %X, B: %X, RES: %X", aluop, opA, opB, res);
-			#10 aluop = MULHU; $strobe("OP: %D, A: %X, B: %X, RES: %X\n", aluop, opA, opB, res);
+			$strobe("A: %X, B: %X", opA, opB);
+			aluop = ADD; 		$strobe("OP: ADD   , RES: %X", res);
+			#10 aluop = SUB; 	$strobe("OP: SUB   , RES: %X", res);
+			#10 aluop = AND; 	$strobe("OP: AND   , RES: %X", res);
+			#10 aluop = OR; 	$strobe("OP: OR    , RES: %X", res);
+			#10 aluop = XOR; 	$strobe("OP: XOR   , RES: %X", res);
+			#10 aluop = SLT; 	$strobe("OP: SLT   , RES: %X", res);
+			#10 aluop = SLTU; 	$strobe("OP: SLTU  , RES: %X", res);
+			#10 aluop = SLL; 	$strobe("OP: SLL   , RES: %X", res);
+			#10 aluop = SRL; 	$strobe("OP: SRL   , RES: %X", res);
+			#10 aluop = SRA; 	$strobe("OP: SRA   , RES: %X", res);
+			#10 aluop = MUL; 	$strobe("OP: MUL   , RES: %X", res);
+			#10 aluop = MULH; 	$strobe("OP: MULH  , RES: %X", res);
+			#10 aluop = MULHSU; $strobe("OP: MULHSU, RES: %X", res);
+			#10 aluop = MULHU; 	$strobe("OP: MULHU , RES: %X\n", res);
 		end
 	endtask
 
 	// always
-	// 	#20 CLK = ~CLK;		// 50MHz
+	// 	#10 CLK = ~CLK;		// 50MHz
 
 	initial begin
-		// test_op(32'h0, 32'h0);
-		// #10 test_op(32'hc0e19800, 32'heee19000);
+		test_op(32'h0, 32'h0);
+		#10 test_op(32'hc0e19800, 32'heee19000);
 
-		// // Random inputs
-		// #10 test_op($random%32, $random%32);
-		// #10 test_op($random%32, $random%32);
-		// #10 test_op($urandom%32, $urandom%32);
-		// #10 test_op($urandom%32, $urandom%32);
-		// #10 test_op($urandom%32, $urandom%32);
+		// Random inputs
+		#10 test_op($random, $random);
+		#10 test_op($random, $random);
+		#10 test_op($urandom, $urandom);
+		#10 test_op($urandom, $urandom);
+		#10 test_op($urandom, $urandom);
 		//CLK = 0;
-		aluop = MUL;
-		opA = 32'hc0e19800;
-		opB = 32'heee19000;
-		#100;
-		aluop = MULH;
-		#100;
-		aluop = MULHU;
-		#100;
-		aluop = MULHSU;
-		#100;
-		$finish;
+		
+		// aluop = MUL;
+		// opA = 32'hc0e19800;
+		// opB = 32'heee19000;
+		// #100;
+		// aluop = MULH;
+		// #100;
+		// aluop = MULHU;
+		// #100;
+		// aluop = MULHSU;
+		// #100;
+		#10 $finish;
 	end
 endmodule
+
+
+
+// module opA_testcases();
+// 	reg [31:0] testcases [0:49];
+// 	initial begin
+// 		$readmemh("opA_testcases.mem", testcases);
+// 	end
+// endmodule
+
+// module opB_testcases();
+// 	reg [31:0] testcases [0:49];
+// 	initial begin
+// 		$readmemh("opB_testcases.mem", testcases);
+// 	end
+// endmodule

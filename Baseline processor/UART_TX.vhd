@@ -9,7 +9,7 @@
 --	This component may be used to transfer data over a UART device. It will
 -- serialize a byte of data and transmit it over a TXD line. The serialized
 -- data has the following characteristics:
---         *9600 Baud Rate
+--         *115200 Baud Rate
 --         *8 data bits, LSB first
 --         *1 stop bit
 --         *no parity
@@ -22,7 +22,7 @@
 --           not be asserted unless READY is high.
 --    DATA - The parallel data to be sent. Must be valid the clock cycle
 --           that SEND has gone high.
---    CLK  - A 100 MHz clock is expected
+--    CLK  - A 50 MHz clock is expected
 --   READY - This signal goes low once a send operation has begun and
 --           remains low until it has completed and the module is ready to
 --           send another byte.
@@ -51,7 +51,7 @@ architecture Behavioral of UART_TX is
 
 type TX_STATE_TYPE is (RDY, LOAD_BIT, SEND_BIT);
 
-constant BIT_TMR_MAX : std_logic_vector(13 downto 0) := "01010001010111"; --(round(CLK / BAUD)) - 1
+constant BIT_TMR_MAX : std_logic_vector(13 downto 0) := "00000110110001"; --(round(CLK / BAUD)) - 1
 constant BIT_INDEX_MAX : natural := 10;
 
 --Counter that keeps track of the number of clock cycles the current bit has been held stable over the

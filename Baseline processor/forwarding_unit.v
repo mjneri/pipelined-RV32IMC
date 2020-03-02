@@ -16,60 +16,69 @@
 */
 
 module forwarding_unit(
-    // Inputs
+	// Source registers
 	input [4:0] id_rsA,
 	input [4:0] id_rsB,
-    input [4:0] exe_rsA,
+	input [4:0] exe_rsA,
 	input [4:0] exe_rsB,
-    
-    input [4:0] exe_rd,
-    input [4:0] mem_rd,
-    input [4:0] wb_rd,
 
-    input exe_wr_en,
-    input mem_wr_en,
-    input wb_wr_en,
+	// Destination registers
+	input [4:0] exe_rd,
+	input [4:0] mem_rd,
+	input [4:0] wb_rd,
 
-    input id_sel_opA,
-    input id_sel_opB,
+	// Control signals
+	input exe_wr_en,
+	input mem_wr_en,
+	input wb_wr_en,
 
-   // input [1:0] id_sel_data,
-    input [1:0] exe_sel_data,
-    input [1:0] mem_sel_data,
-    input [1:0] wb_sel_data,
+	input id_sel_opA,
+	input id_sel_opB,
 
-    input id_is_stype,
-    input exe_is_stype,
+	//input [2:0] id_sel_data,
+	input [2:0] exe_sel_data,
+	input [2:0] mem_sel_data,
+	input [2:0] wb_sel_data,
 
-    input [2:0] id_imm_select,
+	input id_is_stype,
+	//input exe_is_stype,
 
-    input [6:0] exe_opcode,
+	input [2:0] id_imm_select,
 
-    // Outputs
-    // Forwarding to ID stage
+	input [6:0] id_opcode,
+	input [6:0] exe_opcode,
+	input exe_comp_use_A,
+	input exe_comp_use_B,
+	input exe_is_comp,
+	input exe_sel_opBR,
+
+	// Outputs
+	// Forwarding to ID stage
 	output fw_exe_to_id_A,
-    output fw_exe_to_id_B,
-    output fw_mem_to_id_A,
-    output fw_mem_to_id_B,
-    output fw_wb_to_id_A,
-    output fw_wb_to_id_B,
-    
-    // Forwarding to EXE stage
-    output fw_mem_to_exe_A,
-    output fw_mem_to_exe_B,
-    output fw_wb_to_exe_A,
-    output fw_wb_to_exe_B
+	output fw_exe_to_id_B,
+	output fw_mem_to_id_A,
+	output fw_mem_to_id_B,
+	output fw_wb_to_id_A,
+	output fw_wb_to_id_B,
+
+	// Forwarding to EXE stage
+	output fw_wb_to_exe_A,
+	output fw_wb_to_exe_B,
+
+	// Load-use hazards
+	output hzd_exe_to_id_A,  
+	output hzd_mem_to_exe_A,
+	output hzd_mem_to_exe_B
 );
-
+    
     // ID stage forwarding (ALU output, memory load, immediate, or pc+4 -> ALU operand/s)
-
 	assign fw_exe_to_id_A = (id_rsA == exe_rd) && (id_rsA != 0) &&
-							exe_wr_en && (exe_sel_data != 2'd3) &&
+							exe_wr_en && (exe_sel_data != 3'd3) &&
 							id_sel_opA && 
 							!(id_imm_select == 3'd2 || id_imm_select == 3'd4);
 
     assign fw_exe_to_id_B = (id_rsB == exe_rd) && (id_rsB != 0) && 
-							exe_wr_en && (exe_sel_data != 2'd3) &&
+							exe_wr_en && (exe_sel_data != 3'd3) &&
 							(!id_sel_opB || id_is_stype);
 
     assign fw_mem_to_id_A = (id_rsA == mem_rd) && (id_rsA != 0) && 
@@ -90,23 +99,40 @@ module forwarding_unit(
 							wb_wr_en && 
 							(!id_sel_opB || id_is_stype);
 
-    // EXE stage forwarding (memory load -> ALU operand/s)
 
-    assign fw_mem_to_exe_A = (exe_rsA == mem_rd) && (exe_rsA != 0) && 
-							mem_wr_en && (mem_sel_data == 2'd3) &&
-							!(exe_opcode == 7'h37 || exe_opcode == 7'h17 || exe_opcode == 7'h6F);
+    // base:
+    // A: NOT lui/auipc/jal
+    wire base_use_A = !(exe_opcode == 7'h37 || exe_opcode == 7'h17 || exe_opcode == 7'h6F);						// if inst uses operand A
+    // B: conditions for A + r-type/b-type/store
+    wire base_use_B = base_use_A && (exe_opcode == 7'h33 || exe_opcode == 7'h63 || exe_opcode == 7'h23);		// if inst uses operand B
+    // compressed:
+    // check if use_A/use_B is nonzero
+    wire fwd_A = exe_is_comp ? exe_comp_use_A : base_use_A;
+    wire fwd_B = exe_is_comp ? exe_comp_use_B : base_use_B;
 
-	assign fw_mem_to_exe_B = (exe_rsB == mem_rd) && (exe_rsB != 0) && 
-							mem_wr_en && (mem_sel_data == 2'd3) &&
-							(exe_opcode == 7'h33 || exe_opcode == 7'h63 || exe_opcode == 7'h23) &&
-							!(exe_opcode == 7'h37 || exe_opcode == 7'h17 || exe_opcode == 7'h6F);
-
+	// EXE stage forwarding (memory load -> ALU operand/s)
     assign fw_wb_to_exe_A = (exe_rsA == wb_rd) && (exe_rsA != 0) && 
-							wb_wr_en && (wb_sel_data == 2'd3) &&
-							!(exe_opcode == 7'h37 || exe_opcode == 7'h17 || exe_opcode == 7'h6F);
+							wb_wr_en && (wb_sel_data == 3'd3) &&
+							fwd_A;
 
     assign fw_wb_to_exe_B = (exe_rsB == wb_rd) && (exe_rsB != 0) && 
-							wb_wr_en && (wb_sel_data == 2'd3) &&
-							(exe_opcode == 7'h33 || exe_opcode == 7'h63 || exe_opcode == 7'h23) &&
-							!(exe_opcode == 7'h37 || exe_opcode == 7'h17 || exe_opcode == 7'h6F);
+							wb_wr_en && (wb_sel_data == 3'd3) &&
+							fwd_B;
+
+    // Load-use hazard detection
+    // (LOAD@EXE > JALR@ID)
+    assign hzd_exe_to_id_A = (id_rsA == exe_rd) && (id_rsA != 0) &&
+							 exe_wr_en && (exe_sel_data == 3'd3) &&
+							 (exe_sel_opBR);
+
+	// assign hzd_exe_to_id_B
+
+	// (LOAD@MEM > EXE)
+    assign hzd_mem_to_exe_A = (exe_rsA == mem_rd) && (exe_rsA != 0) && 
+                            mem_wr_en && (mem_sel_data == 3'd3) &&
+                            fwd_A;
+
+    assign hzd_mem_to_exe_B = (exe_rsB == mem_rd) && (exe_rsB != 0) && 
+                            mem_wr_en && (mem_sel_data == 3'd3) &&
+                            fwd_B;
 endmodule

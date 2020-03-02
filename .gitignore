@@ -1,5 +1,8 @@
-
+*.vcd
+*.bat
+*.gtkw
 *.pyc
 *.pyc
 Assembler+Testbench/Assembler/__pycache__/instructions.cpython-38.pyc
 Assembler+Testbench/Assembler/__pycache__/instructions.cpython-38.pyc
+Baseline processor/debug place/*
