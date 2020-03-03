@@ -1,0 +1,1 @@
+To add the IP modules in the project, add the *.xci file inside each folder to the Design sources
