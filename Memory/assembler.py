@@ -24,27 +24,6 @@ except:
     print('File error')
     exit()
 
-# Convert to base instruction equivalents
-basename = args.input_file.split('.')[0] + '_base.asm'
-try:
-    base_file = open(basename, "w")
-except:
-    print("Failed to create file")
-
-'''
-    convert_file() does the following:
-    - replaced compressed instruction with their base equivalent for use in RARS
-'''
-def convert_file(instructions_base, labels_base):
-    for inst_address in instructions_base.keys():
-        temp_line = instructions_base[inst_address]
-        if ((temp_line[0] == 'C') | (temp_line[0] == 'c')):
-            temp_inst = parse_inst(temp_line)
-            base_file.write(temp_line + '\n')
-        else:
-            base_file.write(temp_line + '\n')
-    return
-
 '''
     parse_file() does the following:
     - get rid of empty lines
@@ -121,27 +100,27 @@ def parse_file(inst_file):
     return instructions, labels
 
 '''
-    parse_inst() does the following:
+    process_inst() does the following:
     - error checking of instruction syntax
 
     return variables:
     - array of instruction arguements with replaced registers and address offset
 '''
-def parse_inst(inst, labels, inst_address):
+def process_inst(inst, labels, inst_address):
     inst = split('[ \t,()]', inst)
     # go through elements and ditch empty strings
     for j in inst:
         if (j == ''):
             inst.pop(inst.index(j))
     # check if regular instruction
-    inst_type = instruction_dict[inst[0].upper()]
+    inst_info = instruction_dict[inst[0].upper()]
     # arg1 = 0
     # arg2 = 0
     # arg3 = 0
     inst[0] = inst[0].upper()
-    encoding_type = inst_type['format']
-    syntax = inst_type['syntax']
-    args = inst_type['args']
+    encoding_type = inst_info['format']
+    syntax = inst_info['syntax']
+    args = inst_info['args']
     if (len(inst[(args+1):]) > 0):
         print('Error: excessive number of arguments (' + str(args) + '+)')
         exit()
@@ -268,7 +247,7 @@ def assemble(instructions, labels, instmem):
     out_buffer = {}
     compressed_counter = 0
     for inst_address in instructions.keys():
-        temp_inst = parse_inst(instructions[inst_address], labels, inst_address)
+        temp_inst = process_inst(instructions[inst_address], labels, inst_address)
         opt = temp_inst[0]
         opcode = instruction_dict[opt]['opcode']
         encoding_type = instruction_dict[opt]['format']
@@ -451,29 +430,51 @@ def assemble(instructions, labels, instmem):
         instmem.write(' ' + out_buffer + '\n')
     return
 
+'''
+    convert_file() does the following:
+    - replaced compressed instruction with their base equivalent for use in RARS
+'''
+def convert_file(instructions, base_labels):
+    # Create base instructions file
+    basename = args.input_file.split('.')[0] + '_base.asm'
+    try:
+        base_file = open(basename, "w")
+    except:
+        print("Failed to create file")
+    inst_address = 0
+    for temp_address in instructions.keys():
+        temp_line = instructions[temp_address]
+        if ((temp_line[0] == 'C') | (temp_line[0] == 'c')):
+            inst = split('[ \t,()]', temp_line)
+            for j in inst:
+                if (j == ''):
+                    inst.pop(inst.index(j))
+            inst_info = instruction_dict[inst[0].upper()]
+            base_file.write(str(temp_line) + ' converts to ' + str(inst_info['expansion']) + '\n')
+        else:
+            base_file.write(temp_line + '\n')
+
+    # Delete base instructions file
+    #os.remove(basename)
+    return base_file
+
 # Running Code
 # Parse file
 instructions, labels = parse_file(inst_file)
 
 # Convert to base instruction equivalents
-basename = args.input_file.split('.')[0] + '_base.asm'
-try:
-    basefile = open(basename, "w")
-    convert_file(instructions, basefile)
-except:
-    print("Failed to create file")
+base_file = convert_file(instructions, labels)
 
 # Create output file
-savefile = args.output_file
+save_file = args.output_file
 try:
-    instmem = open(savefile, "w")
+    instmem = open(save_file, "w")
     instmem.write("memory_initialization_radix=16;\nmemory_initialization_vector=\n")
 except:
     print("Failed to create file")
-
 # Convert to machine code
 assemble(instructions, labels, instmem)
 instmem.write(";")
-print('Saved to ' + savefile)
+print('Saved to ' + save_file)
 
 exit()
