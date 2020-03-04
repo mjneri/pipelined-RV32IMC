@@ -69,7 +69,7 @@ module tb_core();
 		#100;
 		nrst = 1;
 		#2000
-		int_sig = 1;
+		int_sig = 0;
 	end
 
 	/*
