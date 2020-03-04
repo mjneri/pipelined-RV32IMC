@@ -450,7 +450,16 @@ def convert_file(instructions, base_labels):
                 if (j == ''):
                     inst.pop(inst.index(j))
             inst_info = instruction_dict[inst[0].upper()]
-            base_file.write(str(temp_line) + ' converts to ' + str(inst_info['expansion']) + '\n')
+            expansion_method = inst_info['expansion_method']
+            if (expansion_method == 'none'):
+                base_file.write(str(temp_line) + ' converts to ' + str(temp_line[2:]) + '\n')
+            elif (expansion_method == 'dup_reg'):
+                base_file.write(str(temp_line) + ' converts to ' + str(inst[0][2:]) + ' ' + str(inst[1]) + ', ' +str(inst[1]) + ', ' + str(inst[2]) + '\n')
+            elif (expansion_method == 'replace'):
+                equivalent = inst_info['equivalent']
+                base_file.write(str(temp_line) + ' converts to ' + str(equivalent) + ' ' + str(inst[1:]) + '\n')
+            else:
+                base_file.write(str(temp_line) + ' converts to ' + str(inst_info['expansion']) + '\n')
         else:
             base_file.write(temp_line + '\n')
 

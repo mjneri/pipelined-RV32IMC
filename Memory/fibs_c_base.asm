@@ -17,18 +17,18 @@ nop
 nop
 nop
 addi x12, x4, 16
-c.addi converts to addi rd, rd, imm
-c.addi converts to addi rd, rd, imm
+c.addi x5, 184 converts to addi x5, x5, 184
+c.addi x1, 1 converts to addi x1, x1, 1
 sw x1, 4(x12)
-c.addi converts to addi rd, rd, imm
-c.lw converts to lw rd_, offset[6:2](rs1_)
-c.lw converts to lw rd_, offset[6:2](rs1_)
+c.addi x12, 8 converts to addi x12, x12, 8
+c.lw x9, -8(x12) converts to lw x9, -8(x12)
+c.lw x10, -4(x12) converts to lw x10, -4(x12)
 add x11, x2, x1
-c.sw converts to sw rs2_, offset[6:2](rs1_)
-c.addi converts to addi rd, rd, imm
+c.sw x11, 0(x12) converts to sw x11, 0(x12)
+c.addi x12, 4 converts to addi x12, x12, 4
 sub x15, x12, x5
-c.beqz converts to beq rs1_, x0, label
-c.jal converts to jal x1, label
+c.beqz x15, Exit_C converts to beq ['x15', 'Exit_C']
+c.jal Fibs_C converts to jal x1, label
 sw x12, 0(x5)
 c.nop converts to nop
 c.nop converts to nop
