@@ -90,8 +90,8 @@ module core(
 	wire [31:0] exe_fwdopB;			// Selected opB in ID stage based on forwarded data
 	wire [31:0] exe_inst;			// 32 bit instruction
 	wire [31:0] exe_fwdstore;		// Selected input to STOREBLOCK based on forwarded data
-	wire [31:0] exe_rfoutA;			// Regfile output A
-	wire [31:0] exe_rfoutB;			// Regfile output B
+	// wire [31:0] exe_rfoutA;			// Regfile output A
+	// wire [31:0] exe_rfoutB;			// Regfile output B
 	wire [31:0] exe_imm;			// Immediate
 	wire [4:0] exe_rd;				// Destination register
 	wire [11:0] exe_PC;				// PC
@@ -465,8 +465,8 @@ module core(
 				3'b110: if_pcnew = {exe_PBT, 1'h0};
 				3'b111: if_pcnew = {exe_PBT, 1'h0};
 				default: begin
-					case({id_jump_in_bht, id_sel_pc})
-						2'b01: if_pcnew = id_branchtarget;
+					case({branch_flush, id_jump_in_bht, id_sel_pc})
+						3'b001: if_pcnew = id_branchtarget;
 						default: if_pcnew = if_pc4;
 					endcase
 				end

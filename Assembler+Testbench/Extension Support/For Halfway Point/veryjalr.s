@@ -357,7 +357,7 @@ jal_test:
 	sw x13, 472(x0)
 	sw x31, 476(x0)
 	lw x30, 476(x0)
-	jalr x0, x30, 0
+	jalr x0, x30, 0 #jalr x0, 0(x30)
 	sw x0, 476(x0)
 	
 end:
