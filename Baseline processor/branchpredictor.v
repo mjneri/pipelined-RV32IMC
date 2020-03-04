@@ -204,10 +204,6 @@ module branchpredictor(
 	wire is_bge = exe_btype[2];
 	wire is_bltu = exe_btype[1];
 	wire is_bgeu = exe_btype[0];
-
-	wire [6:0] exe_tag = exe_PC[10:4];
-	wire [3:0] exe_set = exe_PC[3:0];
-
 	wire is_beqz = exe_c_btype[1];
 	wire is_bnez = exe_c_btype[0];
 
@@ -235,6 +231,8 @@ module branchpredictor(
 	reg [21:0] exe_loadentry;
 	wire is_pred_correct;
 	reg [1:0] exe_setoffset;
+	wire [3:0] exe_set = exe_PC[3:0];
+	wire [6:0] exe_tag = exe_PC[10:4];
 
 	assign exe_htset = history_table[exe_set];
 
