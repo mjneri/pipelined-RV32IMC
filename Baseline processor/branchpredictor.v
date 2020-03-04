@@ -66,7 +66,11 @@ module branchpredictor(
 );
 	// NOTE: PC ADDRESSES HERE ARE HALFWORD ADDRESSES.
 	// Declaring memory for BHT
-	/*  new format of each line in reg history_table (halfword ver.)
+	/*  format of each entry in reg history_table (halfword ver.)
+		NOTE: there are FOUR ENTRIES per line in the history_table,
+		and each line corresponds to ONE SET. 
+		With 22 bits per entry, and four entries per line, there will 
+		be 88 bits per line (with 16 lines in total).
 		========================================================================
 		| Valid bit | Tag[7:0] | Branch target[10:0] | Saturating Counter [1:0]|
 		| ht[21]    | ht[20:13]| ht[12:2]           | ht[1:0]				   |
@@ -74,7 +78,8 @@ module branchpredictor(
 		Where ht = history_table
 		*MSB of tag bits = ISR_running
 	*/
-	reg [21:0] history_table [0:63];
+
+	reg [87:0] history_table [0:15];
 
 
 	////////////////////////////////////////////////////////////////////////////
@@ -94,16 +99,19 @@ module branchpredictor(
 	// if_iseqtoX: determines if the entry contains the same tag bits from the input
 	// if_loadentry: the entry that corresponds to the input
 	wire [21:0] if_entry [0:3];
+	wire [87:0] if_htset;
 	wire [3:0] if_valid;
 	wire [3:0] if_iseqto;
 	reg [21:0] if_loadentry;
 	wire [3:0] if_set = if_PC[3:0];
 	wire [6:0] if_tag = if_PC[10:4];
 
-	assign if_entry[0] = history_table[{if_set, 2'b00}];
-	assign if_entry[1] = history_table[{if_set, 2'b01}];
-	assign if_entry[2] = history_table[{if_set, 2'b10}];
-	assign if_entry[3] = history_table[{if_set, 2'b11}];
+	assign if_htset = history_table[if_PC[3:0]];
+
+	assign if_entry[0] = if_htset[21:0];
+	assign if_entry[1] = if_htset[43:22];
+	assign if_entry[2] = if_htset[65:44];
+	assign if_entry[3] = if_htset[87:66];
 
 	assign if_valid[0] = if_entry[0][21];
 	assign if_valid[1] = if_entry[1][21];
@@ -150,6 +158,7 @@ module branchpredictor(
 	reg [1:0] fifo_counter [0:15];
 
 	wire [21:0] id_entry [0:3];
+	wire [87:0] id_htset;
 	wire [3:0] id_valid;
 	wire [3:0] id_iseqto;
 	wire [1:0] sat_counter;
@@ -157,10 +166,12 @@ module branchpredictor(
 	wire [6:0] id_tag = id_PC[10:4];
 
 	// Checking each entry within the set to see if the input is already in the table
-	assign id_entry[0] = history_table[{id_set, 2'b00}];
-	assign id_entry[1] = history_table[{id_set, 2'b01}];
-	assign id_entry[2] = history_table[{id_set, 2'b10}];
-	assign id_entry[3] = history_table[{id_set, 2'b11}];
+	assign id_htset = history_table[id_set];
+
+	assign id_entry[0] = id_htset[21:0];
+	assign id_entry[1] = id_htset[43:22];
+	assign id_entry[2] = id_htset[65:44];
+	assign id_entry[3] = id_htset[87:66];
 
 	assign id_valid[0] = id_entry[0][21];
 	assign id_valid[1] = id_entry[1][21];
@@ -218,16 +229,19 @@ module branchpredictor(
 	// is_pred_correct: determines if the prediction is correct
 	// exe_setoffset: determines the offset addr within the set of the entry being accessed
 	wire [21:0] exe_entry [0:3];
+	wire [87:0] exe_htset;
 	wire [3:0] exe_valid;
 	wire [3:0] exe_iseqto;
 	reg [21:0] exe_loadentry;
 	wire is_pred_correct;
 	reg [1:0] exe_setoffset;
 
-	assign exe_entry[0] = history_table[{exe_set, 2'b00}];
-	assign exe_entry[1] = history_table[{exe_set, 2'b01}];
-	assign exe_entry[2] = history_table[{exe_set, 2'b10}];
-	assign exe_entry[3] = history_table[{exe_set, 2'b11}];
+	assign exe_htset = history_table[exe_set];
+
+	assign exe_entry[0] = exe_htset[21:0];
+	assign exe_entry[1] = exe_htset[43:22];
+	assign exe_entry[2] = exe_htset[65:44];
+	assign exe_entry[3] = exe_htset[87:66];
 
 	assign exe_valid[0] = exe_entry[0][21];
 	assign exe_valid[1] = exe_entry[1][21];
@@ -290,8 +304,6 @@ module branchpredictor(
 	initial begin
 		for(i = 0; i < 16; i=i+1) begin
 			fifo_counter[i] <= 2'b0;
-		end
-		for(i = 0; i < 64; i=i+1) begin
 			history_table[i] <= 22'b0;
 		end
 	end
@@ -301,8 +313,6 @@ module branchpredictor(
 
 			for(i = 0; i < 16; i=i+1) begin
 				fifo_counter[i] <= 2'b0;
-			end
-			for(i = 0; i < 64; i=i+1) begin
 				history_table[i] <= 22'b0;
 			end
 
@@ -310,20 +320,38 @@ module branchpredictor(
 
 			if( (id_is_btype || id_is_jump) && (id_iseqto == 4'h0) ) begin
 				// Write to table if (Branch or Jump) AND the input is not in the table yet
-				history_table[{id_set, fifo_counter[id_set]}] <= {1'b1, ISR_running, id_tag, id_branchtarget, sat_counter};
-				//increment counter
+				// Use masking to prevent the other entries from being overwritten
+				case(fifo_counter[id_set])
+					2'b00: history_table[id_set] <= (history_table[id_set] & 88'hffffffffffffffffc00000) | ({1'b1, ISR_running, id_tag, id_branchtarget, sat_counter} & 88'h00000000000000003fffff);
+					2'b01: history_table[id_set] <= (history_table[id_set] & 88'hfffffffffff000003fffff) | (({1'b1, ISR_running, id_tag, id_branchtarget, sat_counter} & 88'h00000000000000003fffff) << 22);
+					2'b10: history_table[id_set] <= (history_table[id_set] & 88'hfffffc00000fffffffffff) | (({1'b1, ISR_running, id_tag, id_branchtarget, sat_counter} & 88'h00000000000000003fffff) << 44);
+					2'b11: history_table[id_set] <= (history_table[id_set] & 88'h000003ffffffffffffffff) | (({1'b1, ISR_running, id_tag, id_branchtarget, sat_counter} & 88'h00000000000000003fffff) << 66);
+				endcase
+
+				// increment counter
 				fifo_counter[id_set] <= fifo_counter[id_set] + 2'b01;
 			end
 
 			else if(|exe_btype || |exe_c_btype) begin
 				if(feedback == 1'h1) begin
+					// Use masking for writing
 					if(exe_loadentry[1:0] != 2'h3)
-						history_table[{exe_set, exe_setoffset}] <= exe_loadentry + 2'b1;
+						case(exe_setoffset)
+							2'b00: history_table[exe_set] <= (history_table[exe_set] & 88'hffffffffffffffffc00000) | ((exe_loadentry + 2'b1) & 88'h00000000000000003fffff);
+							2'b01: history_table[exe_set] <= (history_table[exe_set] & 88'hfffffffffff000003fffff) | (((exe_loadentry + 2'b1) & 88'h00000000000000003fffff) << 22);
+							2'b10: history_table[exe_set] <= (history_table[exe_set] & 88'hfffffc00000fffffffffff) | (((exe_loadentry + 2'b1) & 88'h00000000000000003fffff) << 44);
+							2'b11: history_table[exe_set] <= (history_table[exe_set] & 88'h000003ffffffffffffffff) | (((exe_loadentry + 2'b1) & 88'h00000000000000003fffff) << 66);
+						endcase
 				end
 
 				else begin
 					if(exe_loadentry[1:0] != 2'h0)
-						history_table[{exe_set, exe_setoffset}] <= exe_loadentry - 2'b1;
+						case(exe_setoffset)
+							2'b00: history_table[exe_set] <= (history_table[exe_set] & 88'hffffffffffffffffc00000) | ((exe_loadentry - 2'b1) & 88'h00000000000000003fffff);
+							2'b01: history_table[exe_set] <= (history_table[exe_set] & 88'hfffffffffff000003fffff) | (((exe_loadentry - 2'b1) & 88'h00000000000000003fffff) << 22);
+							2'b10: history_table[exe_set] <= (history_table[exe_set] & 88'hfffffc00000fffffffffff) | (((exe_loadentry - 2'b1) & 88'h00000000000000003fffff) << 44);
+							2'b11: history_table[exe_set] <= (history_table[exe_set] & 88'h000003ffffffffffffffff) | (((exe_loadentry - 2'b1) & 88'h00000000000000003fffff) << 66);
+						endcase
 				end
 				
 			end
