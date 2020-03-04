@@ -465,8 +465,8 @@ module core(
 				3'b110: if_pcnew = {exe_PBT, 1'h0};
 				3'b111: if_pcnew = {exe_PBT, 1'h0};
 				default: begin
-					case({id_jump_in_bht, id_sel_pc})
-						2'b01: if_pcnew = id_branchtarget;
+					case({branch_flush, id_jump_in_bht, id_sel_pc})
+						3'b001: if_pcnew = id_branchtarget;
 						default: if_pcnew = if_pc4;
 					endcase
 				end
