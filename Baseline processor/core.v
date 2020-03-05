@@ -14,16 +14,28 @@ module core(
 	input [3:0] con_write,
 	input [9:0] con_addr,		// Word-aligned data address
 	input [31:0] con_in,
-	output [31:0] con_out		// Ouput of DATAMEM connected to Protocol controllers
+	output [31:0] con_out,		// Ouput of DATAMEM connected to Protocol controllers
+
+	// SIGNALS TO ADD
+	/*
+	PC
+	inst
+	ALUout
+	*/
+
+	output [11:0] if_PC,
+	output [31:0] if_inst,
+	output [31:0] exe_ALUout
+
 );
 	
 /******************************* DECLARING WIRES ******************************/
 
 // IF stage ========================================================
 	reg [11:0] if_pcnew;		// Input to PC; new PC address
-	wire [11:0] if_PC;			// Output of PC, input to INSTMEM
+	//wire [11:0] if_PC;			// Output of PC, input to INSTMEM
 	wire [11:0] if_pc4;			// PC + 4
-	wire [31:0] if_inst;		// INSTMEM Output
+	//wire [31:0] if_inst;		// INSTMEM Output
 // &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 
 
@@ -54,22 +66,22 @@ module core(
 	// assign id_rsB = id_inst[24:20];
 	// assign id_rd = id_inst[11:7];
 
-	// Control signals //////////////////////////////////
-	wire [3:0] id_ALU_op;			// For EXE stage 	/
+	// Control signals //////////////////////////////////////////////////////
+	wire [3:0] id_ALU_op;				// For EXE stage 	/
 	wire id_div_valid;				// For EXE stage 	/
-	wire [1:0] id_div_op;			// For EXE stage 	/
-	wire id_sel_opA, id_sel_opB;	// For EXE stage 	/ 
+	wire [1:0] id_div_op;				// For EXE stage 	/
+	wire id_sel_opA, id_sel_opB;			// For EXE stage 	/ 
 	wire id_is_stype;				// For EXE stage 	/
 	wire id_is_jump;				// For ID stage 	/
 	wire id_is_btype;				// For ID Stage 	/
 	wire id_wr_en;					// For WB stage 	/
-	wire [2:0] id_dm_select;		// For MEM stage 	/
-	wire [2:0] id_imm_select;		// For ID stage 	/
+	wire [2:0] id_dm_select;			// For MEM stage 	/
+	wire [2:0] id_imm_select;			// For ID stage 	/
 	wire id_sel_pc;					// For EXE stage 	/ 
-	wire [2:0] id_sel_data;			// For WB stage 	/
-	wire [1:0] id_store_select;		// For EXE stage 	/
+	wire [2:0] id_sel_data;				// For WB stage 	/
+	wire [1:0] id_store_select;			// For EXE stage 	/
 	wire id_sel_opBR;				// For ID stage 	/
-	/////////////////////////////////////////////////////
+	/////////////////////////////////////////////////////////////////////////
 
 	// Inputs to ID/EXE Pipereg 														
 	wire [31:0] id_rfoutA, id_rfoutB;	// Regfile outputs 								
@@ -134,7 +146,7 @@ module core(
 	wire [1:0] exe_store_select;	// For EXE stage
 
 	// Inputs to EXE/MEM Pipereg
-	wire [31:0] exe_ALUout;			// ALU output
+	//wire [31:0] exe_ALUout;			// ALU output
 	wire [31:0] exe_DIVout;			// Divider output
 	wire [31:0] exe_storedata;		// Output of STORE BLOCK
 // &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
