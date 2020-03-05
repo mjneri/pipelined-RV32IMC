@@ -197,6 +197,7 @@
         c.addi16sp 0
         sw x2, 344(x31)
 
+
         addi x12, x0, x0
 
         # SUBS ###################################################################################################
@@ -762,20 +763,28 @@
 
         sw x30, 840(x31)
         jal x16, final
-        addi x16, x16, 16
+        addi x16, x16, 14
         final:
         # c.jalr 
         c.jalr x16
         sw x1, 840(x29) 
 
         sw x30, 844(x29)
+
+        addi x2, x0, x0
+
+        # c.addi4spn
+        c.addi4spn 4
+        sw x2, 848(x29)
+        # -
+        c.addi4spn -4
+        sw x2, 852(x29)
+        # 0
+        addi x21, x2, 5
+        c.addi4spn 0
+        sw x2, 856(x29)
         
-        # lui x21, 0xade1b
-        # addi x21, x21, 0x055
-        # addi x22, x0, 0x3ff
-        # slli x22, x22, 2
-        # sw x21, 0(x22)
-        # sw x0, 0(x22)
+
 
         # infinite loop
         inf:
