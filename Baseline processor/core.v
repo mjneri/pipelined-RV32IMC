@@ -520,25 +520,7 @@ module core(
 					   		wb_wr_data								:
 					   id_sel_opA?
 					   		id_rfoutA : id_PC;
-	/*
-	\
-	assign id_fwdstore = (fw_exe_to_id_B)?
-							(exe_sel_data == 3'd4)? exe_DIVout		:
-							(exe_sel_data == 3'd2)? exe_imm			: 
-							(exe_sel_data == 3'd1)? exe_ALUout 		:
-													exe_pc4			:
-						 (fw_mem_to_id_B)?
-						 	(mem_sel_data == 3'd4)? mem_DIVout 		:
-						 	(mem_sel_data == 3'd3)? mem_loaddata	:
-						 	(mem_sel_data == 3'd2)? mem_imm			:
-						 	(mem_sel_data == 3'd1)? mem_ALUout		:
-						 							mem_pc4			:
-						 (fw_wb_to_id_B)?
-						 	wb_wr_data : id_rfoutB; 
-
-	
-
-	*/
+							   
 	// id_fwdopB is passed through ID/EXE pipeline register to the ALU
 	assign id_fwdopB = (fw_exe_to_id_B && !id_is_stype)?
 							(exe_sel_data == 3'd4)? exe_DIVout		:             
