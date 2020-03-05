@@ -17,7 +17,8 @@ Exit_B:
 
 	nop
 	nop
-	nop
+	c.addi4spn x8, 10
+	c.addi16sp 20
 	nop
 	nop
 
