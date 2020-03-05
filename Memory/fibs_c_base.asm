@@ -1,6 +1,5 @@
 # This program writes the fibbonacci sequence into the memory. (Regular)
-addi x5, x0, 184
-sw x0, 0(x0)
+addi x5, x0, 188
 addi x1, x0, 1
 sw x1, 4(x0)
 addi x4, x0, 8
@@ -13,40 +12,38 @@ addi x4, x4, 4
 beq x4, x5, Exit_B
 jal x0, Fibs_B
 Exit_B:
-sw x4, 0(x0)
+sw x4, 0(x5)
 
 nop
 nop
-addi x8, x2, 40	#from c.addi4spn x8, 10
-addi x2, x2, 320	#from c.addi16sp 20
 nop
 nop
 
-addi x12, x4, 16
+addi x11, x4, 4
 # This program writes the fibbonacci sequence into the memory. (Compressed)
-addi x5, x5, 184	#from c.addi x5, 184
-addi x1, x1, 1	#from c.addi x1, 1
-sw x1, 4(x12)
-addi x12, x12, 8	#from c.addi x12, 8
+addi x12, x12, 380	#from c.addi x12, 380
+addi x8, x8, 1	#from c.addi x8, 1
+sw x8, 4(x11)	#from c.sw x8, 4(x11)
+addi x11, x11, 8	#from c.addi x11, 8
 Fibs_C:
-lw x9, -8(x12)	#from c.lw x9, -8(x12)
-lw x10, -4(x12)	#from c.lw x10, -4(x12)
-add x11, x2, x1
-sw x11, 0(x12)	#from c.sw x11, 0(x12)
-addi x12, x12, 4	#from c.addi x12, 4
-sub x15, x12, x5
+lw x8, -8(x11)	#from c.lw x8, -8(x11)
+lw x9, -4(x11)	#from c.lw x9, -4(x11)
+add x10, x9, x8
+sw x10, 0(x11)	#from c.sw x10, 0(x11)
+addi x11, x11, 4	#from c.addi x11, 4
+sub x15, x12, x11
 beq x15, x0, Exit_C	#from c.beqz x15, Exit_C
 jal x1, Fibs_C	#from c.jal Fibs_C
 Exit_C:
-sw x12, 0(x5)
+sw x11, 0(x12)	#from c.sw x11, 0(x12)
 
-nop	#from c.nop
-nop	#from c.nop
-nop	#from c.nop
-nop	#from c.nop
-nop	#from c.nop
-nop	#from c.nop
-nop	#from c.nop
-nop	#from c.nop
-nop	#from c.nop
-nop	#from c.nop
+nop
+nop
+nop
+nop
+nop
+nop
+nop
+nop
+nop
+nop
