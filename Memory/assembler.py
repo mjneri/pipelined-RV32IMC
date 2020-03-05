@@ -458,7 +458,13 @@ def convert_file(line_list):
                 base_file.write(str(inst[0][2:]) + ' ' + str(inst[1]) + ', ' +str(inst[1]) + ', ' + str(inst[2]))
             elif (expansion_method == 'insert_x0'):
                 equivalent = inst_info['equivalent']
-                base_file.write(str(equivalent) + ' ' + str(inst[1]) + ', x0, ' + str(inst[2]))
+                if inst_info['args']==1:
+                    base_file.write(str(equivalent) + ' x0, ' + str(inst[1]))
+                elif inst_info['args']==2:
+                    base_file.write(str(equivalent) + ' ' + str(inst[1]) + ', x0, ' + str(inst[2]))
+            elif (expansion_method == 'insert_x0+0'):
+                equivalent = inst_info['equivalent']
+                base_file.write(str(equivalent) + ' x0, ' + str(inst[1]) + ', 0')
             elif (expansion_method == 'insert_x1'):
                 equivalent = inst_info['equivalent']
                 base_file.write(str(equivalent) + ' x1, ' + str(inst[1]))

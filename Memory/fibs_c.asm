@@ -18,6 +18,8 @@ nop
 nop
 nop
 nop
+c.j Exit_B
+c.jr x13
 
 addi x11, x4, 4
 # This program writes the fibbonacci sequence into the memory. (Compressed)
