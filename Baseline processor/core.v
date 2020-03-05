@@ -806,6 +806,7 @@ module core(
 	divider_unit DIVIDER(
 		.CLK(CLK),
 		.nrst(nrst),
+		.load_hazard(hzd_mem_to_exe_A || hzd_mem_to_exe_B),
 
 		.opA(opA),
 		.opB(opB),
