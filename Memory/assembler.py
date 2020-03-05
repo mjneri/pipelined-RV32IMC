@@ -314,8 +314,8 @@ def assemble(instructions, labels, instmem):
         elif (encoding_type=='B'):      # Okay
             rs1 = int(temp_inst[1])
             rs2 = int(temp_inst[2])
-            offset = temp_inst[3]
-            m_code = opcode | (imm&0x800)>>4 | (imm&0x1E)<<7 | funct3<<12 | rs1<<15 | rs2<<20 | (imm&0x7E0)<<20 | (imm&0x1000)<<19
+            offset = int(temp_inst[3])
+            m_code = opcode | (offset&0x800)>>4 | (offset&0x1E)<<7 | funct3<<12 | rs1<<15 | rs2<<20 | (offset&0x7E0)<<20 | (offset&0x1000)<<19
             
         elif (encoding_type=='U'):      # Okay
             rd = int(temp_inst[1])
@@ -324,8 +324,8 @@ def assemble(instructions, labels, instmem):
         
         elif (encoding_type=='J'):
             rd = int(temp_inst[1])
-            offset = temp_inst[2]
-            m_code = opcode |  rd<<7 | (imm&0xFF000) | (imm&0x800)<<9 | (imm&0x7FE)<<20 | (imm&0x100000)<<11
+            offset = int(temp_inst[2])
+            m_code = opcode |  rd<<7 | (offset&0xFF000) | (offset&0x800)<<9 | (offset&0x7FE)<<20 | (offset&0x100000)<<11
         
         elif (encoding_type=='CR'):     # Okay
             if (instruction_dict[opt]['syntax']=='r'):
@@ -358,11 +358,11 @@ def assemble(instructions, labels, instmem):
 
         elif (encoding_type=='CB'):     # Okay
             rs1_ = int(temp_inst[1])
-            offset = temp_inst[2]
+            offset = int(temp_inst[2])
             if (rs1_ < 8 | rs1_ > 16):
                 print('Warning: Rs1 {} truncated to {}'.format(rs1_, (0x08) | (rs1_ & 0x07)))
             rs1_ = (rs1_ & 0x07)
-            m_code = opcode | (imm&0x20)>>3 | (imm&0x6)<<2 | (imm&0xC0)>>1 | rs1_<<7 | (imm&0x18)<<7 | (imm&0x100)<<4 | funct3<<13
+            m_code = opcode | (offset&0x20)>>3 | (offset&0x6)<<2 | (offset&0xC0)>>1 | rs1_<<7 | (offset&0x18)<<7 | (offset&0x100)<<4 | funct3<<13
 
         elif (encoding_type=='CA'):     # Okay
             rs2_ = int(temp_inst[2])
@@ -381,9 +381,9 @@ def assemble(instructions, labels, instmem):
             m_code = opcode | (imm&0x1F)<<2 | rd_rs1_<<7 | funct2<<10 | (imm&0x20)<<7 | funct3<<13
 
         elif (encoding_type=='CJ'):
-            offset = temp_inst[1]
+            offset = int(temp_inst[1])
             # 5|3:1|7|6|10|9:8|4|11
-            m_code = opcode | (imm&0x20)>>3 | (imm&0xE)<<2 | (imm&0x80)>>1 | (imm&0x40)<<1 | (imm&0x400)>>2 | (imm&0x300)<<1 | (imm&0x10)<<7 | (imm&0x800)<<1 | funct3<<13
+            m_code = opcode | (offset&0x20)>>3 | (offset&0xE)<<2 | (offset&0x80)>>1 | (offset&0x40)<<1 | (offset&0x400)>>2 | (offset&0x300)<<1 | (offset&0x10)<<7 | (offset&0x800)<<1 | funct3<<13
 
         elif (encoding_type=='CIW'):     # Okay
             rd_ = int(temp_inst[1])
@@ -441,7 +441,6 @@ def convert_file(instructions, base_labels):
         base_file = open(basename, "w")
     except:
         print("Failed to create file")
-    inst_address = 0
     for temp_address in instructions.keys():
         temp_line = instructions[temp_address]
         if ((temp_line[0] == 'C') | (temp_line[0] == 'c')):
@@ -452,14 +451,21 @@ def convert_file(instructions, base_labels):
             inst_info = instruction_dict[inst[0].upper()]
             expansion_method = inst_info['expansion_method']
             if (expansion_method == 'none'):
-                base_file.write(str(temp_line) + ' converts to ' + str(temp_line[2:]) + '\n')
+                base_file.write(str(temp_line[2:]))
             elif (expansion_method == 'dup_reg'):
-                base_file.write(str(temp_line) + ' converts to ' + str(inst[0][2:]) + ' ' + str(inst[1]) + ', ' +str(inst[1]) + ', ' + str(inst[2]) + '\n')
+                base_file.write(str(inst[0][2:]) + ' ' + str(inst[1]) + ', ' +str(inst[1]) + ', ' + str(inst[2]))
+            elif (expansion_method == 'insert_x0'):
+                equivalent = inst_info['equivalent']
+                base_file.write(str(equivalent) + ' ' + str(inst[1]) + ', x0, ' + str(inst[2]))
+            elif (expansion_method == 'insert_x1'):
+                equivalent = inst_info['equivalent']
+                base_file.write(str(equivalent) + ' x1, ' + str(inst[1]))
             elif (expansion_method == 'replace'):
                 equivalent = inst_info['equivalent']
-                base_file.write(str(temp_line) + ' converts to ' + str(equivalent) + ' ' + str(inst[1:]) + '\n')
+                base_file.write(str(equivalent) + ' ' + str(inst[1:]))
             else:
-                base_file.write(str(temp_line) + ' converts to ' + str(inst_info['expansion']) + '\n')
+                base_file.write(str(inst_info['expansion']))
+            base_file.write('\t#from ' + temp_line + '\n')
         else:
             base_file.write(temp_line + '\n')
 

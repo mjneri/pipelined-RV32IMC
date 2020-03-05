@@ -17,26 +17,26 @@ nop
 nop
 nop
 addi x12, x4, 16
-c.addi x5, 184 converts to addi x5, x5, 184
-c.addi x1, 1 converts to addi x1, x1, 1
+addi x5, x5, 184	#from c.addi x5, 184
+addi x1, x1, 1	#from c.addi x1, 1
 sw x1, 4(x12)
-c.addi x12, 8 converts to addi x12, x12, 8
-c.lw x9, -8(x12) converts to lw x9, -8(x12)
-c.lw x10, -4(x12) converts to lw x10, -4(x12)
+addi x12, x12, 8	#from c.addi x12, 8
+lw x9, -8(x12)	#from c.lw x9, -8(x12)
+lw x10, -4(x12)	#from c.lw x10, -4(x12)
 add x11, x2, x1
-c.sw x11, 0(x12) converts to sw x11, 0(x12)
-c.addi x12, 4 converts to addi x12, x12, 4
+sw x11, 0(x12)	#from c.sw x11, 0(x12)
+addi x12, x12, 4	#from c.addi x12, 4
 sub x15, x12, x5
-c.beqz x15, Exit_C converts to beq ['x15', 'Exit_C']
-c.jal Fibs_C converts to jal x1, label
+beq x15, x0, Exit_C	#from c.beqz x15, Exit_C
+jal x1, Fibs_C	#from c.jal Fibs_C
 sw x12, 0(x5)
-c.nop converts to nop
-c.nop converts to nop
-c.nop converts to nop
-c.nop converts to nop
-c.nop converts to nop
-c.nop converts to nop
-c.nop converts to nop
-c.nop converts to nop
-c.nop converts to nop
-c.nop converts to nop
+nop	#from c.nop
+nop	#from c.nop
+nop	#from c.nop
+nop	#from c.nop
+nop	#from c.nop
+nop	#from c.nop
+nop	#from c.nop
+nop	#from c.nop
+nop	#from c.nop
+nop	#from c.nop
