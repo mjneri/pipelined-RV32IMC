@@ -60,32 +60,32 @@ anything:
         c.addi x15, -1
        
         sw x5, 0(x3)
-        
+
+        addi x4, x4, 0xCA0        
         lui x4, 0x3B9A
-        addi x4, x4, 0xCA0
-        loop:
+        loop1:
         c.addi x4, -1
-        c.bnez x4, loop
+        bne x4, x0, loop1
 
         lw x5, 0(x3)
         slli x5, x5, 1
         sw x5, 0(x3)
 
+        addi x4, x4, 0xCA0        
         lui x4, 0x3B9A
-        addi x4, x4, 0xCA0
-        loop:
+        loop2:
         c.addi x4, -1
-        c.bnez x4, loop
+        bne x4, x0, loop2
 
         lw x5, 0(x3)
         slli x5, x5, 1
         sw x5, 0(x3)
 
+        addi x4, x4, 0xCA0        
         lui x4, 0x3B9A
-        addi x4, x4, 0xCA0
-        loop:
+        loop3:
         c.addi x4, -1
-        c.bnez x4, loop
+        bne x4, x0, loop3
 
         lw x5, 0(x3)
         slli x5, x5, 1
@@ -93,41 +93,41 @@ anything:
 
         #######################################################################
 
+        addi x4, x4, 0xCA0        
         lui x4, 0x3B9A
-        addi x4, x4, 0xCA0
-        loop:
+        loop4:
         c.addi x4, -1
-        c.bnez x4, loop
+        bne x4, x0, loop4
 
         lw x5, 0(x3)
         srli x5, x5 1
         sw x5, 0(x3)
 
+        addi x4, x4, 0xCA0        
         lui x4, 0x3B9A
-        addi x4, x4, 0xCA0
-        loop:
+        loop5:
         c.addi x4, -1
-        c.bnez x4, loop
+        bne x4, x0, loop5
 
         lw x5, 0(x3)
         srli x5, x5 1
         sw x5, 0(x3)
 
+        addi x4, x4, 0xCA0        
         lui x4, 0x3B9A
-        addi x4, x4, 0xCA0
-        loop:
+        loop6:
         c.addi x4, -1
-        c.bnez x4, loop
+        bne x4, x0, loop6
 
         lw x5, 0(x3)
         srli x5, x5 1
         sw x5, 0(x3)
 
+        addi x4, x4, 0xCA0        
         lui x4, 0x3B9A
-        addi x4, x4, 0xCA0
-        loop:
+        loop7:
         c.addi x4, -1
-        c.bnez x4, loop
+        bne x4, x0, loop7
 
         
         c.bnez x15, running

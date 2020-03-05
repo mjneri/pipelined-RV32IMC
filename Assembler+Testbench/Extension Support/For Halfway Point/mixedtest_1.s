@@ -3,22 +3,54 @@
 
 
 
-.data 0x0
-        .word 0x10       # 0
-        .word 0x19
-        .word 0x17
-        .word 0x71
-        .word 0x6b
-        .word 0x1a4     # 20
-        .word 0xc5
-        .word 0xc350
-        .word 0xe0cc08
-        .word 0xa455    # 36
-        .word 0x1a5
-        .word 0xeffec750 # 44
+# .data 0x0
+#         .word 0x10       # 0
+#         .word 0x19
+#         .word 0x17
+#         .word 0x71
+#         .word 0x6b
+#         .word 0x1a4     # 20
+#         .word 0xc5
+#         .word 0xc350
+#         .word 0xe0cc08
+#         .word 0xa455    # 36
+#         .word 0x1a5
+#         .word 0xeffec750 # 44
 
 
-.text
+
+# .text
+        addi x1, x0, 0
+        addi x2, x0, 0
+        addi x3, x0, 0
+        addi x4, x0, 0
+        addi x5, x0, 0
+        addi x6, x0, 0
+        addi x7, x0, 0
+        addi x8, x0, 0
+        addi x9, x0, 0
+        addi x10, x0, 0
+        addi x11, x0, 0
+        addi x12, x0, 0
+        addi x13, x0, 0
+        addi x14, x0, 0
+        addi x15, x0, 0
+        addi x16, x0, 0
+        addi x17, x0, 0
+        addi x18, x0, 0
+        addi x19, x0, 0
+        addi x20, x0, 0
+        addi x21, x0, 0
+        addi x22, x0, 0
+        addi x23, x0, 0
+        addi x24, x0, 0
+        addi x25, x0, 0
+        addi x26, x0, 0
+        addi x27, x0, 0
+        addi x28, x0, 0
+        addi x29, x0, 0
+        addi x30, x0, 0
+        
         addi x31, x0, 0
 
         # AUIPC
@@ -48,7 +80,7 @@
         lui x9, 0xfffaf
         sw x9, 232(x31)
 
-        addi x9, x0, x0
+        addi x9, x0, 0
         # lw
         lw x10, 0(x31)
         lw x11, -4(x10)
@@ -70,7 +102,7 @@
         sb x15, 250(x31)
 
         lb x16, 30(x31)
-        c.sw x15, 30(x9)
+        c.sw x15, 32(x9)
 
         # lhu
         lhu x17, 44(x31)
@@ -81,18 +113,18 @@
 
         # lbu
         lbu x19, 32(x31)
-        sh x19, 256(x31)
+        sb x19, 256(x31)
        
         lbu x20, 33(x31)
-        sh x20, 257(x31)
+        sb x20, 257(x31)
        
         lbu x21, 34(x31)
-        c.sw x21, 34(x9)
+        sb x21, 34(x31)
        
         lbu x22, 35(x31)
-        sh x22, 259(x31)
+        sb x22, 259(x31)
 
-        addi x12, x0, x0
+        addi x12, x0, 0
         # c.lw
         c.lw x8, 0(x12)
         sw x8, 260(x12)
@@ -113,7 +145,7 @@
         slli x27, x2, 2  
         c.swsp x8, 52
 
-        addi x13, x0, x0
+        addi x13, x0, 0
         # c.lui
         c.lui x9, 0xe
         c.sw x9, 272(x13)
@@ -198,7 +230,7 @@
         sw x2, 344(x31)
 
 
-        addi x12, x0, x0
+        addi x12, x0, 0
 
         # SUBS ###################################################################################################
         c.lw x15, 4(x12)
@@ -221,9 +253,9 @@
         sw x6, 364(x31)
 
         addi x10, x0, 432
-        addi x11, x0, 2710
+        addi x11, x0, 2010
         addi x12, x0, -121
-        addi x13, x0, -5258
+        addi x13, x0, -1958
 
         # MULS ##############################################################################################
         # mul
@@ -303,9 +335,9 @@
         sw x16, 460(x31)
 
         addi x17, x0, 981
-        c.addi x18,  47
+        c.addi x18, 31
         addi x19, x0, -271
-        addi x20, x0, -6471
+        addi x20, x0, -2048
        
         c.addi x22, -4
 
@@ -394,7 +426,7 @@
         sw x17, 548(x31)
         sw x16, 552(x31)
 
-        addi x8, x0, x0
+        addi x8, x0, 0
 
         # SHIFTS #####################################################################################################################
         # sll
@@ -415,7 +447,7 @@
         slli x12, x12, 5
         sw x12, 568(x31)
 
-        addi x9, x0, x0
+        addi x9, x0, 0
         c.lw x10, 28(x9) 
         c.slli x10, 12
         sw x10, 576(x31)
@@ -441,7 +473,7 @@
         srli x12, x12, 5
         sw x12, 588(x31)
 
-        addi x9, x0, x0
+        addi x9, x0, 0
         c.lw x10, 44(x9) 
         c.srli x10, 18
         sw x10, 592(x31)
@@ -475,7 +507,7 @@
         sw x14, 620(x31)
 
 
-        addi x15, x0, 2583
+        addi x15, x0, 1583
         c.addi x16, 44
         addi x17, x16, -787
         addi x18, x17, -32
@@ -506,7 +538,7 @@
 
         # slti
         # + > +
-        slti x10, x15, 2582
+        slti x10, x15, 1582
         sw x10, 652(x31)
         # + > -
         slti x11, x15, -778
@@ -515,16 +547,16 @@
         slti x12, x17, -741
         sw x12, 660(x31)
         # + < +
-        slti x13, x16, 3000
+        slti x13, x16, 2000
         sw x13, 664(x31)
         # - < +
-        slti x14, x18, x15
+        slti x14, x18, 15
         sw x14, 668(x31) 
         # - < -
-        slti x10, x18, x17
+        slti x10, x18, 17
         sw x10, 672(x31)
         # =
-        slti x11, x10, x10
+        slti x11, x10, 10
         sw x10, 676(x31)
 
         # sltu
@@ -552,7 +584,7 @@
 
         # sltiu
         # + > +
-        sltiu x10, x15, 2582
+        sltiu x10, x15, 2047
         sw x10, 708(x31)
         # + > -
         sltiu x11, x15, -778
@@ -561,16 +593,16 @@
         sltiu x12, x17, -741
         sw x12, 716(x31)
         # + < +
-        sltiu x13, x16, 3000
+        sltiu x13, x16, 2047
         sw x13, 720(x31)
         # - < +
-        sltiu x14, x18, x15
+        sltiu x14, x18, 15
         sw x14, 724(x31) 
         # - < -
-        sltiu x10, x18, x17
+        sltiu x10, x18, 17
         sw x10, 728(x31)
         # =
-        sltiu x11, x10, x10
+        sltiu x11, x10, 10
         sw x10, 732(x31)
 
         lw x8, 32(x31)
@@ -600,10 +632,10 @@
         sw x13, 756(x31)
 
         # andi and c.andi
-        andi x14, x20, 2349138
+        andi x14, x20, 2041
         sw x14, 760(x31)
 
-        c.andi x14, 4342
+        c.andi x14, 1342
         sw x14, 764(x31) 
 
         # ori
@@ -637,7 +669,7 @@
         addi x8, x0, 20
         addi x9, x0, 3
         addi x10, x0, 8
-        lui x30, 0xc0e19
+        lui x30, 0xe19
         addi x31, x0, 0x400
         slli x31, x31, 1
         add x30, x30, x31
@@ -682,7 +714,7 @@
         sw x9, 800(x29)
 
         loop7a:
-        addi x20, x0, -1
+        addi x20, x0, 17
         loop7:
         srli x20, x20, 1
         bne x20, x0, loop7
@@ -697,7 +729,7 @@
         sw x21, 808(x29)
 
         loop9a:
-        addi x22, x0, 0
+        addi x22, x0, 20
         loop9:
         addi x22, x22, -1
         c.beqz x22, loopend
@@ -717,6 +749,22 @@
         sw x30, 816(x29)
         sw x30, 820(x29)
         
+        addi x1, x0, 0
+        addi x2, x0, 0
+        addi x3, x0, 0
+        addi x4, x0, 0
+        addi x5, x0, 0
+        addi x6, x0, 0
+        addi x7, x0, 0
+        addi x8, x0, 0
+        addi x9, x0, 0
+        addi x10, x0, 0
+        addi x11, x0, 0
+        addi x12, x0, 0
+        addi x13, x0, 0
+        addi x14, x0, 0
+        addi x15, x0, 0
+        addi x16, x0, 0
 
         # JUMPS
         # jal
@@ -742,7 +790,7 @@
         c.addi x12, 17
         here2:
         addi x12, x12, -1
-        bnez x12, here2
+        c.bnez x12, here2
         c.j jump3
         sw x12, 828(x29)
 
@@ -751,7 +799,7 @@
         
         # c.jr
         jal x13, pc4
-        addi x13, x13, 4
+        addi x13, x13, 8
         pc4:
         c.jr x13
 
@@ -763,7 +811,7 @@
 
         sw x30, 840(x31)
         jal x16, final
-        addi x16, x16, 14
+        addi x16, x16, 12
         final:
         # c.jalr 
         c.jalr x16
@@ -771,17 +819,17 @@
 
         sw x30, 844(x29)
 
-        addi x2, x0, x0
+        addi x2, x0, 0
 
         # c.addi4spn
-        c.addi4spn 4
+        c.addi4spn x8, 4
         sw x2, 848(x29)
         # -
-        c.addi4spn -4
+        c.addi4spn x8, -4
         sw x2, 852(x29)
         # 0
         addi x21, x2, 5
-        c.addi4spn 0
+        c.addi4spn x8, 1
         sw x2, 856(x29)
         
 
