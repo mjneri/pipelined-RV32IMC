@@ -163,8 +163,8 @@ module branchpredictor(
 	wire [87:0] id_htset;
 	wire [3:0] id_valid;
 	wire [3:0] id_iseqto;
-	wire [21:0] id_loadentry;
-	wire [1:0] id_setoffset;
+	reg [21:0] id_loadentry;
+	reg [1:0] id_setoffset;
 	wire [1:0] sat_counter;
 	wire [3:0] id_set = id_PC[3:0];
 	wire [6:0] id_tag = id_PC[10:4];
