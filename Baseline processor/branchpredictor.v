@@ -32,8 +32,8 @@ module branchpredictor(
 	input [10:0] id_PC,
 	input [10:0] id_branchtarget,
 	input id_is_jump,
-	input id_is_bty!pe,
-	input  &&,			// used to determine if the instruction is JALR, C.JR, or C.JALR
+	input id_is_btype,
+	input id_sel_opBR,			// used to determine if the instruction is JALR, C.JR, or C.JALR
 								// which are treated differently than JAL, C.JAL, & C.J
 
 	input [10:0] exe_PC,
@@ -429,7 +429,7 @@ module branchpredictor(
 	end
 	
 	always@(*) begin
-		if(id_is_jump == 1'b1 && id_iseqto != 4'h0)
+		if((id_is_jump && !id_sel_opBR && id_iseqto != 4'h0) || (id_is_jump && id_sel_opBR && (id_iseqto != 4'h0) && (id_branchtarget == id_loadentry[12:2])))
 			id_jump_in_bht = 1'b1;
 		else 
 			id_jump_in_bht = 1'b0;

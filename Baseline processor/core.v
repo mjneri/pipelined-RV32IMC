@@ -832,6 +832,7 @@ module core(
 		.id_branchtarget(id_branchtarget[11:1]),
 		.id_is_jump(id_is_jump),
 		.id_is_btype(id_is_btype),
+		.id_sel_opBR(id_sel_opBR),
 
 		.exe_PC(exe_PC[11:1]),
 		.exe_z(exe_z),
