@@ -444,7 +444,8 @@ def convert_file(line_list):
     
     for index in list(range(0,len(line_list))):
         temp_line = line_list[index].strip()
-        if (('C.' in temp_line) | ('c.' in temp_line)):
+        #if (('C.' in temp_line) | ('c.' in temp_line)):
+        if ((temp_line.split('.')[0] == 'c') | (temp_line.split('.')[0] == 'C')):
             inst = split('[ \t,()]', temp_line)
             for j in inst:
                 if (j == ''):
