@@ -32,7 +32,9 @@ module branchpredictor(
 	input [10:0] id_PC,
 	input [10:0] id_branchtarget,
 	input id_is_jump,
-	input id_is_btype,
+	input id_is_bty!pe,
+	input  &&,			// used to determine if the instruction is JALR, C.JR, or C.JALR
+								// which are treated differently than JAL, C.JAL, & C.J
 
 	input [10:0] exe_PC,
 	input exe_z,				// Feedback from ALU
@@ -161,6 +163,8 @@ module branchpredictor(
 	wire [87:0] id_htset;
 	wire [3:0] id_valid;
 	wire [3:0] id_iseqto;
+	wire [21:0] id_loadentry;
+	wire [1:0] id_setoffset;
 	wire [1:0] sat_counter;
 	wire [3:0] id_set = id_PC[3:0];
 	wire [6:0] id_tag = id_PC[10:4];
@@ -182,6 +186,28 @@ module branchpredictor(
 	assign id_iseqto[1] = (id_entry[1][20:13] == {ISR_running, id_tag}) && id_valid[1];
 	assign id_iseqto[2] = (id_entry[2][20:13] == {ISR_running, id_tag}) && id_valid[2];
 	assign id_iseqto[3] = (id_entry[3][20:13] == {ISR_running, id_tag}) && id_valid[3];// if id_iseq = 0, then input is not in table yet
+
+	// SPECIAL CASES: jalr, c.jr, c.jalr
+	// Compare target of jalr w/ what's saved in the BHT
+	always@(*) begin
+		case(id_iseqto)
+			4'b1000: id_loadentry = id_entry[3];
+			4'b0100: id_loadentry = id_entry[2];
+			4'b0010: id_loadentry = id_entry[1];
+			4'b0001: id_loadentry = id_entry[0];
+			default: id_loadentry = 22'b0;
+		endcase
+	end
+
+	always@(*) begin
+		case(id_iseqto)
+			4'b1000: id_setoffset = 2'h3;
+			4'b0100: id_setoffset = 2'h2;
+			4'b0010: id_setoffset = 2'h1;
+			4'b0001: id_setoffset = 2'h0;
+			default: id_setoffset = 2'h0;
+		endcase
+	end
 
 	// Saturating counter default states. Branches: WNT | Jumps: ST
 	assign sat_counter = (id_is_jump)? 2'b11 : 2'b01;
@@ -330,6 +356,17 @@ module branchpredictor(
 				fifo_counter[id_set] <= fifo_counter[id_set] + 2'b01;
 			end
 
+			else if(id_is_jump && id_sel_opBR && (id_iseqto != 4'h0)) begin
+				if(id_branchtarget != id_loadentry[12:2]) begin
+					case(id_setoffset)
+						2'b00: history_table[id_set] <= (history_table[id_set] & 88'hffffffffffffffffc00000) | ((id_loadentry + 2'b1) & 88'h00000000000000003fffff);
+						2'b01: history_table[id_set] <= (history_table[id_set] & 88'hfffffffffff000003fffff) | (((id_loadentry + 2'b1) & 88'h00000000000000003fffff) << 22);
+						2'b10: history_table[id_set] <= (history_table[id_set] & 88'hfffffc00000fffffffffff) | (((id_loadentry + 2'b1) & 88'h00000000000000003fffff) << 44);
+						2'b11: history_table[id_set] <= (history_table[id_set] & 88'h000003ffffffffffffffff) | (((id_loadentry + 2'b1) & 88'h00000000000000003fffff) << 66);
+					endcase
+				end
+			end
+
 			else if(|exe_btype || |exe_c_btype) begin
 				if(feedback == 1'h1) begin
 					// Use masking for writing
@@ -383,7 +420,7 @@ module branchpredictor(
 				flush = 1;
 			end else begin
 				flush = 0;
-				if(id_is_jump && id_iseqto == 4'h0)
+				if((id_is_jump && !id_sel_opBR && id_iseqto == 4'h0) || (id_is_jump && id_sel_opBR && (id_iseqto != 4'h0) && (id_branchtarget != id_loadentry[12:2])))
 					flush_state = 1;
 				else
 					flush_state = 0;
