@@ -18,8 +18,6 @@ nop
 nop
 nop
 nop
-jal x0, Exit_B	#from c.j Exit_B
-jalr x0 x0, x13, 0	#from c.jr x13
 
 addi x11, x4, 4
 # This program writes the fibbonacci sequence into the memory. (Compressed)
