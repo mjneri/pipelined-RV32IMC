@@ -420,7 +420,7 @@ module branchpredictor(
 				flush = 1;
 			end else begin
 				flush = 0;
-				if((id_is_jump && !id_sel_opBR && id_iseqto == 4'h0) || (id_is_jump && id_sel_opBR && (id_iseqto != 4'h0) && (id_branchtarget != id_loadentry[12:2])))
+				if((id_is_jump && id_iseqto == 4'h0) || (id_is_jump && id_sel_opBR && (id_iseqto != 4'h0) && (id_branchtarget != id_loadentry[12:2])))
 					flush_state = 1;
 				else
 					flush_state = 0;

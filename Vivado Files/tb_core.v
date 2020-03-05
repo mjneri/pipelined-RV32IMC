@@ -124,7 +124,7 @@ module tb_core();
 		end
 	end
 	always@(posedge CLK) begin
-		if(check == 100)
+		if(check == 50)
 			done = 1;
 	end
 
@@ -365,7 +365,7 @@ module tb_core();
 		i = 0;
 		j = 0;
 		$display("\n");
-		$display("Passed %0d/%0d test cases.\nClock cycles: %0d", pass, total_test_cases, clock_counter-100);
+		$display("Passed %0d/%0d test cases.\nClock cycles: %0d", pass, total_test_cases, clock_counter-50);
 		$display("Total cycles stalled: %0d", cumulative_stall_counter);
 		$display("Total cycles flushed: %0d", cumulative_flush_counter);
 		$display("Total NOPs: %0d", nop_counter);

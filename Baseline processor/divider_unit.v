@@ -154,7 +154,7 @@ module divider_unit(
 		case(div_state)
 			RESET: div_nstate = WAIT;
 			WAIT: begin
-				if(div_valid)
+				if(div_valid && !load_hazard)
 					div_nstate = DIVIDING;
 				else
 					div_nstate = WAIT;
