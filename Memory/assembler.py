@@ -97,7 +97,7 @@ def parse_file(inst_file):
                 else:
                     instruction_address += 4
 
-    return instructions, labels
+    return instructions, labels, line_list
 
 '''
     process_inst() does the following:
@@ -252,8 +252,6 @@ def assemble(instructions, labels, instmem):
         opcode = instruction_dict[opt]['opcode']
         encoding_type = instruction_dict[opt]['format']
 
-        print('Instruction at address {}: {}'.format(inst_address, temp_inst))
-
         try:
             imm_width = instruction_dict[opt]['i_width']
         except:
@@ -400,8 +398,6 @@ def assemble(instructions, labels, instmem):
         else:
             print('Work in progress')
             m_code = 1
-
-        print(hex(m_code)[2:].zfill(8))
         
         if (opt[0] == 'C'):
             out = (hex(m_code)[2:].zfill(4))
@@ -424,7 +420,11 @@ def assemble(instructions, labels, instmem):
                 out_buffer = full_inst[0:4]
             else:
                 instmem.write(full_inst[4:8] + ' ' + full_inst[0:4] + '\n')
+
+        print('Instruction at address {}: {}'.format(inst_address, temp_inst))
+        print(hex(m_code)[2:].zfill(8))
         print('-------------------------------------------------')
+
     if (out_buffer):
         instmem.write(hex(0x0001)[2:].zfill(4))
         instmem.write(' ' + out_buffer + '\n')
@@ -434,16 +434,17 @@ def assemble(instructions, labels, instmem):
     convert_file() does the following:
     - replaced compressed instruction with their base equivalent for use in RARS
 '''
-def convert_file(instructions, base_labels):
+def convert_file(line_list):
     # Create base instructions file
     basename = args.input_file.split('.')[0] + '_base.asm'
     try:
         base_file = open(basename, "w")
     except:
         print("Failed to create file")
-    for temp_address in instructions.keys():
-        temp_line = instructions[temp_address]
-        if ((temp_line[0] == 'C') | (temp_line[0] == 'c')):
+    
+    for index in list(range(0,len(line_list))):
+        temp_line = line_list[index].strip()
+        if (('C.' in temp_line) | ('c.' in temp_line)):
             inst = split('[ \t,()]', temp_line)
             for j in inst:
                 if (j == ''):
@@ -463,6 +464,15 @@ def convert_file(instructions, base_labels):
             elif (expansion_method == 'replace'):
                 equivalent = inst_info['equivalent']
                 base_file.write(str(equivalent) + ' ' + str(inst[1:]))
+            elif (expansion_method == 'times_4(x2)'):
+                equivalent = inst_info['equivalent']
+                base_file.write(str(equivalent) + ' ' + str(inst[1]) + ', ' + str(int(inst[2])*4) + '(x2)')
+            elif (expansion_method == 'x2_times_4'):
+                equivalent = inst_info['equivalent']
+                base_file.write(str(equivalent) + ' ' + str(inst[1]) + ', x2, ' + str(int(inst[2])*4))
+            elif (expansion_method == 'times_16'):
+                equivalent = inst_info['equivalent']
+                base_file.write(str(equivalent) + ', ' + str(int(inst[1])*16))
             else:
                 base_file.write(str(inst_info['expansion']))
             base_file.write('\t#from ' + temp_line + '\n')
@@ -475,10 +485,10 @@ def convert_file(instructions, base_labels):
 
 # Running Code
 # Parse file
-instructions, labels = parse_file(inst_file)
+instructions, labels, line_list = parse_file(inst_file)
 
 # Convert to base instruction equivalents
-base_file = convert_file(instructions, labels)
+convert_file(line_list)
 
 # Create output file
 save_file = args.output_file

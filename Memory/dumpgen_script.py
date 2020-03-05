@@ -22,11 +22,21 @@ finally:
 
 filename = args.input_file.split('.')[0]
 # Put rars path here
-path = "C:\\Users\\Emman\\Documents\\GitHub\\pipelined-RV32IMC\\Memory\\"
-# Generating Command strings
-text_command = 'cmd /c "py ' + 'assembler.py ' + args.input_file + ' ' + filename + '.coe' + '"'
-data_command = 'cmd /c "java -jar ' + path + 'rars1_4.jar a mc CompactDataAtZero dump .data HexText \"' + filename + '_data.mem\" '+filename+'_base.asm'+'"'
-ans_command = 'cmd /c "java -jar ' + path + 'rars1_4.jar 1000 mc CompactDataAtZero dump .data HexText \"' + filename + '_answerkey.mem\" ' + filename+'_base.asm' + '"'
+
+# Generating Command strings (Windows)
+win10_path = ""
+#text_command = 'cmd /c "python3 ' + 'assembler.py ' + args.input_file + ' ' + filename + '.coe' + '"'
+#data_command = 'cmd /c "java -jar ' + win10_path + 'rars1_4.jar a mc CompactDataAtZero dump .data HexText \"' + filename + '_data.mem\" '+filename+'_base.asm'+'"'
+#ans_command = 'cmd /c "java -jar ' + win10_path + 'rars1_4.jar 1000 mc CompactDataAtZero dump .data HexText \"' + filename + '_answerkey.mem\" ' + filename+'_base.asm' + '"'
+
+# Generating Command strings (MacOS)
+macos_path = ""
+text_command = 'python3 assembler.py ' + args.input_file + ' ' + filename + '.coe'
+data_command = 'java -jar ' + macos_path + 'rars1_4.jar a mc CompactDataAtZero dump .data HexText \"' + filename + '_data.mem\" \"' + filename+'_base.asm'+'"'
+ans_command = 'java -jar ' + macos_path + 'rars1_4.jar 1000 mc CompactDataAtZero dump .data HexText \"' + filename + '_answerkey.mem\"  \"' + filename+'_base.asm' + '"'
+
+print(data_command)
+print(ans_command)
 
 # print('cmd /c "java -jar C:\\Users\\MJ\\Documents\\RARS\\rars1_4.jar a d mc CompactDataAtZero dump .text HexText \"'+filename+' text.dmp\" '+args.file+'"')
 print("Generating text dump...")
