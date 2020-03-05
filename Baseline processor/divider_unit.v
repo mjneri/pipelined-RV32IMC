@@ -180,7 +180,7 @@ module divider_unit(
 	always@(*) begin
 		case(div_state)
 			RESET: div_running = 0;
-			WAIT: div_running = (div_valid)? 1'b1 : 1'b0;
+			WAIT: div_running = (div_valid && !load_hazard)? 1'b1 : 1'b0;
 			DIVIDING: div_running = 1'b1;
 			DONE: div_running = 1'b0;
 		endcase
