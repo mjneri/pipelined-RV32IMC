@@ -63,7 +63,7 @@ instruction_dict= {
     #'C.FSD':    {'args':3,  'syntax':'r-i_r',   'i_width':7,    'format':'CLS', 'opcode':0,     'funct3':5,                 'expansion_method':'none',		     'expansion':'none'},
     #'C.FSW':    {'args':3,  'syntax':'r-i_r',   'i_width':7,    'format':'CLS', 'opcode':0,     'funct3':7,                 'expansion_method':'none',		     'expansion':'none'},
     'C.SW':     {'args':3,  'syntax':'r-i_r',   'i_width':7,    'format':'CLS', 'opcode':0,     'funct3':6,                 'expansion_method':'none',			'expansion':'sw rs2_, offset[6:2](rs1_)'},
-    'C.NOP':    {'args':0,  'syntax':'none',                    'format':'N',   'opcode':1,                                 'expansion_method':'none',			'expansion':'nop'},
+    'C.NOP':    {'args':0,  'syntax':'none',                    'format':'N',   'opcode':1,                                 'expansion_method':'none',			'expansion':'none'},
     'C.ADDI':   {'args':2,  'syntax':'r-i',     'i_width':6,    'format':'CI',  'opcode':1,     'funct3':0,                 'expansion_method':'dup_reg',		'expansion':'addi rd, rd, imm'},
     'C.JAL':    {'args':1,  'syntax':'l',       'i_width':12,   'format':'CJ',  'opcode':1,     'funct3':1,                 'expansion_method':'insert_x1',		'expansion':'jal x1, label',            'equivalent':'jal'},
     'C.LI':     {'args':2,  'syntax':'r-i',     'i_width':6,    'format':'CI',  'opcode':1,     'funct3':2,                 'expansion_method':'insert_x0',		'expansion':'addi, rd, x0, imm',        'equivalent':'addi'},

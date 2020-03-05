@@ -478,7 +478,7 @@ def convert_file(line_list):
             base_file.write('\t#from ' + temp_line + '\n')
         else:
             base_file.write(temp_line + '\n')
-
+        print(temp_line)
     # Delete base instructions file
     #os.remove(basename)
     return base_file
