@@ -822,7 +822,7 @@ module core(
 		.id_is_btype(id_is_btype),
 
 		.exe_PC(exe_PC[11:1]),
-		.exe_branchtarget(exe_branchtarget),
+		.exe_branchtarget(exe_branchtarget[11:1]),
 		.exe_sel_opBR(exe_sel_opBR),
 		.exe_z(exe_z),
 		.exe_less(exe_less),
