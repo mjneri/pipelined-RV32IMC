@@ -28,158 +28,24 @@ except:
     parse_file() does the following:
     - get rid of empty lines
     - strip stuff from lines
-    to-do:
-    - tokenize all instructions, registers, and things of that nature
+    - associate instructions to their addresses 
 
     return variables:
-    - dict: instructions (contains all instructions)
-    - dict: labels (contains all labels and symbols)
+    - dictionary: instructions (contains all instructions)
+    - dictionary: labels (contains all labels and symbols)
 '''
-# Outputs parsed instruction line with replaced registers
-def parse_inst(inst_type, t_inst):
-    # arg1 = 0
-    # arg2 = 0
-    # arg3 = 0
-    t_inst[0] = t_inst[0].upper()
-    encoding_type = inst_type['format']
-    syntax = inst_type['syntax']
-    args = inst_type['args']
-    if (len(t_inst[(args+1):]) > 0):
-        print('Error: excessive number of arguments (' + str(args) + '+)')
-        exit()
-    
-    if (args==1):
-        if (syntax=='l'):
-            try:
-                arg1 = str(t_inst[1])
-            except IndexError:
-                print('Invalid first arguement (Label)')
-                exit()
-        elif (syntax=='i'):
-            try:
-                arg1 = int(t_inst[1], 0)
-            except IndexError:
-                print('Invalid first arguement (Imm)')
-                exit()
-        elif (syntax=='r'):
-            try:
-                arg1 = register_dict[t_inst[1]]
-            except IndexError:
-                print('Invalid first arguement (Reg)')
-                exit()
-        t_inst = [t_inst[0], arg1]
-
-    elif (args>1):
-        try:
-            arg1 = register_dict[t_inst[1]]
-        except IndexError:
-            print('Invalid first arguement (Reg)')
-            exit()
-
-        if ((encoding_type=='CLS') | (encoding_type=='CIW') | (encoding_type=='CB') | (encoding_type=='CH')):
-            if (arg1>7 & arg1<16):
-                arg1 -= 8
-            else:
-                print('Invalid first arguement (C.Reg)')
-                exit()
-
-        if (args==2):
-            if (syntax=='r-l'): 
-                try:
-                    arg2 = str(t_inst[2])
-                except IndexError:
-                    print('Invalid second arguement (Label)')
-                    exit()
-            elif (syntax=='r-i'):
-                try:
-                    arg2 = int(t_inst[2], 0)
-                except IndexError:
-                    print('Invalid second arguement (Imm)')
-                    exit()
-            elif (syntax=='r-r'):
-                try:
-                    arg2 = register_dict[t_inst[2]]
-                except IndexError:
-                    print('Invalid second arguement (Reg)')
-                    exit()
-            t_inst = [t_inst[0], arg1, arg2]
-            
-        elif (args==3):
-            arg1 = register_dict[t_inst[1]]
-            if ((syntax=='r-r-l') | (syntax=='r-r-i') | (syntax=='r-r-r')):
-                try:
-                    arg2 = register_dict[t_inst[2]]
-                except IndexError:
-                    print('Invalid second arguement (Reg)')
-                    exit()
-                if (syntax=='r-r-l'):
-                    try:
-                        arg3 = str(t_inst[3])
-                    except IndexError:
-                        print('Invalid third arguement (Label)')
-                        exit()
-                elif (syntax=='r-r-i'):
-                    try:
-                        arg3 = int(t_inst[3], 0)
-                    except IndexError:
-                        print('Invalid third arguement (Imm)')
-                        exit()
-                else:
-                    try:
-                        arg3 = register_dict[t_inst[3]]
-                    except IndexError:
-                        print('Invalid third arguement (Reg)')
-                        exit()
-            elif (syntax=='r-i_r'):     # Immediate-only arguement
-                try:
-                    arg2 = int(t_inst[2], 0)
-                except IndexError:
-                    print('Invalid second arguement (Imm)')
-                    exit()
-                try:
-                    arg3 = register_dict[t_inst[3]]
-                except IndexError:
-                    print('Invalid third arguement (Reg)')
-                    exit()
-                if (encoding_type=='CLS'):
-                    if (arg1>7 & arg1<16):
-                        arg1 -= 8
-                    else:
-                        print('Invalid first arguement (C.Reg)')
-                        exit()
-                    if (arg3>7 & arg3<16):
-                        arg3 -= 8
-                    else:
-                        print('Invalid third arguement (C.Reg)')
-                        exit()
-            t_inst = [t_inst[0], arg1, arg2, arg3]
-    
-    return t_inst
-
-def process_inst(inst):
-    t_inst = inst
-    t_inst = split('[ \t,()]', t_inst)
-    # go through elements and ditch empty strings
-    for j in t_inst:
-        if (j == ''):
-            t_inst.pop(t_inst.index(j))
-    # check if regular instruction
-    inst_type = instruction_dict[t_inst[0].upper()]
-    t_inst = parse_inst(inst_type, t_inst)
-    return t_inst
-
-def parse_file(line_list):
+def parse_file(inst_file):
     line_list = []
     for line in inst_file:
         line_list.append(line)
-
+    
+    label_q = []
+    
+    labels = {}
     instructions = {}
     instruction_address = 0
-    labels = {}
-    label_q = []
 
     ## main loops ###
-
     for index in list(range(0,len(line_list))):
         # delete all comments
         line = line_list[index]
@@ -231,18 +97,160 @@ def parse_file(line_list):
                 else:
                     instruction_address += 4
 
-    return instructions, labels
+    return instructions, labels, line_list
 
+'''
+    process_inst() does the following:
+    - error checking of instruction syntax
+
+    return variables:
+    - array of instruction arguements with replaced registers and address offset
+'''
+def process_inst(inst, labels, inst_address):
+    inst = split('[ \t,()]', inst)
+    # go through elements and ditch empty strings
+    for j in inst:
+        if (j == ''):
+            inst.pop(inst.index(j))
+    # check if regular instruction
+    inst_info = instruction_dict[inst[0].upper()]
+    # arg1 = 0
+    # arg2 = 0
+    # arg3 = 0
+    inst[0] = inst[0].upper()
+    encoding_type = inst_info['format']
+    syntax = inst_info['syntax']
+    args = inst_info['args']
+    if (len(inst[(args+1):]) > 0):
+        print('Error: excessive number of arguments (' + str(args) + '+)')
+        exit()
+    
+    if (args==1):
+        if (syntax=='l'):
+            try:
+                label_address = labels[inst[1]]
+                offset = (label_address-inst_address)
+                arg1 = str(offset)
+            except IndexError:
+                print('Invalid first arguement (Label)')
+                exit()
+        elif (syntax=='i'):
+            try:
+                arg1 = int(inst[1], 0)
+            except IndexError:
+                print('Invalid first arguement (Imm)')
+                exit()
+        elif (syntax=='r'):
+            try:
+                arg1 = register_dict[inst[1]]
+            except IndexError:
+                print('Invalid first arguement (Reg)')
+                exit()
+        inst = [inst[0], arg1]
+
+    elif (args>1):
+        try:
+            arg1 = register_dict[inst[1]]
+        except IndexError:
+            print('Invalid first arguement (Reg)')
+            exit()
+
+        if ((encoding_type=='CLS') | (encoding_type=='CIW') | (encoding_type=='CB') | (encoding_type=='CH')):
+            if (arg1>7 & arg1<16):
+                arg1 -= 8
+            else:
+                print('Invalid first arguement (C.Reg)')
+                exit()
+
+        if (args==2):
+            if (syntax=='r-l'): 
+                try:
+                    label_address = labels[inst[2]]
+                    offset = (label_address-inst_address)
+                    arg2 = str(offset)
+                except IndexError:
+                    print('Invalid second arguement (Label)')
+                    exit()
+            elif (syntax=='r-i'):
+                try:
+                    arg2 = int(inst[2], 0)
+                except IndexError:
+                    print('Invalid second arguement (Imm)')
+                    exit()
+            elif (syntax=='r-r'):
+                try:
+                    arg2 = register_dict[inst[2]]
+                except IndexError:
+                    print('Invalid second arguement (Reg)')
+                    exit()
+            inst = [inst[0], arg1, arg2]
+            
+        elif (args==3):
+            arg1 = register_dict[inst[1]]
+            if ((syntax=='r-r-l') | (syntax=='r-r-i') | (syntax=='r-r-r')):
+                try:
+                    arg2 = register_dict[inst[2]]
+                except IndexError:
+                    print('Invalid second arguement (Reg)')
+                    exit()
+                if (syntax=='r-r-l'):
+                    try:
+                        label_address = labels[inst[3]]
+                        offset = (label_address-inst_address)
+                        arg3 = str(offset)
+                    except IndexError:
+                        print('Invalid third arguement (Label)')
+                        exit()
+                elif (syntax=='r-r-i'):
+                    try:
+                        arg3 = int(inst[3], 0)
+                    except IndexError:
+                        print('Invalid third arguement (Imm)')
+                        exit()
+                else:
+                    try:
+                        arg3 = register_dict[inst[3]]
+                    except IndexError:
+                        print('Invalid third arguement (Reg)')
+                        exit()
+            elif (syntax=='r-i_r'):     # Immediate-only arguement
+                try:
+                    arg2 = int(inst[2], 0)
+                except IndexError:
+                    print('Invalid second arguement (Imm)')
+                    exit()
+                try:
+                    arg3 = register_dict[inst[3]]
+                except IndexError:
+                    print('Invalid third arguement (Reg)')
+                    exit()
+                if (encoding_type=='CLS'):
+                    if (arg1>7 & arg1<16):
+                        arg1 -= 8
+                    else:
+                        print('Invalid first arguement (C.Reg)')
+                        exit()
+                    if (arg3>7 & arg3<16):
+                        arg3 -= 8
+                    else:
+                        print('Invalid third arguement (C.Reg)')
+                        exit()
+            inst = [inst[0], arg1, arg2, arg3]
+    
+    return inst
+
+'''
+    assemble() does the following:
+    - convert to machine code
+'''
 def assemble(instructions, labels, instmem):
     out_buffer = {}
     compressed_counter = 0
     for inst_address in instructions.keys():
-        temp_inst = process_inst(instructions[inst_address])
+        temp_inst = process_inst(instructions[inst_address], labels, inst_address)
         opt = temp_inst[0]
         opcode = instruction_dict[opt]['opcode']
         encoding_type = instruction_dict[opt]['format']
-
-        print('Instruction at address {}: {}'.format(inst_address, temp_inst))
 
         try:
             imm_width = instruction_dict[opt]['i_width']
@@ -288,8 +296,7 @@ def assemble(instructions, labels, instmem):
                 imm = int(temp_inst[3])
             elif (instruction_dict[opt]['syntax']=='r-r-l'):
                 rs1 = int(temp_inst[2])
-                label_address = labels[temp_inst[3]]
-                imm = (label_address-inst_address)
+                imm = temp_inst[3]
             else:
                 print('Something went wrong')
                 exit()
@@ -305,9 +312,8 @@ def assemble(instructions, labels, instmem):
         elif (encoding_type=='B'):      # Okay
             rs1 = int(temp_inst[1])
             rs2 = int(temp_inst[2])
-            label_address = labels[temp_inst[3]]
-            imm = (label_address-inst_address)
-            m_code = opcode | (imm&0x800)>>4 | (imm&0x1E)<<7 | funct3<<12 | rs1<<15 | rs2<<20 | (imm&0x7E0)<<20 | (imm&0x1000)<<19
+            offset = int(temp_inst[3])
+            m_code = opcode | (offset&0x800)>>4 | (offset&0x1E)<<7 | funct3<<12 | rs1<<15 | rs2<<20 | (offset&0x7E0)<<20 | (offset&0x1000)<<19
             
         elif (encoding_type=='U'):      # Okay
             rd = int(temp_inst[1])
@@ -316,9 +322,8 @@ def assemble(instructions, labels, instmem):
         
         elif (encoding_type=='J'):
             rd = int(temp_inst[1])
-            label_address = labels[temp_inst[2]]
-            imm = (label_address-inst_address)
-            m_code = opcode |  rd<<7 | (imm&0xFF000) | (imm&0x800)<<9 | (imm&0x7FE)<<20 | (imm&0x100000)<<11
+            offset = int(temp_inst[2])
+            m_code = opcode |  rd<<7 | (offset&0xFF000) | (offset&0x800)<<9 | (offset&0x7FE)<<20 | (offset&0x100000)<<11
         
         elif (encoding_type=='CR'):     # Okay
             if (instruction_dict[opt]['syntax']=='r'):
@@ -353,12 +358,11 @@ def assemble(instructions, labels, instmem):
 
         elif (encoding_type=='CB'):     # Okay
             rs1_ = int(temp_inst[1])
-            label_address = labels[temp_inst[2]]
-            imm = (label_address-inst_address)
+            offset = int(temp_inst[2])
             if (rs1_ < 8 | rs1_ > 16):
                 print('Warning: Rs1 {} truncated to {}'.format(rs1_, (0x08) | (rs1_ & 0x07)))
             rs1_ = (rs1_ & 0x07)
-            m_code = opcode | (imm&0x20)>>3 | (imm&0x6)<<2 | (imm&0xC0)>>1 | rs1_<<7 | (imm&0x18)<<7 | (imm&0x100)<<4 | funct3<<13
+            m_code = opcode | (offset&0x20)>>3 | (offset&0x6)<<2 | (offset&0xC0)>>1 | rs1_<<7 | (offset&0x18)<<7 | (offset&0x100)<<4 | funct3<<13
 
         elif (encoding_type=='CA'):     # Okay
             rs2_ = int(temp_inst[2])
@@ -377,10 +381,9 @@ def assemble(instructions, labels, instmem):
             m_code = opcode | (imm&0x1F)<<2 | rd_rs1_<<7 | funct2<<10 | (imm&0x20)<<7 | funct3<<13
 
         elif (encoding_type=='CJ'):
-            label_address = labels[temp_inst[1]]
-            imm = (label_address-inst_address)
+            offset = int(temp_inst[1])
             # 5|3:1|7|6|10|9:8|4|11
-            m_code = opcode | (imm&0x20)>>3 | (imm&0xE)<<2 | (imm&0x80)>>1 | (imm&0x40)<<1 | (imm&0x400)>>2 | (imm&0x300)<<1 | (imm&0x10)<<7 | (imm&0x800)<<1 | funct3<<13
+            m_code = opcode | (offset&0x20)>>3 | (offset&0xE)<<2 | (offset&0x80)>>1 | (offset&0x40)<<1 | (offset&0x400)>>2 | (offset&0x300)<<1 | (offset&0x10)<<7 | (offset&0x800)<<1 | funct3<<13
 
         elif (encoding_type=='CIW'):     # Okay
             rd_ = int(temp_inst[1])
@@ -399,8 +402,6 @@ def assemble(instructions, labels, instmem):
         else:
             print('Work in progress')
             m_code = 1
-
-        print(hex(m_code))
         
         if (opt[0] == 'C'):
             out = (hex(m_code)[2:].zfill(4))
@@ -410,41 +411,106 @@ def assemble(instructions, labels, instmem):
                     compressed_counter = 1
                 else:
                     # print(out + out_buffer + '\n')
-                    instmem.write(out + out_buffer + '\n')
+                    instmem.write(out_buffer + ' ' + out + '\n')
                     compressed_counter = 0
                     out_buffer = ''
-            else:
-                out = (hex(0x10000 | m_code)[2:].zfill(8))      # insert an upper nop
-                instmem.write(out + '\n')
+            else:   # insert an upper nop
+                instmem.write('0001 ' + out + '\n')
         else:
             full_inst = (hex(m_code)[2:].zfill(8))
             # print(full_inst)
             if (out_buffer):
-                instmem.write(full_inst[4:8] + out_buffer + '\n')
+                instmem.write(out_buffer + ' ' + full_inst[4:8] + '\n')
                 out_buffer = full_inst[0:4]
             else:
                 instmem.write(full_inst[4:8] + ' ' + full_inst[0:4] + '\n')
+
+        print('Instruction at address {}: {}'.format(inst_address, temp_inst))
+        print(hex(m_code)[2:].zfill(8))
         print('-------------------------------------------------')
+
     if (out_buffer):
         instmem.write(hex(0x0001)[2:].zfill(4))
-        instmem.write(out_buffer + '\n')
+        instmem.write(' ' + out_buffer + '\n')
     return
 
-# Running Code
-instructions, labels = parse_file(inst_file)
-savefile = args.output_file
+'''
+    convert_file() does the following:
+    - replaced compressed instruction with their base equivalent for use in RARS
+'''
+def convert_file(line_list):
+    # Create base instructions file
+    basename = args.input_file.split('.')[0] + '_base.asm'
+    try:
+        base_file = open(basename, "w")
+    except:
+        print("Failed to create file")
+    
+    for index in list(range(0,len(line_list))):
+        temp_line = line_list[index].strip()
+        #if (('C.' in temp_line) | ('c.' in temp_line)):
+        if ((temp_line.split('.')[0] == 'c') | (temp_line.split('.')[0] == 'C')):
+            inst = split('[ \t,()]', temp_line)
+            for j in inst:
+                if (j == ''):
+                    inst.pop(inst.index(j))
+            inst_info = instruction_dict[inst[0].upper()]
+            expansion_method = inst_info['expansion_method']
+            if (expansion_method == 'none'):
+                base_file.write(str(temp_line[2:]))
+            elif (expansion_method == 'dup_reg'):
+                base_file.write(str(inst[0][2:]) + ' ' + str(inst[1]) + ', ' +str(inst[1]) + ', ' + str(inst[2]))
+            elif (expansion_method == 'insert_x0'):
+                equivalent = inst_info['equivalent']
+                if inst_info['args']==1:
+                    base_file.write(str(equivalent) + ' x0, ' + str(inst[1]))
+                elif inst_info['args']==2:
+                    base_file.write(str(equivalent) + ' ' + str(inst[1]) + ', x0, ' + str(inst[2]))
+            elif (expansion_method == 'insert_x0+0'):
+                equivalent = inst_info['equivalent']
+                base_file.write(str(equivalent) + ' x0, ' + str(inst[1]) + ', 0')
+            elif (expansion_method == 'insert_x1'):
+                equivalent = inst_info['equivalent']
+                base_file.write(str(equivalent) + ' x1, ' + str(inst[1]))
+            elif (expansion_method == 'replace'):
+                equivalent = inst_info['equivalent']
+                base_file.write(str(equivalent) + ' ' + str(inst[1:]))
+            elif (expansion_method == 'times_4(x2)'):
+                equivalent = inst_info['equivalent']
+                base_file.write(str(equivalent) + ' ' + str(inst[1]) + ', ' + str(int(inst[2])*4) + '(x2)')
+            elif (expansion_method == 'x2_times_4'):
+                equivalent = inst_info['equivalent']
+                base_file.write(str(equivalent) + ' ' + str(inst[1]) + ', x2, ' + str(int(inst[2])*4))
+            elif (expansion_method == 'times_16'):
+                equivalent = inst_info['equivalent']
+                base_file.write(str(equivalent) + ', ' + str(int(inst[1])*16))
+            else:
+                base_file.write(str(inst_info['expansion']))
+            base_file.write('\t#from ' + temp_line + '\n')
+        else:
+            base_file.write(temp_line + '\n')
+        print(temp_line)
+    # Delete base instructions file
+    #os.remove(basename)
+    return base_file
 
+# Running Code
+# Parse file
+instructions, labels, line_list = parse_file(inst_file)
+
+# Convert to base instruction equivalents
+convert_file(line_list)
+
+# Create output file
+save_file = args.output_file
 try:
-    instmem = open(savefile, "w")
-    instmem.write("memory_initialization_radix=16;\n")
-    instmem.write("memory_initialization_vector=\n")
+    instmem = open(save_file, "w")
+    instmem.write("memory_initialization_radix=16;\nmemory_initialization_vector=\n")
 except:
     print("Failed to create file")
-#print(instructions)
-#print(labels)
-
+# Convert to machine code
 assemble(instructions, labels, instmem)
 instmem.write(";")
-print('Saved to ' + savefile)
+print('Saved to ' + save_file)
 
 exit()
