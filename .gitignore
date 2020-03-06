@@ -3,8 +3,7 @@
 *.gtkw
 *.pyc
 *.pyc
-Assembler+Testbench/Assembler/__pycache__/instructions.cpython-38.pyc
-Assembler+Testbench/Assembler/__pycache__/instructions.cpython-38.pyc
+Assembler+Testbench/Assembler/__pycache__/*
 Baseline processor/debug place/*
 Vivado Files/tb_core.v
 dumpgen_script.py

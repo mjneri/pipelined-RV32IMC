@@ -347,6 +347,8 @@ def assemble(instructions, labels, instmem):
             rs1_ = int(temp_inst[3])
             rs1_ = (rs1_ & 0x07)
             rd_rs2_ = (rd_rs2_ & 0x07)
+            if ((imm & 0x3) != 0):
+                print('Warning: word-addressed immediates only: {} will get truncated to {}'.format(imm, imm & -4))
             m_code = opcode |  rd_rs2_<<2 | (imm&0x40)>>1 | (imm&0x4)<<4 | rs1_<<7 | (imm&0x38)<<7 | funct3<<13
 
         elif (encoding_type=='CB'):     # Okay
@@ -385,6 +387,8 @@ def assemble(instructions, labels, instmem):
             imm = int(temp_inst[2])<<2
             if (rd_ < 8 | rd_ > 16):
                 print('Warning: Rd {} truncated to {}'.format(rd_, (0x08) | (rd_ & 0x07)))
+            if (imm < 0):
+                print('Warning: This instruction only takes unsigned inputs. {} will be treated as {}.'.format(imm, imm & 0x3FC))
             rd_ = (rd_ & 0x07)
             m_code = opcode |  rd_<<2 | (imm&0x8)<<2 | (imm&0x4)<<4 | (imm&0x3C0)<<1 | (imm&0x30)<<7 | funct3<<13
 
