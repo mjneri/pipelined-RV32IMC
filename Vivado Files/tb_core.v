@@ -249,7 +249,7 @@ module tb_core();
 			for(i=0; i<16; i=i+1)
 				bht_overwrites[i] <= 0;
 		else if(!done) begin
-			if((CORE.id_is_btype || CORE.id_is_jump) && (CORE.BHT.id_iseqto == 4'h0) && (CORE.BHT.fifo_counter[id_set] == 2'd3)) begin
+			if((CORE.id_is_btype || CORE.id_is_jump) && (CORE.BHT.id_iseqto == 4'h0)) begin
 				bht_overwrites[id_set] <= bht_overwrites[id_set] + 1;
 				total_bht_overwrites <= total_bht_overwrites + 1;
 			end
@@ -376,7 +376,8 @@ module tb_core();
 		$display("Overwrites done: %0d.", total_bht_overwrites);
 		$display("---| Per-set Metrics |---");
 		for(i = 0; i < 16; i = i + 1) begin
-			$display("Set: %0d\tOverwrites: %0d", i, bht_overwrites[i]);
+			if(bht_overwrites[i] > 3) $display("Set: %0d\tOverwrites: %0d", i, bht_overwrites[i] - 3);
+			else $display("Set: %0d\tOverwrites: 0", i);
 			bht_entry_display();
 			$display("------");
 		end
