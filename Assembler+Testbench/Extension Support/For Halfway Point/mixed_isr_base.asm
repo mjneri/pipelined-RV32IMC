@@ -11,7 +11,6 @@ jal x1, anything	#from c.jal anything
 
 jal x1, loadhere	#from c.jal loadhere
 
-uret
 
 # SUBROUTINE FOR STORES
 storehere:
@@ -50,19 +49,21 @@ jalr x0, x1, 0	#from c.jr x1
 
 
 anything:
-addi x15, x0, 5
+addi x15, x0, 3
 addi x3, x0, 0x402
 slli x3, x3, 2
 
-addi x5, x0, 1
+
 
 running:
 addi x15, x15, -1	#from c.addi x15, -1
+addi x5, x0, 1
 
 sw x5, 0(x3)
 
-addi x4, x4, 0xCA0
-lui x4, 0x3B9A
+addi x4, x0, 0x1a0
+lui x4, 0xcca
+
 loop1:
 addi x4, x4, -1	#from c.addi x4, -1
 bne x4, x0, loop1
@@ -71,68 +72,10 @@ lw x5, 0(x3)
 slli x5, x5, 1
 sw x5, 0(x3)
 
-addi x4, x4, 0xCA0
-lui x4, 0x3B9A
-loop2:
-addi x4, x4, -1	#from c.addi x4, -1
-bne x4, x0, loop2
-
-lw x5, 0(x3)
-slli x5, x5, 1
-sw x5, 0(x3)
-
-addi x4, x4, 0xCA0
-lui x4, 0x3B9A
-loop3:
-addi x4, x4, -1	#from c.addi x4, -1
-bne x4, x0, loop3
-
-lw x5, 0(x3)
-slli x5, x5, 1
-sw x5, 0(x3)
-
-#######################################################################
-
-addi x4, x4, 0xCA0
-lui x4, 0x3B9A
-loop4:
-addi x4, x4, -1	#from c.addi x4, -1
-bne x4, x0, loop4
-
-lw x5, 0(x3)
-srli x5, x5 1
-sw x5, 0(x3)
-
-addi x4, x4, 0xCA0
-lui x4, 0x3B9A
-loop5:
-addi x4, x4, -1	#from c.addi x4, -1
-bne x4, x0, loop5
-
-lw x5, 0(x3)
-srli x5, x5 1
-sw x5, 0(x3)
-
-addi x4, x4, 0xCA0
-lui x4, 0x3B9A
-loop6:
-addi x4, x4, -1	#from c.addi x4, -1
-bne x4, x0, loop6
-
-lw x5, 0(x3)
-srli x5, x5 1
-sw x5, 0(x3)
-
-addi x4, x4, 0xCA0
-lui x4, 0x3B9A
-loop7:
-addi x4, x4, -1	#from c.addi x4, -1
-bne x4, x0, loop7
-
-
 bne x15, x0, running	#from c.bnez x15, running
 
-jalr x0, x1, 0	#from c.jr x1
+sw x0, 0(x3)
+
 
 
 loadhere:
@@ -167,9 +110,6 @@ lw x28, 1108(x0)
 lw x29, 1112(x0)
 lw x30, 1116(x0)
 lw x0, 1120(x0)
-
-# ADELBOSS
-
 lui x21, 0xade1b
 addi x21, x21, 0x055
 addi x22, x0, 0x3ff
@@ -177,15 +117,8 @@ slli x22, x22, 2
 sw x21, 0(x22)
 sw x0, 0(x22)
 
-jalr x0, x1, 0	#from c.jr x1
+uret
+# ADELBOSS
 
-
-# END
-# lui x21, 0xade1b
-# addi x21, x21, 0x055
-# addi x22, x0, 0x3ff
-# slli x22, x22, 2
-# sw x21, 0(x22)
-# sw x0, 0(x22)
 
 

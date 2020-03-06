@@ -11,7 +11,6 @@ c.jal anything
 
 c.jal loadhere
 
-uret
 
 # SUBROUTINE FOR STORES
 storehere:
@@ -50,89 +49,33 @@ storehere:
 
 
 anything:
-        addi x15, x0, 5
+        addi x15, x0, 3
         addi x3, x0, 0x402
         slli x3, x3, 2
 
-        addi x5, x0, 1
+        
 
         running:
-        c.addi x15, -1
-       
-        sw x5, 0(x3)
+                c.addi x15, -1
+                addi x5, x0, 1
+               
+                sw x5, 0(x3)
 
-        addi x4, x4, 0xCA0        
-        lui x4, 0x3B9A
-        loop1:
-        c.addi x4, -1
-        bne x4, x0, loop1
+                addi x4, x0, 0x1a0        
+                lui x4, 0xcca
+                 
+                loop1:
+                c.addi x4, -1
+                bne x4, x0, loop1
 
-        lw x5, 0(x3)
-        slli x5, x5, 1
-        sw x5, 0(x3)
+                lw x5, 0(x3)
+                slli x5, x5, 1
+                sw x5, 0(x3)
 
-        addi x4, x4, 0xCA0        
-        lui x4, 0x3B9A
-        loop2:
-        c.addi x4, -1
-        bne x4, x0, loop2
-
-        lw x5, 0(x3)
-        slli x5, x5, 1
-        sw x5, 0(x3)
-
-        addi x4, x4, 0xCA0        
-        lui x4, 0x3B9A
-        loop3:
-        c.addi x4, -1
-        bne x4, x0, loop3
-
-        lw x5, 0(x3)
-        slli x5, x5, 1
-        sw x5, 0(x3)
-
-        #######################################################################
-
-        addi x4, x4, 0xCA0        
-        lui x4, 0x3B9A
-        loop4:
-        c.addi x4, -1
-        bne x4, x0, loop4
-
-        lw x5, 0(x3)
-        srli x5, x5 1
-        sw x5, 0(x3)
-
-        addi x4, x4, 0xCA0        
-        lui x4, 0x3B9A
-        loop5:
-        c.addi x4, -1
-        bne x4, x0, loop5
-
-        lw x5, 0(x3)
-        srli x5, x5 1
-        sw x5, 0(x3)
-
-        addi x4, x4, 0xCA0        
-        lui x4, 0x3B9A
-        loop6:
-        c.addi x4, -1
-        bne x4, x0, loop6
-
-        lw x5, 0(x3)
-        srli x5, x5 1
-        sw x5, 0(x3)
-
-        addi x4, x4, 0xCA0        
-        lui x4, 0x3B9A
-        loop7:
-        c.addi x4, -1
-        bne x4, x0, loop7
-
-        
         c.bnez x15, running
 
-        c.jr x1
+        sw x0, 0(x3)
+
 
 
 loadhere:
@@ -167,9 +110,6 @@ loadhere:
         lw x29, 1112(x0)
         lw x30, 1116(x0)
         lw x0, 1120(x0)
-
-        # ADELBOSS
-
         lui x21, 0xade1b
         addi x21, x21, 0x055
         addi x22, x0, 0x3ff
@@ -177,15 +117,8 @@ loadhere:
         sw x21, 0(x22)
         sw x0, 0(x22)
 
-        c.jr x1
+        uret
+        # ADELBOSS
 
-
-        # END
-        # lui x21, 0xade1b
-        # addi x21, x21, 0x055
-        # addi x22, x0, 0x3ff
-        # slli x22, x22, 2
-        # sw x21, 0(x22)
-        # sw x0, 0(x22)
 
 
