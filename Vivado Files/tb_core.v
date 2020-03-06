@@ -198,8 +198,6 @@ module tb_core();
 					4'b0001: bht_accesses[{id_set, 2'b00}] <= bht_accesses[{id_set, 2'b00}] + 1;
 					4'b0000: bht_accesses[{id_set, CORE.BHT.fifo_counter[id_set]}] <= bht_accesses[{id_set, CORE.BHT.fifo_counter[id_set]}] + 1;
 				endcase
-				
-				total_bht_accesses <= total_bht_accesses + 1;
 			end
 			else if(CORE.id_is_jump) begin
 				case(CORE.BHT.id_iseqto)
@@ -209,8 +207,7 @@ module tb_core();
 					4'b0001: bht_accesses[{id_set, 2'b00}] <= bht_accesses[{id_set, 2'b00}] + 1;
 					4'b0000: bht_accesses[{id_set, CORE.BHT.fifo_counter[id_set]}] <= bht_accesses[{id_set, CORE.BHT.fifo_counter[id_set]}] + 1;
 				endcase
-				total_bht_accesses <= total_bht_accesses + 1;
-				if(CORE.id_jump_in_bht)
+				if(CORE.id_jump_in_bht && !CORE.id_sel_opBR)
 					case(CORE.BHT.id_iseqto)
 						4'b1000: bht_correct[{id_set, 2'b11}] <= bht_correct[{id_set, 2'b11}] + 1;
 						4'b0100: bht_correct[{id_set, 2'b10}] <= bht_correct[{id_set, 2'b10}] + 1;
@@ -223,24 +220,13 @@ module tb_core();
 	end
 
 	// This controls bht_correct for branch instructions
-	always@(posedge CLK)
+	always@(posedge CLK) begin
 		if(!done)
-			if(|CORE.exe_btype || |CORE.exe_c_btype)
-				if(CORE.BHT.is_pred_correct)
-					bht_correct[{exe_set, exe_setoffset}] <= bht_correct[{exe_set, exe_setoffset}] + 1;
-	
-	// This controls total correct accesses
-	always@(posedge CLK)
-		if(!done) begin
-			if( ((|CORE.exe_btype || |CORE.exe_c_btype) && CORE.BHT.is_pred_correct) && !CORE.id_is_jump)
-				total_bht_correct <= total_bht_correct + 1;
-			else if( ((|CORE.exe_btype || |CORE.exe_c_btype) && CORE.BHT.is_pred_correct) && CORE.id_is_jump && !CORE.id_jump_in_bht)
-				total_bht_correct <= total_bht_correct + 1;
-			else if(!(|CORE.exe_btype || |CORE.exe_c_btype) && CORE.id_is_jump && CORE.id_jump_in_bht)
-				total_bht_correct <= total_bht_correct + 1;
-			else if( ((|CORE.exe_btype || |CORE.exe_c_btype) && CORE.BHT.is_pred_correct) && CORE.id_is_jump && CORE.id_jump_in_bht)
-				total_bht_correct <= total_bht_correct + 2;
-		end
+			if((|CORE.exe_btype || |CORE.exe_c_btype) && CORE.BHT.is_pred_correct)
+				bht_correct[{exe_set, exe_setoffset}] <= bht_correct[{exe_set, exe_setoffset}] + 1;
+			else if(CORE.exe_sel_opBR && (CORE.exe_branchtarget == CORE.BHT.exe_loadentry[12:2]))
+				bht_correct[{exe_set, exe_setoffset}] <= bht_correct[{exe_set, exe_setoffset}] + 1;
+	end
 
 	// This controls bht_overwrites, which tracks if a fifo_counter overflows
 	// Please check branchpredictor.v code to understand when a counter overflows
@@ -370,13 +356,19 @@ module tb_core();
 		$display("Total NOPs: %0d", nop_counter);
 		$display("=================\n");
 		
-		$display("---| BHT Performance Metrics |---");
-		$display("Precision: %0d passed/%0d accesses.", total_bht_correct, total_bht_accesses);
-		
+		// Computing BHT metrics
+		for(j = 0; j < 64; j = j + 1) begin
+			total_bht_correct = total_bht_correct + bht_correct[j];
+			total_bht_accesses = total_bht_accesses + bht_accesses[j];
+		end
+
 		for(j = 0; j < 16; j = j+1) begin
 			if(bht_overwrites[j] > 3) total_bht_overwrites = total_bht_overwrites + (bht_overwrites[j] - 3);
 		end
 
+		$display("---| BHT Performance Metrics |---");
+		$display("Precision: %0d passed/%0d accesses.", total_bht_correct, total_bht_accesses);
+		$display("Accuracy: %f%%.", 100*($itor(total_bht_correct)/$itor(total_bht_accesses)));
 		$display("Overwrites done: %0d.", total_bht_overwrites);
 		$display("---| Per-set Metrics |---");
 		for(i = 0; i < 16; i = i + 1) begin
