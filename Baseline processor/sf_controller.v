@@ -41,6 +41,7 @@ module sf_controller(
     input ISR_pipe_flush,
 
     input branch_flush,			// Output flush signal from BHT
+    input jump_flush,
 
     input div_running,			// Status of Divider unit
 
@@ -81,7 +82,7 @@ module sf_controller(
 
     // Flushes/Resets
     assign if_flush = ISR_PC_flush;
-    assign id_flush = ISR_pipe_flush;
+    assign id_flush = ISR_pipe_flush || jump_flush || branch_flush;
     assign exe_flush = jalr_hazard || branch_flush;
     assign mem_flush = load_hazard || div_running;
     assign wb_flush = 1'b0;

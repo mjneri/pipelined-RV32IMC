@@ -215,6 +215,8 @@ module core(
 	wire [10:0] if_PBT;				// Predicted branch target
 	wire [10:0] exe_PBT;				// Predicted branch target
 	wire [10:0] exe_CNI;				// Correct Next Instruction
+	wire branch_flush;
+	wire jump_flush;
 // &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 
 
@@ -342,7 +344,6 @@ module core(
 
 	wire ISR_PC_flush;
 	wire ISR_pipe_flush;
-	wire branch_flush;
 	wire sel_ISR;
 	wire ret_ISR;
 	wire ISR_running;
@@ -359,6 +360,7 @@ module core(
 		.ISR_pipe_flush(ISR_pipe_flush),
 		
 		.branch_flush(branch_flush),
+		.jump_flush(jump_flush),
 		.div_running(exe_div_running),
 
 		.hzd_exe_to_id_A(hzd_exe_to_id_A),
@@ -480,8 +482,8 @@ module core(
 				3'b110: if_pcnew = {exe_PBT, 1'h0};
 				3'b111: if_pcnew = {exe_PBT, 1'h0};
 				default: begin
-					case({branch_flush, id_jump_in_bht, id_sel_pc})
-						3'b001: if_pcnew = id_branchtarget;
+					case({id_jump_in_bht, id_sel_pc})
+						2'b01: if_pcnew = id_branchtarget;
 						default: if_pcnew = if_pc4;
 					endcase
 				end
@@ -831,7 +833,8 @@ module core(
 		.if_prediction(if_prediction),
 		.exe_correction(exe_correction),
 		
-		.flush(branch_flush),
+		.branch_flush(branch_flush),
+		.jump_flush(jump_flush),
 		.id_jump_in_bht(id_jump_in_bht),
 
 		.if_PBT(if_PBT),
