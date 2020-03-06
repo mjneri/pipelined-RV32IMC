@@ -246,6 +246,11 @@ def process_inst(inst, labels, inst_address):
 def assemble(instructions, labels, instmem):
     out_buffer = {}
     compressed_counter = 0
+    try:
+        logs = open("assembler.log", "w")
+    except:
+        print("Failed to create file")
+
     for inst_address in instructions.keys():
         temp_inst = process_inst(instructions[inst_address], labels, inst_address)
         opt = temp_inst[0]
@@ -348,12 +353,10 @@ def assemble(instructions, labels, instmem):
         
         elif (encoding_type=='CLS'):    # Okay
             rd_rs2_ = int(temp_inst[1])
-            imm = int(temp_inst[2])&(2**imm_width-1)
+            imm = (int(temp_inst[2])&(2**imm_width-1)) << 2
             rs1_ = int(temp_inst[3])
             rs1_ = (rs1_ & 0x07)
             rd_rs2_ = (rd_rs2_ & 0x07)
-            if ((imm & 0x3) != 0):
-                print('Warning: word-addressed immediates only: {} will get truncated to {}'.format(imm, imm & -4))
             m_code = opcode |  rd_rs2_<<2 | (imm&0x40)>>1 | (imm&0x4)<<4 | rs1_<<7 | (imm&0x38)<<7 | funct3<<13
 
         elif (encoding_type=='CB'):     # Okay
@@ -429,9 +432,18 @@ def assemble(instructions, labels, instmem):
         print(hex(m_code)[2:].zfill(8))
         print('-------------------------------------------------')
 
+        logs.write('0x{:03x}: {} '.format(inst_address, temp_inst))
+        if(opt[0] == 'C'):
+            logs.write(hex(m_code)[2:].zfill(4))
+        else:
+            logs.write(hex(m_code)[2:].zfill(8))
+        logs.write('\n')
+
     if (out_buffer):
         instmem.write(hex(0x0001)[2:].zfill(4))
         instmem.write(' ' + out_buffer + '\n')
+
+    logs.close()
     return
 
 '''
@@ -478,6 +490,9 @@ def convert_file(line_list):
             elif (expansion_method == 'times_4(x2)'):
                 equivalent = inst_info['equivalent']
                 base_file.write(str(equivalent) + ' ' + str(inst[1]) + ', ' + str(int(inst[2])*4) + '(x2)')
+            elif (expansion_method == 'times_4'):
+                equivalent = inst_info['equivalent']
+                base_file.write(str(equivalent) + ' ' + str(inst[1]) + ', ' + str(int(inst[2])*4) + '({})'.format(inst[3]))
             elif (expansion_method == 'x2_times_4'):
                 equivalent = inst_info['equivalent']
                 base_file.write(str(equivalent) + ' ' + str(inst[1]) + ', x2, ' + str(int(inst[2])*4))

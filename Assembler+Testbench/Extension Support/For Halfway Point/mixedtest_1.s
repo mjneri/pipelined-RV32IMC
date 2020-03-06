@@ -84,11 +84,11 @@
         # lw
         lw x10, 0(x31)
         lw x11, -4(x10)
-        c.sw x11, 12(x9)
+        c.sw x11, 3(x9)
         
         
         lw x12, 16(x31)
-        c.sw x12, 16(x9)
+        c.sw x12, 4(x9)
 
         # lh
         lh x13, 22(x31)
@@ -102,7 +102,7 @@
         sb x15, 250(x31)
 
         lb x16, 30(x31)
-        c.sw x15, 32(x9)
+        c.sw x15, 8(x9)
 
         # lhu
         lhu x17, 44(x31)
@@ -129,12 +129,12 @@
         c.lw x8, 0(x12)
         sw x8, 260(x12)
 
-        c.lw x8, 16(x12)
-        c.sw x8, 264(x12)
+        c.lw x8, 4(x12)
+        c.sw x8, 66(x12)
 
         addi x14, x0, 36
-        c.lw x8, -4(x14)
-        c.sw x8, 268(x12)
+        c.lw x8, -1(x14)
+        c.sw x8, 67(x12)
 
         # c.lwsp
         c.lwsp x8, 4
@@ -148,19 +148,19 @@
         addi x13, x0, 0
         # c.lui
         c.lui x9, 0xe
-        c.sw x9, 272(x13)
+        c.sw x9, 68(x13)
 
         c.lui x10, 0x3a
-        c.sw x10, 276(x13)
+        c.sw x10, 69(x13)
 
         # c.li
         c.li x11, 0xa
-        c.sw x11, 280(x13)
+        c.sw x11, 70(x13)
        
         slt x14, x11, x10
        
         c.li x12, 0x3d
-        c.sw x12, 284(x13)
+        c.sw x12, 71(x13)
 
         # STORES (included in the tests above ^)
         # sw
@@ -233,7 +233,7 @@
         addi x12, x0, 0
 
         # SUBS ###################################################################################################
-        c.lw x15, 4(x12)
+        c.lw x15, 1(x12)
         # sub and c.sub
         # + +
         sub x5, x4, x15
@@ -313,7 +313,7 @@
         mulhsu x17, x17, x0
         mulhsu x16, x0, x16
         sw x16, 432(x31)
-        sw x17, 436(x31
+        sw x17, 436(x31)
 
         # mulhu
         # + +
@@ -431,7 +431,7 @@
         # SHIFTS #####################################################################################################################
         # sll
         c.addi x11, 3
-        c.lw x10, 16(x8)
+        c.lw x10, 4(x8)
         sll x12, x10, x11
         sw x12, 556(x31)
         
@@ -448,7 +448,7 @@
         sw x12, 568(x31)
 
         addi x9, x0, 0
-        c.lw x10, 28(x9) 
+        c.lw x10, 7(x9) 
         c.slli x10, 12
         sw x10, 576(x31)
         
@@ -457,7 +457,7 @@
 
         # srl
         c.addi x11, 3
-        c.lw x10, 28(x9)
+        c.lw x10, 7(x9)
         srl x12, x10, x11
         sw x12, 576(x31)
         
@@ -474,7 +474,7 @@
         sw x12, 588(x31)
 
         addi x9, x0, 0
-        c.lw x10, 44(x9) 
+        c.lw x10, 11(x9) 
         c.srli x10, 18
         sw x10, 592(x31)
         

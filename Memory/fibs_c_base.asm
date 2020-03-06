@@ -26,11 +26,11 @@ addi x11, x4, 4
 # This program writes the fibbonacci sequence into the memory. (Compressed)
 addi x12, x12, 380	#from c.addi x12, 380
 addi x8, x8, 1	#from c.addi x8, 1
-sw x8, 4(x11)	#from c.sw x8, 4(x11)
+sw x8, 4(x11)	#from c.sw x8, 1(x11)
 addi x11, x11, 8	#from c.addi x11, 8
 Fibs_C:
-lw x8, -8(x11)	#from c.lw x8, -8(x11)
-lw x9, -4(x11)	#from c.lw x9, -4(x11)
+lw x8, -8(x11)	#from c.lw x8, -2(x11)
+lw x9, -4(x11)	#from c.lw x9, -1(x11)
 add x10, x9, x8
 sw x10, 0(x11)	#from c.sw x10, 0(x11)
 addi x11, x11, 4	#from c.addi x11, 4

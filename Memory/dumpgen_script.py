@@ -31,7 +31,7 @@ win10_path = ""
 
 # Generating Command strings (MacOS)
 macos_path = ""
-text_command = 'python3 assembler.py ' + args.input_file + ' ' + filename + '.coe' + '-comp_buffer -True'
+text_command = 'python "../Assembler+Testbench/Assembler/assembler.py" ' + args.input_file + ' ' + filename + '.coe ' + '-comp_buffer True'
 data_command = 'java -jar ' + macos_path + 'rars1_4.jar a mc CompactDataAtZero dump .data HexText \"' + filename + '_data.mem\" \"' + filename+'_base.asm'+'"'
 ans_command = 'java -jar ' + macos_path + 'rars1_4.jar 1000 mc CompactDataAtZero dump .data HexText \"' + filename + '_answerkey.mem\"  \"' + filename+'_base.asm' + '"'
 
