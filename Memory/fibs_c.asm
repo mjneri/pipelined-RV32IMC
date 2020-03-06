@@ -16,6 +16,7 @@ sw x4, 0(x5)
 
 nop
 nop
+c.bnez x21, Fibs_C
 nop
 nop
 c.j Exit_B

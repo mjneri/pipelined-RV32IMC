@@ -156,7 +156,7 @@ def process_inst(inst, labels, inst_address):
             exit()
 
         if ((encoding_type=='CLS') | (encoding_type=='CIW') | (encoding_type=='CB') | (encoding_type=='CH')):
-            if (arg1>7 & arg1<16):
+            if ((arg1>7) & (arg1<16)):
                 arg1 -= 8
             else:
                 print('Invalid first arguement (C.Reg)')
@@ -225,12 +225,12 @@ def process_inst(inst, labels, inst_address):
                     print('Invalid third arguement (Reg)')
                     exit()
                 if (encoding_type=='CLS'):
-                    if (arg1>7 & arg1<16):
+                    if ((arg1>7) & (arg1<16)):
                         arg1 -= 8
                     else:
                         print('Invalid first arguement (C.Reg)')
                         exit()
-                    if (arg3>7 & arg3<16):
+                    if ((arg1>7) & (arg1<16)):
                         arg3 -= 8
                     else:
                         print('Invalid third arguement (C.Reg)')
