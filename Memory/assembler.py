@@ -246,6 +246,11 @@ def process_inst(inst, labels, inst_address):
 def assemble(instructions, labels, instmem):
     out_buffer = {}
     compressed_counter = 0
+    try:
+        logs = open("assembler.log", "w")
+    except:
+        print("Failed to create file")
+
     for inst_address in instructions.keys():
         temp_inst = process_inst(instructions[inst_address], labels, inst_address)
         opt = temp_inst[0]
@@ -429,9 +434,18 @@ def assemble(instructions, labels, instmem):
         print(hex(m_code)[2:].zfill(8))
         print('-------------------------------------------------')
 
+        logs.write('0x{:03x}: {} '.format(inst_address, temp_inst))
+        if(opt[0] == 'C'):
+            logs.write(hex(m_code)[2:].zfill(4))
+        else:
+            logs.write(hex(m_code)[2:].zfill(8))
+        logs.write('\n')
+
     if (out_buffer):
         instmem.write(hex(0x0001)[2:].zfill(4))
         instmem.write(' ' + out_buffer + '\n')
+
+    logs.close()
     return
 
 '''
