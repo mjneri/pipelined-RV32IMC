@@ -157,13 +157,15 @@ module tb_core();
 				cumulative_stall_counter <= cumulative_stall_counter + 1;
 	end
 
-	// Tracking total clock cycles "wasted" due to flushing (not counting flushing w/ due to stall conditions)
+	// Tracking total clock cycles "wasted" due to flushing (not counting flushing due to stall conditions)
 	always@(posedge CLK) begin
 		if(!nrst)
 			cumulative_flush_counter <= 0;
 		else if(!done)
-			if(CORE.ISR_PC_flush || CORE.ISR_pipe_flush || CORE.branch_flush)
+			if(CORE.ISR_PC_flush || CORE.ISR_pipe_flush || CORE.jump_flush)
 				cumulative_flush_counter <= cumulative_flush_counter + 1;
+			else if(CORE.branch_flush)
+				cumulative_flush_counter <= cumulative_flush_counter + 2;
 	end
 
 	// Tracking BHT Accuracy
