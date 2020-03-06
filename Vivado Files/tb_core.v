@@ -251,7 +251,6 @@ module tb_core();
 		else if(!done) begin
 			if((CORE.id_is_btype || CORE.id_is_jump) && (CORE.BHT.id_iseqto == 4'h0)) begin
 				bht_overwrites[id_set] <= bht_overwrites[id_set] + 1;
-				total_bht_overwrites <= total_bht_overwrites + 1;
 			end
 		end
 	end
@@ -373,6 +372,11 @@ module tb_core();
 		
 		$display("---| BHT Performance Metrics |---");
 		$display("Precision: %0d passed/%0d accesses.", total_bht_correct, total_bht_accesses);
+		
+		for(j = 0; j < 16; j = j+1) begin
+			if(bht_overwrites[j] > 3) total_bht_overwrites = total_bht_overwrites + (bht_overwrites[j] - 3)
+		end
+		
 		$display("Overwrites done: %0d.", total_bht_overwrites);
 		$display("---| Per-set Metrics |---");
 		for(i = 0; i < 16; i = i + 1) begin
