@@ -24,6 +24,10 @@ module pipereg_id_exe(
 	input [31:0] id_inst,
 	output reg [31:0] exe_inst,
 
+	// Computed branch target
+	input [31:0] id_branchtarget,
+	output reg [31:0] exe_branchtarget,
+
 	// Forwarded STOREBLOCK input
 	input [31:0] id_fwdstore,
 	output reg [31:0] exe_fwdstore,
@@ -46,6 +50,10 @@ module pipereg_id_exe(
 
 	input [1:0] id_c_btype,
 	output reg [1:0] exe_c_btype,
+
+	input id_sel_opBR,
+	output reg exe_sel_opBR,
+
 	input id_div_valid,
 	output reg exe_div_valid,
 
@@ -94,6 +102,7 @@ module pipereg_id_exe(
 		exe_fwdopA <= 0;
 		exe_fwdopB <= 0;
 		exe_inst <= 0;
+		exe_branchtarget <= 0;
 		exe_fwdstore <= 0;
 		exe_imm <= 0;
 		exe_rd <= 0;
@@ -101,6 +110,8 @@ module pipereg_id_exe(
 
 		// Control signals
 		exe_ALU_op <= 0;
+		exe_c_btype <= 0;
+		exe_sel_opBR <= 0;
 		exe_div_valid <= 0;
 		exe_div_op <= 0;
 		// exe_sel_opA <= 0;
@@ -123,6 +134,7 @@ module pipereg_id_exe(
 			exe_fwdopA <= 0;
 			exe_fwdopB <= 0;
 			exe_inst <= 0;
+			exe_branchtarget <= 0;
 			exe_fwdstore <= 0;
 			exe_imm <= 0;
 			exe_rd <= 0;
@@ -132,6 +144,7 @@ module pipereg_id_exe(
 			exe_ALU_op <= 0;
 
 			exe_c_btype <= 0;
+			exe_sel_opBR <= 0;
 
 			exe_div_valid <= 0;
 			exe_div_op <= 0;
@@ -153,6 +166,7 @@ module pipereg_id_exe(
 				exe_fwdopA <= id_fwdopA;
 				exe_fwdopB <= id_fwdopB;
 				exe_inst <= id_inst;
+				exe_branchtarget <= id_branchtarget;
 				exe_fwdstore <= id_fwdstore;
 				exe_imm <= id_imm;
 				exe_rd <= id_rd;
@@ -162,6 +176,7 @@ module pipereg_id_exe(
 				exe_ALU_op <= id_ALU_op;
 
 				exe_c_btype <= id_c_btype;
+				exe_sel_opBR <= id_sel_opBR;
 
 				exe_div_valid <= id_div_valid;
 				exe_div_op <= id_div_op;
