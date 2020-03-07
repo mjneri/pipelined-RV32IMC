@@ -132,19 +132,24 @@ def process_inst(inst, labels, inst_address):
                 offset = (label_address-inst_address)
                 arg1 = str(offset)
             except IndexError:
-                print('Invalid first arguement (Label)')
+                print('Invalid first arguement (Label) on {}'.format(inst))
                 exit()
         elif (syntax=='i'):
             try:
-                arg1 = int(inst[1], 0)
+                imm_width = int(inst_info['i_width'])
+                imm = int(inst[1]) & (2**imm_width-1)
+                if (imm != int(inst[1])):
+                    print('Warning: Imm {} truncated to {}'.format(inst[1], imm))
+                    exit()
+                arg1 = str(imm)
             except IndexError:
-                print('Invalid first arguement (Imm)')
+                print('Invalid first arguement (Imm) on {}'.format(inst))
                 exit()
         elif (syntax=='r'):
             try:
                 arg1 = register_dict[inst[1]]
             except IndexError:
-                print('Invalid first arguement (Reg)')
+                print('Invalid first arguement (Reg) on {}'.format(inst))
                 exit()
         inst = [inst[0], arg1]
 
@@ -152,15 +157,16 @@ def process_inst(inst, labels, inst_address):
         try:
             arg1 = register_dict[inst[1]]
         except IndexError:
-            print('Invalid first arguement (Reg)')
+            print('Invalid first arguement (Reg) on {}'.format(inst))
             exit()
 
-        if ((encoding_type=='CLS') | (encoding_type=='CIW') | (encoding_type=='CB') | (encoding_type=='CH')):
-            if (arg1>7 & arg1<16):
-                arg1 -= 8
-            else:
-                print('Invalid first arguement (C.Reg)')
-                exit()
+        if ('C.' in inst[0]):
+            if (inst_info['comp_reg']):
+                if ((arg1>7) & (arg1<16)):
+                    arg1 -= 8
+                else:
+                    print('Invalid first arguement (C.Reg) on {}'.format(inst))
+                    exit()
 
         if (args==2):
             if (syntax=='r-l'): 
@@ -169,20 +175,32 @@ def process_inst(inst, labels, inst_address):
                     offset = (label_address-inst_address)
                     arg2 = str(offset)
                 except IndexError:
-                    print('Invalid second arguement (Label)')
+                    print('Invalid second arguement (Label) on {}'.format(inst))
                     exit()
             elif (syntax=='r-i'):
                 try:
-                    arg2 = int(inst[2], 0)
+                    imm_width = int(inst_info['i_width'])
+                    imm = int(inst[2]) & (2**imm_width-1)
+                    if (imm != int(inst[2])):
+                        print('Warning: Imm {} truncated to {}'.format(inst[2], imm))
+                        exit()
+                    arg2 = str(imm)
                 except IndexError:
-                    print('Invalid second arguement (Imm)')
+                    print('Invalid second arguement (Imm) on {}'.format(inst))
                     exit()
             elif (syntax=='r-r'):
                 try:
                     arg2 = register_dict[inst[2]]
                 except IndexError:
-                    print('Invalid second arguement (Reg)')
+                    print('Invalid second arguement (Reg) on {}'.format(inst))
                     exit()
+                if ('C.' in inst[0]):
+                    if (inst_info['comp_reg']):
+                        if ((arg2>7) & (arg2<16)):
+                            arg2 -= 8
+                        else:
+                            print('Invalid second arguement (C.Reg) on {}'.format(inst))
+                            exit()
             inst = [inst[0], arg1, arg2]
             
         elif (args==3):
@@ -191,7 +209,7 @@ def process_inst(inst, labels, inst_address):
                 try:
                     arg2 = register_dict[inst[2]]
                 except IndexError:
-                    print('Invalid second arguement (Reg)')
+                    print('Invalid second arguement (Reg) on {}'.format(inst))
                     exit()
                 if (syntax=='r-r-l'):
                     try:
@@ -199,41 +217,41 @@ def process_inst(inst, labels, inst_address):
                         offset = (label_address-inst_address)
                         arg3 = str(offset)
                     except IndexError:
-                        print('Invalid third arguement (Label)')
+                        print('Invalid third arguement (Label) on {}'.format(inst))
                         exit()
                 elif (syntax=='r-r-i'):
                     try:
-                        arg3 = int(inst[3], 0)
+                        imm_width = int(inst_info['i_width'])
+                        imm = int(inst[3]) & (2**imm_width-1)
+                        if (imm != int(inst[3])):
+                            print('Warning: Imm {} truncated to {}'.format(inst[3], imm))
+                            exit()
+                        arg3 = str(imm)
                     except IndexError:
-                        print('Invalid third arguement (Imm)')
+                        print('Invalid third arguement (Imm) on {}'.format(inst))
                         exit()
                 else:
                     try:
                         arg3 = register_dict[inst[3]]
                     except IndexError:
-                        print('Invalid third arguement (Reg)')
+                        print('Invalid third arguement (Reg) on {}'.format(inst))
                         exit()
             elif (syntax=='r-i_r'):     # Immediate-only arguement
                 try:
                     arg2 = int(inst[2], 0)
                 except IndexError:
-                    print('Invalid second arguement (Imm)')
+                    print('Invalid second arguement (Imm) on {}'.format(inst))
                     exit()
                 try:
                     arg3 = register_dict[inst[3]]
                 except IndexError:
-                    print('Invalid third arguement (Reg)')
+                    print('Invalid third arguement (Reg) on {}'.format(inst))
                     exit()
                 if (encoding_type=='CLS'):
-                    if (arg1>7 & arg1<16):
-                        arg1 -= 8
-                    else:
-                        print('Invalid first arguement (C.Reg)')
-                        exit()
-                    if (arg3>7 & arg3<16):
+                    if ((arg3>7) & (arg3<16)):
                         arg3 -= 8
                     else:
-                        print('Invalid third arguement (C.Reg)')
+                        print('Invalid third arguement (C.Reg) on {}'.format(inst))
                         exit()
             inst = [inst[0], arg1, arg2, arg3]
     
@@ -428,9 +446,8 @@ def assemble(instructions, labels, instmem):
             else:
                 instmem.write(full_inst[4:8] + ' ' + full_inst[0:4] + '\n')
 
-        #print('Instruction at address {}: {}'.format(inst_address, temp_inst))
-        #print(hex(m_code)[2:].zfill(8))
-        #print('-------------------------------------------------')
+        print('Instruction at address {}:\t{}\t{}'.format(inst_address, str(hex(m_code)[2:].zfill(8)), temp_inst))
+        print('----------------------------------------------------------------------------------------------------')
 
         logs.write('0x{:03x}: {} '.format(inst_address, temp_inst))
         if(opt[0] == 'C'):
