@@ -428,9 +428,9 @@ def assemble(instructions, labels, instmem):
             else:
                 instmem.write(full_inst[4:8] + ' ' + full_inst[0:4] + '\n')
 
-        print('Instruction at address {}: {}'.format(inst_address, temp_inst))
-        print(hex(m_code)[2:].zfill(8))
-        print('-------------------------------------------------')
+        #print('Instruction at address {}: {}'.format(inst_address, temp_inst))
+        #print(hex(m_code)[2:].zfill(8))
+        #print('-------------------------------------------------')
 
         logs.write('0x{:03x}: {} '.format(inst_address, temp_inst))
         if(opt[0] == 'C'):
@@ -504,9 +504,10 @@ def convert_file(line_list):
             base_file.write('\t#from ' + temp_line + '\n')
         else:
             base_file.write(temp_line + '\n')
-        print(temp_line)
+        #print(temp_line)
     # Delete base instructions file
     #os.remove(basename)
+    base_file.close()
     return base_file
 
 # Running Code
@@ -526,6 +527,7 @@ except:
 # Convert to machine code
 assemble(instructions, labels, instmem)
 instmem.write(";")
+instmem.close()
 print('Saved to ' + save_file)
 
 exit()
