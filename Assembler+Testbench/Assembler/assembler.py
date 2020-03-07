@@ -140,7 +140,7 @@ def process_inst(inst, labels, inst_address):
                 imm = int(inst[1]) & (2**imm_width-1)
                 if (imm != int(inst[1])):
                     print('Warning: Imm {} truncated to {}'.format(inst[1], imm))
-                    exit()
+                    # exit()
                 arg1 = str(imm)
             except IndexError:
                 print('Invalid first arguement (Imm) on {}'.format(inst))
@@ -180,10 +180,10 @@ def process_inst(inst, labels, inst_address):
             elif (syntax=='r-i'):
                 try:
                     imm_width = int(inst_info['i_width'])
-                    imm = int(inst[2]) & (2**imm_width-1)
-                    if (imm != int(inst[2])):
+                    imm = int(inst[2], 0) & (2**imm_width-1)
+                    if (imm != int(inst[2], 0)):
                         print('Warning: Imm {} truncated to {}'.format(inst[2], imm))
-                        exit()
+                        # exit()
                     arg2 = str(imm)
                 except IndexError:
                     print('Invalid second arguement (Imm) on {}'.format(inst))
@@ -222,10 +222,10 @@ def process_inst(inst, labels, inst_address):
                 elif (syntax=='r-r-i'):
                     try:
                         imm_width = int(inst_info['i_width'])
-                        imm = int(inst[3]) & (2**imm_width-1)
-                        if (imm != int(inst[3])):
+                        imm = int(inst[3], 0) & (2**imm_width-1)
+                        if (imm != int(inst[3], 0)):
                             print('Warning: Imm {} truncated to {}'.format(inst[3], imm))
-                            exit()
+                            # exit()
                         arg3 = str(imm)
                     except IndexError:
                         print('Invalid third arguement (Imm) on {}'.format(inst))
