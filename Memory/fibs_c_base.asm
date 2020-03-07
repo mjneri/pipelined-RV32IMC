@@ -1,16 +1,19 @@
 # This program writes the fibbonacci sequence into the memory. (Compressed)
-addi x12, x12, 63	#from c.addi x12, 63
-addi x12, x12, 63	#from c.addi x12, 63
-addi x12, x12, 62	#from c.addi x12, 62
+addi x12, x12, 31	#from c.addi x12, 31
+addi x12, x12, 31	#from c.addi x12, 31
+addi x12, x12, 31	#from c.addi x12, 31
+addi x12, x12, 2	#from c.addi x12, 2
+addi x12, x12, 31	#from c.addi x12, 31
+addi x12, x12, 31	#from c.addi x12, 31
+addi x12, x12, 33	#from c.addi x12, 33
 addi x8, x8, 1	#from c.addi x8, 1
 sw x8, 4(x11)	#from c.sw x8, 1(x11)
-addi x11, x11, 8	#from c.addi x11, 8
 Fibs_C:
-lw x8, -8(x11)	#from c.lw x8, -2(x11)
-lw x9, -4(x11)	#from c.lw x9, -1(x11)
-add x10, x9, x8
-sw x10, 0(x11)	#from c.sw x10, 0(x11)
+lw x8, 0(x11)	#from c.lw x8, 0(x11)
+lw x9, 4(x11)	#from c.lw x9, 1(x11)
 addi x11, x11, 4	#from c.addi x11, 4
+add x10, x9, x8
+sw x10, 4(x11)	#from c.sw x10, 1(x11)
 sub x13, x12, x11
 beq x13, x0, Exit_C	#from c.beqz x13, Exit_C
 jal x1, Fibs_C	#from c.jal Fibs_C

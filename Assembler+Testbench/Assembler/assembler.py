@@ -118,13 +118,17 @@ def process_inst(inst, labels, inst_address):
     # arg2 = 0
     # arg3 = 0
     inst[0] = inst[0].upper()
-    encoding_type = inst_info['format']
-    syntax = inst_info['syntax']
     args = inst_info['args']
     if (len(inst[(args+1):]) > 0):
         print('Error: excessive number of arguments (' + str(args) + '+)')
         exit()
-    
+    encoding_type = inst_info['format']
+    syntax = inst_info['syntax']
+    try:
+        imm_width = int(inst_info['i_width'])
+    except:
+        pass
+
     if (args==1):
         if (syntax=='l'):
             try:
@@ -134,13 +138,13 @@ def process_inst(inst, labels, inst_address):
             except IndexError:
                 print('Invalid first arguement (Label) on {}'.format(inst))
                 exit()
-        elif (syntax=='i'):
+        elif (syntax=='i'): # Only C.ADDI16SP has this syntax
             try:
-                imm_width = int(inst_info['i_width'])
-                imm = int(inst[1]) & (2**imm_width-1)
-                if (imm != int(inst[1])):
-                    print('Warning: Imm {} truncated to {}'.format(inst[1], imm))
+                imm = int(inst[1], 0)
+                if (imm < 1):
+                    print('Invalid immediate {} (nzuimm)'.format(imm))
                     exit()
+                tr_imm = imm & (2**imm_width-1)
                 arg1 = str(imm)
             except IndexError:
                 print('Invalid first arguement (Imm) on {}'.format(inst))
@@ -162,9 +166,7 @@ def process_inst(inst, labels, inst_address):
 
         if ('C.' in inst[0]):
             if (inst_info['comp_reg']):
-                if ((arg1>7) & (arg1<16)):
-                    arg1 -= 8
-                else:
+                if ((arg1<8) | (arg1>15)):
                     print('Invalid first arguement (C.Reg) on {}'.format(inst))
                     exit()
 
@@ -179,12 +181,22 @@ def process_inst(inst, labels, inst_address):
                     exit()
             elif (syntax=='r-i'):
                 try:
-                    imm_width = int(inst_info['i_width'])
-                    imm = int(inst[2]) & (2**imm_width-1)
-                    if (imm != int(inst[2])):
-                        print('Warning: Imm {} truncated to {}'.format(inst[2], imm))
+                    imm = int(inst[2], 0)
+                    if ('C.' in inst[0]):
+                        if (imm < 1) & (inst_info['imm']=='nzuimm'):
+                            print('Invalid immediate {} (nzuimm)'.format(imm))
+                            exit()
+                        elif (imm < 0) & (inst_info['imm']=='uimm'):
+                            print('Invalid immediate {} (uimm)'.format(imm))
+                            exit()
+                        elif (imm == 0) & (inst_info['imm']=='nzimm'):
+                            print('Invalid immediate {} (nzimm'.format(imm))
+                            exit()
+                    tr_imm = imm & (2**imm_width-1)
+                    if ((imm != tr_imm) & (imm > 0)):
+                        print('Immediate {} out of bounds'.format(imm))
                         exit()
-                    arg2 = str(imm)
+                    arg2 = str(tr_imm)
                 except IndexError:
                     print('Invalid second arguement (Imm) on {}'.format(inst))
                     exit()
@@ -196,9 +208,7 @@ def process_inst(inst, labels, inst_address):
                     exit()
                 if ('C.' in inst[0]):
                     if (inst_info['comp_reg']):
-                        if ((arg2>7) & (arg2<16)):
-                            arg2 -= 8
-                        else:
+                        if ((arg2<8) | (arg2>15)):
                             print('Invalid second arguement (C.Reg) on {}'.format(inst))
                             exit()
             inst = [inst[0], arg1, arg2]
@@ -221,12 +231,12 @@ def process_inst(inst, labels, inst_address):
                         exit()
                 elif (syntax=='r-r-i'):
                     try:
-                        imm_width = int(inst_info['i_width'])
-                        imm = int(inst[3]) & (2**imm_width-1)
-                        if (imm != int(inst[3])):
-                            print('Warning: Imm {} truncated to {}'.format(inst[3], imm))
+                        imm = int(inst[3], 0)
+                        tr_imm = imm & (2**imm_width-1)
+                        if ((imm != tr_imm) & (imm > 0)):
+                            print('Immediate {} out of bounds'.format(imm))
                             exit()
-                        arg3 = str(imm)
+                        arg3 = str(tr_imm)
                     except IndexError:
                         print('Invalid third arguement (Imm) on {}'.format(inst))
                         exit()
@@ -238,7 +248,22 @@ def process_inst(inst, labels, inst_address):
                         exit()
             elif (syntax=='r-i_r'):     # Immediate-only arguement
                 try:
-                    arg2 = int(inst[2], 0)
+                    imm = int(inst[2], 0)
+                    if ('C.' in inst[0]):
+                        if (imm < 1) & (inst_info['imm']=='nzuimm'):
+                            print('Invalid immediate {} (nzuimm)'.format(imm))
+                            exit()
+                        elif (imm < 0) & (inst_info['imm']=='uimm'):
+                            print('Invalid immediate {} (uimm)'.format(imm))
+                            exit()
+                        elif (imm == 0) & (inst_info['imm']=='nzimm'):
+                            print('Invalid immediate {} (nzimm'.format(imm))
+                            exit()
+                    tr_imm = imm & (2**imm_width-1)
+                    if ((imm != tr_imm) & (imm > 0)):
+                        print('Immediate {} out of bounds'.format(imm))
+                        exit()
+                    arg2 = str(tr_imm)
                 except IndexError:
                     print('Invalid second arguement (Imm) on {}'.format(inst))
                     exit()
@@ -248,9 +273,7 @@ def process_inst(inst, labels, inst_address):
                     print('Invalid third arguement (Reg) on {}'.format(inst))
                     exit()
                 if (encoding_type=='CLS'):
-                    if ((arg3>7) & (arg3<16)):
-                        arg3 -= 8
-                    else:
+                    if ((arg3<8) | (arg3>15)):
                         print('Invalid third arguement (C.Reg) on {}'.format(inst))
                         exit()
             inst = [inst[0], arg1, arg2, arg3]
@@ -329,7 +352,7 @@ def assemble(instructions, labels, instmem):
         elif (encoding_type=='S'):      # Okay
             rs1 = int(temp_inst[3])
             rs2 = int(temp_inst[1])
-            imm = int(temp_inst[2])&(2**imm_width-1)
+            imm = int(temp_inst[2])
             m_code = opcode |  (imm&0x1F)<<7 | funct3<<12 | rs1<<15 | rs2<<20 | (imm&0xFE0)<<20
             
         elif (encoding_type=='B'):      # Okay
@@ -350,7 +373,7 @@ def assemble(instructions, labels, instmem):
         
         elif (encoding_type=='CR'):     # Okay
             if (instruction_dict[opt]['syntax']=='r'):
-                rd_rs1_ = int(temp_inst[1])
+                rd_rs1_ = int(temp_inst[1]) - 8
                 rs2_ = 0
             else:
                 rd_rs1_ = int(temp_inst[1])
@@ -359,7 +382,7 @@ def assemble(instructions, labels, instmem):
         
         elif (encoding_type=='CI'):     # Okay
             rd = int(temp_inst[1])
-            imm = int(temp_inst[2])&(2**imm_width-1)
+            imm = int(temp_inst[2])
             if (temp_inst[0] == 'C.LWSP'):
                 imm = imm << 2
                 m_code = opcode | (imm&0x1C)<<2 | rd<<7 | (imm&0x20)<<7 | (imm&0xC0)>>4 | funct3<<13            # different format for lwsp
@@ -370,35 +393,26 @@ def assemble(instructions, labels, instmem):
                 m_code = opcode | (imm&0x1F)<<2 | rd<<7 | (imm&0x20)<<7 | funct3<<13
         
         elif (encoding_type=='CLS'):    # Okay
-            rd_rs2_ = int(temp_inst[1])
-            imm = (int(temp_inst[2])&(2**imm_width-1)) << 2
-            rs1_ = int(temp_inst[3])
-            rs1_ = (rs1_ & 0x07)
-            rd_rs2_ = (rd_rs2_ & 0x07)
+            rd_rs2_ = int(temp_inst[1]) - 8
+            imm = (int(temp_inst[2])) << 2
+            rs1_ = int(temp_inst[3]) - 8
             m_code = opcode |  rd_rs2_<<2 | (imm&0x40)>>1 | (imm&0x4)<<4 | rs1_<<7 | (imm&0x38)<<7 | funct3<<13
 
         elif (encoding_type=='CB'):     # Okay
-            rs1_ = int(temp_inst[1])
+            rs1_ = int(temp_inst[1]) - 8
             offset = int(temp_inst[2])
             if (rs1_ < 8 | rs1_ > 16):
                 print('Warning: Rs1 {} truncated to {}'.format(rs1_, (0x08) | (rs1_ & 0x07)))
-            rs1_ = (rs1_ & 0x07)
             m_code = opcode | (offset&0x20)>>3 | (offset&0x6)<<2 | (offset&0xC0)>>1 | rs1_<<7 | (offset&0x18)<<7 | (offset&0x100)<<4 | funct3<<13
 
         elif (encoding_type=='CA'):     # Okay
-            rs2_ = int(temp_inst[2])
-            rd_rs1_ = int(temp_inst[1])
-            if (rd_rs1_ < 8 | rd_rs1_ > 16):
-                print('Warning: Rd/Rs1 {} truncated to {}'.format(rd_rs1_, (0x08) | (rd_rs1_ & 0x07)))
-            rd_rs1_ = (rd_rs1_ & 0x07)
-            if (rs2_ < 8 | rs2_ > 16):
-                print('Warning: Rs2 {} truncated to {}'.format(rs2_, (0x08) | (rs2_ & 0x07)))
-            rs2_ = (rs2_ & 0x07)
+            rs2_ = int(temp_inst[2]) - 8
+            rd_rs1_ = int(temp_inst[1]) - 8
             m_code = opcode |  rs2_<<2 | funct2<<5 | rd_rs1_<<7 | funct6<<10
 
         elif (encoding_type=='CH'):     # Okay
-            imm = int(temp_inst[2])&(2**imm_width-1)
-            rd_rs1_ = int(temp_inst[1])
+            imm = int(temp_inst[2])
+            rd_rs1_ = int(temp_inst[1]) - 8
             m_code = opcode | (imm&0x1F)<<2 | rd_rs1_<<7 | funct2<<10 | (imm&0x20)<<7 | funct3<<13
 
         elif (encoding_type=='CJ'):
@@ -407,13 +421,12 @@ def assemble(instructions, labels, instmem):
             m_code = opcode | (offset&0x20)>>3 | (offset&0xE)<<2 | (offset&0x80)>>1 | (offset&0x40)<<1 | (offset&0x400)>>2 | (offset&0x300)<<1 | (offset&0x10)<<7 | (offset&0x800)<<1 | funct3<<13
 
         elif (encoding_type=='CIW'):     # Okay
-            rd_ = int(temp_inst[1])
+            rd_ = int(temp_inst[1]) - 8
             imm = int(temp_inst[2])<<2
             if (rd_ < 8 | rd_ > 16):
                 print('Warning: Rd {} truncated to {}'.format(rd_, (0x08) | (rd_ & 0x07)))
             if (imm < 0):
                 print('Warning: This instruction only takes unsigned inputs. {} will be treated as {}.'.format(imm, imm & 0x3FC))
-            rd_ = (rd_ & 0x07)
             m_code = opcode |  rd_<<2 | (imm&0x8)<<2 | (imm&0x4)<<4 | (imm&0x3C0)<<1 | (imm&0x30)<<7 | funct3<<13
 
         elif (encoding_type=='C16'):    # Okay
@@ -421,10 +434,10 @@ def assemble(instructions, labels, instmem):
             m_code = opcode | (imm&0x20)>>3 | (imm&0x180)>>4 | (imm&0x40)>>1 | (imm&0x10)<<2 | 2<<7 | (imm&0x200)<<3 | funct3<<13
 
         else:
-            print('Work in progress')
+            print('Encoding type not supported.')
             m_code = 1
         
-        if (opt[0] == 'C'):
+        if ('C.' in opt):
             out = (hex(m_code)[2:].zfill(4))
             if (comp_buffer_en == 'True'):
                 if (compressed_counter == 0):
@@ -450,7 +463,7 @@ def assemble(instructions, labels, instmem):
         print('----------------------------------------------------------------------------------------------------')
 
         logs.write('0x{:03x}: {} '.format(inst_address, temp_inst))
-        if(opt[0] == 'C'):
+        if('C.' in opt):
             logs.write(hex(m_code)[2:].zfill(4))
         else:
             logs.write(hex(m_code)[2:].zfill(8))

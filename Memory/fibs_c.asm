@@ -1,16 +1,19 @@
 # This program writes the fibbonacci sequence into the memory. (Compressed)
-c.addi x12, 63
-c.addi x12, 63
-c.addi x12, 62
+c.addi x12, 31
+c.addi x12, 31
+c.addi x12, 31
+c.addi x12, 2
+c.addi x12, 31
+c.addi x12, 31
+c.addi x12, 31
 c.addi x8, 1
 c.sw x8, 1(x11)
-c.addi x11, 8
 Fibs_C:
-c.lw x8, -2(x11)
-c.lw x9, -1(x11)
-add x10, x9, x8
-c.sw x10, 0(x11)
+c.lw x8, 0(x11)
+c.lw x9, 1(x11)
 c.addi x11, 4
+add x10, x9, x8
+c.sw x10, 1(x11)
 sub x13, x12, x11
 c.beqz x13, Exit_C
 c.jal Fibs_C
