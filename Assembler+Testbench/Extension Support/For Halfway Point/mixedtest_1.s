@@ -800,7 +800,7 @@
         
         # c.jr
         jal x13, pc4
-        addi x13, x13, 8
+        addi x13, x13, 6
         pc4:
         c.jr x13
 
