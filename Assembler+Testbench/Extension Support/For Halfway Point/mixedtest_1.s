@@ -171,7 +171,7 @@
 
         # ADDS #########################################################################################
         # add and c.add
-        addi x6, x0, -72
+        addi x6, x0, 72
         # + +
         lw x3, 4(x31)
         add x4, x3, x11
@@ -718,23 +718,24 @@
         loop7:
         srli x20, x20, 1
         bne x20, x0, loop7
-        jal x0, loop8
+        jal x0, loop8a
         sw x5, 804(x29)
 
-        addi x21, x0, 25 
+        loop8a:
+        addi x12, x0, 25 
         loop8:
-        c.addi x21, -1
-        c.bnez x21, loop8
+        c.addi x12, -1
+        c.bnez x12, loop8
         c.jal loop9a
-        sw x21, 808(x29)
+        sw x12, 808(x29)
 
         loop9a:
-        addi x22, x0, 20
+        addi x13, x0, 20
         loop9:
-        addi x22, x22, -1
-        c.beqz x22, loopend
-        c.bnez x22, loop9
-        sw x22, 812(x29)
+        addi x13, x13, -1
+        c.beqz x13, loopend
+        c.bnez x13, loop9
+        sw x13, 812(x29)
 
         # ADE1BOSS
         loopend:
@@ -799,7 +800,7 @@
         
         # c.jr
         jal x13, pc4
-        addi x13, x13, 8
+        addi x13, x13, 6
         pc4:
         c.jr x13
 
