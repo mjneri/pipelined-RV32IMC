@@ -11,7 +11,7 @@ c.mv x8, x16
 c.nop
 c.nop
 sw x19, 0(x15)
-c.sw x8, 4(x15)
+c.sw x8, 1(x15)
 
 #LWSP & SWSP
 addi x2, x0, 0
@@ -46,10 +46,10 @@ c.sub x9, x9 # x7 = 0 (n - n)
 c.sub x10, x8 # x8 = -5 (n - p)
 c.sub x11, x10 # x9 = 20 (p - n)
 c.sub x12, x11 # x10 = -11 (p - p)
-c.sw x8, 24(x15)
+c.sw x8, 6(x15)
 sw x9, 28(x15)
-c.sw x10, 32(x15)
-c.sw x11, 36(x15)
+c.sw x10, 8(x15)
+c.sw x11, 9(x15)
 sw x12, 40(x15)
 
 #XOR
@@ -62,10 +62,10 @@ c.xor x9, x10 #pp
 c.xor x10, x8 #pn
 c.xor x8, x12 #np
 c.xor x11, x11 #nn
-c.sw x9, 44(x15)
-c.sw x10, 48(x15)
-c.sw x8, 52(x15)
-c.sw x11, 56(x15)
+c.sw x9, 11(x15)
+c.sw x10, 12(x15)
+c.sw x8, 13(x15)
+c.sw x11, 14(x15)
 
 #OR
 c.addi x8, 2

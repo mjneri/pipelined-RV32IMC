@@ -33,23 +33,23 @@ sw x9, 20(x15)
 
 #LW
 c.lw x11, 0(x15)
-c.lw x12, 4(x15)
-c.lw x13, 8(x15)
-c.lw x14, 12(x15)
-c.sw x11, 24(x15)
-c.sw x12, 28(x15)
-c.sw x13, 32(x15)
-c.sw x14, 36(x15)
+c.lw x12, 1(x15)
+c.lw x13, 2(x15)
+c.lw x14, 3(x15)
+c.sw x11, 6(x15)
+c.sw x12, 7(x15)
+c.sw x13, 8(x15)
+c.sw x14, 9(x15)
 
 #LI
 c.li x11, 31
 c.li x12, 0
 c.li x13, 1
 c.li x14, -1
-c.sw x11, 40(x15)
-c.sw x12, 44(x15)
-c.sw x13, 48(x15)
-c.sw x14, 52(x15)
+c.sw x11, 10(x15)
+c.sw x12, 11(x15)
+c.sw x13, 12(x15)
+c.sw x14, 13(x15)
 
 #LUI
 c.lui x11, 2
