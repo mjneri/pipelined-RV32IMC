@@ -43,6 +43,7 @@ module sf_controller(
     input branch_flush,			// Output flush signal from BHT
     input jump_flush,
 
+    input mul_stall,            // Stall due to multiplication
     input div_running,			// Status of Divider unit
 
     // Load-use hazards
@@ -73,9 +74,9 @@ module sf_controller(
     wire load_hazard = (hzd_mem_to_exe_A || hzd_mem_to_exe_B);	// LOAD -> Other instruction
     
     // Stalls/Enables
-    assign if_stall = load_hazard || jalr_hazard || div_running;
-    assign id_stall = load_hazard || jalr_hazard || div_running;
-    assign exe_stall = load_hazard || div_running;					
+    assign if_stall = load_hazard || jalr_hazard || div_running || mul_stall;
+    assign id_stall = load_hazard || jalr_hazard || div_running || mul_stall;
+    assign exe_stall = load_hazard || div_running || mul_stall;					
     assign mem_stall = 1'b0;
     assign wb_stall = 1'b0;
     //assign rf_stall = 1'b0;
@@ -84,6 +85,6 @@ module sf_controller(
     assign if_flush = ISR_PC_flush;
     assign id_flush = ISR_pipe_flush || jump_flush || branch_flush;
     assign exe_flush = jalr_hazard || branch_flush;
-    assign mem_flush = load_hazard || div_running;
+    assign mem_flush = load_hazard || div_running || mul_stall;
     assign wb_flush = 1'b0;
 endmodule

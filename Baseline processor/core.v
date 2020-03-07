@@ -115,6 +115,7 @@ module core(
 	wire [31:0] opB;				// Input opB to ALU & Divider
 	wire [31:0] exe_rstore;			// Input data to STOREBLOCK
 	wire exe_div_running;			// (From Divider) Input to SF controller
+	wire mul_stall;					// (From ALU) Input to SF controller
 
 	wire [4:0] exe_rsA;				// Source register A
 	wire [4:0] exe_rsB;				// Source register B
@@ -361,6 +362,8 @@ module core(
 		
 		.branch_flush(branch_flush),
 		.jump_flush(jump_flush),
+
+		.mul_stall(mul_stall),
 		.div_running(exe_div_running),
 
 		.hzd_exe_to_id_A(hzd_exe_to_id_A),
@@ -782,10 +785,16 @@ module core(
 	assign exe_rstore = (fw_wb_to_exe_B && exe_is_stype)? wb_loaddata : exe_fwdstore;
 
 	alu ALU(
+		.CLK(CLK),
+		.nrst(nrst),
+		.load_hazard(hzd_mem_to_exe_A || hzd_mem_to_exe_B),
+
 		.op_a(opA),
 		.op_b(opB),
 		.ALU_op(exe_ALU_op),
+
 		.res(exe_ALUout),
+		.mul_stall(mul_stall),
 		.z(exe_z),
 		.less(exe_less)
 	);
