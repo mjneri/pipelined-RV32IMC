@@ -143,11 +143,11 @@ def process_inst(inst, labels, inst_address):
                 imm = int(inst[1], 0)
                 if (imm == 0):
                     print('Invalid immediate {} (nzimm) on {}'.format(imm, inst))
-                    exit()
+                    #exit()
                 if ((imm < (2**(imm_width-1))) | (imm >= (0-(2**(imm_width-1))))):
                     print('Immediate {} out of bounds on {}'.format(imm, inst))
                     print('[{},{}]'.format((2**(imm_width-1)-1), (0-(2**(imm_width-1)))))
-                    exit()
+                    #exit()
                 tr_imm = imm & (2**imm_width-1)
                 arg1 = str(tr_imm)
             except IndexError:
@@ -172,7 +172,7 @@ def process_inst(inst, labels, inst_address):
             if (inst_info['comp_reg']):
                 if ((arg1<8) | (arg1>15)):
                     print('Invalid first arguement (C.Reg) on {}'.format(inst))
-                    exit()
+                    #exit()
 
         if (args==2):
             if (syntax=='r-l'): 
@@ -182,7 +182,7 @@ def process_inst(inst, labels, inst_address):
                     arg2 = str(offset)
                 except IndexError:
                     print('Invalid second arguement (Label) on {}'.format(inst))
-                    exit()
+                    #exit()
             elif (syntax=='r-i'):
                 try:
                     imm = int(inst[2], 0)
@@ -191,23 +191,23 @@ def process_inst(inst, labels, inst_address):
                             if ((imm < 1) | (imm >= (2**(imm_width)))) & (inst_info['imm']=='nzuimm'):
                                 print('Invalid immediate {} (nzuimm) on {}'.format(imm, inst))
                                 print('[1,{}]'.format((2**(imm_width)-1)))
-                                exit()
+                                #exit()
                             elif ((imm < 0) | (imm >= (2**(imm_width)))) & (inst_info['imm']=='uimm'):
                                 print('Invalid immediate {} (uimm) on {}'.format(imm, inst))
                                 print('[0,{}]'.format((2**(imm_width)-1)))
-                                exit()
+                                #exit()
                         else:
                             if (imm == 0) & (inst_info['imm']=='nzimm'):
                                 print('Invalid immediate {} (nzimm) on {}'.format(imm, inst))
-                                exit()
+                                #exit()
                             if ((imm < (0-(2**(imm_width-1)))) | (imm >= (2**(imm_width-1)))):
                                 print('Immediate {} out of bounds on {}'.format(imm, inst))
                                 print('[{},{}]'.format((0-(2**(imm_width-1))), (2**(imm_width-1)-1)))
-                                exit()
+                                #exit()
                     elif ((imm < (0-(2**(imm_width-1)))) | (imm >= (2**(imm_width-1)))):
                         print('Immediate {} out of bounds on {}'.format(imm, inst))
                         print('[{},{}]'.format((0-(2**(imm_width-1))), (2**(imm_width-1)-1)))
-                        exit()
+                        #exit()
                     tr_imm = imm & (2**imm_width-1)
                     arg2 = str(tr_imm)
                 except IndexError:
@@ -249,7 +249,7 @@ def process_inst(inst, labels, inst_address):
                         if ((imm < (0-(2**(imm_width-1)))) & (imm >= (2**(imm_width-1)))):    # Only case is signed imm
                             print('Immediate {} out of bounds on {}'.format(imm, inst))
                             print('[{},{}]'.format((0-(2**(imm_width-1))), (2**(imm_width-1)-1)))
-                            exit()
+                            #exit()
                         arg3 = str(tr_imm)
                     except IndexError:
                         print('Invalid third arguement (Imm) on {}'.format(inst))
@@ -267,15 +267,15 @@ def process_inst(inst, labels, inst_address):
                     if ('C.' in inst[0]):   # Either C.LW or C.SW which are unsigned imm
                         if (imm < 0):
                             print('Invalid immediate {} (uimm) on {}'.format(imm, inst))
-                            exit()
+                            #exit()
                         elif (imm != tr_imm):
                             print('Immediate {} out of bounds on {}'.format(imm, inst))
                             print('[0,{}]'.format((2**(imm_width)-1)))
-                            exit()
+                            #exit()
                     elif ((imm < (0-(2**(imm_width-1)))) | (imm >= (2**(imm_width-1)))):    # Only case is signed imm
                         print('Immediate {} out of bounds on {}'.format(imm, inst))
                         print('[{},{}]'.format((0-(2**(imm_width-1))), (2**(imm_width-1)-1)))
-                        exit()
+                        #exit()
                     arg2 = str(tr_imm)
                 except IndexError:
                     print('Invalid second arguement (Imm) on {}'.format(inst))
