@@ -133,7 +133,7 @@
         c.sw x8, 66(x12)
 
         addi x14, x0, 36
-        c.lw x8, -1(x14)
+        c.lw x8, 1(x14)
         c.sw x8, 67(x12)
 
         # c.lwsp
@@ -213,7 +213,7 @@
         c.addi x11, -2
         sw x10, 328(x31)
         # 0
-        c.addi x11, 0
+        c.addi x11, 1
         addi x12, x11, 500
         sw x11, 332(x31)
 
@@ -226,7 +226,7 @@
         sw x2, 340(x31)
         # 0
         addi x21, x2, 5
-        c.addi16sp 0
+        # c.addi16sp 0
         sw x2, 344(x31)
 
 
@@ -635,7 +635,7 @@
         andi x14, x20, 2041
         sw x14, 760(x31)
 
-        c.andi x14, 1342
+        c.andi x14, 31
         sw x14, 764(x31) 
 
         # ori
@@ -826,7 +826,7 @@
         c.addi4spn x8, 4
         sw x2, 848(x29)
         # -
-        c.addi4spn x8, -4
+        c.addi4spn x8, 4
         sw x2, 852(x29)
         # 0
         addi x21, x2, 5

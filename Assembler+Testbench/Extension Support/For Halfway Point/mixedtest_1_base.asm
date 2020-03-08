@@ -3,23 +3,23 @@
 
 
 
-# .data 0x0
-#         .word 0x10       # 0
-#         .word 0x19
-#         .word 0x17
-#         .word 0x71
-#         .word 0x6b
-#         .word 0x1a4     # 20
-#         .word 0xc5
-#         .word 0xc350
-#         .word 0xe0cc08
-#         .word 0xa455    # 36
-#         .word 0x1a5
-#         .word 0xeffec750 # 44
+.data 0x0
+        .word 0x10       # 0
+        .word 0x19
+        .word 0x17
+        .word 0x71
+        .word 0x6b
+        .word 0x1a4     # 20
+        .word 0xc5
+        .word 0xc350
+        .word 0xe0cc08
+        .word 0xa455    # 36
+        .word 0x1a5
+        .word 0xeffec750 # 44
 
 
 
-# .text
+.text
 addi x1, x0, 0
 addi x2, x0, 0
 addi x3, x0, 0
@@ -133,7 +133,7 @@ lw x8, 16(x12)	#from c.lw x8, 4(x12)
 sw x8, 264(x12)	#from c.sw x8, 66(x12)
 
 addi x14, x0, 36
-lw x8, -4(x14)	#from c.lw x8, -1(x14)
+lw x8, 4(x14)	#from c.lw x8, 1(x14)
 sw x8, 268(x12)	#from c.sw x8, 67(x12)
 
 # c.lwsp
@@ -171,7 +171,7 @@ sw x12, 284(x13)	#from c.sw x12, 71(x13)
 
 # ADDS #########################################################################################
 # add and c.add
-addi x6, x0, -72
+addi x6, x0, 72
 # + +
 lw x3, 4(x31)
 add x4, x3, x11
@@ -213,7 +213,7 @@ addi x11, x10, -97
 addi x11, x11, -2	#from c.addi x11, -2
 sw x10, 328(x31)
 # 0
-addi x11, x11, 0	#from c.addi x11, 0
+addi x11, x11, 1	#from c.addi x11, 1
 addi x12, x11, 500
 sw x11, 332(x31)
 
@@ -226,7 +226,7 @@ addi x2, x2, -64	#from c.addi16sp -4
 sw x2, 340(x31)
 # 0
 addi x21, x2, 5
-addi x2, x2, 0	#from c.addi16sp 0
+# c.addi16sp 0
 sw x2, 344(x31)
 
 
@@ -635,7 +635,7 @@ sw x13, 756(x31)
 andi x14, x20, 2041
 sw x14, 760(x31)
 
-andi x14, x14, 1342	#from c.andi x14, 1342
+andi x14, x14, 31	#from c.andi x14, 31
 sw x14, 764(x31)
 
 # ori
@@ -718,23 +718,24 @@ addi x20, x0, 17
 loop7:
 srli x20, x20, 1
 bne x20, x0, loop7
-jal x0, loop8
+jal x0, loop8a
 sw x5, 804(x29)
 
-addi x21, x0, 25
+loop8a:
+addi x12, x0, 25
 loop8:
-addi x21, x21, -1	#from c.addi x21, -1
-bne x21, x0, loop8	#from c.bnez x21, loop8
+addi x12, x12, -1	#from c.addi x12, -1
+bne x12, x0, loop8	#from c.bnez x12, loop8
 jal x1, loop9a	#from c.jal loop9a
-sw x21, 808(x29)
+sw x12, 808(x29)
 
 loop9a:
-addi x22, x0, 20
+addi x13, x0, 20
 loop9:
-addi x22, x22, -1
-beq x22, x0, loopend	#from c.beqz x22, loopend
-bne x22, x0, loop9	#from c.bnez x22, loop9
-sw x22, 812(x29)
+addi x13, x13, -1
+beq x13, x0, loopend	#from c.beqz x13, loopend
+bne x13, x0, loop9	#from c.bnez x13, loop9
+sw x13, 812(x29)
 
 # ADE1BOSS
 loopend:
@@ -814,7 +815,7 @@ jal x16, final
 addi x16, x16, 12
 final:
 # c.jalr
-jalr x1, x16	#from c.jalr x16
+jalr x1, x16, 0	#from c.jalr x16
 sw x1, 840(x29)
 
 sw x30, 844(x29)
@@ -825,7 +826,7 @@ addi x2, x0, 0
 addi x8, x2, 16	#from c.addi4spn x8, 4
 sw x2, 848(x29)
 # -
-addi x8, x2, -16	#from c.addi4spn x8, -4
+addi x8, x2, 16	#from c.addi4spn x8, 4
 sw x2, 852(x29)
 # 0
 addi x21, x2, 5
