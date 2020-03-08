@@ -159,7 +159,7 @@
        
         slt x14, x11, x10
        
-        c.li x12, 0x3d
+        c.li x12, 0x1d
         c.sw x12, 71(x13)
 
         # STORES (included in the tests above ^)
@@ -392,7 +392,7 @@
         c.addi x7, 13
         addi x8, x0, 200
         addi x9, x0, 3
-        c.addi x10, 50
+        c.addi x10, 30
         c.addi x11, 5
         c.addi x12, -6
         c.addi x13, 18
@@ -508,7 +508,7 @@
 
 
         addi x15, x0, 1583
-        c.addi x16, 44
+        c.addi x16, 31
         addi x17, x16, -787
         addi x18, x17, -32
 

@@ -59,9 +59,9 @@ anything:
                
                 sw x5, 0(x3)
 
-                # addi x4, x0, 0x1a0        
-                # lui x4, 0xcca
-                addi x4, x0, 10 
+                addi x4, x0, 0x1a0        
+                lui x4, 0xcca
+                # addi x4, x0, 10 
                 loop1:
                 c.addi x4, -1
                 bne x4, x0, loop1
