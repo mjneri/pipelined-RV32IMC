@@ -91,7 +91,8 @@ module tb_core();
 		j = 0;
 
 		#100 nrst = 1;
-		// #2000 int_sig = 1;
+		#5000 int_sig = 0;
+		#2000 int_sig = 0;
 	end
 
 	// NOTE: THIS SECTION SHOULD BE USED ONCE EXE_INST, MEM_INST, & WB_INST ARE REMOVED
@@ -351,6 +352,7 @@ module tb_core();
 	always@(posedge print_metrics) begin
 		i = 0;
 		j = 0;
+		done = 0;
 		$display("\n");
 		$display("Passed %0d/%0d test cases.\nClock cycles: %0d", pass, total_test_cases, clock_counter-50);
 		$display("Total cycles stalled: %0d", cumulative_stall_counter);

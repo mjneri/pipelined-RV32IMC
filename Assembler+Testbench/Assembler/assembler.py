@@ -7,7 +7,7 @@ from re import split
 argparser = ArgumentParser()
 argparser.add_argument('input_file', help='Input filename')
 argparser.add_argument('output_file', help='Output filename')
-argparser.add_argument('-comp_buffer', '-s', help='Enable compressed buffer', default=False)
+argparser.add_argument('-comp_buffer', '-s', help='Enable compressed buffer', default=True)
 
 args = argparser.parse_args(sys.argv[1:])
 
@@ -142,10 +142,14 @@ def process_inst(inst, labels, inst_address):
             try:
                 imm = int(inst[1], 0)
                 if (imm == 0):
-                    print('Invalid immediate {} (nzuimm)'.format(imm))
+                    print('Invalid immediate {} (nzimm) on {}'.format(imm, inst))
+                    exit()
+                if ((imm < (2**(imm_width-1))) | (imm >= (0-(2**(imm_width-1))))):
+                    print('Immediate {} out of bounds on {}'.format(imm, inst))
+                    print('[{},{}]'.format((2**(imm_width-1)-1), (0-(2**(imm_width-1)))))
                     exit()
                 tr_imm = imm & (2**imm_width-1)
-                arg1 = str(imm)
+                arg1 = str(tr_imm)
             except IndexError:
                 print('Invalid first arguement (Imm) on {}'.format(inst))
                 exit()
@@ -183,19 +187,28 @@ def process_inst(inst, labels, inst_address):
                 try:
                     imm = int(inst[2], 0)
                     if ('C.' in inst[0]):
-                        if (imm < 1) & (inst_info['imm']=='nzuimm'):
-                            print('Invalid immediate {} (nzuimm)'.format(imm))
-                            exit()
-                        elif (imm < 0) & (inst_info['imm']=='uimm'):
-                            print('Invalid immediate {} (uimm)'.format(imm))
-                            exit()
-                        elif (imm == 0) & (inst_info['imm']=='nzimm'):
-                            print('Invalid immediate {} (nzimm'.format(imm))
-                            exit()
-                    tr_imm = imm & (2**imm_width-1)
-                    if ((imm != tr_imm) & (imm > 0)):
-                        print('Immediate {} out of bounds'.format(imm))
+                        if ('uimm' in inst_info['imm']):
+                            if ((imm < 1) | (imm >= (2**(imm_width)))) & (inst_info['imm']=='nzuimm'):
+                                print('Invalid immediate {} (nzuimm) on {}'.format(imm, inst))
+                                print('[1,{}]'.format((2**(imm_width)-1)))
+                                exit()
+                            elif ((imm < 0) | (imm >= (2**(imm_width)))) & (inst_info['imm']=='uimm'):
+                                print('Invalid immediate {} (uimm) on {}'.format(imm, inst))
+                                print('[0,{}]'.format((2**(imm_width)-1)))
+                                exit()
+                        else:
+                            if (imm == 0) & (inst_info['imm']=='nzimm'):
+                                print('Invalid immediate {} (nzimm) on {}'.format(imm, inst))
+                                exit()
+                            if ((imm < (0-(2**(imm_width-1)))) | (imm >= (2**(imm_width-1)))):
+                                print('Immediate {} out of bounds on {}'.format(imm, inst))
+                                print('[{},{}]'.format((0-(2**(imm_width-1))), (2**(imm_width-1)-1)))
+                                exit()
+                    elif ((imm < (0-(2**(imm_width-1)))) | (imm >= (2**(imm_width-1)))):
+                        print('Immediate {} out of bounds on {}'.format(imm, inst))
+                        print('[{},{}]'.format((0-(2**(imm_width-1))), (2**(imm_width-1)-1)))
                         exit()
+                    tr_imm = imm & (2**imm_width-1)
                     arg2 = str(tr_imm)
                 except IndexError:
                     print('Invalid second arguement (Imm) on {}'.format(inst))
@@ -233,8 +246,9 @@ def process_inst(inst, labels, inst_address):
                     try:
                         imm = int(inst[3], 0)
                         tr_imm = imm & (2**imm_width-1)
-                        if ((imm != tr_imm) & (imm > 0)):
-                            print('Immediate {} out of bounds'.format(imm))
+                        if ((imm < (0-(2**(imm_width-1)))) & (imm >= (2**(imm_width-1)))):    # Only case is signed imm
+                            print('Immediate {} out of bounds on {}'.format(imm, inst))
+                            print('[{},{}]'.format((0-(2**(imm_width-1))), (2**(imm_width-1)-1)))
                             exit()
                         arg3 = str(tr_imm)
                     except IndexError:
@@ -246,22 +260,21 @@ def process_inst(inst, labels, inst_address):
                     except IndexError:
                         print('Invalid third arguement (Reg) on {}'.format(inst))
                         exit()
-            elif (syntax=='r-i_r'):     # Immediate-only arguement
+            elif (syntax=='r-i_r'):
                 try:
                     imm = int(inst[2], 0)
-                    if ('C.' in inst[0]):
-                        if (imm < 1) & (inst_info['imm']=='nzuimm'):
-                            print('Invalid immediate {} (nzuimm)'.format(imm))
-                            exit()
-                        elif (imm < 0) & (inst_info['imm']=='uimm'):
-                            print('Invalid immediate {} (uimm)'.format(imm))
-                            exit()
-                        elif (imm == 0) & (inst_info['imm']=='nzimm'):
-                            print('Invalid immediate {} (nzimm'.format(imm))
-                            exit()
                     tr_imm = imm & (2**imm_width-1)
-                    if ((imm != tr_imm) & (imm > 0)):
-                        print('Immediate {} out of bounds'.format(imm))
+                    if ('C.' in inst[0]):   # Either C.LW or C.SW which are unsigned imm
+                        if (imm < 0):
+                            print('Invalid immediate {} (uimm) on {}'.format(imm, inst))
+                            exit()
+                        elif (imm != tr_imm):
+                            print('Immediate {} out of bounds on {}'.format(imm, inst))
+                            print('[0,{}]'.format((2**(imm_width)-1)))
+                            exit()
+                    elif ((imm < (0-(2**(imm_width-1)))) | (imm >= (2**(imm_width-1)))):    # Only case is signed imm
+                        print('Immediate {} out of bounds on {}'.format(imm, inst))
+                        print('[{},{}]'.format((0-(2**(imm_width-1))), (2**(imm_width-1)-1)))
                         exit()
                     arg2 = str(tr_imm)
                 except IndexError:
@@ -376,8 +389,8 @@ def assemble(instructions, labels, instmem):
                 rd_rs1_ = int(temp_inst[1]) - 8
                 rs2_ = 0
             else:
-                rd_rs1_ = int(temp_inst[1])
-                rs2_ = int(temp_inst[2])
+                rd_rs1_ = int(temp_inst[1]) - 8
+                rs2_ = int(temp_inst[2]) - 8
             m_code = opcode |  rs2_<<2 | rd_rs1_<<7 | funct4<<12
         
         elif (encoding_type=='CI'):     # Okay
@@ -401,8 +414,6 @@ def assemble(instructions, labels, instmem):
         elif (encoding_type=='CB'):     # Okay
             rs1_ = int(temp_inst[1]) - 8
             offset = int(temp_inst[2])
-            if (rs1_ < 8 | rs1_ > 16):
-                print('Warning: Rs1 {} truncated to {}'.format(rs1_, (0x08) | (rs1_ & 0x07)))
             m_code = opcode | (offset&0x20)>>3 | (offset&0x6)<<2 | (offset&0xC0)>>1 | rs1_<<7 | (offset&0x18)<<7 | (offset&0x100)<<4 | funct3<<13
 
         elif (encoding_type=='CA'):     # Okay
@@ -422,15 +433,11 @@ def assemble(instructions, labels, instmem):
 
         elif (encoding_type=='CIW'):     # Okay
             rd_ = int(temp_inst[1]) - 8
-            imm = int(temp_inst[2])<<2
-            if (rd_ < 8 | rd_ > 16):
-                print('Warning: Rd {} truncated to {}'.format(rd_, (0x08) | (rd_ & 0x07)))
-            if (imm < 0):
-                print('Warning: This instruction only takes unsigned inputs. {} will be treated as {}.'.format(imm, imm & 0x3FC))
+            imm = int(temp_inst[2]) << 2
             m_code = opcode |  rd_<<2 | (imm&0x8)<<2 | (imm&0x4)<<4 | (imm&0x3C0)<<1 | (imm&0x30)<<7 | funct3<<13
 
         elif (encoding_type=='C16'):    # Okay
-            imm = int(temp_inst[1])<<4
+            imm = int(temp_inst[1]) << 4
             m_code = opcode | (imm&0x20)>>3 | (imm&0x180)>>4 | (imm&0x40)>>1 | (imm&0x10)<<2 | 2<<7 | (imm&0x200)<<3 | funct3<<13
 
         else:
@@ -490,7 +497,6 @@ def convert_file(line_list):
     
     for index in list(range(0,len(line_list))):
         temp_line = line_list[index].strip()
-        #if (('C.' in temp_line) | ('c.' in temp_line)):
         if ((temp_line.split('.')[0] == 'c') | (temp_line.split('.')[0] == 'C')):
             inst = split('[ \t,()]', temp_line)
             for j in inst:
@@ -502,38 +508,31 @@ def convert_file(line_list):
                 base_file.write(str(temp_line[2:]))
             elif (expansion_method == 'dup_reg'):
                 base_file.write(str(inst[0][2:]) + ' ' + str(inst[1]) + ', ' +str(inst[1]) + ', ' + str(inst[2]))
-            elif (expansion_method == 'insert_x0'):
-                equivalent = inst_info['equivalent']
-                if inst_info['args']==1:
-                    base_file.write(str(equivalent) + ' x0, ' + str(inst[1]))
-                elif inst_info['args']==2:
-                    base_file.write(str(equivalent) + ' ' + str(inst[1]) + ', x0, ' + str(inst[2]))
-            elif (expansion_method == 'insert_x0+0'):
-                equivalent = inst_info['equivalent']
-                base_file.write(str(equivalent) + ' x0, ' + str(inst[1]) + ', 0')
-            elif (expansion_method == 'insert_x1'):
-                equivalent = inst_info['equivalent']
-                base_file.write(str(equivalent) + ' x1, ' + str(inst[1]))
-            elif (expansion_method == 'insert_x1+0'):
-                equivalent = inst_info['equivalent']
-                base_file.write(str(equivalent) + ' x1, ' + str(inst[1]) + ', 0')
-            elif (expansion_method == 'replace'):
-                equivalent = inst_info['equivalent']
-                base_file.write(str(equivalent) + ' ' + str(inst[1:]))
-            elif (expansion_method == 'times_4(x2)'):
-                equivalent = inst_info['equivalent']
-                base_file.write(str(equivalent) + ' ' + str(inst[1]) + ', ' + str(int(inst[2])*4) + '(x2)')
-            elif (expansion_method == 'times_4'):
-                equivalent = inst_info['equivalent']
-                base_file.write(str(equivalent) + ' ' + str(inst[1]) + ', ' + str(int(inst[2])*4) + '({})'.format(inst[3]))
-            elif (expansion_method == 'x2_times_4'):
-                equivalent = inst_info['equivalent']
-                base_file.write(str(equivalent) + ' ' + str(inst[1]) + ', x2, ' + str(int(inst[2])*4))
-            elif (expansion_method == 'times_16'):
-                equivalent = inst_info['equivalent']
-                base_file.write(str(equivalent) + ', ' + str(int(inst[1])*16))
             else:
-                base_file.write(str(inst_info['expansion']))
+                equivalent = inst_info['equivalent']
+                if (expansion_method == 'insert_x0'):
+                    if inst_info['args']==1:
+                        base_file.write(str(equivalent) + ' x0, ' + str(inst[1]))
+                    elif inst_info['args']==2:
+                        base_file.write(str(equivalent) + ' ' + str(inst[1]) + ', x0, ' + str(inst[2]))
+                elif (expansion_method == 'insert_x0+0'):
+                    base_file.write(str(equivalent) + ' x0, ' + str(inst[1]) + ', 0')
+                elif (expansion_method == 'insert_x1'):
+                    base_file.write(str(equivalent) + ' x1, ' + str(inst[1]))
+                elif (expansion_method == 'insert_x1+0'):
+                    base_file.write(str(equivalent) + ' x1, ' + str(inst[1]) + ', 0')
+                elif (expansion_method == 'replace'):
+                    base_file.write(str(equivalent) + ' ' + str(inst[1:]))
+                elif (expansion_method == 'times_4(x2)'):
+                    base_file.write(str(equivalent) + ' ' + str(inst[1]) + ', ' + str(int(inst[2])*4) + '(x2)')
+                elif (expansion_method == 'times_4'):
+                    base_file.write(str(equivalent) + ' ' + str(inst[1]) + ', ' + str(int(inst[2])*4) + '({})'.format(inst[3]))
+                elif (expansion_method == 'x2_times_4'):
+                    base_file.write(str(equivalent) + ' ' + str(inst[1]) + ', x2, ' + str(int(inst[2])*4))
+                elif (expansion_method == 'times_16'):
+                    base_file.write(str(equivalent) + ', ' + str(int(inst[1])*16))
+                else:
+                    base_file.write(str(inst_info['expansion']))
             base_file.write('\t#from ' + temp_line + '\n')
         else:
             base_file.write(temp_line + '\n')
