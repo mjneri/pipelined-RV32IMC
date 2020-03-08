@@ -144,7 +144,7 @@ def process_inst(inst, labels, inst_address):
                 if (imm == 0):
                     print('Invalid immediate {} (nzimm) on {}'.format(imm, inst))
                     #exit()
-                if ((imm < (2**(imm_width-1))) | (imm >= (0-(2**(imm_width-1))))):
+                if ((imm < (0-(2**(imm_width-1)))) | (imm >= (2**(imm_width-1)))):
                     print('Immediate {} out of bounds on {}'.format(imm, inst))
                     print('[{},{}]'.format((2**(imm_width-1)-1), (0-(2**(imm_width-1)))))
                     #exit()
