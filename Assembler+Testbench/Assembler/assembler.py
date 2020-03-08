@@ -373,7 +373,7 @@ def assemble(instructions, labels, instmem):
         
         elif (encoding_type=='CR'):     # Okay
             if (instruction_dict[opt]['syntax']=='r'):
-                rd_rs1_ = int(temp_inst[1]) - 8
+                rd_rs1_ = int(temp_inst[1])
                 rs2_ = 0
             else:
                 rd_rs1_ = int(temp_inst[1])
