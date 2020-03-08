@@ -261,7 +261,7 @@ module tb_core();
 			if(INST[15:0] == 16'h0001 || INST == 32'h00000013)
 				nop_counter <= nop_counter + 1;
 	end
-/*
+/**/
 	always@(posedge CLK) begin
 		if(clock_counter == 6) begin
 			#3 BTN[1] = 1;
@@ -293,7 +293,7 @@ module tb_core();
 			int_sig = 0;	
 		end
 	end
-*/
+/**/
 	// The following code snippet is for checking the contents of
 	// the memory when RTL_RAM is used (if it was coded in Verilog)
 	// Displaying Memory contents

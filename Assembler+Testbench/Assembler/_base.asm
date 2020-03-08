@@ -3,23 +3,23 @@
 
 
 
-.data 0x0
-        .word 0x10       # 0
-        .word 0x19
-        .word 0x17
-        .word 0x71
-        .word 0x6b
-        .word 0x1a4     # 20
-        .word 0xc5
-        .word 0xc350
-        .word 0xe0cc08
-        .word 0xa455    # 36
-        .word 0x1a5
-        .word 0xeffec750 # 44
+# .data 0x0
+#         .word 0x10       # 0
+#         .word 0x19
+#         .word 0x17
+#         .word 0x71
+#         .word 0x6b
+#         .word 0x1a4     # 20
+#         .word 0xc5
+#         .word 0xc350
+#         .word 0xe0cc08
+#         .word 0xa455    # 36
+#         .word 0x1a5
+#         .word 0xeffec750 # 44
 
 
 
-.text
+# .text
 addi x1, x0, 0
 addi x2, x0, 0
 addi x3, x0, 0
@@ -159,7 +159,7 @@ sw x11, 280(x13)	#from c.sw x11, 70(x13)
 
 slt x14, x11, x10
 
-addi x12, x0, 0x3d	#from c.li x12, 0x3d
+addi x12, x0, 0x1d	#from c.li x12, 0x1d
 sw x12, 284(x13)	#from c.sw x12, 71(x13)
 
 # STORES (included in the tests above ^)
@@ -392,7 +392,7 @@ sw x22, 516(x31)
 addi x7, x7, 13	#from c.addi x7, 13
 addi x8, x0, 200
 addi x9, x0, 3
-addi x10, x10, 50	#from c.addi x10, 50
+addi x10, x10, 30	#from c.addi x10, 30
 addi x11, x11, 5	#from c.addi x11, 5
 addi x12, x12, -6	#from c.addi x12, -6
 addi x13, x13, 18	#from c.addi x13, 18
@@ -508,7 +508,7 @@ sw x14, 620(x31)
 
 
 addi x15, x0, 1583
-addi x16, x16, 44	#from c.addi x16, 44
+addi x16, x16, 31	#from c.addi x16, 31
 addi x17, x16, -787
 addi x18, x17, -32
 
@@ -800,7 +800,7 @@ sw x30, 832(x29)
 
 # c.jr
 jal x13, pc4
-addi x13, x13, 8
+addi x13, x13, 6
 pc4:
 jalr x0, x13, 0	#from c.jr x13
 
