@@ -261,7 +261,7 @@ module tb_core();
 			if(INST[15:0] == 16'h0001 || INST == 32'h00000013)
 				nop_counter <= nop_counter + 1;
 	end
-/**/
+/*
 	always@(posedge CLK) begin
 		if(clock_counter == 6) begin
 			#3 BTN[1] = 1;

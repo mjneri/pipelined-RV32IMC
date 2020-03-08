@@ -798,11 +798,7 @@
         jump3:
         sw x30, 832(x29)
         
-        # c.jr
-        jal x13, pc4
-        addi x13, x13, 6
-        pc4:
-        c.jr x13
+        
 
         # jalr
         jal x14, hey
@@ -833,7 +829,14 @@
         c.addi4spn x8, 1
         sw x2, 856(x29)
         
+        # c.jr
+        jal x13, pc4
+        addi x13, x13, 8
+        pc4:
+        c.jr x13
 
+        c.nop
+        nop
 
         # infinite loop
         inf:

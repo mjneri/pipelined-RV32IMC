@@ -3,23 +3,23 @@
 
 
 
-# .data 0x0
-#         .word 0x10       # 0
-#         .word 0x19
-#         .word 0x17
-#         .word 0x71
-#         .word 0x6b
-#         .word 0x1a4     # 20
-#         .word 0xc5
-#         .word 0xc350
-#         .word 0xe0cc08
-#         .word 0xa455    # 36
-#         .word 0x1a5
-#         .word 0xeffec750 # 44
+.data 0x0
+        .word 0x10       # 0
+        .word 0x19
+        .word 0x17
+        .word 0x71
+        .word 0x6b
+        .word 0x1a4     # 20
+        .word 0xc5
+        .word 0xc350
+        .word 0xe0cc08
+        .word 0xa455    # 36
+        .word 0x1a5
+        .word 0xeffec750 # 44
 
 
 
-# .text
+.text
 addi x1, x0, 0
 addi x2, x0, 0
 addi x3, x0, 0
@@ -798,11 +798,7 @@ sw x12, 828(x29)
 jump3:
 sw x30, 832(x29)
 
-# c.jr
-jal x13, pc4
-addi x13, x13, 6
-pc4:
-jalr x0, x13, 0	#from c.jr x13
+
 
 # jalr
 jal x14, hey
@@ -833,7 +829,14 @@ addi x21, x2, 5
 addi x8, x2, 4	#from c.addi4spn x8, 1
 sw x2, 856(x29)
 
+# c.jr
+jal x13, pc4
+addi x13, x13, 8
+pc4:
+jalr x0, x13, 0	#from c.jr x13
 
+nop	#from c.nop
+nop
 
 # infinite loop
 inf:
