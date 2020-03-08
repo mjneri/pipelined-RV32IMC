@@ -51,9 +51,7 @@ storehere:
 anything:
         addi x15, x0, 3
         addi x3, x0, 0x402
-        slli x3, x3, 2
-
-        
+        slli x3, x3, 2  
 
         running:
                 c.addi x15, -1
@@ -61,9 +59,9 @@ anything:
                
                 sw x5, 0(x3)
 
-                addi x4, x0, 0x1a0        
-                lui x4, 0xcca
-                 
+                # addi x4, x0, 0x1a0        
+                # lui x4, 0xcca
+                addi x4, x0, 10 
                 loop1:
                 c.addi x4, -1
                 bne x4, x0, loop1
@@ -76,7 +74,7 @@ anything:
 
         sw x0, 0(x3)
 
-
+        c.jr x1
 
 loadhere:
         lw x1, 1000(x0)
