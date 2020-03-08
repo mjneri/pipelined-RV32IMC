@@ -514,6 +514,9 @@ def convert_file(line_list):
             elif (expansion_method == 'insert_x1'):
                 equivalent = inst_info['equivalent']
                 base_file.write(str(equivalent) + ' x1, ' + str(inst[1]))
+            elif (expansion_method == 'insert_x1+0'):
+                equivalent = inst_info['equivalent']
+                base_file.write(str(equivalent) + ' x1, ' + str(inst[1]) + ', 0')
             elif (expansion_method == 'replace'):
                 equivalent = inst_info['equivalent']
                 base_file.write(str(equivalent) + ' ' + str(inst[1:]))

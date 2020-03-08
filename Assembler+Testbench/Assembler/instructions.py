@@ -80,7 +80,7 @@ instruction_dict= {
     'C.JR':     {'args':1,  'syntax':'r',                       'format':'CR',  'opcode':2,     'funct4':8,                                     'comp_reg':False,   'expansion_method':'insert_x0+0',	'expansion':'jalr x0, rs1, 0',          'equivalent':'jalr'},
     'C.MV':     {'args':2,  'syntax':'r-r',                     'format':'CR',  'opcode':2,     'funct4':8,                                     'comp_reg':False,   'expansion_method':'insert_x0',		'expansion':'add rd, x0, rs2',          'equivalent':'add'},
     'C.EBREAK': {'args':0,  'syntax':'none',                    'format':'N',   'opcode':36866,                                                                     'expansion_method':'none',			'expansion':'ebreak'},
-    'C.JALR':   {'args':1,  'syntax':'r',	                    'format':'CR',  'opcode':2,     'funct4':9,                                     'comp_reg':False,   'expansion_method':'insert_x1',		'expansion':'jalr x1, rs1, 0',          'equivalent':'jalr'},
+    'C.JALR':   {'args':1,  'syntax':'r',	                    'format':'CR',  'opcode':2,     'funct4':9,                                     'comp_reg':False,   'expansion_method':'insert_x1+0',		'expansion':'jalr x1, rs1, 0',          'equivalent':'jalr'},
     'C.ADD':    {'args':2,  'syntax':'r-r',                     'format':'CR',  'opcode':2,     'funct4':9,                                     'comp_reg':False,    'expansion_method':'dup_reg',		'expansion':'add rd_, rd_, rs2_'},
     'C.SWSP':   {'args':2,  'syntax':'r-i',     'i_width':8,    'format':'CI',  'opcode':2,     'funct3':6,                 'imm':'uimm',       'comp_reg':False,   'expansion_method':'times_4(x2)',	'expansion':'sw rs2, offset[8:2](x2)',  'equivalent':'sw'},
 
