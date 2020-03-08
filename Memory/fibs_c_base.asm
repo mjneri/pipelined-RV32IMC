@@ -1,7 +1,7 @@
 # This program writes the fibbonacci sequence into the memory. (Compressed)
 addi x12, x12, 31	#from c.addi x12, 31
-addi x12, x12, 32	#from c.addi x12, 32
-addi x12, x12, 33	#from c.addi x12, 33
+addi x12, x12, 31	#from c.addi x12, 31
+addi x12, x12, 31	#from c.addi x12, 31
 addi x12, x12, 31	#from c.addi x12, 31
 addi x12, x12, 31	#from c.addi x12, 31
 addi x12, x12, 25	#from c.addi x12, 25
