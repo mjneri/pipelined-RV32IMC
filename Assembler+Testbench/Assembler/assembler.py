@@ -302,7 +302,6 @@ def process_inst(inst, labels, inst_address):
 '''
 def assemble(instructions, labels, instmem):
     out_buffer = {}
-    compressed_counter = 0
     try:
         logs = open("assembler.log", "w")
     except:
@@ -404,7 +403,7 @@ def assemble(instructions, labels, instmem):
                 m_code = opcode | (imm&0x1C)<<2 | rd<<7 | (imm&0x20)<<7 | (imm&0xC0)>>4 | funct3<<13            # different format for lwsp
             elif (temp_inst[0] == 'C.SWSP'):
                 imm = imm << 2
-                m_code = opcode | (imm&0x3C)<<7 | rd<<2 | (imm&0xC0)<<1 | funct3<<13               # also different format for swsp                
+                m_code = opcode | (imm&0x3C)<<7 | rd<<2 | (imm&0xC0)<<1 | funct3<<13         # also different format for swsp                
             else:
                 m_code = opcode | (imm&0x1F)<<2 | rd<<7 | (imm&0x20)<<7 | funct3<<13
         
@@ -448,29 +447,28 @@ def assemble(instructions, labels, instmem):
             m_code = 1
         
         if ('C.' in opt):
-            out = (hex(m_code)[2:].zfill(4))
+            out = str(hex(m_code)[2:].zfill(4))
             if (comp_buffer_en == 'True'):
-                if (compressed_counter == 0):
+                if (out_buffer == ''):
                     out_buffer = out
-                    compressed_counter = 1
                 else:
                     # print(out + out_buffer + '\n')
-                    instmem.write(out_buffer + ' ' + out + '\n')
-                    compressed_counter = 0
+                    instmem.write(out_buffer + '\n' + out + '\n')
                     out_buffer = ''
             else:   # insert an upper nop
-                instmem.write('0001 ' + out + '\n')
+                instmem.write('0001 ' + '\n' + out + '\n')
         else:
-            full_inst = (hex(m_code)[2:].zfill(8))
+            full_inst = str(hex(m_code)[2:].zfill(8))
             # print(full_inst)
             if (out_buffer):
-                instmem.write(out_buffer + ' ' + full_inst[4:8] + '\n')
+                instmem.write(out_buffer + '\n' + full_inst[4:8] + '\n')
                 out_buffer = full_inst[0:4]
             else:
-                instmem.write(full_inst[4:8] + ' ' + full_inst[0:4] + '\n')
+                instmem.write(full_inst[4:8] + '\n' + full_inst[0:4] + '\n')
+                out_buffer = ''
 
-        print('Instruction at address {}:\t{}\t{}'.format(inst_address, str(hex(m_code)[2:].zfill(8)), temp_inst))
-        print('----------------------------------------------------------------------------------------------------')
+        #print('Instruction at address {}:\t{}\t{}'.format(inst_address, str(hex(m_code)[2:].zfill(8)), temp_inst))
+        #print('----------------------------------------------------------------------------------------------------')
 
         logs.write('0x{:03x}: {} '.format(inst_address, temp_inst))
         if('C.' in opt):
@@ -480,8 +478,7 @@ def assemble(instructions, labels, instmem):
         logs.write('\n')
 
     if (out_buffer):
-        instmem.write(hex(0x0001)[2:].zfill(4))
-        instmem.write(' ' + out_buffer + '\n')
+        instmem.write(out_buffer + '\n0001\n')
 
     logs.close()
     return
