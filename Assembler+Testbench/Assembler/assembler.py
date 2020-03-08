@@ -141,7 +141,7 @@ def process_inst(inst, labels, inst_address):
         elif (syntax=='i'): # Only C.ADDI16SP has this syntax
             try:
                 imm = int(inst[1], 0)
-                if (imm < 1):
+                if (imm == 0):
                     print('Invalid immediate {} (nzuimm)'.format(imm))
                     exit()
                 tr_imm = imm & (2**imm_width-1)
