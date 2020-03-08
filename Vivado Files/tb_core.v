@@ -91,7 +91,8 @@ module tb_core();
 		j = 0;
 
 		#100 nrst = 1;
-		// #2000 int_sig = 1;
+		#5000 int_sig = 0;
+		#2000 int_sig = 0;
 	end
 
 	// NOTE: THIS SECTION SHOULD BE USED ONCE EXE_INST, MEM_INST, & WB_INST ARE REMOVED
@@ -260,39 +261,39 @@ module tb_core();
 			if(INST[15:0] == 16'h0001 || INST == 32'h00000013)
 				nop_counter <= nop_counter + 1;
 	end
-
-	/*always@(posedge CLK) begin
+/*
+	always@(posedge CLK) begin
 		if(clock_counter == 6) begin
 			#3 BTN[1] = 1;
-			int_sig = 0;	
+			int_sig = 1;	
 		end
 
 		if(clock_counter == 100) begin
 			#3 BTN[1] = 0;
-			int_sig = 1;	
+			int_sig = 0;	
 		end
 
 		if(clock_counter == 4976) begin
 			#3 BTN[2] = 1;
-			int_sig = 0;	
+			int_sig = 1;	
 		end
 
 		if(clock_counter == 5100) begin
 			#3 BTN[2] = 0;
-			int_sig = 1;	
+			int_sig = 0;	
 		end
 
 		if(clock_counter == 7400) begin
 			#3 BTN[3] = 1;
-			int_sig = 0;	
+			int_sig = 1;	
 		end
 
 		if(clock_counter == 7500) begin
 			#3 BTN[3] = 0;
-			int_sig = 1;	
+			int_sig = 0;	
 		end
-	end*/
-
+	end
+/**/
 	// The following code snippet is for checking the contents of
 	// the memory when RTL_RAM is used (if it was coded in Verilog)
 	// Displaying Memory contents
@@ -351,6 +352,7 @@ module tb_core();
 	always@(posedge print_metrics) begin
 		i = 0;
 		j = 0;
+		done = 0;
 		$display("\n");
 		$display("Passed %0d/%0d test cases.\nClock cycles: %0d", pass, total_test_cases, clock_counter-50);
 		$display("Total cycles stalled: %0d", cumulative_stall_counter);

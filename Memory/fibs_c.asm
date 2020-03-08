@@ -2,10 +2,9 @@
 c.addi x12, 31
 c.addi x12, 31
 c.addi x12, 31
-c.addi x12, 2
 c.addi x12, 31
 c.addi x12, 31
-c.addi x12, 31
+c.addi x12, 25
 c.addi x8, 1
 c.sw x8, 1(x11)
 Fibs_C:
@@ -18,7 +17,7 @@ sub x13, x12, x11
 c.beqz x13, Exit_C
 c.jal Fibs_C
 Exit_C:
-c.sw x11, 0(x12)
+c.sw x11, 2(x12)
 
 nop
 nop
@@ -30,7 +29,7 @@ nop
 
 # This program writes the fibbonacci sequence into the memory. (Regular)
 addi x22, x0, 380
-addi x21, x11, 4
+addi x21, x11, 12
 addi x18, x0, 1
 sw x18, 4(x21)
 addi x21, x21, 8
