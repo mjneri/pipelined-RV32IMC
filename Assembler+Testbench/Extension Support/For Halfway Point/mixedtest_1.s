@@ -130,11 +130,11 @@
         sw x8, 260(x12)
 
         c.lw x8, 4(x12)
-        c.sw x8, 66(x12)
+        c.sw x8, 4(x12)
 
         addi x14, x0, 36
-        c.lw x8, 1(x14)
-        c.sw x8, 67(x12)
+        c.lw x8, 0(x14)
+        c.sw x8, 36(x12)
 
         # c.lwsp
         c.lwsp x8, 4

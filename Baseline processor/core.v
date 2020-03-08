@@ -147,7 +147,7 @@ module core(
 	wire [2:0] exe_dm_select;		// For MEM stage
 	wire [2:0] exe_sel_data;		// For WB stage
 	wire [1:0] exe_store_select;	// For EXE stage
-	wire [1:0] exe_sel_opBR;		// For EXE stage
+	wire exe_sel_opBR;		// For EXE stage
 
 	// Inputs to EXE/MEM Pipereg
 	wire [31:0] exe_ALUout;			// ALU output
