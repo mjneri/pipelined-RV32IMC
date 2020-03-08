@@ -84,6 +84,9 @@ def parse_file(inst_file):
             if (temp_line == ''):
                 # now empty
                 pass
+            elif (temp_line[0] == '.'):
+                # ignore directives
+                pass
             else:
                 # instruction, probably
                 instructions[instruction_address] = temp_line
