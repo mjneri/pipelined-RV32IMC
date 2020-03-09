@@ -23,11 +23,19 @@
 module tb_top();
 
 	reg CLK100MHZ, nrst;
+	reg [3:0] BTN;
+	reg [2:0] SW;
+	wire [3:0] LED;
 	wire UART_TX;
 
 	top TOP(
 		.CLK100MHZ(CLK100MHZ),
 		.nrst(nrst),
+
+		.BTN(BTN),
+		.SW(SW),
+		.LED(LED),
+
 		.UART_TX(UART_TX)
 	);
 
@@ -37,6 +45,8 @@ module tb_top();
 	initial begin
 		CLK100MHZ = 0;
 		nrst = 0;
+		BTN = 0;
+		SW = 0;
 
 		#100 nrst = 1;
 	end
