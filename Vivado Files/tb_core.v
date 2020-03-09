@@ -326,7 +326,7 @@ module tb_core();
 	always@(negedge CLK) begin
 		if(done) begin	
 			if(con_out == AK.memory[con_addr]) begin
-				$display("0x%3X\t0x%X\t0x%X\tPass", con_addr, con_out, AK.memory[con_addr]);
+				//$display("0x%3X\t0x%X\t0x%X\tPass", con_addr, con_out, AK.memory[con_addr]);
 				pass = pass + 1;
 			end else begin
 				$display("0x%3X\t0x%X\t0x%X\tFail--------------------", con_addr, con_out, AK.memory[con_addr]);
