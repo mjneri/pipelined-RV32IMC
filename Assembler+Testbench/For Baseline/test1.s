@@ -29,9 +29,9 @@ auipc x3, 0x3
 jal x1, end
 sub x30, x3, x2
 
-#addi x0, x0, 0
-#addi x0, x0, 0
-#addi x0, x0, 0
+nop 
+nop 
+nop
 
 end:
 add x30, x2, x3
