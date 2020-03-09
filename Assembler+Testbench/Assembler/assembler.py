@@ -301,7 +301,7 @@ def process_inst(inst, labels, inst_address):
     - convert to machine code
 '''
 def assemble(instructions, labels, instmem):
-    out_buffer = {}
+    out_buffer = ''
     try:
         logs = open("assembler.log", "w")
     except:
@@ -453,7 +453,7 @@ def assemble(instructions, labels, instmem):
                     out_buffer = out
                 else:
                     # print(out + out_buffer + '\n')
-                    instmem.write(out_buffer + '\n' + out + '\n')
+                    instmem.write(str(out_buffer) + '\n' + str(out) + '\n')
                     out_buffer = ''
             else:   # insert an upper nop
                 instmem.write('0001 ' + '\n' + out + '\n')
@@ -478,7 +478,7 @@ def assemble(instructions, labels, instmem):
         logs.write('\n')
 
     if (out_buffer):
-        instmem.write(out_buffer + '\n0001\n')
+        instmem.write(str(out_buffer) + '\n0001\n')
 
     logs.close()
     return
