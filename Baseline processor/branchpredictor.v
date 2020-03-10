@@ -1,5 +1,3 @@
-`timescale 1ns / 1ps
-
 /*
 	Branch History Table module
 	Format of each entry:
@@ -16,7 +14,7 @@
 		3'b10x: exe_CNI
 		3'b11x: exe_PBT
 */
-
+`timescale 1ns / 1ps
 module branchpredictor(
 	input CLK,
 	input nrst,
@@ -35,6 +33,9 @@ module branchpredictor(
 	input id_is_btype,
 
 	input [10:0] exe_PC,
+	input [10:0] exe_branchtarget,
+	input exe_sel_opBR,			// used to determine if the instruction is JALR, C.JR, or C.JALR
+								// which are treated differently than JAL, C.JAL, & C.J
 	input exe_z,				// Feedback from ALU
 	input exe_less,				// Feedback from ALU
 	input [5:0] exe_btype,		// determines what branch instruction was used
@@ -52,7 +53,8 @@ module branchpredictor(
 	output if_prediction,
 	output [1:0] exe_correction,
 
-	output reg flush,
+	output reg jump_flush,
+	output reg branch_flush,
 	output reg id_jump_in_bht,	// added as an input w/ sel_pc s.t. branch target is selected
 								// only when this signal is not asserted, which happens only
 								// when the jump instruction is not yet saved into the table
@@ -193,10 +195,6 @@ module branchpredictor(
 	wire is_bge = exe_btype[2];
 	wire is_bltu = exe_btype[1];
 	wire is_bgeu = exe_btype[0];
-
-	wire [6:0] exe_tag = exe_PC[10:4];
-	wire [3:0] exe_set = exe_PC[3:0];
-
 	wire is_beqz = exe_c_btype[1];
 	wire is_bnez = exe_c_btype[0];
 
@@ -223,6 +221,8 @@ module branchpredictor(
 	reg [21:0] exe_loadentry;
 	wire is_pred_correct;
 	reg [1:0] exe_setoffset;
+	wire [3:0] exe_set = exe_PC[3:0];
+	wire [6:0] exe_tag = exe_PC[10:4];
 
 	assign exe_entry[0] = history_table[{exe_set, 2'b00}];
 	assign exe_entry[1] = history_table[{exe_set, 2'b01}];
@@ -260,7 +260,11 @@ module branchpredictor(
 	end
 
 	// Assign outputs
-	assign exe_PBT = exe_loadentry[12:2];
+	// SPECIAL CASES: jalr, c.jr, c.jalr
+	// Since branch targets of these cases can change depending on the registers used,
+	// we check if the branch target stored in the table is the same as the 
+	// computed branch target. If not, we update the table & flush the next 2 cycles.
+	assign exe_PBT = (exe_sel_opBR)? exe_branchtarget : exe_loadentry[12:2];
 	assign exe_CNI = {exe_loadentry[19:13], exe_set} + ((|exe_c_btype)? 11'd1 : 11'd2);
 
 	// Check if prediction is correct & output appropriate correction
@@ -273,8 +277,12 @@ module branchpredictor(
 	// If feedback = 1, branch comparison is correct, thus branch SHOULD BE TAKEN
 	// If feedback = 0, branch SHOULD NOT BE TAKEN
 	// ----
+	// SPECIAL CASE (JALR, C.JALR, C.JR) if computed branch target (exe_branchtarget)
+	// is different from stored PBT (basically if predicted branch target is wrong),
+	// branchtarget should be taken
+	// ----
 	// exe_correction:
-	// 2'b00 or 2'b01: No correction needed - next PC address would be PC+4
+	// 2'b00: No correction needed - next PC address would be PC+4
 	// 2'b10: Need to select [C]orrect [N]ext [I]nstruction (CNI)
 	// 2'b11: Need to select PBT
 	assign exe_correction = (|exe_btype || |exe_c_btype)?
@@ -282,6 +290,8 @@ module branchpredictor(
 									(feedback == 1'b0)? 2'b10 	:	// branch should not have been taken, so CNI should be next PC addr
 									(feedback == 1'b1)? 2'b11	:	// branch should have been taken, so PBT should be next PC addr
 									2'b00 						:
+							(exe_sel_opBR && (exe_branchtarget != exe_loadentry[12:2]))?
+									2'b11						:
 								2'b00;
 
 	////////////////////////////////////////////////////////////////////////////
@@ -298,51 +308,48 @@ module branchpredictor(
 	
 	always@(posedge CLK) begin
 		if(!nrst) begin
-
 			for(i = 0; i < 16; i=i+1) begin
 				fifo_counter[i] <= 2'b0;
 			end
 			for(i = 0; i < 64; i=i+1) begin
 				history_table[i] <= 22'b0;
 			end
-
 		end else if(en && !stall) begin
 
 			if( (id_is_btype || id_is_jump) && (id_iseqto == 4'h0) ) begin
 				// Write to table if (Branch or Jump) AND the input is not in the table yet
+				// Use masking to prevent the other entries from being overwritten
 				history_table[{id_set, fifo_counter[id_set]}] <= {1'b1, ISR_running, id_tag, id_branchtarget, sat_counter};
-				//increment counter
+
+				// increment counter
 				fifo_counter[id_set] <= fifo_counter[id_set] + 2'b01;
 			end
 
+			else if(exe_sel_opBR && (exe_branchtarget != exe_loadentry[12:2]))
+				history_table[{exe_set, exe_setoffset}] <= {exe_loadentry[21:13], exe_branchtarget, exe_loadentry[1:0]};
 			else if(|exe_btype || |exe_c_btype) begin
-				if(feedback == 1'h1) begin
+				if(feedback == 1'h1)
 					if(exe_loadentry[1:0] != 2'h3)
 						history_table[{exe_set, exe_setoffset}] <= exe_loadentry + 2'b1;
-				end
-
-				else begin
+				else
 					if(exe_loadentry[1:0] != 2'h0)
 						history_table[{exe_set, exe_setoffset}] <= exe_loadentry - 2'b1;
-				end
-				
 			end
-
 		end
 	end
+
 
 	////////////////////////////////////////////////////////////////////////////////////////
 	//Flushing
 	
-	//Flush state registers
+	/* //Flush state registers
 	reg flush_state;
-	reg flush_state_reg;	//delayed flush_state by 1 cycle
 	
 	always@(posedge CLK) begin
 		if(!nrst) begin
-			flush_state_reg <= 1'd0;
+			flush_state <= 1'd0;
 		end
-		else if(en) begin
+		else if(en && !stall) begin
 			flush_state_reg <= flush_state;
 		end
 	end
@@ -352,7 +359,9 @@ module branchpredictor(
 			flush = 1;
 			flush_state = 0;
 		end else begin
-			if((|exe_btype || |exe_c_btype) && !is_pred_correct) begin
+			if( ((|exe_btype || |exe_c_btype) && !is_pred_correct) ||
+				(exe_sel_opBR && (exe_branchtarget != exe_loadentry[12:2])) ) begin
+
 				flush_state = 1;
 				flush = 1;
 			end else begin
@@ -363,10 +372,30 @@ module branchpredictor(
 					flush_state = 0;
 			end
 		end
+	end */
+
+	always@(*) begin
+		if(en && !stall) begin
+			if( ((|exe_btype || |exe_c_btype) && !is_pred_correct) || (exe_sel_opBR && (exe_branchtarget != exe_loadentry[12:2])) )
+				branch_flush = 1;
+			else
+				branch_flush = 0;
+		end else
+			branch_flush = 0;
+	end
+
+	always@(*) begin
+		if(en && !stall)
+			if(id_is_jump && id_iseqto == 4'h0)
+				jump_flush = 1;
+			else
+				jump_flush = 0;
+		else
+			jump_flush = 0;
 	end
 	
 	always@(*) begin
-		if(id_is_jump == 1'b1 && id_iseqto != 4'h0)
+		if(id_is_jump && id_iseqto != 4'h0)
 			id_jump_in_bht = 1'b1;
 		else 
 			id_jump_in_bht = 1'b0;

@@ -1,11 +1,16 @@
 `timescale 1ns / 1ps
 
 module alu(
+	input CLK,
+	input nrst,
+	input load_hazard,
+
 	input [31:0] op_a,
 	input [31:0] op_b,
 	input [3:0] ALU_op,
 
 	output reg [31:0] res,
+	output mul_stall,
 	output z,
 	output less
 );
@@ -44,22 +49,41 @@ module alu(
 
 	// Instantiating Multiplier IPs
 	mult_gen_hsu MULHSU(
+		.CLK(CLK),
+		.CE(ALU_op == alu_mulhsu),
 		.A(signed_a),
 		.B(op_b),
 		.P(mulhsu_res)
 	);
 
 	mult_gen_signed MULH(
+		.CLK(CLK),
+		.CE(ALU_op == alu_mulh),
 		.A(signed_a),
 		.B(signed_b),
 		.P(mulh_res)
 	);
 
 	mult_gen_u MULHU(
+		.CLK(CLK),
+		.CE(ALU_op == alu_mulhu || ALU_op == alu_mul),
 		.A(op_a),
 		.B(op_b),
 		.P(mulhu_res)
 	);
+
+	// This controls mul_stall which asserts for one cycle only whenever a multiplication
+	// operation is present.
+	// NOTE: if a load_hazard is present, we delay the update of mul_stall by 1 cycle.
+	reg mul_stall_reg;
+	initial mul_stall_reg = 0;
+	always@(posedge CLK) begin
+		if(!nrst) 
+			mul_stall_reg <= 0;
+		else if(!load_hazard)
+			mul_stall_reg <= (ALU_op == alu_mul | ALU_op == alu_mulhu | ALU_op == alu_mulhsu | ALU_op == alu_mulh) & mul_stall;
+	end
+	assign mul_stall = !mul_stall_reg & (ALU_op == alu_mul | ALU_op == alu_mulhu | ALU_op == alu_mulhsu | ALU_op == alu_mulh);
 
 	always@(*) begin
 		case(ALU_op)

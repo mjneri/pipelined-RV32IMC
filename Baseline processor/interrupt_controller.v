@@ -33,11 +33,12 @@ module interrupt_controller(
     wire ISR_stall = (ISR_stall_counter!=0) ||    	// Stall for 5 cycles
                         (if_opcode==7'h73);			// Catch URET instruction
 
-    assign ISR_PC_flush = (ISR_stall & !ret_ISR) & !stall & (!(ISR_stall_counter < 3'd2) | (save_PC == if_PC));
+    assign ISR_PC_flush = (interrupt_captured) || (ISR_stall & !ret_ISR) & !stall & (!(ISR_stall_counter < 3'd2) | (save_PC == if_PC));
     assign ISR_pipe_flush = (ISR_stall) & !stall & ((!(ISR_stall_counter < 3'd2) & !ret_ISR) | ret_ISR  | (save_PC == if_PC));
 
+    reg interrupt_captured;
     wire save_PC_en;
-    assign save_PC_en = ((!int_sig & ISR_en) || // Capture first clock edge
+    assign save_PC_en = (interrupt_captured || // Capture first clock edge
                         (ISR_stall & ((exe_correction!=0) | if_prediction | (id_sel_pc & !id_jump_in_bht)))) // Catch any change in PC while pipeline finishes
                          & !(ISR_running);   //Di massave PC during ISR
 
@@ -58,11 +59,12 @@ module interrupt_controller(
             save_PC <= 12'd0;
             ISR_running <= 0;
             ISR_stall_counter <= 0;
+            interrupt_captured <= 0;
         end else begin
-            if(!int_sig & !(sel_ISR | !ISR_en)) begin
+            if(int_sig & !(sel_ISR | !ISR_en)) begin
                 ISR_stall_counter <= 1;
                 ISR_en <= 0;
-            end else if(int_sig & !(ISR_running | ISR_stall))
+            end else if(!int_sig & !(ISR_running | ISR_stall))
                 ISR_en <= 1;
 
             if(if_opcode==7'h73) begin
@@ -89,6 +91,12 @@ module interrupt_controller(
                 ISR_running <= 0;
                 ret_ISR <= 0;
             end
+
+            if (int_sig & ISR_en)
+                interrupt_captured <= 1;
+            
+            if (interrupt_captured)
+                interrupt_captured <= 0;
         end
     end
 	

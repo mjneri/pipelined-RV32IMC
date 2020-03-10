@@ -25,6 +25,7 @@
 module divider_unit(
 	input CLK,
 	input nrst,
+	input load_hazard,
 
 	input [31:0] opA,
 	input [31:0] opB,
@@ -92,8 +93,8 @@ module divider_unit(
 	// Note: the tvalid inputs are ANDed w/ div_state == WAIT because
 	// we want them to be asserted for only one clock cycle during WAIT.
 	// (We want them to be asserted by the next cycle (starting at state DIVIDING))
-	assign div_signed_input_tvalid = div_valid & (div_op == DIV || div_op == REM) & (div_state == WAIT);
-	assign div_unsigned_input_tvalid = div_valid & (div_op == DIVU || div_op == REMU) & (div_state == WAIT);
+	assign div_signed_input_tvalid = div_valid & (div_op == DIV || div_op == REM) & (div_state == WAIT) & !load_hazard;
+	assign div_unsigned_input_tvalid = div_valid & (div_op == DIVU || div_op == REMU) & (div_state == WAIT) & !load_hazard;
 
 	// Instantiating Divider generator modules
 	// NOTE: aresetn should be active for at least 2 cycles.
@@ -153,7 +154,7 @@ module divider_unit(
 		case(div_state)
 			RESET: div_nstate = WAIT;
 			WAIT: begin
-				if(div_valid)
+				if(div_valid && !load_hazard)
 					div_nstate = DIVIDING;
 				else
 					div_nstate = WAIT;
@@ -179,7 +180,7 @@ module divider_unit(
 	always@(*) begin
 		case(div_state)
 			RESET: div_running = 0;
-			WAIT: div_running = (div_valid)? 1'b1 : 1'b0;
+			WAIT: div_running = (div_valid && !load_hazard)? 1'b1 : 1'b0;
 			DIVIDING: div_running = 1'b1;
 			DONE: div_running = 1'b0;
 		endcase
