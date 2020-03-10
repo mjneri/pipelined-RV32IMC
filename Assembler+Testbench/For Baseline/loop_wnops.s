@@ -12,5 +12,16 @@ loop:
 	c.nop
 	beq x1, x0, zoom
 	jal x0, loop
+
 zoom:
-	jal x0, zoom
+	nop	
+	nop	
+	nop
+		nop
+			nop
+				nop
+					nop
+						nop
+							nop
+								nop
+									nop

@@ -66,9 +66,16 @@ anything:
                 c.addi x4, -1
                 bne x4, x0, loop1
 
-                lw x5, 0(x3)
-                slli x5, x5, 1
+                add x5, x0, x0
+                #srli x5, x5, 1
                 sw x5, 0(x3)
+
+                addi x4, x0, 0x1a0        
+                lui x4, 0xcca
+                # addi x4, x0, 10 
+                loop2:
+                c.addi x4, -1
+                bne x4, x0, loop2
 
         c.bnez x15, running
 
