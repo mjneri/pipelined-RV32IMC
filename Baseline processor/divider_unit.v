@@ -100,7 +100,7 @@ module divider_unit(
 	// NOTE: aresetn should be active for at least 2 cycles.
 	div_gen_signed DIVREM(
 		.aclk(CLK),
-		.aclken(1'b1),
+		.aclken((div_op[0] == 1'b0) & (div_valid)),
 		.aresetn(nrst),
 		
 		.s_axis_dividend_tdata(opA),
@@ -117,7 +117,7 @@ module divider_unit(
 
 	div_gen_unsigned DIVUREMU(
 		.aclk(CLK),
-		.aclken(1'b1),
+		.aclken((div_op[0] == 1'b1) & (div_valid)),
 		.aresetn(nrst),
 		
 		.s_axis_dividend_tdata(opA),

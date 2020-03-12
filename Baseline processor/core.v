@@ -513,7 +513,7 @@ module core(
 		end
 
 	pipereg_if_id IF_ID(
-		.clk(CLK),
+		.clk(if_clk),
 		.nrst(nrst),
 		.en(/*id_clk_en*/1'b1),
 
@@ -607,7 +607,7 @@ module core(
 	);
 
 	regfile RF(
-		.clk(CLK),
+		.clk(rf_clk),
 		.nrst(nrst),
 
 		.wr_en(wb_wr_en),
@@ -751,7 +751,7 @@ module core(
 	assign id_imm_select = id_is_comp ? id_c_imm_select : id_base_imm_select;
     
 	pipereg_id_exe ID_EXE(
-		.clk(CLK),
+		.clk(exe_clk),
 		.nrst(nrst),		
 		.en(/*exe_clk_en*/1'b1),
 
@@ -817,6 +817,7 @@ module core(
 		.less(exe_less)
 	);
 
+	// NOTE: 
 	divider_unit DIVIDER(
 		.CLK(CLK),
 		.nrst(nrst),
@@ -879,7 +880,7 @@ module core(
 	);
 	
 	pipereg_exe_mem EXE_MEM(
-		.clk(CLK),
+		.clk(mem_clk),
 		.nrst(nrst),
 		.en(/*mem_clk_en*/1'b1),
 
@@ -906,7 +907,7 @@ module core(
 
 // MEM Stage ========================================================
 	datamem DATAMEM(
-		.clk(CLK),
+		.clk(mem_clk),
 		.nrst(nrst),
 
 		.dm_write(exe_dm_write),
@@ -934,7 +935,7 @@ module core(
 	);
 
 	pipereg_mem_wb MEM_WB(
-		.clk(CLK),
+		.clk(wb_clk),
 		.nrst(nrst),
 		.en(/*wb_clk_en*/1'b1),
 

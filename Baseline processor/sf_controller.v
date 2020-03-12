@@ -104,12 +104,12 @@ module sf_controller(
     assign wb_flush = 1'b0;
 
     // Enables
-    assign if_clk_en = ~(if_stall || if_flush);
-    assign id_clk_en = ~(id_stall || id_flush || if_prev_flush);
-    assign exe_clk_en = ~(exe_stall || exe_flush || id_prev_flush);
-    assign mem_clk_en = ~(mem_stall || mem_flush || exe_prev_flush);
-    assign wb_clk_en = ~(wb_stall || wb_flush || mem_prev_flush);
-    assign rf_clk_en = ~(wb_prev_flush);
+    assign if_clk_en = ~(if_stall);
+    assign id_clk_en = ~(id_stall || if_flush);
+    assign exe_clk_en = ~(exe_stall || id_flush || if_prev_flush);
+    assign mem_clk_en = ~(mem_stall || exe_flush || id_prev_flush);
+    assign wb_clk_en = ~(wb_stall || mem_flush || exe_prev_flush);
+    assign rf_clk_en = ~(wb_prev_flush || mem_prev_flush);
 
     always@(posedge clk) begin
         if (!nrst) begin
