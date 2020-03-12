@@ -252,12 +252,14 @@ module core(
 	wire exe_clk;			// CLK input to ID/EXE pipereg
 	wire mem_clk;			// CLK input to EXE/MEM pipereg
 	wire wb_clk;			// CLK input to MEM/WB pipereg
+	wire rf_clk;
 	
 	wire if_clk_en;
 	wire id_clk_en;
 	wire exe_clk_en;
 	wire mem_clk_en;
 	wire wb_clk_en;
+	wire rf_clk_en;
 	
 	wire if_stall;			// Controls PC + Instmem stall
 	wire id_stall;			// Controls IF/ID + BHT stall
@@ -383,7 +385,14 @@ module core(
 		.id_flush(id_flush),
 		.exe_flush(exe_flush),
 		.mem_flush(mem_flush),
-		.wb_flush(wb_flush)
+		.wb_flush(wb_flush),
+
+		.if_clk_en(if_clk_en),
+		.id_clk_en(id_clk_en),
+		.exe_clk_en(exe_clk_en),
+		.mem_clk_en(mem_clk_en),
+		.wb_clk_en(wb_clk_en),
+		.rf_clk_en(rf_clk_en)
 	);
 
 	BUFGCE en_if (
@@ -414,6 +423,12 @@ module core(
 	 	.I(CLK),
 	 	.CE(wb_clk_en),
 	 	.O(wb_clk)
+	);
+
+	BUFGCE en_rf(
+	 	.I(CLK),
+	 	.CE(rf_clk_en),
+	 	.O(rf_clk)
 	);
 
 
