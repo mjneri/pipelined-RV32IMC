@@ -247,16 +247,17 @@ module core(
 
 
 // Clock Gating + SF_Controller=====================================
-	// wire if_clk;			// CLK input to PC
-	// wire if_clk_en;
-	// wire id_clk;			// CLK input to IF/ID pipereg
-	// wire id_clk_en;
-	// wire exe_clk;		// CLK input to ID/EXE pipereg
-	// wire exe_clk_en;
-	// wire mem_clk;		// CLK input to EXE/MEM pipereg
-	// wire mem_clk_en;
-	// wire wb_clk;			// CLK input to MEM/WB pipereg
-	// wire wb_clk_en;
+	wire if_clk;			// CLK input to PC
+	wire id_clk;			// CLK input to IF/ID pipereg
+	wire exe_clk;			// CLK input to ID/EXE pipereg
+	wire mem_clk;			// CLK input to EXE/MEM pipereg
+	wire wb_clk;			// CLK input to MEM/WB pipereg
+	
+	wire if_clk_en;
+	wire id_clk_en;
+	wire exe_clk_en;
+	wire mem_clk_en;
+	wire wb_clk_en;
 	
 	wire if_stall;			// Controls PC + Instmem stall
 	wire id_stall;			// Controls IF/ID + BHT stall
@@ -357,6 +358,8 @@ module core(
 /******************************* DATAPATH (INSTANTIATING MODULES) ******************************/
 // CLOCKS ========================================================
 	sf_controller SF_CONTROLLER(
+		.clk(CLK),
+		.nrst(nrst),
 		.ISR_PC_flush(ISR_PC_flush),
 		.ISR_pipe_flush(ISR_pipe_flush),
 		
@@ -383,35 +386,35 @@ module core(
 		.wb_flush(wb_flush)
 	);
 
-	// BUFGCE en_if (
-	// 	.I(CLK),
-	// 	.CE(if_clk_en),
-	// 	.O(if_clk)
-	// );
+	BUFGCE en_if (
+	 	.I(CLK),
+	 	.CE(if_clk_en),
+	 	.O(if_clk)
+	);
 
-	// BUFGCE en_id (
-	// 	.I(CLK),
-	// 	.CE(id_clk_en),
-	// 	.O(id_clk)
-	// );
+	BUFGCE en_id (
+	 	.I(CLK),
+	 	.CE(id_clk_en),
+	 	.O(id_clk)
+	);
 
-	// BUFGCE en_exe (
-	// 	.I(CLK),
-	// 	.CE(exe_clk_en),
-	// 	.O(exe_clk)
-	// );
+	BUFGCE en_exe (
+	 	.I(CLK),
+	 	.CE(exe_clk_en),
+	 	.O(exe_clk)
+	);
 
-	// BUFGCE en_mem (
-	// 	.I(CLK),
-	// 	.CE(mem_clk_en),
-	// 	.O(mem_clk)
-	// );
+	BUFGCE en_mem (
+	 	.I(CLK),
+	 	.CE(mem_clk_en),
+	 	.O(mem_clk)
+	);
 
-	// BUFGCE en_wb (
-	// 	.I(CLK),
-	// 	.CE(wb_clk_en),
-	// 	.O(wb_clk)
-	// );
+	BUFGCE en_wb (
+	 	.I(CLK),
+	 	.CE(wb_clk_en),
+	 	.O(wb_clk)
+	);
 
 
 

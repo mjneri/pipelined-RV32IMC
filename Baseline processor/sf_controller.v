@@ -18,8 +18,8 @@
 
 module sf_controller(
     // Uncomment the ff. if needed
-    //input clk,
-    //input nrst,
+    input clk,
+    input nrst,
 
     // IF stage
     //input [31:0] if_inst,       // -- current instmem output
@@ -67,8 +67,23 @@ module sf_controller(
 	output id_flush,			// controls IF/ID pipeline register flush
 	output exe_flush,			// controls ID/EXE pipeline register flush
 	output mem_flush,			// controls EXE/MEM pipeline register flush
-	output wb_flush 			// controls MEM/WB pipeline register flush
+	output wb_flush, 			// controls MEM/WB pipeline register flush
+
+    // Clock Enables
+    output if_clk_en,
+    output id_clk_en,
+    output exe_clk_en,
+    output mem_clk_en,
+    output wb_clk_en,
+    output rf_clk_en
 );
+
+    reg if_prev_flush;
+	reg id_prev_flush;
+	reg exe_prev_flush;
+	reg mem_prev_flush;
+    reg wb_prev_flush;
+
     
     wire jalr_hazard = hzd_exe_to_id_A;							// LOAD -> JALR will result in a one-cycle stall for IF and ID stages
     wire load_hazard = (hzd_mem_to_exe_A || hzd_mem_to_exe_B);	// LOAD -> Other instruction
@@ -87,4 +102,29 @@ module sf_controller(
     assign exe_flush = jalr_hazard || branch_flush;
     assign mem_flush = load_hazard || div_running || mul_stall;
     assign wb_flush = 1'b0;
+
+    // Enables
+    assign if_clk_en = ~(if_stall || if_flush);
+    assign id_clk_en = ~(id_stall || id_flush || if_prev_flush);
+    assign exe_clk_en = ~(exe_stall || exe_flush || id_prev_flush);
+    assign mem_clk_en = ~(mem_stall || mem_flush || exe_prev_flush);
+    assign wb_clk_en = ~(wb_stall || wb_flush || mem_prev_flush);
+    assign rf_clk_en = ~(wb_prev_flush);
+
+    always@(posedge clk) begin
+        if (!nrst) begin
+            if_prev_flush <= 1'b0;
+            id_prev_flush <= 1'b0;
+            exe_prev_flush <= 1'b0;
+            mem_prev_flush <= 1'b0;
+            wb_prev_flush <= 1'b0;
+        end
+        else begin
+            if_prev_flush <= if_flush;
+            id_prev_flush <= (if_prev_flush ? if_prev_flush : id_flush);
+            exe_prev_flush <= (id_prev_flush ? id_prev_flush : exe_flush);
+            mem_prev_flush <= (exe_prev_flush ? exe_prev_flush : mem_flush);
+            wb_prev_flush <= (mem_prev_flush ? mem_prev_flush : wb_flush);
+        end
+    end
 endmodule
