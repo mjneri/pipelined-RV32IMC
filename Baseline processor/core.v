@@ -826,8 +826,11 @@ module core(
 		.opA(opA),
 		.opB(opB),
 
-		.div_valid(exe_div_valid),
-		.div_op(exe_div_op),
+		.id_div_valid(id_div_valid),
+		.id_div_op_0(id_div_op[0]),
+
+		.exe_div_valid(exe_div_valid),
+		.exe_div_op(exe_div_op),
 
 		.div_running(exe_div_running),
 		.DIVout(exe_DIVout)

@@ -87,6 +87,11 @@ module sf_controller(
     
     wire jalr_hazard = hzd_exe_to_id_A;							// LOAD -> JALR will result in a one-cycle stall for IF and ID stages
     wire load_hazard = (hzd_mem_to_exe_A || hzd_mem_to_exe_B);	// LOAD -> Other instruction
+    /* load_hazard result:
+        1st cycle: no clock for IF, ID, EXE stage registers
+        2nd cycle: no clock for WB stage registers
+        3rd cycle: no clock for RF writeback
+    */
     
     // Stalls/Enables
     assign if_stall = load_hazard || jalr_hazard || div_running || mul_stall;
@@ -105,11 +110,11 @@ module sf_controller(
 
     // Enables
     assign if_clk_en = ~(if_stall);
-    assign id_clk_en = ~(id_stall || if_flush);
-    assign exe_clk_en = ~(exe_stall || id_flush || if_prev_flush);
-    assign mem_clk_en = ~(mem_stall || exe_flush || id_prev_flush);
-    assign wb_clk_en = ~(wb_stall || mem_flush || exe_prev_flush);
-    assign rf_clk_en = ~(wb_prev_flush || mem_prev_flush);
+    assign id_clk_en = ~(id_stall || if_prev_flush);
+    assign exe_clk_en = ~(exe_stall || id_prev_flush);
+    assign mem_clk_en = ~(mem_stall || exe_prev_flush || div_running || mul_stall);
+    assign wb_clk_en = ~(wb_stall || mem_prev_flush);
+    assign rf_clk_en = ~(wb_prev_flush);
 
     always@(posedge clk) begin
         if (!nrst) begin
