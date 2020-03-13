@@ -364,7 +364,7 @@ module core(
 		.nrst(nrst),
 		.ISR_PC_flush(ISR_PC_flush),
 		.ISR_pipe_flush(ISR_pipe_flush),
-		
+		.is_jump(id_is_jump),
 		.branch_flush(branch_flush),
 		.jump_flush(jump_flush),
 

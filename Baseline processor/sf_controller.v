@@ -29,7 +29,7 @@ module sf_controller(
     //input [6:0] id_opcode,
     //input [4:0] id_rsA,
     //input [4:0] id_rsB,
-    //input is_jump,			// uses controller1 to find if jump or not (low-asserted)
+    input is_jump,			// uses controller1 to find if jump or not (low-asserted)
     //input is_nop,
     
     // EXE stage inputs
@@ -126,7 +126,7 @@ module sf_controller(
         end
         else begin
             if_prev_flush <= if_flush;
-            id_prev_flush <= (if_prev_flush ? if_prev_flush : id_flush);
+            id_prev_flush <= (if_prev_flush ? if_prev_flush : (id_flush || is_jump));
             exe_prev_flush <= (id_prev_flush ? id_prev_flush : exe_flush);
             mem_prev_flush <= (exe_prev_flush ? exe_prev_flush : mem_flush);
             wb_prev_flush <= (mem_prev_flush ? mem_prev_flush : wb_flush);
