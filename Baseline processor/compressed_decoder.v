@@ -385,7 +385,7 @@ module compressed_decoder(
                  (lui_type) ? 2'd0 : {2{sign}},         // bits 11:10
                  (lui_type) ? 1'd0 : (spn_imm ? inst[10] : (sp_imm ? inst[12] : sign)),   // bit 9
                  (lui_type) ? 1'd0 : ((spn_imm) ? inst[9] : (sp_imm ? inst[4] : sign)),   // bit 8
-                 (lui_type) ? 1'd0 : ((spn_imm|lssp_imm) ? inst[8] : (sp_imm ? inst[3] : sign)),   // bit 7
+                 (lui_type) ? 1'd0 : ((spn_imm|(store_inst & lssp_imm)) ? inst[8] : ((sp_imm | (load_inst & lssp_imm)) ? inst[3] : sign)),   // bit 7
                  (lui_type) ? 1'd0 : (lssp_imm ? (load_inst ? inst[2] : inst[7]) : (spn_imm ? inst[7] : ((sp_imm || load_inst || store_inst) ? inst[5] : sign))), // bit 6
                  (lui_type) ? 1'd0 : (sp_imm ? inst[2] : inst[12]), // bit 5
                  (lui_type) ? 1'd0 : (((load_inst && ~lssp_imm) || store_inst || spn_imm) ? inst[11] : inst[6]), // bit 4
