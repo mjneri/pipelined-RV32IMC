@@ -1,0 +1,55 @@
+COMPRESSED INSTRUCTIONS USAGE GUIDE
+
+COMPRESSED							BASE EQUIVALENT					NOTES
+=========================			==========================		========================
+C.LW rd', uimm[6:2](rs1')			LW rd', uimm[6:2](rs1')			uimm range: [0, 31]*4
+C.SW rs2', uimm[6:2](rs1')			SW rs2', uimm[6:2](rs1')		uimm range: [0, 31]*4
+C.LWSP rd, uimm[7:2]				LW rd, uimm[7:2](x2)			uimm range: [0, 63]*4
+C.SWSP rs2, uimm[7:2]				SW rs2, uimm[7:2](x2)			uimm range: [0, 63]*4
+
+C.JAL target						JAL x1, target
+C.J	target							JAL x0, target
+C.BEQZ rs1', target					BEQ rs1', x0, target
+C.BNEZ rs1', target					BNE rs1', x0, target
+C.JR rs1							JALR x0, 0(rs1)
+C.JALR rs1							JALR x1, 0(rs1)
+
+C.LI rd, imm[5:0]					ADDI rd, x0, imm[5:0]			imm range: [-32, 31]
+C.LUI rd, nzimm[17:12]				LUI rd, nzimm[17:12]			nzimm is sign extended non-zero imm
+C.ADDI4SPN rd', nzuimm[9:2]			ADDI rd', x2, nzuimm[9:2]		nzuimm range: [0, 255]*4
+C.ADDI16SP nzimm[9:4]				ADDI x2, x2, nzimm[9:4]			nzimm range: [-32, 31]*16
+
+C.ADDI rs1, nzimm[5:0]				ADDI rs1, rs1, nzimm[5:0]		nzimm range: [-32, 31]
+C.SLLI rs1, nzuimm[5:0]				SLLI rs1, rs1, nzuimm[5:0]		nzuimm range: [0, 63]
+C.SRLI rd', nzuimm[5:0]				SRLI rd', rd', nzuimm[5:0]		nzuimm range: [0, 63]
+C.SRAI rd', nzuimm[5:0]				SRAI rd', rd', nzuimm[5:0]		nzuimm range: [0, 63]
+C.ANDI rd', imm[5:0]				ANDI rd', rd', imm[5:0]			imm range: [-32, 31]
+
+C.MV rd, rs2						ADD rd, x0, rs2
+C.ADD rs1, rs2						ADD rs1, rs1, rs2
+C.AND rs1', rs2'					AND rs1', rs1', rs2'
+C.OR rs1' rs2'						OR rs1', rs1', rs2'
+C.XOR rs1', rs2'					XOR rs1', rs1', rs2'
+C.SUB rs1', rs2'					SUB rs1', rs1', rs2'
+
+C.NOP								NOP
+
+REGISTER ALIASES:
+ # aliases
+ "zero": x0				
+ "ra"  : x1				"a6"  : x16
+ "sp"  : x2				"a7"  : x17
+ "gp"  : x3				"s2"  : x18
+ "tp"  : x4				"s3"  : x19
+ "t0"  : x5				"s4"  : x20
+ "t1"  : x6				"s5"  : x21
+ "t2"  : x7				"s6"  : x22
+ "s0"  : x8				"s7"  : x23
+ "fp"  : x8				"s8"  : x24
+ "s1"  : x9				"s9"  : x25
+ "a0"  : x10			"s10" : x26
+ "a1"  : x11			"s11" : x27
+ "a2"  : x12			"t3"  : x28
+ "a3"  : x13			"t4"  : x29
+ "a4"  : x14			"t5"  : x30
+ "a5"  : x15			"t6"  : x31
