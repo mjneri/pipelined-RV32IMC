@@ -29,14 +29,13 @@ module interrupt_controller(
 );
 
     reg [2:0] ISR_stall_counter;
-    reg ISR_en;
+    reg ISR_en, interrupt_captured;
     wire ISR_stall = (ISR_stall_counter!=0) ||    	// Stall for 5 cycles
                         (if_opcode==7'h73);			// Catch URET instruction
 
     assign ISR_PC_flush = (interrupt_captured) || (ISR_stall & !ret_ISR) & !stall & (!(ISR_stall_counter < 3'd2) | (save_PC == if_PC));
     assign ISR_pipe_flush = (ISR_stall) & !stall & ((!(ISR_stall_counter < 3'd2) & !ret_ISR) | ret_ISR  | (save_PC == if_PC));
 
-    reg interrupt_captured;
     wire save_PC_en;
     assign save_PC_en = (interrupt_captured || // Capture first clock edge
                         (ISR_stall & ((exe_correction!=0) | if_prediction | (id_sel_pc & !id_jump_in_bht)))) // Catch any change in PC while pipeline finishes
