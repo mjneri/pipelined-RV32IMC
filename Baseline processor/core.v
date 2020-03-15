@@ -237,9 +237,7 @@ module core(
     wire fw_wb_to_exe_A;
     wire fw_wb_to_exe_B;
 
-    wire hzd_exe_to_id_A;
-	wire hzd_mem_to_exe_A;
-    wire hzd_mem_to_exe_B;
+	wire load_hazard;
 // &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 
 
@@ -371,10 +369,6 @@ module core(
 		.mul_stall(mul_stall),
 		.div_running(exe_div_running),
 
-		.hzd_exe_to_id_A(hzd_exe_to_id_A),
-		.hzd_mem_to_exe_A(hzd_mem_to_exe_A),
-		.hzd_mem_to_exe_B(hzd_mem_to_exe_B),
-
 		.if_stall(if_stall),
 		.id_stall(id_stall),
 		.exe_stall(exe_stall),
@@ -392,7 +386,56 @@ module core(
 		.exe_clk_en(exe_clk_en),
 		.mem_clk_en(mem_clk_en),
 		.wb_clk_en(wb_clk_en),
-		.rf_clk_en(rf_clk_en)
+		.rf_clk_en(rf_clk_en),
+
+		// Forwarding Unit inputs and outputs
+		// Source registers
+		.id_rsA(id_rsA),
+		.id_rsB(id_rsB),
+		.exe_rsA(exe_rsA),
+		.exe_rsB(exe_rsB),
+
+		// Destination registers
+		.exe_rd(exe_rd),
+		.mem_rd(mem_rd),
+		.wb_rd(wb_rd),
+
+		// Control signals
+		.exe_wr_en(exe_wr_en),
+		.mem_wr_en(mem_wr_en),
+		.wb_wr_en(wb_wr_en),
+
+		.id_sel_opA(id_sel_opA),
+		.id_sel_opB(id_sel_opB),
+
+		//.id_sel_data(id_sel_data),
+		.exe_sel_data(exe_sel_data),
+		.mem_sel_data(mem_sel_data),
+		.wb_sel_data(wb_sel_data),
+
+		.id_is_stype(id_is_stype),
+		//.exe_is_stype(exe_is_stype),
+
+		.id_imm_select(id_imm_select),
+
+		.id_opcode(id_opcode),
+		.exe_opcode(exe_opcode),
+		.exe_comp_use_A(exe_comp_use_A),
+		.exe_comp_use_B(exe_comp_use_B),
+		.exe_is_comp(exe_is_comp),
+		.id_sel_opBR(id_sel_opBR),
+
+		// Outputs
+		.fw_exe_to_id_A(fw_exe_to_id_A),
+		.fw_exe_to_id_B(fw_exe_to_id_B),
+		.fw_mem_to_id_A(fw_mem_to_id_A),
+		.fw_mem_to_id_B(fw_mem_to_id_B),
+		.fw_wb_to_id_A(fw_wb_to_id_A),
+		.fw_wb_to_id_B(fw_wb_to_id_B),
+
+		.fw_wb_to_exe_A(fw_wb_to_exe_A),
+		.fw_wb_to_exe_B(fw_wb_to_exe_B),
+		.load_hazard(load_hazard)
 	);
 
 	BUFGCE en_if (
@@ -646,59 +689,6 @@ module core(
 	assign id_brOP = (id_sel_opBR) ? id_fwdopA : id_PC;
 	assign id_branchtarget = id_brOP + (id_is_comp ? (id_sel_opBR ? 32'd0: id_c_jt) : id_base_imm);
 
-	forwarding_unit FWD(
-		// Source registers
-		.id_rsA(id_rsA),
-		.id_rsB(id_rsB),
-		.exe_rsA(exe_rsA),
-		.exe_rsB(exe_rsB),
-
-		// Destination registers
-		.exe_rd(exe_rd),
-		.mem_rd(mem_rd),
-		.wb_rd(wb_rd),
-
-		// Control signals
-		.exe_wr_en(exe_wr_en),
-		.mem_wr_en(mem_wr_en),
-		.wb_wr_en(wb_wr_en),
-
-		.id_sel_opA(id_sel_opA),
-		.id_sel_opB(id_sel_opB),
-
-		//.id_sel_data(id_sel_data),
-		.exe_sel_data(exe_sel_data),
-		.mem_sel_data(mem_sel_data),
-		.wb_sel_data(wb_sel_data),
-
-		.id_is_stype(id_is_stype),
-		//.exe_is_stype(exe_is_stype),
-
-		.id_imm_select(id_imm_select),
-
-		.id_opcode(id_opcode),
-		.exe_opcode(exe_opcode),
-		.exe_comp_use_A(exe_comp_use_A),
-		.exe_comp_use_B(exe_comp_use_B),
-		.exe_is_comp(exe_is_comp),
-		.id_sel_opBR(id_sel_opBR),
-
-		// Outputs
-		.fw_exe_to_id_A(fw_exe_to_id_A),
-		.fw_exe_to_id_B(fw_exe_to_id_B),
-		.fw_mem_to_id_A(fw_mem_to_id_A),
-		.fw_mem_to_id_B(fw_mem_to_id_B),
-		.fw_wb_to_id_A(fw_wb_to_id_A),
-		.fw_wb_to_id_B(fw_wb_to_id_B),
-
-		.fw_wb_to_exe_A(fw_wb_to_exe_A),
-		.fw_wb_to_exe_B(fw_wb_to_exe_B),
-
-		.hzd_exe_to_id_A(hzd_exe_to_id_A),
-		.hzd_mem_to_exe_A(hzd_mem_to_exe_A),
-		.hzd_mem_to_exe_B(hzd_mem_to_exe_B)
-	);
-
     compressed_decoder C_DECODER (
         // Input
         .inst(id_inst[15:0]),
@@ -805,7 +795,7 @@ module core(
 	alu ALU(
 		.CLK(CLK),
 		.nrst(nrst),
-		.load_hazard(hzd_mem_to_exe_A || hzd_mem_to_exe_B),
+		.load_hazard(load_hazard),
 
 		.op_a(opA),
 		.op_b(opB),
@@ -821,7 +811,7 @@ module core(
 	divider_unit DIVIDER(
 		.CLK(CLK),
 		.nrst(nrst),
-		.load_hazard(hzd_mem_to_exe_A || hzd_mem_to_exe_B),
+		.load_hazard(load_hazard),
 
 		.opA(opA),
 		.opB(opB),

@@ -47,9 +47,9 @@ module sf_controller(
     input div_running,			// Status of Divider unit
 
     // Load-use hazards
-    input hzd_exe_to_id_A,		// determines LOAD@EXE>JALR@ID hazards
-    input hzd_mem_to_exe_A,		// determines LOAD@MEM>EXE hazards
-    input hzd_mem_to_exe_B,		// determines LOAD@MEM>EXE hazards
+    // input hzd_exe_to_id_A,		// determines LOAD@EXE>JALR@ID hazards
+    // input hzd_mem_to_exe_A,		// determines LOAD@MEM>EXE hazards
+    // input hzd_mem_to_exe_B,		// determines LOAD@MEM>EXE hazards
 
     // Divider status
     //input [1:0] div_status, 	// determines status of Divider unit
@@ -75,8 +75,129 @@ module sf_controller(
     output exe_clk_en,
     output mem_clk_en,
     output wb_clk_en,
-    output rf_clk_en
+    output rf_clk_en,
+
+    // Forwarding Unit Inputs
+    // Source registers
+	input [4:0] id_rsA,
+	input [4:0] id_rsB,
+	input [4:0] exe_rsA,
+	input [4:0] exe_rsB,
+
+	// Destination registers
+	input [4:0] exe_rd,
+	input [4:0] mem_rd,
+	input [4:0] wb_rd,
+
+	// Control signals
+	input exe_wr_en,
+	input mem_wr_en,
+	input wb_wr_en,
+
+	input id_sel_opA,
+	input id_sel_opB,
+
+	//input [2:0] id_sel_data,
+	input [2:0] exe_sel_data,
+	input [2:0] mem_sel_data,
+	input [2:0] wb_sel_data,
+
+	input id_is_stype,
+	//input exe_is_stype,
+
+	input [2:0] id_imm_select,
+
+	input [6:0] id_opcode,
+	input [6:0] exe_opcode,
+	input exe_comp_use_A,
+	input exe_comp_use_B,
+	input exe_is_comp,
+	input id_sel_opBR,
+
+	// Outputs
+	// Forwarding to ID stage
+	output fw_exe_to_id_A,
+	output fw_exe_to_id_B,
+	output fw_mem_to_id_A,
+	output fw_mem_to_id_B,
+	output fw_wb_to_id_A,
+	output fw_wb_to_id_B,
+
+	// Forwarding to EXE stage
+	output fw_wb_to_exe_A,
+	output fw_wb_to_exe_B,
+    output load_hazard          // result of having a L[W/H/B] -> EXE hazard
+
+	// Load-use hazards // used for the sf_controller only
+	// output hzd_exe_to_id_A,  
+	// output hzd_mem_to_exe_A,
+	// output hzd_mem_to_exe_B
 );
+
+ 	// Forwarding to ID stage
+	wire t_fw_exe_to_id_A;
+	wire t_fw_exe_to_id_B;
+	wire t_fw_mem_to_id_A;
+	wire t_fw_mem_to_id_B;
+	wire t_fw_wb_to_id_A;
+	wire t_fw_wb_to_id_B;
+
+	// Forwarding to EXE stage
+	wire t_fw_wb_to_exe_A;
+	wire t_fw_wb_to_exe_B;
+
+    forwarding_unit FWD(
+		// Source registers
+		.id_rsA(id_rsA),
+		.id_rsB(id_rsB),
+		.exe_rsA(exe_rsA),
+		.exe_rsB(exe_rsB),
+
+		// Destination registers
+		.exe_rd(exe_rd),
+		.mem_rd(mem_rd),
+		.wb_rd(wb_rd),
+
+		// Control signals
+		.exe_wr_en(exe_wr_en),
+		.mem_wr_en(mem_wr_en),
+		.wb_wr_en(wb_wr_en),
+
+		.id_sel_opA(id_sel_opA),
+		.id_sel_opB(id_sel_opB),
+
+		//.id_sel_data(id_sel_data),
+		.exe_sel_data(exe_sel_data),
+		.mem_sel_data(mem_sel_data),
+		.wb_sel_data(wb_sel_data),
+
+		.id_is_stype(id_is_stype),
+		//.exe_is_stype(exe_is_stype),
+
+		.id_imm_select(id_imm_select),
+
+		.id_opcode(id_opcode),
+		.exe_opcode(exe_opcode),
+		.exe_comp_use_A(exe_comp_use_A),
+		.exe_comp_use_B(exe_comp_use_B),
+		.exe_is_comp(exe_is_comp),
+		.id_sel_opBR(id_sel_opBR),
+
+		// Outputs
+		.fw_exe_to_id_A(t_fw_exe_to_id_A),
+		.fw_exe_to_id_B(t_fw_exe_to_id_B),
+		.fw_mem_to_id_A(t_fw_mem_to_id_A),
+		.fw_mem_to_id_B(t_fw_mem_to_id_B),
+		.fw_wb_to_id_A(t_fw_wb_to_id_A),
+		.fw_wb_to_id_B(t_fw_wb_to_id_B),
+
+		.fw_wb_to_exe_A(t_fw_wb_to_exe_A),
+		.fw_wb_to_exe_B(t_fw_wb_to_exe_B),
+
+		.hzd_exe_to_id_A(hzd_exe_to_id_A),
+		.hzd_mem_to_exe_A(hzd_mem_to_exe_A),
+		.hzd_mem_to_exe_B(hzd_mem_to_exe_B)
+	);
 
     reg if_prev_flush;
 	reg id_prev_flush;
@@ -84,9 +205,24 @@ module sf_controller(
 	reg mem_prev_flush;
     reg wb_prev_flush;
 
+    // results of forwarding
+    assign fw_exe_to_id_A = t_fw_exe_to_id_A; // && !id_prev_flush;
+    assign fw_exe_to_id_B = t_fw_exe_to_id_B; // && !id_prev_flush;
+    assign fw_mem_to_id_A = t_fw_mem_to_id_A; // && !exe_prev_flush;
+    assign fw_mem_to_id_B = t_fw_mem_to_id_B; // && !exe_prev_flush;
+    assign fw_wb_to_id_A = t_fw_wb_to_id_A; // && !mem_prev_flush;
+    assign fw_wb_to_id_B = t_fw_wb_to_id_B; // && !mem_prev_flush;
+
+    assign fw_wb_to_exe_A = t_fw_wb_to_exe_A; // && !mem_prev_flush;
+    assign fw_wb_to_exe_B = t_fw_wb_to_exe_B; // && !mem_prev_flush;
+
+    wire hzd_exe_to_id_A;
+    wire hzd_mem_to_exe_A;
+    wire hzd_mem_to_exe_B;
+
     
     wire jalr_hazard = hzd_exe_to_id_A;							// LOAD -> JALR will result in a one-cycle stall for IF and ID stages
-    wire load_hazard = (hzd_mem_to_exe_A || hzd_mem_to_exe_B);	// LOAD -> Other instruction
+    assign load_hazard = (hzd_mem_to_exe_A || hzd_mem_to_exe_B);	// LOAD -> Other instruction
     /* load_hazard result:
         1st cycle: no clock for IF, ID, EXE stage registers
         2nd cycle: no clock for WB stage registers
@@ -94,9 +230,9 @@ module sf_controller(
     */
     
     // Stalls/Enables
-    assign if_stall = ((load_hazard  && ~mem_prev_flush) || jalr_hazard || div_running || mul_stall);
-    assign id_stall = ((load_hazard  && ~mem_prev_flush) || jalr_hazard || div_running || mul_stall);
-    assign exe_stall = ((load_hazard  && ~mem_prev_flush) || div_running || mul_stall);					
+    assign if_stall = ((load_hazard /* && ~mem_prev_flush*/) || jalr_hazard || div_running || mul_stall);
+    assign id_stall = ((load_hazard /* && ~mem_prev_flush*/) || jalr_hazard || div_running || mul_stall);
+    assign exe_stall = ((load_hazard /* && ~mem_prev_flush*/) || div_running || mul_stall);					
     assign mem_stall = 1'b0;
     assign wb_stall = 1'b0;
     //assign rf_stall = 1'b0;
@@ -105,16 +241,26 @@ module sf_controller(
     assign if_flush = ISR_PC_flush;
     assign id_flush = ISR_pipe_flush || jump_flush || branch_flush;
     assign exe_flush = jalr_hazard || branch_flush;
-    assign mem_flush = (load_hazard && ~mem_prev_flush) || div_running || mul_stall;
+    assign mem_flush = (load_hazard /*&& ~mem_prev_flush*/) || div_running || mul_stall;
     assign wb_flush = 1'b0;
 
     // Enables
+    /*
     assign if_clk_en = ~(if_stall);
     assign id_clk_en = ~(id_stall || if_prev_flush);
     assign exe_clk_en = ~(exe_stall || id_prev_flush);
     assign mem_clk_en = ~(mem_flush || exe_prev_flush);
     assign wb_clk_en = ~(mem_prev_flush);
     assign rf_clk_en = ~(wb_prev_flush);
+    */
+
+    assign if_clk_en = ~if_stall;
+    assign id_clk_en = ~id_stall;
+    assign exe_clk_en = ~exe_stall;
+    assign mem_clk_en = 1;
+    assign wb_clk_en = 1;
+    assign rf_clk_en = 1;
+
 
     always@(posedge clk) begin
         if (!nrst) begin
