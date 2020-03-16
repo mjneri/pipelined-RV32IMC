@@ -151,7 +151,6 @@ def process_inst(inst, labels, inst_address):
                     print('Immediate {} out of bounds on {}'.format(imm, inst))
                     print('[{},{}]'.format((2**(imm_width-1)-1), (0-(2**(imm_width-1)))))
                     #exit()
-                tr_imm = imm & (2**imm_width-1)
                 arg1 = str(tr_imm)
             except IndexError:
                 print('Invalid first arguement (Imm) on {}'.format(inst))
@@ -211,8 +210,7 @@ def process_inst(inst, labels, inst_address):
                         print('Immediate {} out of bounds on {}'.format(imm, inst))
                         print('[{},{}]'.format((0-(2**(imm_width-1))), (2**(imm_width-1)-1)))
                         #exit()
-                    tr_imm = imm & (2**imm_width-1)
-                    arg2 = str(tr_imm)
+                    arg2 = str(imm)
                 except IndexError:
                     print('Invalid second arguement (Imm) on {}'.format(inst))
                     exit()
@@ -248,12 +246,11 @@ def process_inst(inst, labels, inst_address):
                 elif (syntax=='r-r-i'):
                     try:
                         imm = int(inst[3], 0)
-                        tr_imm = imm & (2**imm_width-1)
                         if ((imm < (0-(2**(imm_width-1)))) & (imm >= (2**(imm_width-1)))):    # Only case is signed imm
                             print('Immediate {} out of bounds on {}'.format(imm, inst))
                             print('[{},{}]'.format((0-(2**(imm_width-1))), (2**(imm_width-1)-1)))
                             #exit()
-                        arg3 = str(tr_imm)
+                        arg3 = str(imm)
                     except IndexError:
                         print('Invalid third arguement (Imm) on {}'.format(inst))
                         exit()
@@ -279,7 +276,7 @@ def process_inst(inst, labels, inst_address):
                         print('Immediate {} out of bounds on {}'.format(imm, inst))
                         print('[{},{}]'.format((0-(2**(imm_width-1))), (2**(imm_width-1)-1)))
                         #exit()
-                    arg2 = str(tr_imm)
+                    arg2 = str(imm)
                 except IndexError:
                     print('Invalid second arguement (Imm) on {}'.format(inst))
                     exit()
@@ -368,22 +365,26 @@ def assemble(instructions, labels, instmem):
             rs1 = int(temp_inst[3])
             rs2 = int(temp_inst[1])
             imm = int(temp_inst[2])
+            imm &= (2**imm_width-1)
             m_code = opcode |  (imm&0x1F)<<7 | funct3<<12 | rs1<<15 | rs2<<20 | (imm&0xFE0)<<20
             
         elif (encoding_type=='B'):
             rs1 = int(temp_inst[1])
             rs2 = int(temp_inst[2])
             offset = int(temp_inst[3])
+            offset &= (2**imm_width-1)
             m_code = opcode | (offset&0x800)>>4 | (offset&0x1E)<<7 | funct3<<12 | rs1<<15 | rs2<<20 | (offset&0x7E0)<<20 | (offset&0x1000)<<19
             
         elif (encoding_type=='U'):
             rd = int(temp_inst[1])
             imm = int(temp_inst[2])
+            imm &= (2**imm_width-1)
             m_code = opcode |  rd<<7 | ((imm << 12) & 0xFFFFF000)
         
         elif (encoding_type=='J'):
             rd = int(temp_inst[1])
             offset = int(temp_inst[2])
+            offset &= (2**imm_width-1)
             m_code = opcode |  rd<<7 | (offset&0xFF000) | (offset&0x800)<<9 | (offset&0x7FE)<<20 | (offset&0x100000)<<11
         
         elif (encoding_type=='CR'):
@@ -398,6 +399,7 @@ def assemble(instructions, labels, instmem):
         elif (encoding_type=='CI'):
             rd = int(temp_inst[1])
             imm = int(temp_inst[2])
+            imm &= (2**imm_width-1)
             if (temp_inst[0] == 'C.LWSP'):
                 imm = imm << 2
                 m_code = opcode | (imm&0x1C)<<2 | rd<<7 | (imm&0x20)<<7 | (imm&0xC0)>>4 | funct3<<13            # different format for lwsp
@@ -409,13 +411,15 @@ def assemble(instructions, labels, instmem):
         
         elif (encoding_type=='CLS'):
             rd_rs2_ = int(temp_inst[1]) - 8
-            imm = (int(temp_inst[2])) << 2
+            imm = (int(temp_inst[2]))
+            imm = (imm & (2**imm_width-1)) << 2
             rs1_ = int(temp_inst[3]) - 8
             m_code = opcode |  rd_rs2_<<2 | (imm&0x40)>>1 | (imm&0x4)<<4 | rs1_<<7 | (imm&0x38)<<7 | funct3<<13
 
         elif (encoding_type=='CB'):
             rs1_ = int(temp_inst[1]) - 8
             offset = int(temp_inst[2])
+            offset &= (2**imm_width-1)
             m_code = opcode | (offset&0x20)>>3 | (offset&0x6)<<2 | (offset&0xC0)>>1 | rs1_<<7 | (offset&0x18)<<7 | (offset&0x100)<<4 | funct3<<13
 
         elif (encoding_type=='CA'):
@@ -425,21 +429,25 @@ def assemble(instructions, labels, instmem):
 
         elif (encoding_type=='CH'):
             imm = int(temp_inst[2])
+            imm &= (2**imm_width-1)
             rd_rs1_ = int(temp_inst[1]) - 8
             m_code = opcode | (imm&0x1F)<<2 | rd_rs1_<<7 | funct2<<10 | (imm&0x20)<<7 | funct3<<13
 
         elif (encoding_type=='CJ'):
             offset = int(temp_inst[1])
+            offset &= (2**imm_width-1)
             # 5|3:1|7|6|10|9:8|4|11
             m_code = opcode | (offset&0x20)>>3 | (offset&0xE)<<2 | (offset&0x80)>>1 | (offset&0x40)<<1 | (offset&0x400)>>2 | (offset&0x300)<<1 | (offset&0x10)<<7 | (offset&0x800)<<1 | funct3<<13
 
         elif (encoding_type=='CIW'):
             rd_ = int(temp_inst[1]) - 8
-            imm = int(temp_inst[2]) << 2
+            imm = (int(temp_inst[2]))
+            imm = (imm & (2**imm_width-1)) << 2
             m_code = opcode |  rd_<<2 | (imm&0x8)<<2 | (imm&0x4)<<4 | (imm&0x3C0)<<1 | (imm&0x30)<<7 | funct3<<13
 
         elif (encoding_type=='C16'):
-            imm = int(temp_inst[1]) << 4
+            imm = (int(temp_inst[2]))
+            imm = (imm & (2**imm_width-1)) << 4
             m_code = opcode | (imm&0x20)>>3 | (imm&0x180)>>4 | (imm&0x40)>>1 | (imm&0x10)<<2 | 2<<7 | (imm&0x200)<<3 | funct3<<13
 
         else:

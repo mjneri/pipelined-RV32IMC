@@ -30,7 +30,7 @@ module datamem(
 	// Synchronous read
 	// Addresses 0x000 - 0x3FF (Word-aligned addresses)
 	wire [31:0] blk_mem_douta;
-	blk_mem_gen_datamem BLOCKMEM(
+	blk_mem_gen_datamem BLK_DATA(
 		.clka(clk),
 		.wea(dm_write),
 		.addra(exe_data_addr[9:0]),
