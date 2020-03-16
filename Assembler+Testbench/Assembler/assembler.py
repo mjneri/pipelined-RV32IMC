@@ -151,7 +151,7 @@ def process_inst(inst, labels, inst_address):
                     print('Immediate {} out of bounds on {}'.format(imm, inst))
                     print('[{},{}]'.format((2**(imm_width-1)-1), (0-(2**(imm_width-1)))))
                     #exit()
-                arg1 = str(tr_imm)
+                arg1 = str(imm)
             except IndexError:
                 print('Invalid first arguement (Imm) on {}'.format(inst))
                 exit()
@@ -446,7 +446,7 @@ def assemble(instructions, labels, instmem):
             m_code = opcode |  rd_<<2 | (imm&0x8)<<2 | (imm&0x4)<<4 | (imm&0x3C0)<<1 | (imm&0x30)<<7 | funct3<<13
 
         elif (encoding_type=='C16'):
-            imm = (int(temp_inst[2]))
+            imm = (int(temp_inst[1]))
             imm = (imm & (2**imm_width-1)) << 4
             m_code = opcode | (imm&0x20)>>3 | (imm&0x180)>>4 | (imm&0x40)>>1 | (imm&0x10)<<2 | 2<<7 | (imm&0x200)<<3 | funct3<<13
 

@@ -50,7 +50,6 @@ addi x27, x0, 0
 addi x28, x0, 0
 addi x29, x0, 0
 addi x30, x0, 0
-
 addi x31, x0, 0
 
 # AUIPC
@@ -842,6 +841,46 @@ nop
 # infinite loop
 inf:
 #jal x0, inf
+nop
+nop
+nop
+nop
+nop
+nop
+nop
+nop
+nop
+nop
+nop
+nop
+nop
+nop
+nop
+nop
+nop
+nop
+nop
+nop
+nop
+nop
+nop
+nop
+nop
+nop
+nop
+nop
+nop
+nop
+nop
+nop
+nop
+nop
+nop
+nop
+nop
+nop
+nop
+nop
 nop
 nop
 nop
