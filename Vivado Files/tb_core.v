@@ -320,7 +320,7 @@ module tb_core();
 	always@(posedge done) begin
 		$display("---------| SUMMARY |---------");
 		$display("Address\t  Actual  \tExpected ");
-		$display("=======\t==========\t==========");	
+		$display("=======\t==========\t==========");
 	end
 
 	always@(negedge CLK) begin
@@ -381,6 +381,7 @@ module tb_core();
 			bht_entry_display();
 			$display("------");
 		end
+		
 		$finish;
 	end
 endmodule

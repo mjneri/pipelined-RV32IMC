@@ -1,50 +1,59 @@
 `timescale 1ns / 1ps
 
+`define MEM_DEPTH 2048
+`define MEM_WIDTH 16
+`define WORD_WIDTH 32
+
 module instmem(
 	input clk,
 	input sel_ISR,
 
-	input [11:0] addr, 
+	input [11:0] addr,
 	output [31:0] inst
 );
 	
-	wire [31:0] prog;
-	wire [31:0] isr;
-    wire [10:0] addr_2 = addr[11:1] + 11'd1;
-    
+	wire [`WORD_WIDTH-1:0] prog;
+	wire [`WORD_WIDTH-1:0] isr;
+	wire [11:0] addr_1 = addr[11:1];
+    wire [11:0] addr_2 = addr[11:1] + 11'd1;
+
+	/*
 	// Instmem that uses BLOCKMEM from Vivado IP Catalog
 	// Generate as DUAL port ROM
 	// Synchronous read
 	blk_mem_gen_instmem BLK_INST(
-		.clka(clk),
-		.addra(addr[11:1]),
+		.clka(~clk),
+		.addra(addr_1[11:1]),
 		.douta(prog[15:0]),
 
-		.clkb(clk),
+		.clkb(~clk),
 		.addrb(addr_2[10:0]),
 		.doutb(prog[31:16])
 	);
 
 	blk_mem_gen_isr BLK_ISR(
-		.clka(clk),
-		.addra(addr[11:1]),
+		.clka(~clk),
+		.addra(addr_1[11:1]),
 		.douta(isr[15:0]),
 
-		.clkb(clk),
+		.clkb(~clk),
 		.addrb(addr_2[10:0]),
 		.doutb(isr[31:16])
 	);
-    
-	assign inst = sel_ISR? isr : prog;
+    */
 
 	// For this part:
 	// Instmem that was coded s.t. Vivado generates an RTL_ROM
 	// Asynchronous read
-	/*reg [31:0] memory [0:1023];
+	reg [`MEM_WIDTH-1:0] instmem [0:`MEM_DEPTH-1];
+	reg [`MEM_WIDTH-1:0] isr_mem [0:`MEM_DEPTH-1];
 	initial begin
-		$readmemh("instmem.mem", memory);
+		$readmemh("instmem.mem", instmem);
+		$readmemh("isr_mem.mem", isr_mem);
 	end
+	assign prog = {instmem[addr_2], instmem[addr_1]};
+	assign isr = {isr_mem[addr_2], isr_mem[addr_1]};
 
-	assign inst = memory[addr[11:2]];*/
 
+	assign inst = sel_ISR? isr : prog;
 endmodule
