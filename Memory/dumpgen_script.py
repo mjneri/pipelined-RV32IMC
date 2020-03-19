@@ -24,7 +24,7 @@ filename = args.input_file.split('.')[0]
 
 # Generating Command strings
 rars_path = ""
-text_command = 'python3 "../Assembler+Testbench/Assembler/assembler.py" ' + args.input_file + ' ' + filename + '.coe ' + '-comp_buffer True'
+text_command = 'python3 "../Assembler+Testbench/Assembler/assembler.py" ' + args.input_file + ' ' + filename + '.mem ' + '-comp_buffer True'
 data_command = 'java -jar ' + rars_path + 'rars1_4.jar a mc CompactDataAtZero dump .data HexText \"' + filename + '_data.mem\" \"' + filename+'_base.asm'+'"'
 ans_command = 'java -jar ' + rars_path + 'rars1_4.jar 1000 mc CompactDataAtZero dump .data HexText \"' + 'answerkey.mem\"  \"' + filename+'_base.asm' + '"'
 

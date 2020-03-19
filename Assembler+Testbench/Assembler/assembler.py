@@ -561,12 +561,12 @@ convert_file(line_list)
 save_file = args.output_file
 try:
     instmem = open(save_file, "w")
-    instmem.write("memory_initialization_radix=16;\nmemory_initialization_vector=\n")
+    #instmem.write("memory_initialization_radix=16;\nmemory_initialization_vector=\n")
 except:
     print("Failed to create file")
 # Convert to machine code
 assemble(instructions, labels, instmem)
-instmem.write(";")
+#instmem.write(";")
 instmem.close()
 print('Saved to ' + save_file)
 
