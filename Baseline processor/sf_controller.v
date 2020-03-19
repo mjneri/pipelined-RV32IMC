@@ -22,20 +22,14 @@ module sf_controller(
     input nrst,
 
     // IF stage
-    //input [31:0] if_inst,       // -- current instmem output
-    //input buffer_stall,         // checks if compressed buffer calls stall
+    input [11:0] if_pc,
 
     // ID stage inputs
-    //input [6:0] id_opcode,
-    //input [4:0] id_rsA,
-    //input [4:0] id_rsB,
+    input [11:0] id_pc,
     input is_jump,			// uses controller1 to find if jump or not (low-asserted)
-    //input is_nop,
+    // input is_nop,
     
     // EXE stage inputs
-    //input [6:0] exe_opcode,		// for checking if a load inst
-    //input exe_wr_en,
-    //input [4:0] exe_rd,
     
     input ISR_PC_flush,			// Output flush signal of interrupt controller
     input ISR_pipe_flush,
@@ -46,21 +40,12 @@ module sf_controller(
     input mul_stall,            // Stall due to multiplication
     input div_running,			// Status of Divider unit
 
-    // Load-use hazards
-    // input hzd_exe_to_id_A,		// determines LOAD@EXE>JALR@ID hazards
-    // input hzd_mem_to_exe_A,		// determines LOAD@MEM>EXE hazards
-    // input hzd_mem_to_exe_B,		// determines LOAD@MEM>EXE hazards
-
-    // Divider status
-    //input [1:0] div_status, 	// determines status of Divider unit
-
     // Stalls/Enables
 	output if_stall,			// controls PC + instmem stall
 	output id_stall,			// controls IF/ID pipeline register stall
 	output exe_stall,			// controls ID/EXE pipeline register stall
 	output mem_stall,			// controls EXE/MEM pipeline register and datamem stall
 	output wb_stall,			// controls MEM/WB pipeline register stall
-	//output rf_stall,			// controls RF stall
 
 	// Flushes/Resets (flushes act as active-high resets)
 	output if_flush,			// controls PC flush
@@ -127,11 +112,6 @@ module sf_controller(
 	output fw_wb_to_exe_A,
 	output fw_wb_to_exe_B,
     output load_hazard          // result of having a L[W/H/B] -> EXE hazard
-
-	// Load-use hazards // used for the sf_controller only
-	// output hzd_exe_to_id_A,  
-	// output hzd_mem_to_exe_A,
-	// output hzd_mem_to_exe_B
 );
 
  	// Forwarding to ID stage
@@ -220,6 +200,7 @@ module sf_controller(
     wire hzd_mem_to_exe_A;
     wire hzd_mem_to_exe_B;
 
+    wire loop_jump = (if_pc == id_pc) && is_jump && ~id_stall;
     
     wire jalr_hazard = hzd_exe_to_id_A;							// LOAD -> JALR will result in a one-cycle stall for IF and ID stages
     assign load_hazard = (hzd_mem_to_exe_A || hzd_mem_to_exe_B);	// LOAD -> Other instruction
@@ -246,8 +227,8 @@ module sf_controller(
 
     // Enables
     
-    assign if_clk_en = ~(if_stall);
-    assign id_clk_en = ~(id_stall || if_prev_flush);
+    assign if_clk_en = ~(if_stall || loop_jump);
+    assign id_clk_en = ~(id_stall || if_prev_flush || loop_jump);
     assign exe_clk_en = ~(exe_stall || id_prev_flush);
     assign mem_clk_en = ~(mem_flush || exe_prev_flush);
     assign wb_clk_en = ~(mem_prev_flush);
