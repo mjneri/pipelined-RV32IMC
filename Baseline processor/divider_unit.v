@@ -30,8 +30,10 @@ module divider_unit(
 	input [31:0] opA,
 	input [31:0] opB,
 
-	input div_valid,
-	input [1:0] div_op,
+	input id_div_valid,
+	input exe_div_valid,
+	input id_div_op_0,
+	input [1:0] exe_div_op,
 
 	output reg div_running,
 	output reg [31:0] DIVout
@@ -93,14 +95,14 @@ module divider_unit(
 	// Note: the tvalid inputs are ANDed w/ div_state == WAIT because
 	// we want them to be asserted for only one clock cycle during WAIT.
 	// (We want them to be asserted by the next cycle (starting at state DIVIDING))
-	assign div_signed_input_tvalid = div_valid & (div_op == DIV || div_op == REM) & (div_state == WAIT) & !load_hazard;
-	assign div_unsigned_input_tvalid = div_valid & (div_op == DIVU || div_op == REMU) & (div_state == WAIT) & !load_hazard;
+	assign div_signed_input_tvalid = exe_div_valid & (exe_div_op == DIV || exe_div_op == REM) & (div_state == WAIT) & !load_hazard;
+	assign div_unsigned_input_tvalid = exe_div_valid & (exe_div_op == DIVU || exe_div_op == REMU) & (div_state == WAIT) & !load_hazard;
 
 	// Instantiating Divider generator modules
 	// NOTE: aresetn should be active for at least 2 cycles.
 	div_gen_signed DIVREM(
 		.aclk(CLK),
-		.aclken(1'b1),
+		.aclken(((id_div_op_0 == 1'b0) & (id_div_valid)) | (div_unsigned_input_tvalid ? 1'b0 : exe_div_valid)),
 		.aresetn(nrst),
 		
 		.s_axis_dividend_tdata(opA),
@@ -117,7 +119,7 @@ module divider_unit(
 
 	div_gen_unsigned DIVUREMU(
 		.aclk(CLK),
-		.aclken(1'b1),
+		.aclken(((id_div_op_0 == 1'b1) & (id_div_valid)) | (div_signed_input_tvalid ? 1'b0 : exe_div_valid)),
 		.aresetn(nrst),
 		
 		.s_axis_dividend_tdata(opA),
@@ -154,7 +156,7 @@ module divider_unit(
 		case(div_state)
 			RESET: div_nstate = WAIT;
 			WAIT: begin
-				if(div_valid && !load_hazard)
+				if(exe_div_valid && !load_hazard)
 					div_nstate = DIVIDING;
 				else
 					div_nstate = WAIT;
@@ -180,7 +182,7 @@ module divider_unit(
 	always@(*) begin
 		case(div_state)
 			RESET: div_running = 0;
-			WAIT: div_running = (div_valid && !load_hazard)? 1'b1 : 1'b0;
+			WAIT: div_running = (exe_div_valid && !load_hazard)? 1'b1 : 1'b0;
 			DIVIDING: div_running = 1'b1;
 			DONE: div_running = 1'b0;
 		endcase
@@ -197,7 +199,7 @@ module divider_unit(
 			DIVout <= 0;
 		else begin
 			if(div_state == DIVIDING && (div_unsigned_out_tvalid || div_signed_out_tvalid))
-				case(div_op)
+				case(exe_div_op)
 					DIV: DIVout <= div_signed_out_tdata[63:32];
 					REM: DIVout <= div_signed_out_tdata[31:0];
 					DIVU: DIVout <= div_unsigned_out_tdata[63:32];

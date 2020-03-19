@@ -1,7 +1,8 @@
 `timescale 1ns / 1ps
 
 module datamem(
-	input clk,
+	input core_clk,
+	input con_clk,
 	input nrst,
 
 	// Inputs from within the core
@@ -30,14 +31,14 @@ module datamem(
 	// Synchronous read
 	// Addresses 0x000 - 0x3FF (Word-aligned addresses)
 	wire [31:0] blk_mem_douta;
-	blk_mem_gen_datamem BLK_DATA(
-		.clka(clk),
+	blk_mem_gen_datamem BLOCKMEM(
+		.clka(core_clk),
 		.wea(dm_write),
 		.addra(exe_data_addr[9:0]),
 		.dina(data_in),
 		.douta(blk_mem_douta),
 
-		.clkb(clk),
+		.clkb(con_clk),
 		.web(con_write),
 		.addrb(con_addr),
 		.dinb(con_in),
@@ -57,7 +58,7 @@ module datamem(
 	end
 
 	// Writes to FPGAIO[1:0] (BTN, SW)
-	always@(posedge clk) begin
+	always@(posedge con_clk) begin
 		if(!nrst) begin
 			FPGAIO[1] <= 32'h0;
 			FPGAIO[0] <= 32'h0;
@@ -69,7 +70,7 @@ module datamem(
 
 	// Reads & Writes to FPGAIO[2] (LEDs)
 	assign LED = FPGAIO[2][3:0];
-	always@(posedge clk) begin
+	always@(posedge con_clk) begin
 		if(!nrst)
 			FPGAIO[2] <= 0;
 		else begin
@@ -108,28 +109,22 @@ module datamem(
 	/*
 	reg [31:0] memory [0:511];		// Addresses 0x000 to 0x1FF
 	reg [31:0] con_mem [0:511];		// Addresses 0x200 to 0x3FF
-
 	initial begin
 		$readmemh("datamem.mem", memory);
 	end
-
 	// read
 	// Core read
 	assign data_out = (data_addr[9] == 1'h1)? con_mem[data_addr] : memory[data_addr];
-
 	// Protocol controller read
 	assign con_out = (con_addr[9] == 1'h1)? con_mem[con_addr] : memory[con_addr];
-
 	// write
 	always@(posedge clk) begin
 		case(dm_write)
 			// SW
 			4'b1111: memory[data_addr] <= data_in;
-
 			// SH
 			4'b0011: memory[data_addr] <= (memory[data_addr] & 32'hffff0000) | (data_in & 32'h0000ffff);
 			4'b1100: memory[data_addr] <= (memory[data_addr] & 32'h0000ffff) | (data_in & 32'hffff0000);
-
 			// SB
 			4'b0001: memory[data_addr] <= (memory[data_addr] & 32'hffffff00) | (data_in & 32'h000000ff);
 			4'b0010: memory[data_addr] <= (memory[data_addr] & 32'hffff00ff) | (data_in & 32'h0000ff00);
@@ -137,16 +132,13 @@ module datamem(
 			4'b1000: memory[data_addr] <= (memory[data_addr] & 32'h00ffffff) | (data_in & 32'hff000000);
 		endcase
 	end
-
 	always@(posedge clk) begin
 		case(con_write)
 			// SW
 			4'b1111: con_mem[con_addr] <= con_in;
-
 			// SH
 			4'b0011: con_mem[con_addr] <= (con_mem[con_addr] & 32'hffff0000) | (con_in & 32'h0000ffff);
 			4'b1100: con_mem[con_addr] <= (con_mem[con_addr] & 32'h0000ffff) | (con_in & 32'hffff0000);
-
 			// SB
 			4'b0001: con_mem[con_addr] <= (con_mem[con_addr] & 32'hffffff00) | (con_in & 32'h000000ff);
 			4'b0010: con_mem[con_addr] <= (con_mem[con_addr] & 32'hffff00ff) | (con_in & 32'h0000ff00);
