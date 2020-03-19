@@ -230,9 +230,9 @@ module sf_controller(
     */
     
     // Stalls/Enables
-    assign if_stall = ((load_hazard /* && ~mem_prev_flush*/) || jalr_hazard || div_running || mul_stall);
-    assign id_stall = ((load_hazard /* && ~mem_prev_flush*/) || jalr_hazard || div_running || mul_stall);
-    assign exe_stall = ((load_hazard /* && ~mem_prev_flush*/) || div_running || mul_stall);					
+    assign if_stall = ((load_hazard  && ~mem_prev_flush) || jalr_hazard || div_running || mul_stall);
+    assign id_stall = ((load_hazard  && ~mem_prev_flush) || jalr_hazard || div_running || mul_stall);
+    assign exe_stall = ((load_hazard  && ~mem_prev_flush) || div_running || mul_stall);					
     assign mem_stall = 1'b0;
     assign wb_stall = 1'b0;
     //assign rf_stall = 1'b0;
@@ -241,26 +241,26 @@ module sf_controller(
     assign if_flush = ISR_PC_flush;
     assign id_flush = ISR_pipe_flush || jump_flush || branch_flush;
     assign exe_flush = jalr_hazard || branch_flush;
-    assign mem_flush = (load_hazard /*&& ~mem_prev_flush*/) || div_running || mul_stall;
+    assign mem_flush = (load_hazard && ~mem_prev_flush) || div_running || mul_stall;
     assign wb_flush = 1'b0;
 
     // Enables
-    /*
+    
     assign if_clk_en = ~(if_stall);
     assign id_clk_en = ~(id_stall || if_prev_flush);
     assign exe_clk_en = ~(exe_stall || id_prev_flush);
     assign mem_clk_en = ~(mem_flush || exe_prev_flush);
     assign wb_clk_en = ~(mem_prev_flush);
     assign rf_clk_en = ~(wb_prev_flush);
-    */
-
+    
+    /*
     assign if_clk_en = ~if_stall;
     assign id_clk_en = ~id_stall;
     assign exe_clk_en = ~exe_stall;
     assign mem_clk_en = 1;
     assign wb_clk_en = 1;
     assign rf_clk_en = 1;
-
+    */
 
     always@(posedge clk) begin
         if (!nrst) begin

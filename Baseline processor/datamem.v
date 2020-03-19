@@ -1,7 +1,8 @@
 `timescale 1ns / 1ps
 
 module datamem(
-	input clk,
+	input core_clk,
+	input con_clk,
 	input nrst,
 
 	// Inputs from within the core
@@ -31,13 +32,13 @@ module datamem(
 	// Addresses 0x000 - 0x3FF (Word-aligned addresses)
 	wire [31:0] blk_mem_douta;
 	blk_mem_gen_datamem BLOCKMEM(
-		.clka(clk),
+		.clka(core_clk),
 		.wea(dm_write),
 		.addra(exe_data_addr[9:0]),
 		.dina(data_in),
 		.douta(blk_mem_douta),
 
-		.clkb(clk),
+		.clkb(con_clk),
 		.web(con_write),
 		.addrb(con_addr),
 		.dinb(con_in),
@@ -57,7 +58,7 @@ module datamem(
 	end
 
 	// Writes to FPGAIO[1:0] (BTN, SW)
-	always@(posedge clk) begin
+	always@(posedge con_clk) begin
 		if(!nrst) begin
 			FPGAIO[1] <= 32'h0;
 			FPGAIO[0] <= 32'h0;
@@ -69,7 +70,7 @@ module datamem(
 
 	// Reads & Writes to FPGAIO[2] (LEDs)
 	assign LED = FPGAIO[2][3:0];
-	always@(posedge clk) begin
+	always@(posedge con_clk) begin
 		if(!nrst)
 			FPGAIO[2] <= 0;
 		else begin

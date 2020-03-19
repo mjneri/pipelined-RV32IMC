@@ -900,7 +900,8 @@ module core(
 
 // MEM Stage ========================================================
 	datamem DATAMEM(
-		.clk(mem_clk),
+		.core_clk(mem_clk),
+		.con_clk(CLK),
 		.nrst(nrst),
 
 		.dm_write(exe_dm_write),
