@@ -73,6 +73,7 @@ module core(
 	wire id_is_stype;									// For EXE stage 	/
 	wire id_is_jump;									// For ID stage 	/
 	wire id_is_btype;									// For ID Stage 	/
+	wire id_is_nop; 									// For ID stage 	/
 	wire id_wr_en;										// For WB stage 	/
 	wire [2:0] id_dm_select;							// For MEM stage 	/
 	wire [2:0] id_imm_select;							// For ID stage 	/
@@ -324,6 +325,7 @@ module core(
 	wire id_c_use_B;
 	wire id_c_is_jump;
 	wire id_c_is_btype;
+	wire id_c_is_nop;
 
 	// registers and immediates
     wire [4:0] id_c_rsA;
@@ -365,6 +367,7 @@ module core(
 		.if_pc(if_PC),
 		.id_pc(id_PC),
 		.is_jump(id_is_jump),
+		.is_nop(id_is_nop),
 		.branch_flush(branch_flush),
 		.jump_flush(jump_flush),
 
@@ -715,6 +718,7 @@ module core(
 		.use_B(id_c_use_B),
 		.is_jump(id_c_is_jump),
 		.is_btype(id_c_is_btype),
+		.is_nop(id_c_is_nop),
         
         // Results (output)
         .rs1(id_c_rsA),
@@ -741,6 +745,7 @@ module core(
 	assign id_is_jump = id_is_comp ? id_c_is_jump : id_base_is_jump;
 	assign id_is_btype = id_is_comp ? id_c_is_btype : id_base_is_btype;
 	assign id_imm_select = id_is_comp ? id_c_imm_select : id_base_imm_select;
+	assign id_is_nop = id_is_comp ? id_c_is_nop : (id_inst == 32'h13);
     
 	pipereg_id_exe ID_EXE(
 		.clk(exe_clk),

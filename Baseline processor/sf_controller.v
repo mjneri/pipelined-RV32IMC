@@ -27,7 +27,7 @@ module sf_controller(
     // ID stage inputs
     input [11:0] id_pc,
     input is_jump,			// uses controller1 to find if jump or not (low-asserted)
-    // input is_nop,
+    input is_nop,
     
     // EXE stage inputs
     
@@ -220,7 +220,7 @@ module sf_controller(
 
     // Flushes/Resets
     assign if_flush = ISR_PC_flush;
-    assign id_flush = ISR_pipe_flush || jump_flush || branch_flush;
+    assign id_flush = ISR_pipe_flush || jump_flush || branch_flush || is_nop;
     assign exe_flush = jalr_hazard || branch_flush;
     assign mem_flush = (load_hazard && ~mem_prev_flush) || div_running || mul_stall;
     assign wb_flush = 1'b0;
@@ -233,15 +233,6 @@ module sf_controller(
     assign mem_clk_en = ~(mem_flush || exe_prev_flush);
     assign wb_clk_en = ~(mem_prev_flush);
     assign rf_clk_en = ~(wb_prev_flush);
-    
-    /*
-    assign if_clk_en = ~if_stall;
-    assign id_clk_en = ~id_stall;
-    assign exe_clk_en = ~exe_stall;
-    assign mem_clk_en = 1;
-    assign wb_clk_en = 1;
-    assign rf_clk_en = 1;
-    */
 
     always@(posedge clk) begin
         if (!nrst) begin

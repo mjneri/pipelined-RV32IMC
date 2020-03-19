@@ -8,3 +8,4 @@ Baseline processor/debug place/*
 Vivado Files/tb_core.v
 dumpgen_script.py
 *.pyc
+*/assembler.log
