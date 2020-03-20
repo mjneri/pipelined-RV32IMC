@@ -16,16 +16,25 @@ module core(
 	input [31:0] con_in,
 	output [31:0] con_out		// Ouput of DATAMEM connected to Protocol controllers
 
-	// // SIGNALS TO ADD
-	// /*
-	// PC
-	// inst
-	// ALUout
-	// */
-
+	// Debug signals for post-synthesis simulations
 	// output [11:0] if_PC,
+	// output [11:0] id_PC,
+	// output [11:0] exe_PC,
+	// output [11:0] mem_PC,
+	// output [11:0] wb_PC,
 	// output [31:0] if_inst,
-	// output [31:0] exe_ALUout
+	// output if_stall,
+	// output ISR_PC_flush,
+	// output ISR_pipe_flush,
+	// output ISR_running,
+	// output [11:0] save_PC,
+	// output jump_flush,
+	// output branch_flush,
+	// output exe_is_stype,
+	// output [3:0] exe_dm_write,
+	// output [31:0] exe_ALUout,
+	// output [2:0] wb_sel_data,
+	// output [31:0] wb_wr_data
 
 );
 	
@@ -807,8 +816,10 @@ module core(
 		.opA(opA),
 		.opB(opB),
 
-		.div_valid(exe_div_valid),
-		.div_op(exe_div_op),
+		.id_div_valid(id_div_valid),
+		.id_div_op_0(id_div_op[0]),
+		.exe_div_valid(exe_div_valid),
+		.exe_div_op(exe_div_op),
 
 		.div_running(exe_div_running),
 		.DIVout(exe_DIVout)
