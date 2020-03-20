@@ -48,9 +48,12 @@ module alu(
 	assign signed_res = signed_a >>> signed_b[4:0];
 
 	// Instantiating Multiplier IPs
+	wire mulhsu_clken = (ALU_op == alu_mulhsu)? 1'b1 : 1'b0;
+	wire mulh_clken = (ALU_op == alu_mulh)? 1'b1 : 1'b0;
+	wire mulhu_clken = (ALU_op == alu_mulhu || ALU_op == alu_mul)? 1'b1 : 1'b0;
 	mult_gen_hsu MULHSU(
 		.CLK(CLK),
-		.CE(ALU_op == alu_mulhsu),
+		.CE(mulhsu_clken),
 		.A(signed_a),
 		.B(op_b),
 		.P(mulhsu_res)
@@ -58,7 +61,7 @@ module alu(
 
 	mult_gen_signed MULH(
 		.CLK(CLK),
-		.CE(ALU_op == alu_mulh),
+		.CE(mulh_clken),
 		.A(signed_a),
 		.B(signed_b),
 		.P(mulh_res)
@@ -66,7 +69,7 @@ module alu(
 
 	mult_gen_u MULHU(
 		.CLK(CLK),
-		.CE(ALU_op == alu_mulhu || ALU_op == alu_mul),
+		.CE(mulhu_clken),
 		.A(op_a),
 		.B(op_b),
 		.P(mulhu_res)
@@ -77,13 +80,14 @@ module alu(
 	// NOTE: if a load_hazard is present, we delay the update of mul_stall by 1 cycle.
 	reg mul_stall_reg;
 	initial mul_stall_reg = 0;
+	wire is_mul = (ALU_op > 4'd10) & (ALU_op != 4'd15);
 	always@(posedge CLK) begin
 		if(!nrst) 
 			mul_stall_reg <= 0;
 		else if(!load_hazard)
-			mul_stall_reg <= (ALU_op == alu_mul | ALU_op == alu_mulhu | ALU_op == alu_mulhsu | ALU_op == alu_mulh) & mul_stall;
+			mul_stall_reg <= is_mul & mul_stall;
 	end
-	assign mul_stall = !mul_stall_reg & (ALU_op == alu_mul | ALU_op == alu_mulhu | ALU_op == alu_mulhsu | ALU_op == alu_mulh);
+	assign mul_stall = ~mul_stall_reg & is_mul;
 
 	always@(*) begin
 		case(ALU_op)
