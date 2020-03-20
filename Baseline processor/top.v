@@ -71,6 +71,26 @@ module top(
 		.con_in(32'h0),
 
 		.con_out(con_out)
+
+		// Debug signals for Virtual I/O
+		// .if_PC(if_PC),
+		// .id_PC(id_PC),
+		// .exe_PC(exe_PC),
+		// .mem_PC(mem_PC),
+		// .wb_PC(wb_PC),
+		// .if_inst(if_inst),
+		// .if_stall(if_stall),
+		// .ISR_PC_flush(ISR_PC_flush),
+		// .ISR_pipe_flush(ISR_pipe_flush),
+		// .ISR_running(ISR_running),
+		// .save_PC(save_PC),
+		// .jump_flush(jump_flush),
+		// .branch_flush(branch_flush),
+		// .exe_is_stype(exe_is_stype),
+		// .exe_dm_write(exe_dm_write),
+		// .exe_ALUout(exe_ALUout),
+		// .wb_sel_data(wb_sel_data),
+		// .wb_wr_data(wb_wr_data)
 	);
 
 	// Protocol Controllers OR UART Controller
@@ -92,5 +112,30 @@ module top(
 		.btn(BTN),
 		.db_btn(db_btn)
 	);
+
+	// Virtual I/O for H/W Debugging
+	// vio_core VIO(
+	// 	.clk(CLKIP_OUT),
+	// 	.probe_in18(CLKIP_OUT),
+
+	// 	.probe_in0(if_PC),
+	// 	.probe_in1(id_PC),
+	// 	.probe_in2(exe_PC),
+	// 	.probe_in3(mem_PC),
+	// 	.probe_in4(wb_PC),
+	// 	.probe_in5(if_inst),
+	// 	.probe_in6(if_stall),
+	// 	.probe_in7(ISR_PC_flush),
+	// 	.probe_in8(ISR_pipe_flush),
+	// 	.probe_in9(ISR_running),
+	// 	.probe_in10(save_PC),
+	// 	.probe_in11(jump_flush),
+	// 	.probe_in12(branch_flush),
+	// 	.probe_in13(exe_is_stype),
+	// 	.probe_in14(exe_dm_write),
+	// 	.probe_in15(exe_ALUout),
+	// 	.probe_in16(wb_sel_data),
+	// 	.probe_in17(wb_wr_data)
+	// );
 
 endmodule
