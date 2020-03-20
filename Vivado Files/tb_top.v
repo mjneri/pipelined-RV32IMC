@@ -49,5 +49,17 @@ module tb_top();
 		SW = 0;
 
 		#100 nrst = 1;
+		#100 BTN[1] = 1;
+	end
+	
+	reg [11:0] mem_PC, wb_PC;
+	always@(posedge TOP.CLKIP_OUT) begin
+		if(!nrst) begin
+			mem_PC <= 0;
+			wb_PC <= 0;
+		end else begin
+			mem_PC <= {TOP.RISCVCORE.exe_PC, 1'b0};
+			wb_PC <= mem_PC;
+		end
 	end
 endmodule
