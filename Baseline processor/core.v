@@ -82,6 +82,7 @@ module core(
 	wire id_is_stype;									// For EXE stage 	/
 	wire id_is_jump;									// For ID stage 	/
 	wire id_is_btype;									// For ID Stage 	/
+	wire id_is_nop; 									// For ID stage 	/
 	wire id_wr_en;										// For WB stage 	/
 	wire [2:0] id_dm_select;							// For MEM stage 	/
 	wire [2:0] id_imm_select;							// For ID stage 	/
@@ -246,9 +247,7 @@ module core(
     wire fw_wb_to_exe_A;
     wire fw_wb_to_exe_B;
 
-    wire hzd_exe_to_id_A;
-	wire hzd_mem_to_exe_A;
-    wire hzd_mem_to_exe_B;
+	wire load_hazard;
 // &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 
 
@@ -256,16 +255,19 @@ module core(
 
 
 // Clock Gating + SF_Controller=====================================
-	// wire if_clk;			// CLK input to PC
-	// wire if_clk_en;
-	// wire id_clk;			// CLK input to IF/ID pipereg
-	// wire id_clk_en;
-	// wire exe_clk;		// CLK input to ID/EXE pipereg
-	// wire exe_clk_en;
-	// wire mem_clk;		// CLK input to EXE/MEM pipereg
-	// wire mem_clk_en;
-	// wire wb_clk;			// CLK input to MEM/WB pipereg
-	// wire wb_clk_en;
+	wire if_clk;			// CLK input to PC
+	wire id_clk;			// CLK input to IF/ID pipereg
+	wire exe_clk;			// CLK input to ID/EXE pipereg
+	wire mem_clk;			// CLK input to EXE/MEM pipereg
+	wire wb_clk;			// CLK input to MEM/WB pipereg
+	wire rf_clk;
+	
+	wire if_clk_en;
+	wire id_clk_en;
+	wire exe_clk_en;
+	wire mem_clk_en;
+	wire wb_clk_en;
+	wire rf_clk_en;
 	
 	wire if_stall;			// Controls PC + Instmem stall
 	wire id_stall;			// Controls IF/ID + BHT stall
@@ -332,6 +334,7 @@ module core(
 	wire id_c_use_B;
 	wire id_c_is_jump;
 	wire id_c_is_btype;
+	wire id_c_is_nop;
 
 	// registers and immediates
     wire [4:0] id_c_rsA;
@@ -366,18 +369,19 @@ module core(
 /******************************* DATAPATH (INSTANTIATING MODULES) ******************************/
 // CLOCKS ========================================================
 	sf_controller SF_CONTROLLER(
+		.clk(CLK),
+		.nrst(nrst),
 		.ISR_PC_flush(ISR_PC_flush),
 		.ISR_pipe_flush(ISR_pipe_flush),
-		
+		.if_pc(if_PC),
+		.id_pc(id_PC),
+		.is_jump(id_is_jump),
+		.is_nop(id_is_nop),
 		.branch_flush(branch_flush),
 		.jump_flush(jump_flush),
 
 		.mul_stall(mul_stall),
 		.div_running(exe_div_running),
-
-		.hzd_exe_to_id_A(hzd_exe_to_id_A),
-		.hzd_mem_to_exe_A(hzd_mem_to_exe_A),
-		.hzd_mem_to_exe_B(hzd_mem_to_exe_B),
 
 		.if_stall(if_stall),
 		.id_stall(id_stall),
@@ -389,38 +393,100 @@ module core(
 		.id_flush(id_flush),
 		.exe_flush(exe_flush),
 		.mem_flush(mem_flush),
-		.wb_flush(wb_flush)
+		.wb_flush(wb_flush),
+
+		.if_clk_en(if_clk_en),
+		.id_clk_en(id_clk_en),
+		.exe_clk_en(exe_clk_en),
+		.mem_clk_en(mem_clk_en),
+		.wb_clk_en(wb_clk_en),
+		.rf_clk_en(rf_clk_en),
+
+		// Forwarding Unit inputs and outputs
+		// Source registers
+		.id_rsA(id_rsA),
+		.id_rsB(id_rsB),
+		.exe_rsA(exe_rsA),
+		.exe_rsB(exe_rsB),
+
+		// Destination registers
+		.exe_rd(exe_rd),
+		.mem_rd(mem_rd),
+		.wb_rd(wb_rd),
+
+		// Control signals
+		.exe_wr_en(exe_wr_en),
+		.mem_wr_en(mem_wr_en),
+		.wb_wr_en(wb_wr_en),
+
+		.id_sel_opA(id_sel_opA),
+		.id_sel_opB(id_sel_opB),
+
+		//.id_sel_data(id_sel_data),
+		.exe_sel_data(exe_sel_data),
+		.mem_sel_data(mem_sel_data),
+		.wb_sel_data(wb_sel_data),
+
+		.id_is_stype(id_is_stype),
+		//.exe_is_stype(exe_is_stype),
+
+		.id_imm_select(id_imm_select),
+
+		.id_opcode(id_opcode),
+		.exe_opcode(exe_opcode),
+		.exe_comp_use_A(exe_comp_use_A),
+		.exe_comp_use_B(exe_comp_use_B),
+		.exe_is_comp(exe_is_comp),
+		.id_sel_opBR(id_sel_opBR),
+
+		// Outputs
+		.fw_exe_to_id_A(fw_exe_to_id_A),
+		.fw_exe_to_id_B(fw_exe_to_id_B),
+		.fw_mem_to_id_A(fw_mem_to_id_A),
+		.fw_mem_to_id_B(fw_mem_to_id_B),
+		.fw_wb_to_id_A(fw_wb_to_id_A),
+		.fw_wb_to_id_B(fw_wb_to_id_B),
+
+		.fw_wb_to_exe_A(fw_wb_to_exe_A),
+		.fw_wb_to_exe_B(fw_wb_to_exe_B),
+		.load_hazard(load_hazard)
 	);
 
-	// BUFGCE en_if (
-	// 	.I(CLK),
-	// 	.CE(if_clk_en),
-	// 	.O(if_clk)
-	// );
+	BUFGCE en_if (
+	 	.I(CLK),
+	 	.CE(if_clk_en),
+	 	.O(if_clk)
+	);
 
-	// BUFGCE en_id (
-	// 	.I(CLK),
-	// 	.CE(id_clk_en),
-	// 	.O(id_clk)
-	// );
+	BUFGCE en_id (
+	 	.I(CLK),
+	 	.CE(id_clk_en),
+	 	.O(id_clk)
+	);
 
-	// BUFGCE en_exe (
-	// 	.I(CLK),
-	// 	.CE(exe_clk_en),
-	// 	.O(exe_clk)
-	// );
+	BUFGCE en_exe (
+	 	.I(CLK),
+	 	.CE(exe_clk_en),
+	 	.O(exe_clk)
+	);
 
-	// BUFGCE en_mem (
-	// 	.I(CLK),
-	// 	.CE(mem_clk_en),
-	// 	.O(mem_clk)
-	// );
+	BUFGCE en_mem (
+	 	.I(CLK),
+	 	.CE(mem_clk_en),
+	 	.O(mem_clk)
+	);
 
-	// BUFGCE en_wb (
-	// 	.I(CLK),
-	// 	.CE(wb_clk_en),
-	// 	.O(wb_clk)
-	// );
+	BUFGCE en_wb (
+	 	.I(CLK),
+	 	.CE(wb_clk_en),
+	 	.O(wb_clk)
+	);
+
+	BUFGCE en_rf(
+	 	.I(CLK),
+	 	.CE(rf_clk_en),
+	 	.O(rf_clk)
+	);
 
 
 
@@ -504,7 +570,7 @@ module core(
 		end
 
 	pipereg_if_id IF_ID(
-		.clk(CLK),
+		.clk(if_clk),
 		.nrst(nrst),
 		.en(/*id_clk_en*/1'b1),
 
@@ -598,7 +664,7 @@ module core(
 	);
 
 	regfile RF(
-		.clk(CLK),
+		.clk(rf_clk),
 		.nrst(nrst),
 
 		.wr_en(wb_wr_en),
@@ -637,59 +703,6 @@ module core(
 	assign id_brOP = (id_sel_opBR) ? id_fwdopA : id_PC;
 	assign id_branchtarget = id_brOP + (id_is_comp ? (id_sel_opBR ? 32'd0: id_c_jt) : id_base_imm);
 
-	forwarding_unit FWD(
-		// Source registers
-		.id_rsA(id_rsA),
-		.id_rsB(id_rsB),
-		.exe_rsA(exe_rsA),
-		.exe_rsB(exe_rsB),
-
-		// Destination registers
-		.exe_rd(exe_rd),
-		.mem_rd(mem_rd),
-		.wb_rd(wb_rd),
-
-		// Control signals
-		.exe_wr_en(exe_wr_en),
-		.mem_wr_en(mem_wr_en),
-		.wb_wr_en(wb_wr_en),
-
-		.id_sel_opA(id_sel_opA),
-		.id_sel_opB(id_sel_opB),
-
-		//.id_sel_data(id_sel_data),
-		.exe_sel_data(exe_sel_data),
-		.mem_sel_data(mem_sel_data),
-		.wb_sel_data(wb_sel_data),
-
-		.id_is_stype(id_is_stype),
-		//.exe_is_stype(exe_is_stype),
-
-		.id_imm_select(id_imm_select),
-
-		.id_opcode(id_opcode),
-		.exe_opcode(exe_opcode),
-		.exe_comp_use_A(exe_comp_use_A),
-		.exe_comp_use_B(exe_comp_use_B),
-		.exe_is_comp(exe_is_comp),
-		.id_sel_opBR(id_sel_opBR),
-
-		// Outputs
-		.fw_exe_to_id_A(fw_exe_to_id_A),
-		.fw_exe_to_id_B(fw_exe_to_id_B),
-		.fw_mem_to_id_A(fw_mem_to_id_A),
-		.fw_mem_to_id_B(fw_mem_to_id_B),
-		.fw_wb_to_id_A(fw_wb_to_id_A),
-		.fw_wb_to_id_B(fw_wb_to_id_B),
-
-		.fw_wb_to_exe_A(fw_wb_to_exe_A),
-		.fw_wb_to_exe_B(fw_wb_to_exe_B),
-
-		.hzd_exe_to_id_A(hzd_exe_to_id_A),
-		.hzd_mem_to_exe_A(hzd_mem_to_exe_A),
-		.hzd_mem_to_exe_B(hzd_mem_to_exe_B)
-	);
-
     compressed_decoder C_DECODER (
         // Input
         .inst(id_inst[15:0]),
@@ -714,6 +727,7 @@ module core(
 		.use_B(id_c_use_B),
 		.is_jump(id_c_is_jump),
 		.is_btype(id_c_is_btype),
+		.is_nop(id_c_is_nop),
         
         // Results (output)
         .rs1(id_c_rsA),
@@ -740,9 +754,10 @@ module core(
 	assign id_is_jump = id_is_comp ? id_c_is_jump : id_base_is_jump;
 	assign id_is_btype = id_is_comp ? id_c_is_btype : id_base_is_btype;
 	assign id_imm_select = id_is_comp ? id_c_imm_select : id_base_imm_select;
+	assign id_is_nop = id_is_comp ? id_c_is_nop : (id_inst == 32'h13);
     
 	pipereg_id_exe ID_EXE(
-		.clk(CLK),
+		.clk(exe_clk),
 		.nrst(nrst),		
 		.en(/*exe_clk_en*/1'b1),
 
@@ -796,7 +811,7 @@ module core(
 	alu ALU(
 		.CLK(CLK),
 		.nrst(nrst),
-		.load_hazard(hzd_mem_to_exe_A || hzd_mem_to_exe_B),
+		.load_hazard(load_hazard),
 
 		.op_a(opA),
 		.op_b(opB),
@@ -808,10 +823,11 @@ module core(
 		.less(exe_less)
 	);
 
+	// NOTE: 
 	divider_unit DIVIDER(
 		.CLK(CLK),
 		.nrst(nrst),
-		.load_hazard(hzd_mem_to_exe_A || hzd_mem_to_exe_B),
+		.load_hazard(load_hazard),
 
 		.opA(opA),
 		.opB(opB),
@@ -872,7 +888,7 @@ module core(
 	);
 	
 	pipereg_exe_mem EXE_MEM(
-		.clk(CLK),
+		.clk(mem_clk),
 		.nrst(nrst),
 		.en(/*mem_clk_en*/1'b1),
 
@@ -899,7 +915,8 @@ module core(
 
 // MEM Stage ========================================================
 	datamem DATAMEM(
-		.clk(CLK),
+		.core_clk(mem_clk),
+		.con_clk(CLK),
 		.nrst(nrst),
 
 		.dm_write(exe_dm_write),
@@ -927,7 +944,7 @@ module core(
 	);
 
 	pipereg_mem_wb MEM_WB(
-		.clk(CLK),
+		.clk(wb_clk),
 		.nrst(nrst),
 		.en(/*wb_clk_en*/1'b1),
 

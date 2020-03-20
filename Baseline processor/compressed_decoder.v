@@ -32,6 +32,7 @@ module compressed_decoder(
     output use_B,
     output is_jump,
     output is_btype,
+    output reg is_nop,
 
     // results
     output [4:0] rs1,
@@ -103,6 +104,7 @@ module compressed_decoder(
         lssp_imm = 1'b0;
         unsigned_imm = 1'b0;
         b_type = 1'b0;
+        is_nop = 1'b0;
 
         // logic
         case(opcode)
@@ -144,6 +146,9 @@ module compressed_decoder(
                         temp_rs1 = rd7;
                         i_type = 1'b1;
                         temp_op = 4'd1;
+                        if (rd7 == 5'd0) begin
+                            is_nop = 1'b1;
+                        end
                     end
                     3'd1: begin
                         // JAL -> expands to jal x1, <offset>
