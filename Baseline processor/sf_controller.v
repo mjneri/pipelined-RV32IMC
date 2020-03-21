@@ -126,6 +126,11 @@ module sf_controller(
 	wire t_fw_wb_to_exe_A;
 	wire t_fw_wb_to_exe_B;
 
+	// Data (Forwarding) Read-After-Write Hazards
+    wire hzd_exe_to_id_A;
+    wire hzd_mem_to_exe_A;
+    wire hzd_mem_to_exe_B;
+
     forwarding_unit FWD(
 		// Source registers
 		.id_rsA(id_rsA),
@@ -186,19 +191,15 @@ module sf_controller(
     reg wb_prev_flush;
 
     // results of forwarding
-    assign fw_exe_to_id_A = t_fw_exe_to_id_A; // && !id_prev_flush;
-    assign fw_exe_to_id_B = t_fw_exe_to_id_B; // && !id_prev_flush;
-    assign fw_mem_to_id_A = t_fw_mem_to_id_A; // && !exe_prev_flush;
-    assign fw_mem_to_id_B = t_fw_mem_to_id_B; // && !exe_prev_flush;
-    assign fw_wb_to_id_A = t_fw_wb_to_id_A; // && !mem_prev_flush;
-    assign fw_wb_to_id_B = t_fw_wb_to_id_B; // && !mem_prev_flush;
+    assign fw_exe_to_id_A = t_fw_exe_to_id_A;
+    assign fw_exe_to_id_B = t_fw_exe_to_id_B;
+    assign fw_mem_to_id_A = t_fw_mem_to_id_A;
+    assign fw_mem_to_id_B = t_fw_mem_to_id_B;
+    assign fw_wb_to_id_A = t_fw_wb_to_id_A;
+    assign fw_wb_to_id_B = t_fw_wb_to_id_B;
 
-    assign fw_wb_to_exe_A = t_fw_wb_to_exe_A; // && !mem_prev_flush;
-    assign fw_wb_to_exe_B = t_fw_wb_to_exe_B; // && !mem_prev_flush;
-
-    wire hzd_exe_to_id_A;
-    wire hzd_mem_to_exe_A;
-    wire hzd_mem_to_exe_B;
+    assign fw_wb_to_exe_A = t_fw_wb_to_exe_A && !wb_prev_flush;
+    assign fw_wb_to_exe_B = t_fw_wb_to_exe_B && !wb_prev_flush;
 
     wire loop_jump = (if_pc == id_pc) && is_jump && ~id_stall;
     
@@ -220,8 +221,8 @@ module sf_controller(
 
     // Flushes/Resets
     assign if_flush = ISR_PC_flush;
-    assign id_flush = ISR_pipe_flush || jump_flush || branch_flush || is_nop;
-    assign exe_flush = jalr_hazard || branch_flush;
+    assign id_flush = ISR_pipe_flush || jump_flush || branch_flush;
+    assign exe_flush = jalr_hazard || branch_flush || loop_jump || is_nop;
     assign mem_flush = (load_hazard && ~mem_prev_flush) || div_running || mul_stall;
     assign wb_flush = 1'b0;
 
@@ -232,7 +233,7 @@ module sf_controller(
     assign exe_clk_en = ~(exe_stall || id_prev_flush);
     assign mem_clk_en = ~(mem_flush || exe_prev_flush);
     assign wb_clk_en = ~(mem_prev_flush);
-    assign rf_clk_en = wb_wr_en;
+    assign rf_clk_en = ~wb_prev_flush && wb_wr_en;
 
     always@(posedge clk) begin
         if (!nrst) begin
@@ -244,7 +245,7 @@ module sf_controller(
         end
         else begin
             if_prev_flush <= if_flush;
-            id_prev_flush <= (if_prev_flush ? if_prev_flush : id_flush);
+            id_prev_flush <= (if_prev_flush ? if_prev_flush : (id_flush || loop_jump));
             exe_prev_flush <= (id_prev_flush ? id_prev_flush : exe_flush);
             mem_prev_flush <= (exe_prev_flush ? exe_prev_flush : mem_flush);
             wb_prev_flush <= (mem_prev_flush ? mem_prev_flush : wb_flush);
