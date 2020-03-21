@@ -329,7 +329,7 @@ module tb_core();
 				//$display("0x%3X\t0x%X\t0x%X\tPass", con_addr, con_out, AK.memory[con_addr]);
 				pass = pass + 1;
 			end else begin
-				$display("0x%3X\t0x%X\t0x%X\tFail--------------------", con_addr, con_out, AK.memory[con_addr]);
+				$display("%D\t0x%X\t0x%X\tFail--------------------", con_addr<<2, con_out, AK.memory[con_addr]);
 			end
 
 			total_test_cases = total_test_cases + 1;
@@ -353,7 +353,7 @@ module tb_core();
 		i = 0;
 		j = 0;
 		done = 0;
-		$display("\n");
+		$display("Ended at address %D.", con_addr<<2);
 		$display("Passed %0d/%0d test cases.\nClock cycles: %0d", pass, total_test_cases, clock_counter-50);
 		$display("Total cycles stalled: %0d", cumulative_stall_counter);
 		$display("Total cycles flushed: %0d", cumulative_flush_counter);
