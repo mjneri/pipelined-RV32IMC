@@ -841,24 +841,4 @@ nop
 
 # infinite loop
 inf:
-#jal x0, inf
-nop
-nop
-nop
-nop
-nop
-nop
-nop
-nop
-nop
-nop
-nop
-nop
-nop
-nop
-nop
-nop
-nop
-nop
-nop
-nop
+jal x0, inf
