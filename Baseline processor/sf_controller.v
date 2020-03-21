@@ -203,7 +203,7 @@ module sf_controller(
     wire loop_jump = (if_pc == id_pc) && is_jump && ~id_stall;
     
     wire jalr_hazard = hzd_exe_to_id_A;							// LOAD -> JALR will result in a one-cycle stall for IF and ID stages
-    assign load_hazard = (hzd_mem_to_exe_A || hzd_mem_to_exe_B);	// LOAD -> Other instruction
+    assign load_hazard = (hzd_mem_to_exe_A || hzd_mem_to_exe_B) && !mem_prev_flush;	// LOAD -> Other instruction
     /* load_hazard result:
         1st cycle: no clock for IF, ID, EXE stage registers
         2nd cycle: no clock for WB stage registers
