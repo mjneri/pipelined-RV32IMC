@@ -232,7 +232,7 @@ module sf_controller(
     assign exe_clk_en = ~(exe_stall || id_prev_flush);
     assign mem_clk_en = ~(mem_flush || exe_prev_flush);
     assign wb_clk_en = ~(mem_prev_flush);
-    assign rf_clk_en = ~(wb_prev_flush);
+    assign rf_clk_en = wb_wr_en;
 
     always@(posedge clk) begin
         if (!nrst) begin
