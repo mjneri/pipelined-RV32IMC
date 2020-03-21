@@ -244,7 +244,7 @@ module sf_controller(
         end
         else begin
             if_prev_flush <= if_flush;
-            id_prev_flush <= (if_prev_flush ? if_prev_flush : (id_flush || is_jump));
+            id_prev_flush <= (if_prev_flush ? if_prev_flush : id_flush);
             exe_prev_flush <= (id_prev_flush ? id_prev_flush : exe_flush);
             mem_prev_flush <= (exe_prev_flush ? exe_prev_flush : mem_flush);
             wb_prev_flush <= (mem_prev_flush ? mem_prev_flush : wb_flush);
