@@ -46,6 +46,7 @@ module tb_core();
 	// Various counters for checking performance of the core
 	integer clock_counter, stall_counter, cumulative_stall_counter;
 	integer cumulative_flush_counter;
+	integer if_clk_counter, id_clk_counter, exe_clk_counter, mem_clk_counter, wb_clk_counter, rf_clk_counter;
 
 	// Counters for checking BHT accuracy for each entry
 	reg [31:0] bht_correct [0:63];
@@ -90,6 +91,15 @@ module tb_core();
 		i = 0;
 		j = 0;
 
+		// Initializing counters
+		clock_counter = 0;
+		if_clk_counter = 0;
+		id_clk_counter = 0;
+		exe_clk_counter = 0;
+		mem_clk_counter = 0;
+		wb_clk_counter = 0;
+		rf_clk_counter = 0;
+
 		#100 nrst = 1;
 		#5000 int_sig = 0;
 		#2000 int_sig = 0;
@@ -131,11 +141,38 @@ module tb_core();
 
 	// Tracking how many clock cycles it takes to execute the program
 	always@(posedge CLK) begin
-		if(!nrst)
-			clock_counter <= 0;
-		else
-			if(!done)
-				clock_counter <= clock_counter + 1;
+		if(!nrst) clock_counter <= 0;
+		else if(!done) clock_counter <= clock_counter + 1;
+	end
+
+	always@(posedge CORE.if_clk) begin
+		if(!nrst) if_clk_counter <= 0;
+		else if(!done) if_clk_counter <= if_clk_counter + 1;
+	end
+
+	always@(posedge CORE.id_clk) begin
+		if(!nrst) id_clk_counter <= 0;
+		else if(!done) id_clk_counter <= id_clk_counter + 1;
+	end
+
+	always@(posedge CORE.exe_clk) begin
+		if(!nrst) exe_clk_counter <= 0;
+		else if(!done) exe_clk_counter <= exe_clk_counter + 1;
+	end
+
+	always@(posedge CORE.mem_clk) begin
+		if(!nrst) mem_clk_counter <= 0;
+		else if(!done) mem_clk_counter <= mem_clk_counter + 1;
+	end
+
+	always@(posedge CORE.wb_clk) begin
+		if(!nrst) wb_clk_counter <= 0;
+		else if(!done) wb_clk_counter <= wb_clk_counter + 1;
+	end
+
+	always@(posedge CORE.rf_clk) begin
+		if(!nrst) rf_clk_counter <= 0;
+		else if(!done) rf_clk_counter <= rf_clk_counter + 1;
 	end
 
 	// Tracking how many cycles each stall takes
@@ -359,6 +396,16 @@ module tb_core();
 		$display("Total cycles flushed: %0d", cumulative_flush_counter);
 		$display("Total NOPs: %0d", nop_counter);
 		$display("=================\n");
+
+		// Clock gating counters
+		$display("---| Clock Gating Metrics |---");
+		$display("IF Stage clock: %0d/%0d cycles", if_clk_counter, clock_counter-50);
+		$display("ID Stage clock: %0d/%0d cycles", id_clk_counter, clock_counter-50);
+		$display("EXE Stage clock: %0d/%0d cycles", exe_clk_counter, clock_counter-50);
+		$display("MEM Stage clock: %0d/%0d cycles", mem_clk_counter, clock_counter-50);
+		$display("WB Stage clock: %0d/%0d cycles", wb_clk_counter, clock_counter-50);
+		$display("Regfile clock: %0d/%0d cycles", rf_clk_counter, clock_counter-50);
+		$display("=================\n");
 		
 		// Computing BHT metrics
 		for(j = 0; j < 64; j = j + 1) begin
@@ -374,13 +421,13 @@ module tb_core();
 		$display("Precision: %0d passed/%0d accesses.", total_bht_correct, total_bht_accesses);
 		$display("Accuracy: %f%%.", 100*($itor(total_bht_correct)/$itor(total_bht_accesses)));
 		$display("Overwrites done: %0d.", total_bht_overwrites);
-		$display("---| Per-set Metrics |---");
+		/* $display("---| Per-set Metrics |---");
 		for(i = 0; i < 16; i = i + 1) begin
 			if(bht_overwrites[i] > 3) $display("Set: %0d\tOverwrites: %0d", i, bht_overwrites[i] - 3);
 			else $display("Set: %0d\tOverwrites: 0", i);
 			bht_entry_display();
 			$display("------");
-		end
+		end */
 		$finish;
 	end
 endmodule
