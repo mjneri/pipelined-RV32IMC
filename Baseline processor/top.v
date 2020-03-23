@@ -74,9 +74,9 @@ module top(
 		.SW(SW),
 		.LED(LED),
 
-		.con_write(4'h0),
+		.con_write(con_write),
 		.con_addr(con_addr),
-		.con_in(32'h0),
+		.con_in(con_in),
 
 		.con_out(con_out)
 
