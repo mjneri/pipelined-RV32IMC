@@ -3,7 +3,6 @@
 module pc(
 	input clk,
 	input nrst,
-	input en,
 
 	input flush,
 	input stall,
@@ -19,6 +18,6 @@ module pc(
 	always@(posedge clk)
 		if(!nrst || flush)
 			inst_addr <= 12'h0;
-		else if(en && !stall)
+		else if(!stall)
 			inst_addr <= addr_in;
 endmodule
