@@ -570,7 +570,7 @@ module core(
 		end
 
 	pipereg_if_id IF_ID(
-		.clk(if_clk),
+		.clk(id_clk),
 		.nrst(nrst),
 		.en(/*id_clk_en*/1'b1),
 

@@ -222,7 +222,7 @@ module sf_controller(
     // Flushes/Resets
     assign if_flush = ISR_PC_flush;
     assign id_flush = ISR_pipe_flush || jump_flush || branch_flush;
-    assign exe_flush = jalr_hazard || branch_flush || loop_jump || is_nop;
+    assign exe_flush = jalr_hazard || branch_flush || is_nop;
     assign mem_flush = (load_hazard && ~mem_prev_flush) || div_running || mul_stall;
     assign wb_flush = 1'b0;
 
