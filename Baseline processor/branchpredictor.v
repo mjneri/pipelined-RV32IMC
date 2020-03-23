@@ -18,7 +18,6 @@
 module branchpredictor(
 	input CLK,
 	input nrst,
-	input en,
 
 	input ISR_running,
 
@@ -314,7 +313,7 @@ module branchpredictor(
 			for(i = 0; i < 64; i=i+1) begin
 				history_table[i] <= 22'b0;
 			end
-		end else if(en && !stall) begin
+		end else if(!stall) begin
 
 			if( (id_is_btype || id_is_jump) && (id_iseqto == 4'h0) ) begin
 				// Write to table if (Branch or Jump) AND the input is not in the table yet
@@ -375,7 +374,7 @@ module branchpredictor(
 	end */
 
 	always@(*) begin
-		if(en && !stall) begin
+		if(!stall) begin
 			if( ((|exe_btype || |exe_c_btype) && !is_pred_correct) || (exe_sel_opBR && (exe_branchtarget != exe_loadentry[12:2])) )
 				branch_flush = 1;
 			else
@@ -385,7 +384,7 @@ module branchpredictor(
 	end
 
 	always@(*) begin
-		if(en && !stall)
+		if(!stall)
 			if(id_is_jump && id_iseqto == 4'h0)
 				jump_flush = 1;
 			else
