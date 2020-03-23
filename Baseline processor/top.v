@@ -39,12 +39,12 @@ module top(
 	wire locked;			// determines stability of CLKIP output
 	wire [3:0] db_btn;		// Debounced button inputs
 	wire int_sig;			// Interrupt signal
-	assign int_sig = (|db_btn) | (|SW);
+	assign int_sig = 1'b0;
 
 	// Uncomment the following if needed:
-	wire [9:0] con_addr;	// Output datamem address from protocol controllers or uartdump
-	//wire [3:0] con_write;	// Write enable signal from protocol controllers or uartdump
-	//wire [31:0] con_in;	// Input data to datamem from protocol controllers or uartdump
+	wire [10:0] con_addr;	// Output datamem address from protocol controllers or uartdump
+	wire [3:0] con_write;	// Write enable signal from protocol controllers or uartdump
+	wire [31:0] con_in;	// Input data to datamem from protocol controllers or uartdump
 	wire [31:0] con_out;	// Output data of datamem based on con_addr
 
 /*=== INSTANTIATING MODULES ===*/
@@ -101,25 +101,58 @@ module top(
 		// .wb_wr_data(wb_wr_data)
 	);
 
-	// Protocol Controllers OR UART Controller
-	uart_datamemdump UARTDUMP(
-		.CLK(CLK_BUF),
-		.nrst(nrst & locked),
-		.con_data(con_out),
+	// Protocol controllers
+	mcont PROTOCOL_CON(
+		.clk(CLK_BUF),
+		.nrst(nrst),
 
-		// Outputs
-		.con_addr(con_addr),
-		.TX(UART_TX)
+		.mem_in(con_out),
+		.mem_addr(con_addr),
+		.mem_out(con_in),
+		.mem_wr(con_write),
+
+		// SPI pins
+		.sck(),
+		.miso(),
+		.mosi(),
+		.ss0(),
+		.ss1(),
+		.ss2(),
+		.ss3(),
+		
+		// UART pins
+		.uart_enc(),
+		.uart_dec(),
+		
+		// I2C pins
+		.i2c_scl_i(),
+		.i2c_sda_i(),
+		.i2c_scl_o(),
+		.i2c_scl_t(),
+		.i2c_sda_o(),
+		.i2c_sda_t(),
+		.i2c_slave_sda_o()
 	);
+
+	// UART Data Memory Dump
+	// uart_datamemdump UARTDUMP(
+	// 	.CLK(CLK_BUF),
+	// 	.nrst(nrst & locked),
+	// 	.con_data(con_out),
+
+	// 	// Outputs
+	// 	.con_addr(con_addr),
+	// 	.TX(UART_TX)
+	// );
 
 	// Button debouncing
-	btndebounce DEBOUNCE(
-		.CLK(CLK_BUF),
-		.nrst(nrst & locked),
+	// btndebounce DEBOUNCE(
+	// 	.CLK(CLK_BUF),
+	// 	.nrst(nrst & locked),
 
-		.btn(BTN),
-		.db_btn(db_btn)
-	);
+	// 	.btn(BTN),
+	// 	.db_btn(db_btn)
+	// );
 
 	// Virtual I/O for H/W Debugging
 	// vio_core VIO(
