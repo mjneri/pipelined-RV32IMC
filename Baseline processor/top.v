@@ -35,6 +35,7 @@ module top(
 
 // DECLARING WIRES
 	wire CLKIP_OUT;			// Output of CLKIP module
+	wire CLK_BUF;			// Global Clock buffer output
 	wire locked;			// determines stability of CLKIP output
 	wire [3:0] db_btn;		// Debounced button inputs
 	wire int_sig;			// Interrupt signal
@@ -56,9 +57,16 @@ module top(
 		.locked(locked)
 	);
 
+	// Global clock buffer
+	BUFG clk_buf(
+		.I(CLKIP_OUT),
+		.O(CLK_BUF)
+	);
+
+
 	// RISC-V CORE
 	core RISCVCORE(
-		.CLK(CLKIP_OUT),
+		.CLK(CLK_BUF),
 		.nrst(nrst & locked),
 
 		.int_sig(int_sig),
@@ -95,7 +103,7 @@ module top(
 
 	// Protocol Controllers OR UART Controller
 	uart_datamemdump UARTDUMP(
-		.CLK(CLKIP_OUT),
+		.CLK(CLK_BUF),
 		.nrst(nrst & locked),
 		.con_data(con_out),
 
@@ -106,7 +114,7 @@ module top(
 
 	// Button debouncing
 	btndebounce DEBOUNCE(
-		.CLK(CLKIP_OUT),
+		.CLK(CLK_BUF),
 		.nrst(nrst & locked),
 
 		.btn(BTN),
@@ -115,7 +123,7 @@ module top(
 
 	// Virtual I/O for H/W Debugging
 	// vio_core VIO(
-	// 	.clk(CLKIP_OUT),
+	// 	.clk(CLK_BUF),
 	// 	.probe_in18(CLKIP_OUT),
 
 	// 	.probe_in0(if_PC),
