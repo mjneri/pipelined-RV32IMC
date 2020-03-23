@@ -254,13 +254,14 @@ module core(
 
 
 
-// Clock Gating + SF_Controller=====================================
+// Clock Gating + SF_Controller ====================================
+	wire CORE_CLK;			// Clock buffer output
 	wire if_clk;			// CLK input to PC
 	wire id_clk;			// CLK input to IF/ID pipereg
 	wire exe_clk;			// CLK input to ID/EXE pipereg
-	wire mem_clk;			// CLK input to EXE/MEM pipereg
+	wire mem_clk;			// CLK input to EXE/MEM pipereg & DATAMEM
 	wire wb_clk;			// CLK input to MEM/WB pipereg
-	wire rf_clk;
+	wire rf_clk;			// CLK input to Register file
 	
 	wire if_clk_en;
 	wire id_clk_en;
@@ -274,7 +275,6 @@ module core(
 	wire exe_stall; 		// Controls ID/EXE stall
 	wire mem_stall;			// Controls EXE/MEM + Datamem stall
 	wire wb_stall; 			// Controls MEM/WB stall
-	// wire rf_stall;		// Controls RF stall
 
 	wire if_flush;			// Controls PC flush
 	wire id_flush;			// Controls IF/ID flush
@@ -369,7 +369,7 @@ module core(
 /******************************* DATAPATH (INSTANTIATING MODULES) ******************************/
 // CLOCKS ========================================================
 	sf_controller SF_CONTROLLER(
-		.clk(CLK),
+		.clk(CORE_CLK),
 		.nrst(nrst),
 		.ISR_PC_flush(ISR_PC_flush),
 		.ISR_pipe_flush(ISR_pipe_flush),
@@ -452,7 +452,12 @@ module core(
 		.load_hazard(load_hazard)
 	);
 
-	BUFGCE en_if (
+	BUFG clk_buf(
+		.I(CLK),
+		.O(CORE_CLK)
+	);
+
+	BUFGCE en_iF (
 	 	.I(CLK),
 	 	.CE(if_clk_en),
 	 	.O(if_clk)
@@ -492,9 +497,8 @@ module core(
 
 // IF Stage ========================================================
 	pc PC( 
-		.clk(CLK),
+		.clk(if_clk),
 		.nrst(nrst),
-		.en(/*if_clk_en*/1'b1),
 
 		.flush(if_flush),
 		.stall(if_stall),
@@ -504,7 +508,7 @@ module core(
 	);
 
 	instmem INSTMEM( 
-		.clk(CLK),
+		.clk(CORE_CLK),
 		.sel_ISR(sel_ISR),
 
 		.addr(if_PC),
@@ -512,7 +516,7 @@ module core(
 	);
 
 	interrupt_controller INT_CON(
-		.clk(CLK),
+		.clk(CORE_CLK),
 		.nrst(nrst),
 		.stall(if_stall),
 
@@ -572,7 +576,6 @@ module core(
 	pipereg_if_id IF_ID(
 		.clk(id_clk),
 		.nrst(nrst),
-		.en(/*id_clk_en*/1'b1),
 
 		.flush(id_flush),
 		.stall(id_stall),
@@ -758,8 +761,7 @@ module core(
     
 	pipereg_id_exe ID_EXE(
 		.clk(exe_clk),
-		.nrst(nrst),		
-		.en(/*exe_clk_en*/1'b1),
+		.nrst(nrst),
 
 		.flush(exe_flush),
 		.stall(exe_stall),
@@ -809,7 +811,7 @@ module core(
 	assign exe_rstore = (fw_wb_to_exe_B && exe_is_stype)? wb_loaddata : exe_fwdstore;
 
 	alu ALU(
-		.CLK(CLK),
+		.CLK(CORE_CLK),
 		.nrst(nrst),
 		.load_hazard(load_hazard),
 
@@ -825,7 +827,7 @@ module core(
 
 	// NOTE: 
 	divider_unit DIVIDER(
-		.CLK(CLK),
+		.CLK(CORE_CLK),
 		.nrst(nrst),
 		.load_hazard(load_hazard),
 
@@ -842,9 +844,8 @@ module core(
 	);
 
 	branchpredictor BHT(
-		.CLK(CLK),
+		.CLK(CORE_CLK),
 		.nrst(nrst),
-		.en(/*id_clk_en*/ 1'b1),
 
 		.ISR_running(ISR_running),
 
@@ -890,7 +891,6 @@ module core(
 	pipereg_exe_mem EXE_MEM(
 		.clk(mem_clk),
 		.nrst(nrst),
-		.en(/*mem_clk_en*/1'b1),
 
 		.flush(mem_flush),
 		.stall(mem_stall),
@@ -916,7 +916,7 @@ module core(
 // MEM Stage ========================================================
 	datamem DATAMEM(
 		.core_clk(mem_clk),
-		.con_clk(CLK),
+		.con_clk(CORE_CLK),
 		.nrst(nrst),
 
 		.dm_write(exe_dm_write),
@@ -946,7 +946,6 @@ module core(
 	pipereg_mem_wb MEM_WB(
 		.clk(wb_clk),
 		.nrst(nrst),
-		.en(/*wb_clk_en*/1'b1),
 
 		.flush(wb_flush),
 		.stall(wb_stall),
