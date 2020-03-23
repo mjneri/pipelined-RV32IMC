@@ -135,8 +135,7 @@ module tb_core();
 		end
 	end
 	always@(posedge CLK) begin
-		if(check == 50)
-			done = 1;
+		if(check == 50) done = 1;
 	end
 
 	// Tracking how many clock cycles it takes to execute the program
@@ -286,7 +285,7 @@ module tb_core();
 		if(!nrst)
 			max_data_addr <= 0;
 		else if(!done) 
-			if(CORE.exe_is_stype && |CORE.exe_dm_write && CORE.exe_ALUout[12:2] > max_data_addr)
+			if((CORE.exe_is_stype && |CORE.exe_dm_write && CORE.exe_ALUout[12:2] > max_data_addr) && (CORE.exe_ALUout[12:2] < 11'h400))
 				max_data_addr <= CORE.exe_ALUout[12:2];
 	end
 
@@ -299,37 +298,37 @@ module tb_core();
 				nop_counter <= nop_counter + 1;
 	end
 
-	// always@(posedge CLK) begin
-	// 	// if(clock_counter == 100) begin
-	// 	// 	#3 BTN[1] = 1;
-	// 	// 	int_sig = 1;	
-	// 	// end
+	always@(posedge CLK) begin
+		if(clock_counter == 20) begin
+			#3 BTN[1] = 1;
+			int_sig = 1;	
+		end
 
-	// 	// if(clock_counter == 100) begin
-	// 	// 	#3 BTN[1] = 0;
-	// 	// 	int_sig = 0;	
-	// 	// end
+		// if(clock_counter == 100) begin
+		// 	#3 BTN[1] = 0;
+		// 	int_sig = 0;	
+		// end
 
-	// 	// if(clock_counter == 4976) begin
-	// 	// 	#3 BTN[2] = 1;
-	// 	// 	int_sig = 1;	
-	// 	// end
+		// if(clock_counter == 4976) begin
+		// 	#3 BTN[2] = 1;
+		// 	int_sig = 1;	
+		// end
 
-	// 	// if(clock_counter == 5100) begin
-	// 	// 	#3 BTN[2] = 0;
-	// 	// 	int_sig = 0;	
-	// 	// end
+		// if(clock_counter == 5100) begin
+		// 	#3 BTN[2] = 0;
+		// 	int_sig = 0;	
+		// end
 
-	// 	// if(clock_counter == 7400) begin
-	// 	// 	#3 BTN[3] = 1;
-	// 	// 	int_sig = 1;	
-	// 	// end
+		// if(clock_counter == 7400) begin
+		// 	#3 BTN[3] = 1;
+		// 	int_sig = 1;	
+		// end
 
-	// 	// if(clock_counter == 7500) begin
-	// 	// 	#3 BTN[3] = 0;
-	// 	// 	int_sig = 0;	
-	// 	// end
-	// end
+		// if(clock_counter == 7500) begin
+		// 	#3 BTN[3] = 0;
+		// 	int_sig = 0;	
+		// end
+	end
 
 	// The following code snippet is for checking the contents of
 	// the memory when RTL_RAM is used (if it was coded in Verilog)
@@ -399,12 +398,13 @@ module tb_core();
 
 		// Clock gating counters
 		$display("---| Clock Gating Metrics |---");
-		$display("IF Stage clock: %0d/%0d cycles", if_clk_counter, clock_counter-50);
-		$display("ID Stage clock: %0d/%0d cycles", id_clk_counter, clock_counter-50);
-		$display("EXE Stage clock: %0d/%0d cycles", exe_clk_counter, clock_counter-50);
-		$display("MEM Stage clock: %0d/%0d cycles", mem_clk_counter, clock_counter-50);
-		$display("WB Stage clock: %0d/%0d cycles", wb_clk_counter, clock_counter-50);
+		$display("PC clock: %0d/%0d cycles", if_clk_counter-50, clock_counter-50);
+		$display("IF/ID clock: %0d/%0d cycles", id_clk_counter, clock_counter-50);
+		$display("ID/EXE clock: %0d/%0d cycles", exe_clk_counter, clock_counter-50);
+		$display("EXE/MEM & DATAMEM clock: %0d/%0d cycles", mem_clk_counter, clock_counter-50);
+		$display("MEM/WB clock: %0d/%0d cycles", wb_clk_counter, clock_counter-50);
 		$display("Regfile clock: %0d/%0d cycles", rf_clk_counter, clock_counter-50);
+		$display("Ungated clock: %0d/%0d cycles", clock_counter-50, clock_counter-50);
 		$display("=================\n");
 		
 		// Computing BHT metrics
