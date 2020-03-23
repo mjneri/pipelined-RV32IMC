@@ -12,7 +12,7 @@ module core(
 
 	// inputs from protocol controllers
 	input [3:0] con_write,
-	input [9:0] con_addr,		// Word-aligned data address
+	input [10:0] con_addr,		// Word-aligned data address
 	input [31:0] con_in,
 	output [31:0] con_out		// Ouput of DATAMEM connected to Protocol controllers
 
