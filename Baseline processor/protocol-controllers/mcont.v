@@ -7,9 +7,7 @@ module mcont(
 	input		[31:0]	mem_in,
 	output reg	[6:0]	mem_addr,
 	output reg	[31:0]	mem_out,
-	output reg			mem_wr,
-	output reg	[2:0]	mem_load,
-	output reg	[1:0]	mem_store,
+	output reg	[3:0]	mem_wr,
 	
 	// SPI
 	output				sck,
@@ -122,8 +120,6 @@ module mcont(
 			mem_addr	<=	7'h0;
 			mem_out		<=	32'h0;
 			mem_wr		<=	0;
-			mem_load	<=	3'h0;
-			mem_store	<=	2'h0;
 			
 			s_din		<=	32'h0;
 			s_con		<=	32'h0;
@@ -141,73 +137,73 @@ module mcont(
 				7'h0: begin
 					mem_addr	<=	7'h04;
 					mem_out		<=	32'h0;
-					mem_wr		<=	0;
+					mem_wr		<=	4'h0;
 				end
 				7'h1: begin
 					mem_addr	<=	7'h08;
 					mem_out		<=	32'h0;
-					mem_wr		<=	0;
+					mem_wr		<=	4'h0;
 					s_din		<=	mem_in;
 				end
 				7'h2: begin
 					mem_addr	<=	7'h44;
 					mem_out		<=	s_dat_t;
-					mem_wr		<=	1;
+					mem_wr		<=	4'hf;
 					s_con		<=	mem_in;
 				end
 				7'h3: begin
 					mem_addr	<=	7'h40;
 					mem_out		<=	s_rco_t;
-					mem_wr		<=	1;
+					mem_wr		<=	4'hF;
 				end
 				7'h4: begin
 					mem_addr	<=	7'h0C;
 					mem_out		<=	32'h0;
-					mem_wr		<=	0;
+					mem_wr		<=	4'h0;
 				end
 				7'h5: begin
 					mem_addr	<=	7'h10;
 					mem_out		<=	32'h0;
-					mem_wr		<=	0;
+					mem_wr		<=	4'h0;
 					u_din		<=	mem_in;
 				end
 				7'h6: begin
 					mem_addr	<=	7'h4C;
 					mem_out		<=	u_rco;
-					mem_wr		<=	1;
+					mem_wr		<=	4'hF;
 					u_con		<=	mem_in;
 				end
 				7'h7: begin
 					mem_addr	<=	7'h50;
 					mem_out		<=	u_dat;
-					mem_wr		<=	1;
+					mem_wr		<=	4'hF;
 				end
 				7'h8: begin
 					mem_addr	<=	7'h14;
 					mem_out		<=	32'h0;
-					mem_wr		<=	0;
+					mem_wr		<=	4'h0;
 				end
 				7'h9: begin
 					mem_addr	<=	7'h18;
 					mem_out		<=	32'h0;
-					mem_wr		<=	0;
+					mem_wr		<=	4'h0;
 					i_din		<=	mem_in;
 				end
 				7'hA: begin
 					mem_addr	<=	7'h58;
 					mem_out		<=	i_rco;
-					mem_wr		<=	1;
+					mem_wr		<=	4'hF;
 					i_con		<=	mem_in;
 				end
 				7'hB: begin
 					mem_addr	<=	7'h54;
 					mem_out		<=	i_dat;
-					mem_wr		<=	1;
+					mem_wr		<=	4'hF;
 				end
 				default: begin
 					mem_addr	<=	7'h000;
 					mem_out		<=	32'h0;
-					mem_wr		<=	0;
+					mem_wr		<=	4'h0;
 				end
 			endcase
 		end
