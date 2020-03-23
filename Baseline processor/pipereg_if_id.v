@@ -3,7 +3,6 @@
 module pipereg_if_id(
 	input clk,
 	input nrst,
-	input en,
 
 	input flush,
 	input stall,
@@ -35,7 +34,7 @@ module pipereg_if_id(
 
 			id_PC <= 0;
 		end
-		else if(en && !stall) begin
+		else if(!stall) begin
 			id_pc4 <= if_pc4;
 			id_inst <= if_inst;
 			

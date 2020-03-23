@@ -3,7 +3,6 @@
 module pipereg_id_exe(
 	input clk,
 	input nrst,
-	input en,
 
 	input flush,
 	input stall,
@@ -161,7 +160,7 @@ module pipereg_id_exe(
 			exe_rs1 <= 5'd0;
 			exe_rs2 <= 5'd0;
 		end else begin
-			if(en && !stall) begin
+			if(!stall) begin
 				exe_pc4 <= id_pc4;
 				exe_fwdopA <= id_fwdopA;
 				exe_fwdopB <= id_fwdopB;

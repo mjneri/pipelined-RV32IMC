@@ -3,7 +3,6 @@
 module pipereg_mem_wb(
 	input clk,
 	input nrst,
-	input en,
 
 	input flush,
 	input stall,
@@ -72,7 +71,7 @@ module pipereg_mem_wb(
 			wb_wr_en <= 0;
 			wb_sel_data <= 0;
 
-		end else if(en && !stall) begin
+		end else if(!stall) begin
 			wb_pc4 <= mem_pc4;
 			wb_inst <= mem_inst;
 			wb_ALUout <= mem_ALUout;

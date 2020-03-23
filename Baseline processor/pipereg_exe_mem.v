@@ -3,7 +3,6 @@
 module pipereg_exe_mem(
 	input clk,
 	input nrst,
-	input en,
 	
 	input flush,
 	input stall,
@@ -82,7 +81,7 @@ module pipereg_exe_mem(
 			mem_dm_select <= 0;
 			mem_sel_data <= 0;
 		end
-		else if(en && !stall) begin
+		else if(!stall) begin
 			mem_pc4 <= exe_pc4;
 			mem_inst <= exe_inst;
 			mem_ALUout <= exe_ALUout;
