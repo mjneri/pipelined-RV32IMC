@@ -221,8 +221,8 @@ module sf_controller(
 
     // Flushes/Resets
     assign if_flush = ISR_PC_flush;
-    assign id_flush = ISR_pipe_flush || jump_flush || branch_flush;
-    assign exe_flush = jalr_hazard || branch_flush || loop_jump || is_nop;
+    assign id_flush = ISR_pipe_flush || jump_flush || branch_flush || loop_jump;
+    assign exe_flush = jalr_hazard || branch_flush || is_nop;
     assign mem_flush = (load_hazard && ~mem_prev_flush) || div_running || mul_stall;
     assign wb_flush = 1'b0;
 
@@ -245,7 +245,7 @@ module sf_controller(
         end
         else begin
             if_prev_flush <= if_flush;
-            id_prev_flush <= (if_prev_flush ? if_prev_flush : (id_flush || loop_jump));
+            id_prev_flush <= (if_prev_flush ? if_prev_flush : id_flush);
             exe_prev_flush <= (id_prev_flush ? id_prev_flush : exe_flush);
             mem_prev_flush <= (exe_prev_flush ? exe_prev_flush : mem_flush);
             wb_prev_flush <= (mem_prev_flush ? mem_prev_flush : wb_flush);
