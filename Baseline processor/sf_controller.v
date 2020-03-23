@@ -26,12 +26,12 @@ module sf_controller(
 
     // ID stage inputs
     input [11:0] id_pc,
-    input is_jump,			// uses controller1 to find if jump or not (low-asserted)
-    input is_nop,
+    input is_jump,				// uses controller1 to find if jump or not
+    input is_nop,				// ID Stage NOP
     
     // EXE stage inputs
     
-    input ISR_PC_flush,			// Output flush signal of interrupt controller
+    input ISR_PC_flush,			// Output flush signals of interrupt controller
     input ISR_pipe_flush,
 
     input branch_flush,			// Output flush signal from BHT
@@ -184,7 +184,6 @@ module sf_controller(
 		.hzd_mem_to_exe_B(hzd_mem_to_exe_B)
 	);
 
-    reg if_prev_flush;
 	reg id_prev_flush;
 	reg exe_prev_flush;
 	reg mem_prev_flush;
@@ -201,7 +200,7 @@ module sf_controller(
     assign fw_wb_to_exe_A = t_fw_wb_to_exe_A && !wb_prev_flush;
     assign fw_wb_to_exe_B = t_fw_wb_to_exe_B && !wb_prev_flush;
 
-    wire loop_jump = (if_pc == id_pc) && is_jump && ~id_stall;
+    wire loop_jump = (if_pc == id_pc) && is_jump && ~id_sel_opBR && ~id_stall;
     
     wire jalr_hazard = hzd_exe_to_id_A;							// LOAD -> JALR will result in a one-cycle stall for IF and ID stages
     assign load_hazard = (hzd_mem_to_exe_A || hzd_mem_to_exe_B) && !mem_prev_flush;	// LOAD -> Other instruction
@@ -221,15 +220,15 @@ module sf_controller(
 
     // Flushes/Resets
     assign if_flush = ISR_PC_flush;
-    assign id_flush = ISR_pipe_flush || jump_flush || branch_flush || loop_jump;
+    assign id_flush = ISR_pipe_flush || jump_flush || branch_flush;
     assign exe_flush = jalr_hazard || branch_flush || is_nop;
     assign mem_flush = (load_hazard && ~mem_prev_flush) || div_running || mul_stall;
     assign wb_flush = 1'b0;
 
     // Enables
     
-    assign if_clk_en = ~(if_stall || loop_jump);
-    assign id_clk_en = ~(id_stall || if_prev_flush || loop_jump);
+    assign if_clk_en = ~(if_stall || (loop_jump && ~ISR_pipe_flush));
+    assign id_clk_en = ~(id_stall || (loop_jump && ~ISR_pipe_flush));
     assign exe_clk_en = ~(exe_stall || id_prev_flush);
     assign mem_clk_en = ~(mem_flush || exe_prev_flush);
     assign wb_clk_en = ~(mem_prev_flush);
@@ -237,15 +236,13 @@ module sf_controller(
 
     always@(posedge clk) begin
         if (!nrst) begin
-            if_prev_flush <= 1'b0;
             id_prev_flush <= 1'b0;
             exe_prev_flush <= 1'b0;
             mem_prev_flush <= 1'b0;
             wb_prev_flush <= 1'b0;
         end
         else begin
-            if_prev_flush <= if_flush;
-            id_prev_flush <= (if_prev_flush ? if_prev_flush : id_flush);
+            id_prev_flush <= ((id_flush || loop_jump) && ~ISR_pipe_flush);
             exe_prev_flush <= (id_prev_flush ? id_prev_flush : exe_flush);
             mem_prev_flush <= (exe_prev_flush ? exe_prev_flush : mem_flush);
             wb_prev_flush <= (mem_prev_flush ? mem_prev_flush : wb_flush);
