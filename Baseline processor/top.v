@@ -6,7 +6,7 @@
 //
 //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 // Module Name: top.v
-// Description: This module will instantiate the required modules
+// Description: This module instantiates the required modules
 //				for the project, which include the RISC-V Core, the
 //				Clocking Wizard, and the Protocol Controllers.
 //				The XDC file is based on the IO ports of this module
