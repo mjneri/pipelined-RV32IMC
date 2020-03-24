@@ -125,7 +125,7 @@ module mcont(
 		.con_out(i_rco)
 	);
 	
-	always@(posedge clk or negedge nrst) begin
+	always@(posedge clk) begin
 		if(!nrst) begin
 			ctr			<=	7'h0;
 			mem_addr	<=	11'h0;

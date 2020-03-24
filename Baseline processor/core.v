@@ -6,9 +6,9 @@ module core(
 
 	// Interrupt related signals
 	input int_sig,				// Interrupt signal
-	input [3:0] BTN,			// Button input
-	input [2:0] SW,				// Switch input
-	output [3:0] LED,			// LED output
+	// input [3:0] BTN,			// Button input
+	// input [2:0] SW,				// Switch input
+	// output [3:0] LED,			// LED output
 
 	// inputs from protocol controllers
 	input [3:0] con_write,
@@ -924,9 +924,9 @@ module core(
 		.mem_data_addr(mem_ALUout[12:2]),
 		.data_in(exe_storedata),
 
-		.BTN(BTN),
-		.SW(SW),
-		.LED(LED),
+		// .BTN(BTN),
+		// .SW(SW),
+		// .LED(LED),
 
 		.con_write(con_write),
 		.con_addr(con_addr),

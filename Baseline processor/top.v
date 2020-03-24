@@ -29,7 +29,7 @@ module top(
 	// output [3:0] LED,
 
 	// Protocol controller related I/O
-	// output UART_TX		Output pin for UARTDUMP
+	// output UART_TX		// Output pin for UARTDUMP
 	output ck_io0,		// SCK
 	input ck_io1,		// MISO
 	output ck_io2,		// MOSI
@@ -107,9 +107,9 @@ module top(
 		.nrst(nrst & locked),
 
 		.int_sig(int_sig),
-		.BTN(BTN),
-		.SW(SW),
-		.LED(LED),
+		// .BTN(BTN),
+		// .SW(SW),
+		// .LED(LED),
 
 		.con_write(con_write),
 		.con_addr(con_addr),

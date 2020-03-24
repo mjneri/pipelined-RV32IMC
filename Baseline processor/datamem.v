@@ -12,9 +12,9 @@ module datamem(
 	input [31:0] data_in,
 
 	// Ports for FPGA I/O
-	input [3:0] BTN,
-	input [2:0] SW,
-	output [3:0] LED,
+	// input [3:0] BTN,
+	// input [2:0] SW,
+	// output [3:0] LED,
 
 	// Inputs from protocol controllers
 	// NOTE: protocol controllers cannot read from FPGAIO
