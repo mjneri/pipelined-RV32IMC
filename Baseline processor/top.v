@@ -49,13 +49,14 @@ module top(
 	wire locked;			// determines stability of CLKIP output
 	// wire [3:0] db_btn;		// Debounced button inputs
 	wire int_sig;			// Interrupt signal
-	assign int_sig = 1'b0;
 
 	// Uncomment the following if needed:
 	wire [10:0] con_addr;	// Output datamem address from protocol controllers
 	wire [3:0] con_write;	// Write enable signal from protocol controllers
 	wire [31:0] con_in;		// Input data to datamem from protocol controllers
 	wire [31:0] con_out;	// Output data of datamem based on con_addr
+
+	assign int_sig = &con_write;
 
 	// Wires for the protocol controllers (based on top_tb.v from prev198)
 	// I2C
