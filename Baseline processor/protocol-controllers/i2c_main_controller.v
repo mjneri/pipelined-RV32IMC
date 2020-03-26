@@ -43,33 +43,36 @@ module i2c_main_controller(
 
 	//I2C State Parameters
 	parameter [7*8:0] 	I2C_STATE_IDLE = "___IDLE",
-								I2C_STATE_READ = "___READ",
-								I2C_STATE_WRITE = "__WRITE",
-								I2C_STATE_PRESCALE = "_PRESCL";
+						I2C_STATE_READ = "___READ",
+						I2C_STATE_WRITE = "__WRITE",
+						I2C_STATE_PRESCALE = "_PRESCL",
+						I2C_STATE_DONE = "___DONE";
 	
 	parameter [4*8:0]	R0 = "_R00",
-							R1 = "_R01",
-							R2 = "_R02",
-							R3 = "_R03",
-							R4 = "_R04",
-							R5 = "_R05",
-							R6 = "_R06",
-							R7 = "_R07",
-							R8 = "_R08",
-							
-							W0 = "_W00",
-							W1 = "_W01",
-							W2 = "_W02",
-							W3 = "_W03",
-							W4 = "_W04",
-							W5 = "_W05",
-							W6 = "_W06",
-							W7 = "_W07",
-							W8 = "_W08",
-							
-							P0 = "_P00",
-							P1 = "_P01",
-							P2 = "_P02";
+						R1 = "_R01",
+						R2 = "_R02",
+						R3 = "_R03",
+						R4 = "_R04",
+						R5 = "_R05",
+						R6 = "_R06",
+						R7 = "_R07",
+						R8 = "_R08",
+						RX = "RSET",
+						
+						W0 = "_W00",
+						W1 = "_W01",
+						W2 = "_W02",
+						W3 = "_W03",
+						W4 = "_W04",
+						W5 = "_W05",
+						W6 = "_W06",
+						W7 = "_W07",
+						W8 = "_W08",
+						WX = "WSET",
+						
+						P0 = "_P00",
+						P1 = "_P01",
+						P2 = "_P02";
 
 	//I2C registers
 	reg [31:0] buffer_data;
@@ -82,8 +85,8 @@ module i2c_main_controller(
 	reg [15:0] i2c_prescale; // 16-bit prescale value
 	reg [6:0] i2c_addr; // 7-bit i2c addresses
 
-    assign done = (i2c_state == I2C_STATE_IDLE);
-    assign busy = ((i2c_state != I2C_STATE_IDLE) && (i2c_state != I2C_STATE_PRESCALE));
+    assign done = (i2c_state == I2C_STATE_DONE);
+    assign busy = ((i2c_state == I2C_STATE_READ) || (i2c_state == I2C_STATE_WRITE));
     
 	always@(posedge clk) begin
 		if (!nrst) begin
@@ -191,7 +194,7 @@ module i2c_main_controller(
 								wbm_stb_o <= 1'b1;
 								wbm_cyc_o <= 1'b1;
 							
-								i2c_substate_count <= R8;
+								i2c_substate_count <= RX;
 							end
 							else begin
 								wbm_adr_o <= 3'd0;
@@ -226,7 +229,7 @@ module i2c_main_controller(
 								wbm_stb_o <= 1'b1;
 								wbm_cyc_o <= 1'b1;
 							
-								i2c_substate_count <= R8;
+								i2c_substate_count <= RX;
 							end
 							else begin
 								if (i2c_data_sent_counter == i2c_data_length) begin //all bytes received by the I2C module, send stop command
@@ -306,6 +309,13 @@ module i2c_main_controller(
 					end
 				end
 				else if ( i2c_substate_count == R8 ) begin
+					//reset values
+					i2c_data_length <= 4'd1;
+					i2c_data_length_counter <= 4'd0;
+					i2c_data_sent_counter <= 4'd0;
+					i2c_state <= I2C_STATE_DONE;
+				end
+				else if( i2c_substate_count == RX ) begin
 					//reset values
 					i2c_data_length <= 4'd1;
 					i2c_data_length_counter <= 4'd0;
@@ -399,7 +409,7 @@ module i2c_main_controller(
 								wbm_stb_o <= 1'b1;
 								wbm_cyc_o <= 1'b1;
 							
-								i2c_substate_count <= W8;
+								i2c_substate_count <= WX;
 							end
 							else begin //keep waiting for busy to go high
 								wbm_adr_o <= 3'd0;
@@ -433,7 +443,7 @@ module i2c_main_controller(
 								wbm_stb_o <= 1'b1;
 								wbm_cyc_o <= 1'b1;
 							
-								i2c_substate_count <= W8;
+								i2c_substate_count <= WX;
 							end
 							else if (i2c_data_sent_counter == i2c_data_length) begin //all bytes sent by the I2C module, send stop command
 								wbm_adr_o <= 3'd3;
@@ -463,6 +473,25 @@ module i2c_main_controller(
 					end
 				end
 				else if (i2c_substate_count == W8) begin
+					if (wbm_ack_i == 1'b0) begin
+						wbm_stb_o <= 1'b0;
+					end
+					else begin
+						//reset values
+						wbm_adr_o <= 3'd0;
+						wbm_dat_o <= 8'd0;
+						wbm_we_o <= 1'b0;
+						wbm_stb_o <= 1'b0;
+						wbm_cyc_o <= 1'b0;
+						
+						i2c_data_length <= 4'd1;
+						i2c_data_length_counter <= 4'd0;
+						i2c_data_sent_counter <= 4'd0;
+						i2c_substate_count <= "_I00";
+						i2c_state <= I2C_STATE_DONE;
+					end
+				end
+				else if (i2c_substate_count == WX) begin
 					if (wbm_ack_i == 1'b0) begin
 						wbm_stb_o <= 1'b0;
 					end
@@ -509,9 +538,12 @@ module i2c_main_controller(
 					wbm_we_o <= 1'b0;
 					wbm_stb_o <= 1'b0;
 					wbm_cyc_o <= 1'b0;
-					i2c_state <= I2C_STATE_IDLE;
+					i2c_state <= I2C_STATE_DONE;
 				end
 			end
+
+			else if (i2c_state == I2C_STATE_DONE) // go back to I2C_STATE_IDLE
+				i2c_state <= I2C_STATE_IDLE;
 		end
 	end
 
