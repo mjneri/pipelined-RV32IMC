@@ -29,14 +29,14 @@ module i2c_main_controller(
 	/*
 	DATA MEMORY SIGNALS
 	
-	memory_control[31:0]- [0] 		- reset/en
-						- [1] 		- CMD START
-						- [2] 		- CMD READ
-						- [3] 		- CMD WRITE
-						- [4] 		- CMD STOP
-						- [5]		- SET PRESCALE
-						- [12:6] 	- SLAVE ADDRESS
-						- [16:13]	- NO. OF BITS TO BE SENT
+	memory_control[31:0]- [0] 		- CMD START
+						- [1] 		- CMD READ
+						- [2] 		- CMD WRITE
+						- [3] 		- SET PRESCALE
+						- [10:4] 	- SLAVE ADDRESS
+						- [14:11]	- NO. OF BITS TO BE SENT
+						- [15]		- UNUSED
+						- [31:16]	- PRESCALE VALUE
 	
 	memory_data[31:0]	-	DATA TO BE SENT
 	*/
@@ -131,22 +131,22 @@ module i2c_main_controller(
 
 			if ( (i2c_state == I2C_STATE_IDLE) ) begin //state while waiting for valid command from user host
 				//check if valid command present
-				if (memory_control[2] == 1'b1) begin //If CMD READ = 1
+				if (memory_control[1] == 1'b1) begin //If CMD READ = 1
 					i2c_state <= I2C_STATE_READ;
-					i2c_data_length <= memory_control[16:13]; //8bits data
+					i2c_data_length <= memory_control[14:11]; //8bits data
 					i2c_substate_count <= R0;
 				
 				end
-				else if (memory_control[3] == 1'b1) begin // If WRITE = 1
+				else if (memory_control[2] == 1'b1) begin // If WRITE = 1
 					i2c_state <= I2C_STATE_WRITE;
-					i2c_data_length <= memory_control[16:13]; //8bits data
+					i2c_data_length <= memory_control[14:11]; //8bits data
 					i2c_substate_count <= W0;
 					
 				end
-				else if (memory_control[5] == 1'b1) begin //If SET_PRESCALE = 1
+				else if (memory_control[3] == 1'b1) begin //If SET_PRESCALE = 1
 					i2c_state <= I2C_STATE_PRESCALE;
-					i2c_data_length <= memory_control[16:13]; //8bits data
-					i2c_prescale <= 16'd125;//16'd2500;
+					i2c_data_length <= memory_control[14:11]; //8bits data
+					i2c_prescale <= memory_control[31:16]; //16'd125;//16'd2500;
 					i2c_substate_count <= P0;
 				end
 			end
@@ -154,7 +154,7 @@ module i2c_main_controller(
 			else if (i2c_state == I2C_STATE_READ) begin
 				if (i2c_substate_count == R0) begin
 					//wait for i2c_address
-					i2c_addr <= memory_control[12:6];
+					i2c_addr <= memory_control[10:4];
 					i2c_substate_count <= R1;
 					
 				end
@@ -355,7 +355,7 @@ module i2c_main_controller(
 				end
 				else if (i2c_substate_count == W2) begin
 					//wait for i2c address
-					i2c_addr <= memory_control[12:6];
+					i2c_addr <= memory_control[10:4];
 					i2c_substate_count <= W3;
 					
 				end
