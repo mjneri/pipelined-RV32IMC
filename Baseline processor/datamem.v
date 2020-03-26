@@ -22,7 +22,7 @@ module datamem(
 	input [10:0] con_addr,		// datamem address from protocol controller
 	input [31:0] con_in,		// data input from protocol controller
 
-	output [31:0] data_out,	// data output to the RISC-V core
+	output [31:0] data_out,		// data output to the RISC-V core
 	output [31:0] con_out		// data output to protocol controller
 );
 	
@@ -72,5 +72,10 @@ module datamem(
 	assign data_out = core_sel? protocolmem_douta : coremem_douta;
 
 	// Assigning con_out
-	assign con_out = protocol_sel? protocolmem_doutb : coremem_doutb;
+	reg protocol_sel_reg;
+	always@(posedge con_clk) begin
+		if(!nrst) protocol_sel_reg <= 0;
+		else protocol_sel_reg <= protocol_sel;
+	end
+	assign con_out = protocol_sel_reg? protocolmem_doutb : coremem_doutb;
 endmodule
