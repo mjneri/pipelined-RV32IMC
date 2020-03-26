@@ -39,8 +39,7 @@ module Encoder(
     //parameter baud = 2'd1;
     //parameter data_in = 72'hEFE90100001106FF7E;
     
-    wire [31:0] clk_per_bit;
-    assign clk_per_bit = 32'd12500000 / baud;
+    wire [31:0] clk_per_bit = 32'd50000000 / baud;  // 50MHz clock
     parameter data_width = 3'd7;
     
     parameter s_idle = 3'd0;

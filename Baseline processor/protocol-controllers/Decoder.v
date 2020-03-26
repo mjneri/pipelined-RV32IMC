@@ -12,8 +12,7 @@ module Decoder(
 
   parameter data_width = 3'd7;
 
-  wire [31:0] clk_per_bit;
-  assign clk_per_bit = 32'd12500000 / baud;
+  wire [31:0] clk_per_bit = 32'd50000000 / baud;   // 50 MHz clk
   
   parameter s_idle = 3'd0;
   parameter s_start = 3'd1;
