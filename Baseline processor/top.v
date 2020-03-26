@@ -110,7 +110,7 @@ module top(
 		// .SW(SW),
 		// .LED(LED),
 
-		.con_write(4'b0),
+		.con_write(con_write),
 		.con_addr(con_addr),
 		.con_in(con_in),
 

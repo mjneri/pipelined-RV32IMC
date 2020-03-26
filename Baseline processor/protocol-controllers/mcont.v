@@ -164,7 +164,7 @@ module mcont(
 		end
 		else begin
 			// the counter cycles through the data memory addresses
-			ctr		<=	ctr == 7'h16	?	7'h0	:	ctr + 7'h1;
+			ctr		<=	ctr == 7'h17	?	7'h0	:	ctr + 7'h1;
 			case(ctr) 
 				7'h0: begin
 					mem_addr	<=	11'h001;	// Read from address 0x001 (SPI Data In)
@@ -245,6 +245,6 @@ module mcont(
 	// SPI: when DONE = 1 (spi_rco_t[0])
 	// UART: when DONE2 = 1 (uart_rco[6])
 	// I2C: when DONE = 1 (i2c_rco[1])
-	assign int_sig = (spi_rco_t[0] == 1'b1) | (uart_rco[6] == 1'b1) | (i2c_rco[1] == 1'b1);
+	assign int_sig = (spi_rco_t[1] == 1'b1) | (uart_rco[6] == 1'b1) | (i2c_rco[1] == 1'b1);
 	
 endmodule
