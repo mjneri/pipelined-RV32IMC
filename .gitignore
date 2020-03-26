@@ -2,7 +2,6 @@
 *.bat
 *.gtkw
 *.pyc
-*.pyc
 Assembler+Testbench/Assembler/__pycache__/*
 Baseline processor/debug place/*
 Vivado Files/tb_core.v
