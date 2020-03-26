@@ -65,7 +65,7 @@ module spi(
 	reg	[7:0]	dout;
 	reg			busy;
 	reg			done;
-	assign rco = {30'h0, busy, done};
+	assign rco = {30'h0, done, busy};
 	assign dat = {24'h0, dout};
 	
 	reg			[3:0]	ss;
