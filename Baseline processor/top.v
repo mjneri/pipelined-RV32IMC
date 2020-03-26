@@ -47,7 +47,7 @@ module top(
 	wire CLKIP_OUT;			// Output of CLKIP module
 	wire CLK_BUF;			// Global Clock buffer output
 	wire locked;			// determines stability of CLKIP output
-	// wire [3:0] db_btn;		// Debounced button inputs
+	// wire [3:0] db_btn;	// Debounced button inputs
 	wire int_sig;			// Interrupt signal
 
 	// Uncomment the following if needed:
@@ -55,8 +55,6 @@ module top(
 	wire [3:0] con_write;	// Write enable signal from protocol controllers
 	wire [31:0] con_in;		// Input data to datamem from protocol controllers
 	wire [31:0] con_out;	// Output data of datamem based on con_addr
-
-	assign int_sig = &con_write;
 
 	// Wires for the protocol controllers (based on top_tb.v from prev198)
 	// I2C
@@ -112,7 +110,7 @@ module top(
 		// .SW(SW),
 		// .LED(LED),
 
-		.con_write(con_write),
+		.con_write(4'b0),
 		.con_addr(con_addr),
 		.con_in(con_in),
 
@@ -142,7 +140,7 @@ module top(
 	// Protocol controllers
 	mcont PROTOCOL_CON(
 		.clk(CLK_BUF),
-		.nrst(nrst),
+		.nrst(nrst & locked),
 
 		.mem_in(con_out),
 		.mem_addr(con_addr),
@@ -169,7 +167,10 @@ module top(
 		.i2c_scl_t(i2c_scl_t),
 		.i2c_sda_o(i2c_sda_o),
 		.i2c_sda_t(i2c_sda_t),
-		.i2c_slave_sda_o(i2c_slave_sda_o)
+		.i2c_slave_sda_o(i2c_slave_sda_o),
+		
+		// Interrupts
+		.int_sig(int_sig)
 	);
 
 	// UART Data Memory Dump
