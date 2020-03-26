@@ -6,9 +6,9 @@ module tb_core();
 	reg nrst;
 
 	reg int_sig;
-	reg [3:0] BTN;
-	reg [2:0] SW;
-	wire [3:0] LED;
+	// reg [3:0] BTN;
+	// reg [2:0] SW;
+	// wire [3:0] LED;
 
 	reg [3:0] con_write;
 	reg [9:0] con_addr;
@@ -22,9 +22,9 @@ module tb_core();
 		.nrst(nrst),
 
 		.int_sig(int_sig),
-		.BTN(BTN),
-		.SW(SW),
-		.LED(LED),
+		// .BTN(BTN),
+		// .SW(SW),
+		// .LED(LED),
 
 		.con_write(con_write),
 		.con_addr(con_addr),
@@ -77,8 +77,8 @@ module tb_core();
 		nrst = 0;
 
 		int_sig = 0;
-		BTN = 0;
-		SW = 0;
+		// BTN = 0;
+		// SW = 0;
 		last_inst = 0;
 
 		con_write = 0;
@@ -298,11 +298,11 @@ module tb_core();
 				nop_counter <= nop_counter + 1;
 	end
 
-	always@(posedge CLK) begin
-		if(clock_counter == 20) begin
-			#3 BTN[1] = 1;
-			int_sig = 1;	
-		end
+	// always@(posedge CLK) begin
+	// 	if(clock_counter == 20) begin
+	// 		#3 BTN[1] = 1;
+	// 		int_sig = 1;	
+	// 	end
 
 		// if(clock_counter == 100) begin
 		// 	#3 BTN[1] = 0;
@@ -328,30 +328,9 @@ module tb_core();
 		// 	#3 BTN[3] = 0;
 		// 	int_sig = 0;	
 		// end
-	end
+	// end
 
-	// The following code snippet is for checking the contents of
-	// the memory when RTL_RAM is used (if it was coded in Verilog)
-	// Displaying Memory contents
-	/*always@(posedge done) begin
-		$display("===| SUMMARY |===");
-		$display("Actual  \tExpected");
-		$display("========\t========");
-		for(i = 0; i < 100; i = i + 1) begin
-			//$display("%X\t%X", CORE.DATAMEM.memory[i], AK.memory[i]);
-			if(CORE.DATAMEM.memory[i] == AK.memory[i]) begin
-				$display("%X\t%X\tPass", CORE.DATAMEM.memory[i], AK.memory[i]);
-				pass = pass + 1;
-			end else begin
-				$display("%X\t%X\tFail", CORE.DATAMEM.memory[i], AK.memory[i]);
-			end
-		end
-		$display("\n");
-		$display("Passed %0d/%0d test cases.\n=================", pass, i);
-		$finish;
-	end*/
-
-	// The following code snippet is for checking the contents
+	// The following code is for checking the contents
 	// of BLOCKMEM
 	always@(posedge done) begin
 		$display("---------| SUMMARY |---------");
