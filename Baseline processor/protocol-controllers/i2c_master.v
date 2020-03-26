@@ -825,6 +825,24 @@ always @* begin
     end
 end
 
+// Initializing registers
+initial begin
+    state_reg = STATE_IDLE;
+    phy_state_reg = PHY_STATE_IDLE;
+    delay_reg = 16'd0;
+    delay_scl_reg = 1'b0;
+    delay_sda_reg = 1'b0;
+    cmd_ready_reg = 1'b0;
+    data_in_ready_reg = 1'b0;
+    data_out_valid_reg = 1'b0;
+    scl_o_reg = 1'b1;
+    sda_o_reg = 1'b1;
+    busy_reg = 1'b0;
+    bus_active_reg = 1'b0;
+    bus_control_reg = 1'b0;
+    missed_ack_reg = 1'b0;
+end
+
 always @(posedge clk) begin
     if (!nrst) begin
         state_reg <= STATE_IDLE;

@@ -29,6 +29,15 @@ module Decoder(
   reg [31:0] width_add;
   reg parity_bit;
 
+  // Initializing registers
+  initial begin
+    state <= s_idle;
+    clk_count <= 0;
+    bit_index <= 0;
+    data_out <= 0;
+    width_add <= 0;
+  end
+
   always@(*)
     begin
       r_data <= data_in;

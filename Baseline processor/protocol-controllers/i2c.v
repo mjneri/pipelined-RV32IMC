@@ -111,6 +111,10 @@ module i2c_slave_temp (
 	input	wire	sda_passthrough_i,
 	output	reg	i2c_slave_sda_o
 	);
+
+	initial begin
+		i2c_slave_sda_o = 1;
+	end
 	
 	always@(posedge clk) begin
 		if (!nrst) begin

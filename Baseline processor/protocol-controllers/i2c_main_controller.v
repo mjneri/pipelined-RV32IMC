@@ -88,6 +88,25 @@ module i2c_main_controller(
     assign done = (i2c_state == I2C_STATE_DONE);
     assign busy = ((i2c_state == I2C_STATE_READ) || (i2c_state == I2C_STATE_WRITE));
     
+	// Initializing registers
+	initial begin
+		wbm_adr_o <= 3'd0;
+		wbm_dat_o <= 8'd0;
+		wbm_we_o <= 1'b0;
+		wbm_stb_o <= 1'b0;
+		wbm_cyc_o <= 1'b0;
+		
+		i2c_state <= I2C_STATE_IDLE;
+		i2c_substate_count <= "_I00";
+		i2c_data_length <= 4'd1;
+		i2c_data_length_counter <= 4'd0;
+		i2c_data_sent_counter <= 4'd0;
+		
+		i2c_prescale <= 16'd0;// = 75; 60 MHz / (4 * 200 kHz); Fclk = 60 MHz, Fi2c = 200 kHz
+		buffer_data <= 16'b0;
+		i2c_addr <= 7'd0;
+	end
+
 	always@(posedge clk) begin
 		if (!nrst) begin
 

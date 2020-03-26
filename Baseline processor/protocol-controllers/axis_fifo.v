@@ -89,6 +89,14 @@ assign output_axis_tvalid = output_axis_tvalid_reg;
 assign mem_write_data = {input_axis_tlast, input_axis_tuser, input_axis_tdata};
 assign {output_axis_tlast, output_axis_tuser, output_axis_tdata} = output_data_reg;
 
+// Initializing registers
+initial begin
+    wr_ptr_reg = {ADDR_WIDTH+1{1'b0}};
+    rd_ptr_reg <= {ADDR_WIDTH+1{1'b0}};
+    mem_read_data_valid_reg <= 1'b0;
+    output_axis_tvalid_reg <= 1'b0;
+end
+
 // Write logic
 always @* begin
     write = 1'b0;

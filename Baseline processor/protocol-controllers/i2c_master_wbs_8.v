@@ -542,6 +542,18 @@ always @* begin
     end
 end
 
+// Initializing registers
+initial begin
+    wbs_ack_o_reg = 1'b0;
+    cmd_valid_reg = 1'b0;
+    data_in_valid_reg = 1'b0;
+    data_out_ready_reg = 1'b0;
+    prescale_reg = DEFAULT_PRESCALE;
+    missed_ack_reg = 1'b0;
+    cmd_fifo_overflow_reg = 1'b0;
+    write_fifo_overflow_reg = 1'b0;
+end
+
 always @(posedge clk) begin
     if (!nrst) begin
         wbs_ack_o_reg <= 1'b0;
@@ -576,8 +588,7 @@ always @(posedge clk) begin
     data_in_last_reg <= data_in_last_next;
 end
 
-i2c_master
-i2c_master_inst (
+i2c_master i2c_master_inst (
     .clk(clk),
     .nrst(nrst),
 

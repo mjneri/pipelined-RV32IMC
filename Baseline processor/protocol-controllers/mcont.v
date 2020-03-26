@@ -127,6 +127,23 @@ module mcont(
 		.i_dat(i2c_dat),
 		.con_out(i2c_rco)
 	);
+
+	// Initializing registers
+	initial begin
+		ctr			=	7'h0;
+		mem_addr	=	11'h0;
+		mem_out		=	32'h0;
+		mem_wr		=	0;
+		
+		spi_din		=	32'h0;
+		spi_con		=	32'h0;
+		
+		uart_din	=	32'h0;
+		uart_con	=	32'h0;
+		
+		i2c_din		=	32'h0;
+		i2c_con		=	32'h0;
+	end
 	
 	always@(posedge clk) begin
 		if(!nrst) begin

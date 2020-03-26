@@ -68,6 +68,16 @@ module Encoder(
     wire     fifo_underflow;  
     wire     [4:0] wptr;
     
+    // Initializing registers
+    initial begin
+        state <= s_idle;
+        clk_count <= 0;
+        bit_index <= 0;
+        data <= 0;
+        width_add <= 0;
+        en <= 0;
+    end
+
     // 7. DUT Instantiation
    // fpga4student.com: FPga projects, Verilog projects, VHDL projects  
     fifo_mem FIFO (/*AUTOARG*/  
@@ -76,7 +86,7 @@ module Encoder(
       fifo_underflow,
       // Inputs  
       clk, nrst, (!wr & en), ((bit_index == 8'd7)&(clk_count == 32'd0)), data_in_mem,wptr,(u_rco[0]&fifo_empty)
-      );  
+      ); 
 
     always@(posedge clk) begin
         if(!nrst) begin

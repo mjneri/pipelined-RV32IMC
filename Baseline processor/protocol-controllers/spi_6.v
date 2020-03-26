@@ -61,7 +61,23 @@ module spi(
 	assign next = order ? state + 8'h1 : state - 8'h1;
 	
 	
-	initial e_clk <= 0;
+	initial begin
+		e_clk <= 0;
+		ctr <= 24'h0;
+		din_tmp <= din;
+		sck <= cpol;
+		dout <= 8'h0;
+		state <= 8'hFF;
+		toggle <= 0;
+		busy <= 0;
+		done <= 0;
+		ss[0] <= 1;
+		ss[1] <= 1;
+		ss[2] <= 1;
+		ss[3] <= 1;
+		din_reg <= 8'h0;
+	end
+
 	always@(posedge clk) begin
 		if(!turnon)	e_clk <= ~e_clk;
 		else if(ctr == prescale) e_clk <= ~e_clk;
