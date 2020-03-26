@@ -9,3 +9,4 @@ Vivado Files/tb_core.v
 dumpgen_script.py
 *.pyc
 */assembler.log
+*.mem
