@@ -130,24 +130,27 @@ module i2c_main_controller(
 			
 
 			if ( (i2c_state == I2C_STATE_IDLE) ) begin //state while waiting for valid command from user host
-				//check if valid command present
-				if (memory_control[1] == 1'b1) begin //If CMD READ = 1
-					i2c_state <= I2C_STATE_READ;
-					i2c_data_length <= memory_control[14:11]; //8bits data
-					i2c_substate_count <= R0;
-				
-				end
-				else if (memory_control[2] == 1'b1) begin // If WRITE = 1
-					i2c_state <= I2C_STATE_WRITE;
-					i2c_data_length <= memory_control[14:11]; //8bits data
-					i2c_substate_count <= W0;
+				// check if CMD START = 1
+				if (memory_control[0] == 1'b1) begin
+					//check if valid command present
+					if (memory_control[1] == 1'b1) begin //If CMD READ = 1
+						i2c_state <= I2C_STATE_READ;
+						i2c_data_length <= memory_control[14:11]; //8bits data
+						i2c_substate_count <= R0;
 					
-				end
-				else if (memory_control[3] == 1'b1) begin //If SET_PRESCALE = 1
-					i2c_state <= I2C_STATE_PRESCALE;
-					i2c_data_length <= memory_control[14:11]; //8bits data
-					i2c_prescale <= memory_control[31:16]; //16'd125;//16'd2500;
-					i2c_substate_count <= P0;
+					end
+					else if (memory_control[2] == 1'b1) begin // If WRITE = 1
+						i2c_state <= I2C_STATE_WRITE;
+						i2c_data_length <= memory_control[14:11]; //8bits data
+						i2c_substate_count <= W0;
+						
+					end
+					else if (memory_control[3] == 1'b1) begin //If SET_PRESCALE = 1
+						i2c_state <= I2C_STATE_PRESCALE;
+						i2c_data_length <= memory_control[14:11]; //8bits data
+						i2c_prescale <= memory_control[31:16]; //16'd125;//16'd2500;
+						i2c_substate_count <= P0;
+					end
 				end
 			end
 			
