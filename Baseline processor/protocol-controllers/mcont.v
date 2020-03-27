@@ -93,7 +93,7 @@ module mcont(
         .nrst(nrst),
         .data_in_mem(uart_din[7:0]),
         .wr(uart_con[0]),
-        .baud(uart_con[31:8]),
+        .baudcontrol(uart_con[31:8]),
         .parity(uart_con[1]),
         .last_byte(uart_con[2]),
         .data_out(uart_enc),
@@ -104,7 +104,7 @@ module mcont(
    		.clk(clk),
    		.nrst(nrst),
    		.data_in(uart_dec),        
-   		.baud(uart_con[31:8]),    
+   		.baudcontrol(uart_con[31:8]),    
    		.parity(uart_con[1]),        
    		.done(uart_rco[6]),        
    		.data_out(uart_dat)            

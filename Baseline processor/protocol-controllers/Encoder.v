@@ -25,7 +25,7 @@ module Encoder(
     input nrst,
     input wire [7:0] data_in_mem,
     input wire wr,
-    input wire [23:0] baud,
+    input wire [23:0] baudcontrol,
     input wire parity,
     input wire last_byte,
     output reg data_out,
@@ -35,11 +35,10 @@ module Encoder(
     // CLKS_PER_BIT = (Frequency of i_Clock)/(Frequency of UART)
     // Example: 10 MHz Clock, 115200 baud UART
     // (10000000)/(115200) = 87
-    //parameter clk_freq = 2'd2;
     //parameter baud = 2'd1;
     //parameter data_in = 72'hEFE90100001106FF7E;
     
-    wire [31:0] clk_per_bit = 32'd50000000 / baud;  // 50MHz clock
+    wire [31:0] clk_per_bit = baudcontrol;
     parameter data_width = 3'd7;
     
     parameter s_idle = 3'd0;
