@@ -2,39 +2,40 @@
 init:
 	addi sp, x0, 0x400		# address of PROTOCOLMEM
 	c.slli sp, 2
+	c.li s0, 0				# s0 serves as x0 for some compressed instructions
 
 main:
 	# Writing to SPI Data In & Input control
-	lui t0, 0xade1b
-	addi t0, t0, 0x055
-	sw t0, 4(x0)	# SPI Data In
+	lui a0, 0xade1b
+	addi a0, a0, 0x055	# data = 0xade1b055
+	c.sw a0, 1(s0)		# SPI Data In
 
-	addi t0, x0, 0x3e8
-	c.slli t0, 8
-	c.addi t0, 0xc		# prescale
-	xori t0, t0, 0x2	# turn on
-	sw t0, 8(x0)		# SPI Input control 1
+	addi a0, x0, 0x1b1	# prescale for SCK = 115,200bps
+	c.slli a0, 8		# shift to prescale field
+	xori a0, a0, 0x3	# turn on & enable SPI
+	c.sw a0, 2(s0)		# SPI Input Control 1
 
 	# Writing to UART Data In & Input control
-	lui t0, 0xc0e19
+	lui a0, 0xc0e19
 	addi t1, x0, 0x400
 	c.slli t1, 1
-	c.add t0, t1
-	sw t0, 12(x0)		# UART Data In
+	c.add a0, t1		# data = 0xc0e19800
+	c.sw a0, 3(s0)		# UART Data In
 
-	addi t0, x0, 0x4b0
-	c.slli t0, 3
-	c.slli t0, 8
-	xori t0, t0, 1
-	sw t0, 16(x0)		# UART Input Control
+	addi a0, x0, 0x1b2	# baudcontrol for 115200 bps
+	c.slli a0, 8		# shift to baudcontrol field
+	xori a0, a0, 1		# enable UART
+	c.sw a0, 4(s0)		# UART Input Control
 
 	# Writing to I2C Data In & Input Control
-	lui t0, 0xeee19
-	addi t0, t0, 0x700
-	sw t0, 20(x0)		# I2C Data In
+	lui a0, 0xeee19
+	addi a0, a0, 0x700	# data = 0xeee19700
+	c.sw a0, 5(s0)		# I2C Data In
 
-	addi t0, x0, 0x22	# prescale
-	sw t0, 24(x0)		# I2C Input Control
+	addi a0, x0, 54		# prescale for SCL = 115,200 bps
+	c.slli a0, 16		# shift to prescale field
+	xori a0, a0, 5		# start write
+	c.sw a0, 6(s0)		# I2C Input Control
 
 inf:
 	c.j inf
