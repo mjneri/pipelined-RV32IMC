@@ -68,7 +68,6 @@ module i2c_main_controller(
 						W6 = "_W06",
 						W7 = "_W07",
 						W8 = "_W08",
-						WX = "WSET",
 						
 						P0 = "_P00",
 						P1 = "_P01",
@@ -85,7 +84,7 @@ module i2c_main_controller(
 	reg [15:0] i2c_prescale; // 16-bit prescale value
 	reg [6:0] i2c_addr; // 7-bit i2c addresses
 
-    assign done = (i2c_state == I2C_STATE_DONE);
+    assign done = (i2c_state == I2C_STATE_DONE);	// asserts only when READs are done
     assign busy = ((i2c_state == I2C_STATE_READ) || (i2c_state == I2C_STATE_WRITE));
     
 	// Initializing registers
@@ -431,7 +430,7 @@ module i2c_main_controller(
 								wbm_stb_o <= 1'b1;
 								wbm_cyc_o <= 1'b1;
 							
-								i2c_substate_count <= WX;
+								i2c_substate_count <= W8;
 							end
 							else begin //keep waiting for busy to go high
 								wbm_adr_o <= 3'd0;
@@ -465,7 +464,7 @@ module i2c_main_controller(
 								wbm_stb_o <= 1'b1;
 								wbm_cyc_o <= 1'b1;
 							
-								i2c_substate_count <= WX;
+								i2c_substate_count <= W8;
 							end
 							else if (i2c_data_sent_counter == i2c_data_length) begin //all bytes sent by the I2C module, send stop command
 								wbm_adr_o <= 3'd3;
@@ -495,25 +494,6 @@ module i2c_main_controller(
 					end
 				end
 				else if (i2c_substate_count == W8) begin
-					if (wbm_ack_i == 1'b0) begin
-						wbm_stb_o <= 1'b0;
-					end
-					else begin
-						//reset values
-						wbm_adr_o <= 3'd0;
-						wbm_dat_o <= 8'd0;
-						wbm_we_o <= 1'b0;
-						wbm_stb_o <= 1'b0;
-						wbm_cyc_o <= 1'b0;
-						
-						i2c_data_length <= 4'd1;
-						i2c_data_length_counter <= 4'd0;
-						i2c_data_sent_counter <= 4'd0;
-						i2c_substate_count <= "_I00";
-						i2c_state <= I2C_STATE_DONE;
-					end
-				end
-				else if (i2c_substate_count == WX) begin
 					if (wbm_ack_i == 1'b0) begin
 						wbm_stb_o <= 1'b0;
 					end
@@ -560,7 +540,7 @@ module i2c_main_controller(
 					wbm_we_o <= 1'b0;
 					wbm_stb_o <= 1'b0;
 					wbm_cyc_o <= 1'b0;
-					i2c_state <= I2C_STATE_DONE;
+					i2c_state <= I2C_STATE_IDLE;
 				end
 			end
 
