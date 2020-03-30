@@ -23,14 +23,14 @@
 module Encoder(
     input clk,
     input nrst,
-    input wire [7:0] data_in_mem,
-    input wire wr,
-    input wire [23:0] baudcontrol,
-    input wire parity,
-    input wire last_byte,
+    input [7:0] data_in_mem,
+    input wr,
+    input [23:0] baudcontrol,
+    input parity,
+    input last_byte,
     output reg data_out,
     output reg [31:0] u_rco
-    );
+);
     
     // CLKS_PER_BIT = (Frequency of i_Clock)/(Frequency of UART)
     // Example: 10 MHz Clock, 115200 baud UART
@@ -41,11 +41,16 @@ module Encoder(
     wire [31:0] clk_per_bit = baudcontrol;
     parameter data_width = 3'd7;
     
-    parameter s_idle = 3'd0;
-    parameter s_start = 3'd1;
-    parameter s_data = 3'd2;
-    parameter s_stop = 3'd3;
-    parameter s_parity = 3'd4;
+	parameter [7*8:0] s_idle = "___IDLE",
+					  s_start = "__START",
+					  s_data = "___DATA",
+					  s_stop = "___STOP",
+					  s_parity = "_PARITY";
+	// parameter s_idle = 3'd0;
+	// parameter s_start = 3'd1;
+	// parameter s_data = 3'd2;
+	// parameter s_stop = 3'd3;
+	// parameter s_parity = 3'd4;
     
     reg [2:0] state;
     reg [31:0] clk_count;
@@ -79,13 +84,24 @@ module Encoder(
 
     // 7. DUT Instantiation
    // fpga4student.com: FPga projects, Verilog projects, VHDL projects  
-    fifo_mem FIFO (/*AUTOARG*/  
-      // Outputs  
-      data_out_mem, fifo_full, fifo_empty, fifo_threshold, fifo_overflow,   
-      fifo_underflow,
-      // Inputs  
-      clk, nrst, (!wr & en), ((bit_index == 8'd7)&(clk_count == 32'd0)), data_in_mem,wptr,(u_rco[0]&fifo_empty)
-      ); 
+    fifo_mem FIFO (
+		// Inputs
+		.clk(clk),
+		.nrst(nrst),
+		.wr(!wr & en),
+		.fifo_clr(u_rco[0] & fifo_empty),
+		.rd((bit_index == 8'd7) & (clk_count == 32'd0)),
+		.data_in(data_in_mem),
+
+		// Outputs
+		.data_out(data_out_mem),
+		.fifo_full(fifo_full),
+		.fifo_empty(fifo_empty),
+		.fifo_threshold(fifo_threshold),
+		.fifo_overflow(fifo_overflow),
+		.fifo_underflow(fifo_underflow),
+		.wptr(wptr)
+	); 
 
     always@(posedge clk) begin
         if(!nrst) begin
@@ -163,6 +179,7 @@ module Encoder(
             endcase
         end
     end
+
     always@(*) begin
         case(state)
             s_idle: begin
