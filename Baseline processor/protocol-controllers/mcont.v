@@ -68,7 +68,7 @@ module mcont(
 
 		.prescale(spi_con[31:8]),
 
-		.din(spi_din[31:0]),
+		.din(spi_din),
 		.select(spi_con[6:5]),
 
 		.cpol(spi_con[2]),
@@ -113,7 +113,7 @@ module mcont(
 	i2c I2C1(
 		.clk(clk),
 		.nrst(nrst),
-		.memory_data(i2c_din[31:0]),
+		.memory_data(i2c_din),
 		.memory_control(i2c_con[31:0]),
 		
 		.i2c_scl_i(i2c_scl_i),
