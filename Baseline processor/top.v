@@ -39,8 +39,8 @@ module top(
 	output ck_io6,		// SS3
 	output ck_io7,		// UART_ENC
 	input ck_io8,		// UART_DEC
-	inout ck_io38,		// Tristate buffer/I2C
-	inout ck_io39		// Tristate buffer/I2C
+	inout ck_io38,		// Tristate buffer/I2C SCL
+	inout ck_io39		// Tristate buffer/I2C SDA
 );
 
 // DECLARING WIRES
@@ -58,17 +58,17 @@ module top(
 
 	// Wires for the protocol controllers (based on top_tb.v from prev198)
 	// I2C
-	wire i2c_scl_i = ck_io38;
-	wire i2c_sda_i = ck_io39;
-	wire i2c_scl_o;
-	wire i2c_scl_t;
-	wire i2c_sda_o;
-	wire i2c_sda_t;
-	wire i2c_slave_sda_o;
+	wire i2c_scl_i = ck_io38;		// SCL from slave device
+	wire i2c_sda_i = ck_io39;		// SDA from slave device
+	wire i2c_scl_o;					// SCL from master
+	wire i2c_scl_t;					// SCL Tristate buffer control
+	wire i2c_sda_o;					// SDA from master
+	wire i2c_sda_t;					// SDA Tristate buffer control
+	wire i2c_slave_sda_o;			// ????????????????
 
 	// Tristate buffers for I2C
 	assign ck_io38 = i2c_scl_t? 1'bZ : i2c_scl_o;
-	assign ck_io39 = (i2c_sda_t & i2c_slave_sda_o)? 1'bZ : 0;
+	assign ck_io39 = (i2c_sda_t & i2c_slave_sda_o)? 1'bZ : i2c_sda_o;
 
 	// SPI
 	wire sck;		assign ck_io0 = sck;
