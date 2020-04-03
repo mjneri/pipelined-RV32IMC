@@ -45,7 +45,7 @@ module divider_unit(
 	parameter REMU = 2'd3;
 
 	// For determining the status of the operation, a finite state machine (FSM)
-	// will be implemented. Here is a description of what occurs during each state:
+	// is implemented. Here is a description of what occurs during each state:
 	//
 	// RESET		-- Do nothing. This state is entered one cycle after DONE or after a user reset.
 	//					Next state is WAIT.

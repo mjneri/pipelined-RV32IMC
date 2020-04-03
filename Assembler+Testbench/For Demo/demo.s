@@ -414,11 +414,11 @@ addi x15, x0, 0
 addi x16, x0, 0
 addi x17, x0, 0
 addi x18, x0, 0
-lui x16, 0x258
-addi x17, x0, 0x4c
+lui x16, 0x258			# Baudrate: ~19200 bps?
+addi x17, x0, 0x4c		# Address for UART Output control 1
 
-addi x2, x2, -4
-sw x1, 4(x2)
+addi x2, x2, -4			# decrement stack pointer?
+sw x1, 4(x2)			# push jump address in stack
 
 addi x15, x0, 0x7E	# UART Data In
 jal x1, uart_send
@@ -480,10 +480,10 @@ addi x0, x0, 0
 jalr x0, x1, 0
 
 uart_send:
-sw x15, 0xc(x0)
+sw x15, 0xc(x0)		# Store to UART Data In
 
 addi x16, x16, 0x1	# UART Input Control 1 (Mode)
-sw x16, 0x10(x0)
+sw x16, 0x10(x0)	# Assert EN
 
 addi x0, x0, 0
 addi x0, x0, 0
@@ -500,7 +500,7 @@ addi x0, x0, 0
 addi x0, x0, 0
 
 addi x16, x16, -1	# UART Input Control 1 (Mode)
-sw x16, 0x10(x0)
+sw x16, 0x10(x0)	# Deassert EN after 13 cycles (enough for mcont to read DATAIN once & store to FIFO)
 
 addi x18, x18, 0x2
 u1:
