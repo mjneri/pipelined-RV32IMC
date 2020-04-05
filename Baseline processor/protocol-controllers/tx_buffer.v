@@ -26,18 +26,17 @@ module tx_buffer(
 	input nrst,
 	input wr,					// Stores data_in to the buffer if asserted
 	input rd,					// Pops data out of the buffer if asserted
-	//input fifo_clr,
 	input [7:0] data_in,
 
 	// Outputs
 	output [7:0] data_out,
-	output [4:0] wptr,			// Determines how much data is stored
+	output reg [4:0] buffer_count,	// tracks how much data is stored in the buffer.
+									// buffer_count[4] determines if the buffer has exceeded 16 bytes stored.
 	output buffer_empty,
 	output buffer_full
 );
 	// Declaring wires & regs
 	reg [7:0] buffer [15:0];				// 16 byte buffer
-	reg [4:0] buffer_count;					// tracks how much data is stored in the buffer. The 5th bit determines if the buffer has exceeded 16 bytes stored.
 	wire buffer_wren = wr & (!buffer_full);	// buffer write enable
 	wire buffer_pop = rd & (!buffer_empty);	// buffer pop signal (similar to popping a stack)
 
@@ -45,7 +44,6 @@ module tx_buffer(
 	assign buffer_full = buffer_count[4];	// asserts if the buffer is full
 	assign buffer_empty = ~(|buffer_count);	// asserts if the buffer is empty
 	assign data_out = buffer[0];
-	assign wptr = buffer_count;
 
 	// Initializing the buffer
 	integer i;

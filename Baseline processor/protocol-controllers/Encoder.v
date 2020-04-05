@@ -1,158 +1,168 @@
-`timescale 1ns / 1ps
-//////////////////////////////////////////////////////////////////////////////////
-// Company: 
-// Engineer: 
-// 
-// Create Date: 18.03.2019 18:39:51
-// Design Name: 
-// Module Name: Encoder
-// Project Name: 
-// Target Devices: 
-// Tool Versions: 
-// Description: 
-// 
-// Dependencies: 
-// 
-// Revision:
+//-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+// Encoder.v -- UART Transmitter module
+//-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+// Author: Microlab 198 Single-cycle RISC-V Group (2SAY1819)
+//-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+//
+//-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+// Module Name: Encoder.v
+// Description:
+//
+// Revisions:
 // Revision 0.01 - File Created
+// Revision 1.00 - File modified by Pipelined RISC-V Group (2SAY1920)
 // Additional Comments:
 // 
-//////////////////////////////////////////////////////////////////////////////////
+//-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 
-
+`timescale 1ns / 1ps
 module Encoder(
     input clk,
     input nrst,
-    input [7:0] data_in_mem,
-    input wr,
-    input [23:0] baudcontrol,
-    input parity,
-    input last_byte,
-    output reg data_out,
-    output reg [31:0] u_rco
+
+    input [7:0] data_in,		// UART_DIN
+    input en,					// UART_CON[0]: EN
+    input [1:0] parity,			// PARITY: 	00 -- no parity bit
+								//		   	01 -- even parity
+								//		   	10 -- odd parity
+								//		   	11 -- no parity bit
+    input stop_sel,				// STOP_SEL: 0 -- 1 stop bit
+								//			 1 -- 2 stop bits
+    input [23:0] baudcontrol,	// BAUDCONTROL = (Fcoreclk/Fbaudrate) - 1
+
+    output reg uart_enc,		// UART_TX Pin
+    output reg [7:0] uart_rco	// uart_rco[7]: TRMT (transmit buffer empty)
+								// uart_rco[6]: TXBF (transmit buffer full)
+								// uart_rco[5:1]: BUFFER_COUNT
+								// uart_rco[0]: WRDONE
 );
     
-    // CLKS_PER_BIT = (Frequency of i_Clock)/(Frequency of UART)
-    // Example: 10 MHz Clock, 115200 baud UART
-    // (10000000)/(115200) = 87
-    //parameter baud = 2'd1;
-    //parameter data_in = 72'hEFE90100001106FF7E;
-    
-    wire [31:0] clk_per_bit = baudcontrol;
-    parameter data_width = 3'd7;
-    
-	parameter [7*8:0] s_idle = "___IDLE",
-					  s_start = "__START",
-					  s_data = "___DATA",
-					  s_stop = "___STOP",
-					  s_parity = "_PARITY";
+    // For determining the status of the operation, a finite state machine (FSM)
+	// is implemented. Here is a description of what occurs during each state:
+	//
+	// IDLE         -- Do nothing. Wait until at least 1 byte is saved in the buffer.
+    //                  Next state is START.
+    // START        -- Send the START bit for one cycle based on the set baud rate.
+    //                  Next state is DATA.
+    // DATA         -- Send the LSB (data[0]), advancing through the data bits by incrementing
+    //                  bit_index & shifting the data right by 1 bit. Once the data is finished sending,
+	//					check if the PARITY bit setting is enabled. If so, next state is PARITY. Else,
+	//					next state is STOP.
+	// PARITY		-- Send either an even or odd parity bit (based on the settings in uart_con). Next state
+	//					is STOP.
+	// STOP			-- Send 1 or 2 stop bits (depending on the setting). If the buffer is not yet empty, next
+	//					state is START. Else, next state is IDLE.
+	parameter [7*8:0] s_idle 	= 	"___IDLE",
+					  s_start 	= 	"__START",
+					  s_data 	= 	"___DATA",
+					  s_stop 	= 	"___STOP",
+					  s_parity 	= 	"_PARITY";
 	// parameter s_idle = 3'd0;
 	// parameter s_start = 3'd1;
 	// parameter s_data = 3'd2;
 	// parameter s_stop = 3'd3;
 	// parameter s_parity = 3'd4;
     
-    reg [2:0] state;
-    reg [31:0] clk_count;
-    reg [7:0] bit_index;
-    reg [7:0] data;
-    reg [31:0] width_add;
-    reg parity_bit;
-    reg en;
+	// Declaring other signals
+    reg [7*8:0] state;			// FSM signals
+    reg [23:0] clk_count;		// clock based on the baud rate
+    reg [2:0] bit_index;		// determines which bit is being sent
+    reg [7:0] data;				// the data being sent
+    reg parity_bit;				// contains the parity bit (depending on the setting)
+	reg stop_bit;				// determines if a stop bit has been sent. used for sending 2 stop bits.
+    // reg en_reg;
     
-    //wire     rd;
-    
-    //reg     [7:0] data_in_mem;  
-    // 6. DUT Output wires  
-    wire     [7:0] data_out_mem;  
-    wire     fifo_empty;  
-    wire     fifo_full;  
-    wire     fifo_threshold;  
-    wire     fifo_overflow;  
-    wire     fifo_underflow;  
-    wire     [4:0] wptr;
-    
-    // Initializing registers
+    wire [7:0] buffer_out;  	// data from the buffer that will be sent
+    wire buffer_empty;			// determines if the buffer is empty
+    wire buffer_full;			// determines if the buffer is full
+    wire [4:0] buffer_count;	// determines how much data is stored in the buffer
+
+	// TX_BUFFER can store up to 16 bytes of data.
+    tx_buffer TX_BUFFER(
+        .CLK(clk),
+        .nrst(nrst),
+
+        .wr(en /*& en*/),
+        .rd( (bit_index == 3'd7) & (clk_count == 24'd0) ),
+        .data_in(data_in),
+
+        .data_out(buffer_out),
+        .buffer_count(buffer_count),
+        .buffer_empty(buffer_empty),
+        .buffer_full(buffer_full)
+    );
+
+	// Initializing registers
     initial begin
         state <= s_idle;
         clk_count <= 0;
         bit_index <= 0;
         data <= 0;
-        width_add <= 0;
-        en <= 0;
+		parity_bit <= 0;
+		stop_bit <= 0;
+        // en_reg <= 0;
     end
 
-    // 7. DUT Instantiation
-   // fpga4student.com: FPga projects, Verilog projects, VHDL projects  
-    fifo_mem FIFO (
-		// Inputs
-		.clk(clk),
-		.nrst(nrst),
-		.wr(!wr & en),
-		.fifo_clr(u_rco[0] & fifo_empty),
-		.rd((bit_index == 8'd7) & (clk_count == 32'd0)),
-		.data_in(data_in_mem),
-
-		// Outputs
-		.data_out(data_out_mem),
-		.fifo_full(fifo_full),
-		.fifo_empty(fifo_empty),
-		.fifo_threshold(fifo_threshold),
-		.fifo_overflow(fifo_overflow),
-		.fifo_underflow(fifo_underflow),
-		.wptr(wptr)
-	); 
-
+	// This controls state transitions, the clock counter, bit index,
+	// parity bit, and the data to be sent. States described above.
     always@(posedge clk) begin
         if(!nrst) begin
             state <= s_idle;
             clk_count <= 0;
             bit_index <= 0;
             data <= 0;
-            width_add <= 0;
-            en <= 0;
+			parity_bit <= 0;
+			stop_bit <= 0;
+            // en_reg <= 0;
         end
         else begin
             case(state)
-                s_idle: begin
-                    if((last_byte|u_rco[0])&!fifo_empty) begin
+                s_idle: 
+				begin
+                    // en_reg <= en;
+                    if(!buffer_empty) begin
                         state <= s_start;
-                        data <= data_out_mem;
-                        parity_bit <= data_out_mem[7] ^ data_out_mem[6] ^ data_out_mem[5] ^ data_out_mem[4] ^ data_out_mem[3] ^ data_out_mem[2] ^ data_out_mem[1] ^ data_out_mem[0];
+                        data <= buffer_out;
+						parity_bit <= (parity == 2'b01)? ^buffer_out 	:	// even parity
+									  (parity == 2'b10)? ~(^buffer_out) :	// odd parity
+									  1;
                     end
-                    else state <= s_idle;
-                    en <= wr;
-                    end
+                    else
+						state <= s_idle;
+                end
+
                 s_start:
-                    if(clk_count < clk_per_bit-1) begin
+                    if(clk_count < baudcontrol) begin
                         clk_count <= clk_count+1;
                         state <= s_start;
                     end
                     else begin
                         clk_count <= 0;
+						stop_bit <= 0;		// reset stop_bit to 0
                         state <= s_data;
-                    end
+                	end
+
                 s_data:
-                    if(clk_count < clk_per_bit-1) begin
+                    if(clk_count < baudcontrol) begin
                         clk_count <= clk_count+1;
                         state <= s_data;
                     end
                     else begin
                         clk_count <= 0;
-                        if(bit_index < data_width) begin
-                            bit_index <= bit_index + 32'd1;
+                        if(bit_index < 3'd7) begin
+                            bit_index <= bit_index + 3'd1;
                             data <= {1'd0,data[7:1]};
                             state <= s_data;
                          end
                          else begin
                             bit_index <= 0;
                             data <= {1'd0,data[7:1]};
-                            if(parity) state <= s_parity;
-                            state <= s_stop;
+                            state <= (^parity)? s_parity : s_stop;
                          end
                     end
+
                 s_parity:
-                    if(clk_count < clk_per_bit-1) begin
+                    if(clk_count < baudcontrol) begin
                         clk_count <= clk_count+1;
                         state <= s_parity;
                     end
@@ -160,53 +170,70 @@ module Encoder(
                         clk_count <= 0;
                         state <= s_stop;
                     end
+
                 s_stop:
-                    if(clk_count < clk_per_bit-1) begin
+                    if(clk_count < baudcontrol) begin
                         clk_count <= clk_count+1;
                         state <= s_stop;
                     end
                     else begin
                         clk_count <= 0;
-                        if((last_byte|u_rco[0])&!fifo_empty) begin
+						stop_bit <= 1;				// assert stop_bit, which means at least 1 stop bit has been sent.
+						if(stop_sel && !stop_bit)
+							state <= s_stop;		// send the second stop bit.
+                        else if(!buffer_empty) begin
                             state <= s_start;
-                            data <= data_out_mem;
-                            parity_bit <= data_out_mem[7] ^ data_out_mem[6] ^ data_out_mem[5] ^ data_out_mem[4] ^ data_out_mem[3] ^ data_out_mem[2] ^ data_out_mem[1] ^ data_out_mem[0];
+                            data <= buffer_out;
+                            parity_bit <= (parity == 2'b01)? ^buffer_out 	:	// even parity
+									  	  (parity == 2'b10)? ~(^buffer_out) :	// odd parity
+									  	  1;
                         end
                         else state <= s_idle;
                     end
+
                 default:
                     state <= s_idle;
             endcase
         end
     end
 
+	// This controls the UART Output Control contents (uart_rco[7:0]) and 
+	// the uart_enc port (which corresponds to the TX pin of the UART module).
     always@(*) begin
+		uart_rco[5:1] = buffer_count;	// BUFFER_COUNT
+		uart_rco[6] = buffer_full;		// TXBF
+		uart_rco[7] = buffer_empty;		// TRMT
+
         case(state)
             s_idle: begin
-                data_out <= 1;
-                u_rco[0] <= 0;
-                u_rco[5:1] <= wptr[4:0];
-                end
+                uart_enc = 1;
+                uart_rco[0] = 0;
+            end
+
             s_start: begin
-                data_out <= 0;
-                u_rco <= 0;
-                end
+                uart_enc = 0;
+                uart_rco[0] = 0;
+            end
+
             s_data: begin
-                data_out <= data[0];
-                u_rco[0] <= 0;
-                end
-            s_stop: begin
-                data_out <= 1;
-                u_rco[0] <= 1;
-                end
+                uart_enc = data[0];
+                uart_rco[0] = 0;
+            end
+
             s_parity: begin
-                data_out <= parity_bit;
-                u_rco <= 0;
-                end
+                uart_enc = parity_bit;
+                uart_rco[0] = 0;
+            end
+
+            s_stop: begin
+                uart_enc = 1;
+                uart_rco[0] = ((stop_sel && stop_bit) || !stop_sel)? 1 : 0;
+            end
+
             default: begin
-                data_out <= 1;
-                u_rco <= 0;
-                end
+                uart_enc = 1;
+                uart_rco[0] = 0;
+            end
         endcase
     end
 endmodule

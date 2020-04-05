@@ -2,14 +2,14 @@ module fifo_mem(
 	// Inputs
 	input clk,
 	input nrst,
-	input wr,
-	input fifo_clr,
-	input rd,
+	input wr,				// UART_CON[0]: EN
+	input fifo_clr,			// RDDONE && FIFO_EMPTY
+	input rd,				// BIT_INDEX = 7 && CLK_COUNT = 0
 	input [7:0] data_in,
 
 	// Outputs
 	output [7:0] data_out,
-	output fifo_full,
+	output fifo_full,		
 	output fifo_empty,
 	output fifo_threshold,
 	output fifo_overflow,
@@ -85,31 +85,32 @@ module memory_array(
 	output [7:0] data_out
  );
 
-	reg [7:0] data_out2[15:0];  
+	reg [7:0] fifo_array [31:0];  
 	wire [7:0] data_out;  
 	integer i;
 
 	// Initializing registers
 	initial begin
-	for(i = 0; i < 16; i = i + 1)
-		data_out2[i]    <=    8'd0;
+	for(i = 0; i < 32; i = i + 1)
+		fifo_array[i]    <=    8'd0;
 	end
 
 	always @(posedge clk) begin
 		if(!nrst | fifo_clr)
-			for(i = 0; i < 16; i = i + 1)
-				data_out2[i]    <=    8'd0;
+			for(i = 0; i < 32; i = i + 1)
+				fifo_array[i]    <=    8'd0;
 		else  
 			if(fifo_we)   
-				data_out2[wptr[3:0]] <= data_in ;  
+				fifo_array[wptr] <= data_in ;  
 	end  
 
-	assign data_out = data_out2[rptr[3:0]];  
+	assign data_out = fifo_array[rptr];  
 endmodule
 
 // fpga4student.com: FPga projects, Verilog projects, VHDL projects
 // Verilog project: Verilog code for FIFO memory
-// Verilog code for Read Pointer sub-module 
+// Verilog code for Read Pointer sub-module
+// RPTR increments as bytes are sent.
 module read_pointer(
 	input clk,
 	input nrst,
@@ -166,7 +167,8 @@ module status_signal(
 	assign fbit_comp = wptr[4] ^ rptr[4];
 	assign overflow_set = fifo_full & wr;
 	assign underflow_set = fifo_empty & rd;
-	assign pointer_equal = (wptr[3:0] - rptr[3:0])? 0 : 1;
+	// assign pointer_equal = (wptr[3:0] - rptr[3:0])? 0 : 1;
+	assign pointer_equal = (wptr == rptr)? 1 : 0;
 	assign pointer_result = wptr[4:0] - rptr[4:0];
 
 	// Initializing registers
@@ -176,7 +178,7 @@ module status_signal(
 	end
 
 	always@(*) begin  
-		fifo_full =fbit_comp & pointer_equal;  
+		fifo_full = fbit_comp & pointer_equal;  
 		fifo_empty = (~fbit_comp) & pointer_equal;  
 		fifo_threshold = (pointer_result[4]||pointer_result[3]) ? 1:0;  
 	end
@@ -207,6 +209,7 @@ endmodule
 // fpga4student.com: FPga projects, Verilog projects, VHDL projects
 // Verilog project: Verilog code for FIFO memory
 // Verilog code for Write Pointer sub-module   
+// WPTR increments as bytes are written into the FIFO memory.
 module write_pointer(
 	input clk,
 	input nrst,
@@ -215,7 +218,7 @@ module write_pointer(
 	input fifo_clr,
 
 	output reg [4:0] wptr,
-	output fifo_we
+	output fifo_we			// FIFO Write enable
  );
 
 	assign fifo_we = (~fifo_full) & wr;
@@ -226,11 +229,11 @@ module write_pointer(
 	end
 
 	always @(posedge clk) begin  
-	if(~nrst | fifo_clr)
-		wptr <= 5'b0;  
-	else if(fifo_we)  
-		wptr <= wptr + 5'b1;  
-	else  
-		wptr <= wptr;  
+		if(~nrst | fifo_clr)
+			wptr <= 5'b0;  
+		else if(fifo_we)  
+			wptr <= wptr + 5'b1;  
+		// else  
+		// 	wptr <= wptr;  
 	end
 endmodule  
