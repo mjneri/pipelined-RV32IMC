@@ -9,82 +9,100 @@
 */
 
 module compressed_decoder(
-    // inputs
-    input [15:0] inst,
+    // Instruction Input
+    input [15:0] inst,                              // The instruction to be decoded. 
+                                                    // This is assumed to be the lower 16 bits of the 32-bit instruction in the ID stage.
 
-    // type indicator
-    output is_compressed,
+    // Type Indicator
+    output is_compressed,                           // Signal to indicate if the instruction belongs to the compressed extension.
 
-    // control signals
-    output [2:0] dm_select,
-    output [2:0] imm_select,
-    output [2:0] sel_data,
-    output [1:0] store_select,
-    output [3:0] alu_op,
-    output sel_opA,
-    output sel_opB,
-    output sel_opBR,
-    output sel_pc,
-    output is_stype,
-    output wr_en,
-    output [1:0] btype,
-    output use_A,
-    output use_B,
-    output is_jump,
-    output is_btype,
-    output reg is_nop,
+    // Control Signals
+    // These signals are analogues of their counterparts from the controller1 module. ===================================
+    output [2:0] dm_select,                         // Selects size of data to be loaded using the loadblock module.
+                                                    // For more information, see the loadblock module.
+    output [2:0] imm_select,                        // Selects extended immediate output of the shiftsignshuff block.
+                                                    // This does not affect the output immediate of this module,
+                                                    // and was included for debugging reasons.
+    output [2:0] sel_data,                          // Selects data to be written during the WB stage.
+                                                    // For more information, see the controller1 module.
+    output [1:0] store_select,                      // Selects data to be stored using the storeblock module.
+                                                    // For more information, see the controller1 module.
+    output [3:0] alu_op,                            // Selects the operation to be performed by the ALU module.
+                                                    // For more information, see the controller1 module.
+    output sel_opA,                                 // Selects between immediate and register A output for operand A.
+
+    output sel_opB,                                 // Selects between immediate and register B output for operand B.
+
+    output sel_opBR,                                // Selects between PC and register A output to use as a base address for jumps.
+
+    output sel_pc,                                  // Used to facilitate jumps from the ID stage.
+    output is_stype,                                // Used to check instructions that store to memory.
+    output wr_en,                                   // Used to enable writing to registers in the WB stage.
+
+    output is_jump,                                 // Used to check if an instruction is an unconditional jump.
+    output is_btype,                                // Used to check if an instruction is a conditional branch.
+    output [1:0] btype,                             // Used to check the type of branch to be evaluated in the EXE stage.
+                                                    // For more information, see the branchpredictor module.
+    // ====================================================================================================================                                                    
+    output use_A,                                   // Used to check if an instruction uses Register A in the ID stage.
+    output use_B,                                   // Used to check if an instruction uses Register B in the ID stage.
+    output reg is_nop,                              // Used to check if an instruction is C.NOP.
 
     // results
-    output [4:0] rs1,
-    output [4:0] rs2,
-    output [4:0] rd,
-    output [31:0] imm,
-    output [31:0] jt
+    output [4:0] rs1,                               // Register A
+    output [4:0] rs2,                               // Register B
+    output [4:0] rd,                                // Destination Register
+    output [31:0] imm,                              // Immediate
+    output [31:0] jt                                // Jump offset
     );
 
     // instruction encoding
-    wire [1:0] opcode = inst[1:0];                        // opcode used by all instructions
-    wire [2:0] funct3 = inst[15:13];                      // function code used by most instructions except for the following:
-    wire funct4 = inst[12];                               // function code used by CA-type instructions
-    wire [1:0] funct2 = inst[11:10];                      // function code used by CA-type instructions
-    wire [1:0] funct2_lo = inst[6:5];                     // function code used by CA-type instructions
+    wire [1:0] opcode = inst[1:0];                      // 2-bit opcode used by all instructions
+    wire [2:0] funct3 = inst[15:13];                    // Function code used by most compressed instructions 
+                                                        // except for the CA-type instructions
+    // Function codes used by CA-type instructions
+    wire funct4 = inst[12];
+    wire [1:0] funct2 = inst[11:10];
+    wire [1:0] funct2_lo = inst[6:5];
 
-    wire [4:0] rd7 = inst[11:7];                          // full (5-bit) register addressing used by CR-type instructions
-    wire [4:0] rs2_full = inst[6:2];                           // full register addressing used by CI- and CR-type instructions
-    wire [2:0] rs1_abb = inst[9:7];                       // abdridged register used by CL-, CS-, CA-, and CB-type instructions
-    wire [2:0] rs2_abb = inst[4:2];                       // abdridged register used by CL-, CS-, CA-, and CIW-type instructions
-
-
-    // decoding logic
-    wire quad_0 = (opcode == 2'd0);
-    wire quad_1 = (opcode == 2'd1);
-    wire quad_2 = (opcode == 2'd2);
-    wire not_func3 = (funct3 == 3'd4);
-
-    wire [5:0] rs1_eff = {2'b01, rs1_abb};
-    wire [5:0] rs2_eff = {2'b01, rs2_abb};
+    // Register addressing
+    wire [4:0] rd7 = inst[11:7];                        // Full (5-bit) register addressing used by CR-type instructions
+                                                        // This signal can also correspond to rs1.
+    wire [4:0] rs2_full = inst[6:2];                    // Full register addressing used by CI- and CR-type instructions
+    
+    // Abdridged registers used by CL-, CS-, CA-, and CB-type instructions
+    wire [2:0] rs1_abb = inst[9:7];                     
+    wire [5:0] rs1_eff = {2'b01, rs1_abb};              
+    wire [2:0] rs2_abb = inst[4:2];
+    wire [5:0] rs2_eff = {2'b01, rs2_abb};              
     
     // facilitators
+    // register primitives for output signals
     reg [5:0] temp_rs1;
     reg [5:0] temp_rs2;
     reg [5:0] temp_rd;
     reg [3:0] temp_op;
+    // instruction types
     reg i_type;
     reg j_type;
-    reg jr_type;
     reg b_type;
     reg r_type;
+    // other instruction types
+    reg jr_type;
     reg lui_type;
     reg ebreak_type;
     reg load_inst;
     reg store_inst;
-
+    // immediate types (used in immediate generation)
     reg spn_imm;
     reg sp_imm;
     reg lssp_imm;
     reg unsigned_imm;
 
-    // instruction decodes
+    // decoding logic
+    wire not_func3 = (funct3 == 3'd4);
+
+    // instruction decodings
     always@(*) begin
         // default values
         temp_rs1 = 5'd0;
@@ -369,7 +387,7 @@ module compressed_decoder(
     // jump/branch target
     wire [2:0] jump_upper = {sign, inst[8], inst[10]};
 
-    assign jt = {{20{sign}},                             // bits 31:12
+    assign jt = {{20{sign}},                            // bits 31:12
                 (j_type) ? jump_upper : {3{sign}},      // bits 11:9
                 (j_type) ? inst[9]: inst[12],           // bit 8
                 inst[6],                                // bit 7

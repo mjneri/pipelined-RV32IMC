@@ -11,7 +11,7 @@ module tb_core();
 	// wire [3:0] LED;
 
 	reg [3:0] con_write;
-	reg [9:0] con_addr;
+	reg [10:0] con_addr;
 	reg [31:0] con_in;
 	wire [31:0] con_out;
 

@@ -1,19 +1,37 @@
 `timescale 1ns / 1ps
 /* 
-    Clock Controller module
+    (Stall + Flush) + Forwarding Controller module
 
     A handy excuse to merge controlling for stalls and flushes (bad for performance), 
     and clock gating (good for power usage).
-    
-    An intended feature down the line is to treat back-to-back issues of the same branch instruction as a NOP.
-    A branch that links to itself, after all, results in the processor spinning its wheels.
+	This controller now also includes the forwarding unit controller in order to reduce the number of wire declarations in the core module.
 
-    Stall(s) are (currently) as follows:
-        - L(B/H/W)/inst pair (stall at ID)
+	Stalls and flushes are handled using a mix of clock gating, and additional support logic that facilitates stalling or flushing in the
+	corresponding pipeline registers.
+	The scenarios currently supported by the gating logic are as follows:
+		- Stalls
+			All stalls are handled by disabling the clock for the corresponding stage.
+			e.g. an ID-stage stall will have the ID stage clock disabled.
+		- Flushes
+			A flush will result in a case-by-case resolution of what will happen. Be prepared for inconsistent behavior.
+			
+			To give two examples:
+				- A MEM-stage flush due to a data hazard will result in the MEM stage clock getting disabled on the current
+				  WB stage clock getting disabled on the next cycle, and will force a non-flush on the next cycle.
+				- The ISR flushes (ISR_PC_flush and ISR_pipe_flush) work together, but act differently.
+				  Only the ISR_pipe_flush signal can actually disable the IF- and ID-stage clocks.
+			What *is* consistent, however, is that flushes get propagated to later stages via the *_prev_flush registers,
+			with the exception of the IF-stage. 
+		- Looping Jumps
+			A looping jump is defined as a jump whose target address is the same as its own address.
+			Such jumps are detected by checking if the ID-stage instruction is a jump, and if the IF- and ID-stage PC
+			addresses are equal. If both conditions are met, the result is to disable the IF- and ID-stage clocks, and
+			to the EXE stage.
+			Due to how the interrupt memory space is currently implemented, looping jumps cannot be escaped from without resetting.
+			As such, please use branches to wait for interrupts instead.
+		- NOPs
+			These are treated as EXE-stage flushes, but the implementation disables the EXE-stage clock as well. 
 
-        LW      IF  ID  EXE MEM WB
-        inst        IF  ID  EXE MEM WB
-                            ^- hazard: need to stall since memory not read yet
 */
 
 module sf_controller(
@@ -34,7 +52,7 @@ module sf_controller(
     input ISR_PC_flush,			// Output flush signals of interrupt controller
     input ISR_pipe_flush,
 
-    input branch_flush,			// Output flush signal from BHT
+    input branch_flush,			// Output flush signals from BHT
     input jump_flush,
 
     input mul_stall,            // Stall due to multiplication
@@ -184,6 +202,15 @@ module sf_controller(
 		.hzd_mem_to_exe_B(hzd_mem_to_exe_B)
 	);
 
+	/* 
+	
+		*_prev_flush registers keep track of whether the current stage has contains an instruction that has been flushed.
+		
+		For example:
+		- id_prev_flush tracks whether an instruction was flushed from the ID stage on the previous cycle.
+		  Thus, it corresponds to the EXE stage on the current cycle.
+
+	*/
 	reg id_prev_flush;
 	reg exe_prev_flush;
 	reg mem_prev_flush;
@@ -216,20 +243,19 @@ module sf_controller(
     assign exe_stall = ((load_hazard  && ~mem_prev_flush) || div_running || mul_stall);					
     assign mem_stall = 1'b0;
     assign wb_stall = 1'b0;
-    //assign rf_stall = 1'b0;
 
     // Flushes/Resets
     assign if_flush = ISR_PC_flush;
     assign id_flush = ISR_pipe_flush || jump_flush || branch_flush;
     assign exe_flush = jalr_hazard || branch_flush || is_nop;
-    assign mem_flush = (load_hazard && ~mem_prev_flush) || div_running || mul_stall;
+    assign mem_flush = (load_hazard && ~mem_prev_flush) || div_running || mul_stall;	// flushing the MEM-stage for two straight cycles is disabled for forwarding reasons
     assign wb_flush = 1'b0;
 
     // Enables
     
     assign if_clk_en = ~(if_stall || (loop_jump && ~ISR_pipe_flush));
     assign id_clk_en = ~(id_stall || (loop_jump && ~ISR_pipe_flush));
-    assign exe_clk_en = ~(exe_stall || id_prev_flush);
+    assign exe_clk_en = ~(exe_stall || id_prev_flush || is_nop);
     assign mem_clk_en = ~(mem_flush || exe_prev_flush);
     assign wb_clk_en = ~(mem_prev_flush);
     assign rf_clk_en = ~wb_prev_flush && wb_wr_en;
