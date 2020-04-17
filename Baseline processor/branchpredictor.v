@@ -1,19 +1,35 @@
-/*
-	Branch History Table module
-	Format of each entry:
-	========================================================================
-	| Valid bit | Tag[6:0] | Branch target[10:0] | Saturating Counter [1:0] |
-	========================================================================
-	BHT is implemented as a 4-way Set Associative Cache with 64 entries
-	Replacement policy is FIFO
-	id_PC[10:0] = {Tag[6:0], Set[3:0]}
-	For selecting next PC:
-	format of selection bits: {exe_correction[1:0], if_prediction}
-		default selection: PC+4
-		3'b001: if_PBT
-		3'b10x: exe_CNI
-		3'b11x: exe_PBT
-*/
+//-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+// branchpredictor.v -- Dynamic Branch Prediction module
+//-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+// Author: Microlab 198 Pipelined RISC-V Group (2SAY1920)
+//-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+//
+//-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+// Module Name: branchpredictor.v
+// Description:
+// 			Branch History Table module
+// 			Format of each entry:
+// 			========================================================================
+// 			| Valid bit | Tag[6:0] | Branch target[10:0] | Saturating Counter [1:0] |
+// 			========================================================================
+// 			BHT is implemented as a 4-way Set Associative Cache with 64 entries
+// 			Replacement policy is FIFO
+// 			id_PC[10:0] = {Tag[6:0], Set[3:0]}
+// 			For selecting next PC:
+// 			format of selection bits: {exe_correction[1:0], if_prediction}
+// 				default selection: PC+4
+// 				3'b001: if_PBT
+// 				3'b10x: exe_CNI
+// 				3'b11x: exe_PBT
+//
+// Revisions:
+// Revision 0.01 - File Created
+// Additional Comments:
+// 
+//-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+
+
+
 `timescale 1ns / 1ps
 module branchpredictor(
 	input CLK,

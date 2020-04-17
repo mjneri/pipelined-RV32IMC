@@ -1,38 +1,48 @@
+//-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+// sf_controller.v -- Stall + flush + forwarding controller module
+//-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+// Author: Microlab 198 Pipelined RISC-V Group (2SAY1920)
+//-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+//
+//-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+// Module Name: sf_controller.v
+// Description:
+// 				A handy excuse to merge controlling for stalls and flushes (bad for performance), 
+// 				and clock gating (good for power usage).
+// 				This controller now also includes the forwarding unit controller in order to reduce the number of wire declarations in the core module.
+// 				Stalls and flushes are handled using a mix of clock gating, and additional support logic that facilitates stalling or flushing in the
+// 				corresponding pipeline registers.
+// 				The scenarios currently supported by the gating logic are as follows:
+// 					- Stalls
+// 						All stalls are handled by disabling the clock for the corresponding stage.
+// 						e.g. an ID-stage stall will have the ID stage clock disabled.
+// 					- Flushes
+// 						A flush will result in a case-by-case resolution of what will happen. Be prepared for inconsistent behavior.
+// 						To give two examples:
+// 							- A MEM-stage flush due to a data hazard will result in the MEM stage clock getting disabled on the current
+// 							  WB stage clock getting disabled on the next cycle, and will force a non-flush on the next cycle.
+// 							- The ISR flushes (ISR_PC_flush and ISR_pipe_flush) work together, but act differently.
+// 							  Only the ISR_pipe_flush signal can actually disable the IF- and ID-stage clocks.
+// 						What *is* consistent, however, is that flushes get propagated to later stages via the *_prev_flush registers,
+// 						with the exception of the IF-stage. 
+// 					- Looping Jumps
+// 						A looping jump is defined as a jump whose target address is the same as its own address.
+// 						Such jumps are detected by checking if the ID-stage instruction is a jump, and if the IF- and ID-stage PC
+// 						addresses are equal. If both conditions are met, the result is to disable the IF- and ID-stage clocks, and
+// 						to the EXE stage.
+// 						Due to how the interrupt memory space is currently implemented, looping jumps cannot be escaped from without resetting.
+// 						As such, please use branches to wait for interrupts instead.
+// 					- NOPs
+// 						These are treated as EXE-stage flushes, but the implementation disables the EXE-stage clock as well. 
+//
+// Revisions:
+// Revision 0.01 - File Created
+// Additional Comments:
+// 
+//-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+
+
 `timescale 1ns / 1ps
-/* 
-    (Stall + Flush) + Forwarding Controller module
-
-    A handy excuse to merge controlling for stalls and flushes (bad for performance), 
-    and clock gating (good for power usage).
-	This controller now also includes the forwarding unit controller in order to reduce the number of wire declarations in the core module.
-
-	Stalls and flushes are handled using a mix of clock gating, and additional support logic that facilitates stalling or flushing in the
-	corresponding pipeline registers.
-	The scenarios currently supported by the gating logic are as follows:
-		- Stalls
-			All stalls are handled by disabling the clock for the corresponding stage.
-			e.g. an ID-stage stall will have the ID stage clock disabled.
-		- Flushes
-			A flush will result in a case-by-case resolution of what will happen. Be prepared for inconsistent behavior.
-			
-			To give two examples:
-				- A MEM-stage flush due to a data hazard will result in the MEM stage clock getting disabled on the current
-				  WB stage clock getting disabled on the next cycle, and will force a non-flush on the next cycle.
-				- The ISR flushes (ISR_PC_flush and ISR_pipe_flush) work together, but act differently.
-				  Only the ISR_pipe_flush signal can actually disable the IF- and ID-stage clocks.
-			What *is* consistent, however, is that flushes get propagated to later stages via the *_prev_flush registers,
-			with the exception of the IF-stage. 
-		- Looping Jumps
-			A looping jump is defined as a jump whose target address is the same as its own address.
-			Such jumps are detected by checking if the ID-stage instruction is a jump, and if the IF- and ID-stage PC
-			addresses are equal. If both conditions are met, the result is to disable the IF- and ID-stage clocks, and
-			to the EXE stage.
-			Due to how the interrupt memory space is currently implemented, looping jumps cannot be escaped from without resetting.
-			As such, please use branches to wait for interrupts instead.
-		- NOPs
-			These are treated as EXE-stage flushes, but the implementation disables the EXE-stage clock as well. 
-
-*/
 
 module sf_controller(
     // Uncomment the ff. if needed

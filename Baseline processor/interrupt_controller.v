@@ -1,7 +1,23 @@
+//-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+// interrupt_controller.v -- Interrupt controller module
+//-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+// Author: Microlab 198 Pipelined RISC-V Group (2SAY1920)
+//-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+//
+//-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+// Module Name: interrupt_controller.v
+// Description: This module implements the interrupt controller that controls the 
+//              flow of instructions in the datapath whenever an interrupt signal
+//              is detected.
+//
+// Revisions:
+// Revision 0.01 - File Created
+// Additional Comments:
+// 
+//-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+
+
 `timescale 1ns / 1ps
-/*
-    Interrupt Controller Module
-*/
 module interrupt_controller(
 	input clk,
 	input nrst,
@@ -45,6 +61,7 @@ module interrupt_controller(
 		sel_ISR <= 0;
 		ret_ISR <= 0;
 		ISR_en <= 1;
+        interrupt_captured <= 0;
 		save_PC <= 12'd0;
 		ISR_running <= 0;
 		ISR_stall_counter <= 0;

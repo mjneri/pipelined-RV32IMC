@@ -1,11 +1,39 @@
+//-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+// datamem.v -- Data memory module
+//-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+// Author: Microlab 198 Pipelined RISC-V Group (2SAY1920)
+//-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+//
+//-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+// Module Name: datamem.v
+// Description: This module contains the Block Memory Generator IP Modules needed
+//				to implement a ~4kB memory for the RISCV processor.
+//				Block Memory Generator IP settings for both modules:
+//					- Native Interface, True DUAL PORT RAM
+//					- Byte write enabled (8bits per byte)
+//					- common clock &  generate address unchecked
+//					- minimum area algorithm
+//					PORT settings (both port a & b)
+//						- 32bit write & read width, 1024 write & read depth
+//						- Read First operating mode, Always Enabled
+//						- checkboxes left unchecked
+//					
+//
+// Revisions:
+// Revision 0.01 - File Created
+// Additional Comments:
+// 
+//-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+
+
 `timescale 1ns / 1ps
 
 module datamem(
-	input core_clk,
-	input con_clk,
+	input core_clk,				// Gated clock signal
+	input con_clk,				// un-gated clock signal
 	input nrst,
 
-	// Inputs from within the core
+	// Inputs from the RISCV core
 	input [3:0] dm_write,
 	input [10:0] exe_data_addr,
 	input [10:0] mem_data_addr,
@@ -48,7 +76,7 @@ module datamem(
 
 		.clkb(con_clk),
 		.web(4'b0),
-		.addrb(con_addr),
+		.addrb(con_addr[9:0]),
 		.dinb(32'b0),
 		.doutb(coremem_doutb)
 	);

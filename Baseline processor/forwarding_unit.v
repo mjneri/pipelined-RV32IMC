@@ -1,19 +1,28 @@
+//-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+// forwarding_unit.v -- Data forwarding unit module
+//-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+// Author: Microlab 198 Pipelined RISC-V Group (2SAY1920)
+//-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+//
+//-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+// Module Name: forwarding_unit.v
+// Description: Creates control signals for data forwarding in the datapath.
+//				ALU output:
+//				- forward ALU output, EXE/MEM, or MEM/WB to ID
+//				
+//				Memory output:
+//				- forward datamem output to EXE (ALU inputs, non-multiplication)
+//				- stall one cycle + forward datamem output to jump adder (LW -> JALR)
+//				- forward MEM/WB register to ID (LW -> (inst) -> (inst) -> JALR)
+//
+// Revisions:
+// Revision 0.01 - File Created
+// Additional Comments:
+// 
+//-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+
+
 `timescale 1ns / 1ps
-
-/*
-    Forwarding Unit module
-
-    Creates control signals for data forwarding in the datapath.
-
-    ALU output:
-    - forward ALU output, EXE/MEM, or MEM/WB to ID
-
-    Memory output:
-    - forward datamem output to EXE (ALU inputs, non-multiplication)
-    - stall one cycle + forward datamem output to jump adder (LW -> JALR)
-    - forward MEM/WB register to ID (LW -> (inst) -> (inst) -> JALR)
-
-*/
 
 module forwarding_unit(
 	// Source registers
