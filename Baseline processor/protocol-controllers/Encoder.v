@@ -12,6 +12,11 @@
 // Revision 0.01 - File Created
 // Revision 1.00 - File modified by Pipelined RISC-V Group (2SAY1920)
 // Additional Comments:
+//		(!en & en_reg) is used for TX_BUFFER.wr due to how mcont.v & tx_buffer.v work.
+//		Basically, since we want tx_buffer to store data_in at least once, we want TX_BUFFER.wr to
+//		assert for one cycle only. Which is why even if Encoder.en is asserted for more than
+//		one cycle, once it deasserts, en_reg will remain asserted until the next cycle.
+//		(Effectively, the logic !en & en_reg will assert for one cycle only).
 // 
 //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 
@@ -70,7 +75,7 @@ module Encoder(
     reg [7:0] data;				// the data being sent
     reg parity_bit;				// contains the parity bit (depending on the setting)
 	reg stop_bit;				// determines if a stop bit has been sent. used for sending 2 stop bits.
-    // reg en_reg;
+    reg en_reg;					// used for asserting TX_BUFFER.wr for one cycle
     
     wire [7:0] buffer_out;  	// data from the buffer that will be sent
     wire buffer_empty;			// determines if the buffer is empty
@@ -82,7 +87,7 @@ module Encoder(
         .CLK(clk),
         .nrst(nrst),
 
-        .wr(en /*& en*/),
+        .wr(!en & en_reg),		// used s.t. wr is asserted for one cycle only (this is described at the module description above)
         .rd( (bit_index == 3'd7) & (clk_count == 24'd0) ),
         .data_in(data_in),
 
@@ -100,7 +105,7 @@ module Encoder(
         data <= 0;
 		parity_bit <= 0;
 		stop_bit <= 0;
-        // en_reg <= 0;
+        en_reg <= 0;
     end
 
 	// This controls state transitions, the clock counter, bit index,
@@ -113,13 +118,13 @@ module Encoder(
             data <= 0;
 			parity_bit <= 0;
 			stop_bit <= 0;
-            // en_reg <= 0;
+            en_reg <= 0;
         end
         else begin
             case(state)
                 s_idle: 
 				begin
-                    // en_reg <= en;
+                    en_reg <= en;
                     if(!buffer_empty) begin
                         state <= s_start;
                         data <= buffer_out;
