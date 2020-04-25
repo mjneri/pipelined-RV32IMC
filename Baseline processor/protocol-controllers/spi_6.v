@@ -30,39 +30,41 @@ SPI OUTPUT CONTROL 1
 */
 
 module spi(
+	// Inputs from core
 	input				clk,
+
+	input				turnon,		// Toggles module on or off
+	input				enable,		// Control SPI funtionality
 	
-	input				turnon,
-	input				enable,
+	input				mb,			// Master Buffer: 
+
+	input		[23:0]	prescale,	// Frequency reduction factor
+
+	input		[31:0]	din,		// Data in from core
+	input		[1:0]	select,		// Slave selector
 	
-	input				mb,
-	
-	input		[23:0]	prescale,
-	
-	input		[31:0]	din,
-	input		[1:0]	select,
-	
-	input				cpol,
-	input				cpha,
-	input				order,
-	
-	input				miso,
+	input				order,		// MSB-first(1) or LSB-first(0)
+	input				cpha,		// Default clock phase
+	input				cpol,		// Default clock polarity
+
+	// Main I/O
+	input				miso,		// When asserted, means that data is transmitted from slave to master
+	output				mosi,		// When asserted, means that data is transmitted from master to slave
 	output reg			sck,
-	output				mosi,
 	
 	output 				ss0,
 	output 				ss1,
 	output 				ss2,
 	output 				ss3,
 	
-	output		[31:0]	rco,
-	output		[31:0]	dat
+	output		[31:0]	rco,		// Contains done and busy flags
+	output		[31:0]	dat			// Contains data out
 	);
 	
-	reg [31:0]	din_tmp;
-	reg [7:0]	din_reg;
+	reg [31:0]	din_tmp;			// 32-bit data in buffer
+	reg [7:0]	din_reg;			// 8-bit data in buffer
 	
-	reg	[7:0]	dout;
+	reg	[7:0]	dout;				// 8-bit data out buffer
 	reg			busy;
 	reg			done;
 	assign rco = {30'h0, done, busy};
@@ -71,8 +73,12 @@ module spi(
 	reg			[3:0]	ss;
 	reg					toggle;
 	reg			[7:0]	state;
+	// state values:
+	// 8'hFF		- initial state
+	// 8'hEE		- 
+	// Anythin else - 
 	
-	reg					e_clk;
+	reg					e_clk;		// Extended Clock
 	reg			[23:0]	ctr;
 	
 	assign	mosi = busy ? state == 8'hEE || state == 8'hFF ? 1 : din_tmp[state[4:0]] : 1;
@@ -107,26 +113,29 @@ module spi(
 		din_reg <= 8'h0;
 	end
 
-	always@(posedge clk) begin
-		if(!turnon)	e_clk <= ~e_clk;
-		else if(ctr == prescale) e_clk <= ~e_clk;
+	// Extended clock state machine
+	always@(posedge clk) begin						
+		if(!turnon)	e_clk <= ~e_clk;				// If not turned on, e_clk is a pulse train with HALF the frequency of clk
+		else if(ctr == prescale) e_clk <= ~e_clk;	// If turned on, eclk has a frequency of clk divided by (prescale value*4)
 		else e_clk <= e_clk;
 	end
 	
+	// Prescale counter state machine
 	always@(posedge clk) begin
 		if(!turnon) begin
 			ctr <= 24'h0;
 			din_tmp <= din;
 		end
 		else begin
-			if(ctr == prescale) ctr <= 24'h0;
+			if(ctr == prescale) ctr <= 24'h0;		// Adds ctr until is reaches the prescale value
 			else ctr <= ctr + 24'h1;
 			
-			if(enable) din_tmp <= din;
+			if(enable) din_tmp <= din;				// Data in temporary buffer
 			else din_tmp <= din_tmp;
 		end
 	end
 	
+	// Main I/O state machine (operates at a reduced frequency)
 	always@(posedge e_clk) begin
 		if(!turnon) begin
 			sck <= cpol;
@@ -202,7 +211,7 @@ module spi(
 						else dout <= dout;
 				else dout <= dout;
 			
-			// SCK
+			// SCK operates at the frequency of clk divided by (prescale*8)
 			if(!busy) sck <= cpol;
 			else if(toggle && cpha && state == last) sck <= cpol;
 			else if(!cpha && state == 8'hEE) sck <= cpol;
