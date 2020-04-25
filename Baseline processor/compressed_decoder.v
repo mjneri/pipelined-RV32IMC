@@ -163,6 +163,9 @@ module compressed_decoder(
                         unsigned_imm = 1'b1;
                     end
                     // other cases: non-implemented instructions
+                    default: begin
+                        i_type = 1'b0;
+                    end
                 endcase
             end
             2'd1: begin
