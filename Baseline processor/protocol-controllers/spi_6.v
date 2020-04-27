@@ -212,7 +212,7 @@ module spi(
 			
 			// SCK operates at the frequency of clk divided by (prescale*8)
 			if(!busy) sck <= cpol;
-			else if(toggle && cpha && (state == last) sck <= cpol;
+			else if(toggle && cpha && (state == last)) sck <= cpol;
 			else if(!cpha && (state == 8'hEE)) sck <= cpol;
 			else sck <= ~sck;
 			
