@@ -102,6 +102,7 @@ module top(
 
 	// RISC-V CORE
 	core RISCVCORE(
+	    .CLKIP_OUT(CLKIP_OUT),
 		.CLK(CLK_BUF),
 		.nrst(nrst & locked),
 
