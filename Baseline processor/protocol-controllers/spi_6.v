@@ -31,19 +31,19 @@ SPI OUTPUT CONTROL 1
 
 module spi(
 	// Inputs from core
-	input				clk,
+	input				clk,		// Clock from core (50MHz)
 
 	input				turnon,		// Toggles module on or off
-	input				enable,		// Control SPI funtionality
+	input				enable,		// Controls SPI funtionality
 	
-	input				mb,			// Master Buffer: 
+	input				mb, 
 
-	input		[23:0]	prescale,	// Frequency reduction factor
+	input		[23:0]	prescale,
 
 	input		[31:0]	din,		// Data in from core
 	input		[1:0]	select,		// Slave selector
 	
-	input				order,		// MSB-first(1) or LSB-first(0)
+	input				order,		// MSB-first(0) or LSB-first(1)
 	input				cpha,		// Default clock phase
 	input				cpol,		// Default clock polarity
 
@@ -52,7 +52,7 @@ module spi(
 	output				mosi,		// When asserted, means that data is transmitted from master to slave
 	output reg			sck,
 	
-	output 				ss0,
+	output 				ss0,		// Low asserted slave select signals
 	output 				ss1,
 	output 				ss2,
 	output 				ss3,
@@ -70,18 +70,17 @@ module spi(
 	assign rco = {30'h0, done, busy};
 	assign dat = {24'h0, dout};
 	
-	reg			[3:0]	ss;
-	reg					toggle;
-	reg			[7:0]	state;
-	// state values:
-	// 8'hFF		- initial state
-	// 8'hEE		- 
-	// Anythin else - 
+	reg			[3:0]	ss;			// Slave select register
+	reg					toggle;		
+	reg			[7:0]	state;		// State register values:
+									// If cpha:		8'hFF... -> 8'hEE -> start -> next... -> last(done) -> 8h'FF...
+									// If !cpha:	8'hFF... -> start -> next... -> last -> 8h'EE(done) -> 8h'FF...
 	
 	reg					e_clk;		// Extended Clock
-	reg			[23:0]	ctr;
+	reg			[23:0]	ctr;		// Clock Counter
 	
-	assign	mosi = busy ? state == 8'hEE || state == 8'hFF ? 1 : din_tmp[state[4:0]] : 1;
+	// Data transmission logic (32-bit segments)
+	assign	mosi = busy ? ((state == 8'hEE) || (state == 8'hFF)) ? 1 : din_tmp[state[4:0]] : 1;
 	assign ss0 = ss[0];
 	assign ss1 = ss[1];
 	assign ss2 = ss[2];
@@ -127,10 +126,10 @@ module spi(
 			din_tmp <= din;
 		end
 		else begin
-			if(ctr == prescale) ctr <= 24'h0;		// Adds ctr until is reaches the prescale value
+			if(ctr == prescale) ctr <= 24'h0;		// Adds ctr until it reaches the prescale value
 			else ctr <= ctr + 24'h1;
 			
-			if(enable) din_tmp <= din;				// Data in temporary buffer
+			if(enable) din_tmp <= din;				// Stores data from core
 			else din_tmp <= din_tmp;
 		end
 	end
@@ -151,32 +150,32 @@ module spi(
 			din_reg <= 8'h0;
 		end
 		else begin
-			// Toggle Register
+			// Toggle Register (Provides a stable enable signal)
 			if(busy) toggle <= ~toggle;
 			else if(enable) toggle <= 1;
 			else toggle <= 0;
 			
 			// Busy Flag
 			if(enable) busy <= 1;
-			else if(cpha && toggle && state == last) busy <= 0;
-			else if(!cpha && state == 8'hEE) busy <= 0;
+			else if((cpha && toggle) && (state == last)) busy <= 0;
+			else if(!cpha && (state == 8'hEE)) busy <= 0;
 			else busy <= busy;
 			
 			// Done Flag
-			if(cpha && toggle && state == last) done <= 1;
-			else if(!cpha && state == 8'hEE) done <= 1;
+			if(cpha && toggle && (state == last)) done <= 1;
+			else if(!cpha && (state == 8'hEE)) done <= 1;
 			else done <= 0;
 			
 			// State Reg
 			if(busy)
 				if(cpha)
 					if(state == 8'hEE) state <= start;
-					else if(toggle && state == last) state <= 8'hFF;
+					else if(toggle && (state == last)) state <= 8'hFF;
 					else if(toggle) state <= next;
 					else state <= state;
 				else
 					if(state == 8'hEE) state <= 8'hFF;
-					else if(!toggle && state == last) state <= 8'hEE;
+					else if(!toggle && (state == last)) state <= 8'hEE;
 					else if(!toggle) state <= next;
 					else state <= state;
 			else
@@ -186,14 +185,14 @@ module spi(
 				else state <= 8'hFF;
 			
 			// Slave Select
-			if(cpha && toggle && state == last) ss[select] <= 1;
-			else if(!cpha && state == 8'hEE) ss[select] <= 1;
+			if(cpha && toggle && (state == last)) ss[select] <= 1;
+			else if(!cpha && (state == 8'hEE)) ss[select] <= 1;
 			else if(enable) ss[select] <= 0;
 			else ss[select] <= ss[select];
 			
 			// Data (MISO)
 			if(!cpha)
-				if(toggle && state != 8'hEE)
+				if(toggle && (state != 8'hEE))
 					if(order)
 						if(state > 8'h7) dout[state] <= miso;
 						else dout <= dout;
@@ -213,8 +212,8 @@ module spi(
 			
 			// SCK operates at the frequency of clk divided by (prescale*8)
 			if(!busy) sck <= cpol;
-			else if(toggle && cpha && state == last) sck <= cpol;
-			else if(!cpha && state == 8'hEE) sck <= cpol;
+			else if(toggle && cpha && (state == last) sck <= cpol;
+			else if(!cpha && (state == 8'hEE)) sck <= cpol;
 			else sck <= ~sck;
 			
 			// DIN_REG
