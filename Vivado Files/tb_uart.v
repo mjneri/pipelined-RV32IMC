@@ -173,8 +173,7 @@ module tb_uart();
 	// Stimulus for the decoder
 	reg dec_CLK = 0;						// baud rate clock for decoder input
 	integer dec_counter = 0;				// counter for decoder
-	integer dec_const = 100;				// constant for counter
-	always #43.402778 dec_CLK = ~dec_CLK;	// 11.52MHz clock
+	always #4340.2778 dec_CLK = ~dec_CLK;	// 115.2kHz clock
 	
 	always@(posedge dec_CLK) begin
 		if(!nrst) dec_counter <= 0;
@@ -186,63 +185,63 @@ module tb_uart();
 			// Send 0xe1dadefa (even parity, 1 stop bit)
 			if(dec_counter==0) uart_dec <= 0;					// START bit
 
-			if(dec_counter==1*dec_const) uart_dec <= 0;			// 0xA
-			if(dec_counter==2*dec_const) uart_dec <= 1;			// 0xA
-			if(dec_counter==3*dec_const) uart_dec <= 0;			// 0xA
-			if(dec_counter==4*dec_const) uart_dec <= 1;			// 0xA
+			if(dec_counter==1) uart_dec <= 0;			// 0xA
+			if(dec_counter==2) uart_dec <= 1;			// 0xA
+			if(dec_counter==3) uart_dec <= 0;			// 0xA
+			if(dec_counter==4) uart_dec <= 1;			// 0xA
 
-			if(dec_counter==5*dec_const) uart_dec <= 1;			// 0xF
-			if(dec_counter==6*dec_const) uart_dec <= 1;			// 0xF
-			if(dec_counter==7*dec_const) uart_dec <= 1;			// 0xF
-			if(dec_counter==8*dec_const) uart_dec <= 1;			// 0xF
+			if(dec_counter==5) uart_dec <= 1;			// 0xF
+			if(dec_counter==6) uart_dec <= 1;			// 0xF
+			if(dec_counter==7) uart_dec <= 1;			// 0xF
+			if(dec_counter==8) uart_dec <= 1;			// 0xF
 
-			if(dec_counter==9*dec_const) uart_dec <= 0;			// Parity bit
-			if(dec_counter==10*dec_const) uart_dec <= 1;		// Stop bit
+			if(dec_counter==9) uart_dec <= 0;			// Parity bit
+			if(dec_counter==10) uart_dec <= 1;		// Stop bit
 			// ===========================================================
-			if(dec_counter==11*dec_const) uart_dec <= 0;		// Start bit
+			if(dec_counter==11) uart_dec <= 0;		// Start bit
 
-			if(dec_counter==12*dec_const) uart_dec <= 0;		// 0xE
-			if(dec_counter==13*dec_const) uart_dec <= 1;		// 0xE
-			if(dec_counter==14*dec_const) uart_dec <= 1;		// 0xE
-			if(dec_counter==15*dec_const) uart_dec <= 1;		// 0xE
+			if(dec_counter==12) uart_dec <= 0;		// 0xE
+			if(dec_counter==13) uart_dec <= 1;		// 0xE
+			if(dec_counter==14) uart_dec <= 1;		// 0xE
+			if(dec_counter==15) uart_dec <= 1;		// 0xE
 
-			if(dec_counter==16*dec_const) uart_dec <= 1;		// 0xD
-			if(dec_counter==17*dec_const) uart_dec <= 0;		// 0xD
-			if(dec_counter==18*dec_const) uart_dec <= 1;		// 0xD
-			if(dec_counter==19*dec_const) uart_dec <= 1;		// 0xD
+			if(dec_counter==16) uart_dec <= 1;		// 0xD
+			if(dec_counter==17) uart_dec <= 0;		// 0xD
+			if(dec_counter==18) uart_dec <= 1;		// 0xD
+			if(dec_counter==19) uart_dec <= 1;		// 0xD
 
-			if(dec_counter==20*dec_const) uart_dec <= 0;		// Parity bit
-			if(dec_counter==21*dec_const) uart_dec <= 1;		// Stop bit
+			if(dec_counter==20) uart_dec <= 0;		// Parity bit
+			if(dec_counter==21) uart_dec <= 1;		// Stop bit
 			// ===========================================================
-			if(dec_counter==22*dec_const) uart_dec <= 0;		// Start bit
+			if(dec_counter==22) uart_dec <= 0;		// Start bit
 
-			if(dec_counter==23*dec_const) uart_dec <= 0;		// 0xA
-			if(dec_counter==24*dec_const) uart_dec <= 1;		// 0xA
-			if(dec_counter==25*dec_const) uart_dec <= 0;		// 0xA
-			if(dec_counter==26*dec_const) uart_dec <= 1;		// 0xA
+			if(dec_counter==23) uart_dec <= 0;		// 0xA
+			if(dec_counter==24) uart_dec <= 1;		// 0xA
+			if(dec_counter==25) uart_dec <= 0;		// 0xA
+			if(dec_counter==26) uart_dec <= 1;		// 0xA
 
-			if(dec_counter==27*dec_const) uart_dec <= 1;		// 0xD
-			if(dec_counter==28*dec_const) uart_dec <= 0;		// 0xD
-			if(dec_counter==29*dec_const) uart_dec <= 1;		// 0xD
-			if(dec_counter==30*dec_const) uart_dec <= 1;		// 0xD
+			if(dec_counter==27) uart_dec <= 1;		// 0xD
+			if(dec_counter==28) uart_dec <= 0;		// 0xD
+			if(dec_counter==29) uart_dec <= 1;		// 0xD
+			if(dec_counter==30) uart_dec <= 1;		// 0xD
 
-			if(dec_counter==31*dec_const) uart_dec <= 0;		// Parity bit (wrong parity bit)
-			if(dec_counter==32*dec_const) uart_dec <= 1;		// Stop bit
+			if(dec_counter==31) uart_dec <= 0;		// Parity bit (wrong parity bit)
+			if(dec_counter==32) uart_dec <= 1;		// Stop bit
 			// ===========================================================
-			if(dec_counter==33*dec_const) uart_dec <= 0;		// Start bit
+			if(dec_counter==33) uart_dec <= 0;		// Start bit
 
-			if(dec_counter==34*dec_const) uart_dec <= 1;		// 0x1
-			if(dec_counter==35*dec_const) uart_dec <= 0;		// 0x1
-			if(dec_counter==36*dec_const) uart_dec <= 0;		// 0x1
-			if(dec_counter==37*dec_const) uart_dec <= 0;		// 0x1
+			if(dec_counter==34) uart_dec <= 1;		// 0x1
+			if(dec_counter==35) uart_dec <= 0;		// 0x1
+			if(dec_counter==36) uart_dec <= 0;		// 0x1
+			if(dec_counter==37) uart_dec <= 0;		// 0x1
 
-			if(dec_counter==38*dec_const) uart_dec <= 0;		// 0xE
-			if(dec_counter==39*dec_const) uart_dec <= 1;		// 0xE
-			if(dec_counter==40*dec_const) uart_dec <= 1;		// 0xE
-			if(dec_counter==41*dec_const) uart_dec <= 1;		// 0xE
+			if(dec_counter==38) uart_dec <= 0;		// 0xE
+			if(dec_counter==39) uart_dec <= 1;		// 0xE
+			if(dec_counter==40) uart_dec <= 1;		// 0xE
+			if(dec_counter==41) uart_dec <= 1;		// 0xE
 
-			if(dec_counter==42*dec_const) uart_dec <= 1;		// Parity bit (wrong parity bit)
-			if(dec_counter==43*dec_const) uart_dec <= 1;		// Stop bit
+			if(dec_counter==42) uart_dec <= 1;		// Parity bit (wrong parity bit)
+			if(dec_counter==43) uart_dec <= 1;		// Stop bit
 		end
 	end
 endmodule
