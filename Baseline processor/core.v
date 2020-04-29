@@ -18,7 +18,6 @@
 `timescale 1ns / 1ps
 
 module core(
-    input CLKIP_OUT,
 	input CLK,
 	input nrst,
 
@@ -385,44 +384,6 @@ module core(
 
 
 /******************************* DATAPATH (INSTANTIATING MODULES) ******************************/
-// CLOCKS ========================================================
-	BUFGCE en_iF (
-	 	.I(CLKIP_OUT),
-	 	.CE(if_clk_en),
-	 	.O(if_clk)
-	);
-
-	BUFGCE en_id (
-	 	.I(CLKIP_OUT),
-	 	.CE(id_clk_en),
-	 	.O(id_clk)
-	);
-
-	BUFGCE en_exe (
-	 	.I(CLKIP_OUT),
-	 	.CE(exe_clk_en),
-	 	.O(exe_clk)
-	);
-
-	BUFGCE en_mem (
-	 	.I(CLKIP_OUT),
-	 	.CE(mem_clk_en),
-	 	.O(mem_clk)
-	);
-
-	BUFGCE en_wb (
-	 	.I(CLKIP_OUT),
-	 	.CE(wb_clk_en),
-	 	.O(wb_clk)
-	);
-
-	BUFGCE en_rf(
-	 	.I(CLKIP_OUT),
-	 	.CE(rf_clk_en),
-	 	.O(rf_clk)
-	);
-
-
 
 // STALL and FLUSH Controller ========================================================
 	sf_controller SF_CONTROLLER(
