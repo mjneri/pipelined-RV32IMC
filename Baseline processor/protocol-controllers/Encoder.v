@@ -108,6 +108,14 @@ module Encoder(
         en_reg <= 0;
     end
 
+    // This controls en_reg
+    always@(posedge clk) begin
+        if(!nrst)
+            en_reg <= 0;
+        else
+            en_reg <= en;
+    end
+
 	// This controls state transitions, the clock counter, bit index,
 	// parity bit, and the data to be sent. States described above.
     always@(posedge clk) begin
@@ -118,13 +126,11 @@ module Encoder(
             data <= 0;
 			parity_bit <= 0;
 			stop_bit <= 0;
-            en_reg <= 0;
         end
         else begin
             case(state)
                 s_idle: 
 				begin
-                    en_reg <= en;
                     if(!buffer_empty) begin
                         state <= s_start;
                         data <= buffer_out;
