@@ -386,6 +386,11 @@ module core(
 
 /******************************* DATAPATH (INSTANTIATING MODULES) ******************************/
 // CLOCKS ========================================================
+	BUFG clk_buf(
+		.I(CLK),
+		.O(CLK_BUF)
+	);
+	
 	BUFGCE en_iF (
 	 	.I(CLKIP_OUT),
 	 	.CE(if_clk_en),
@@ -507,47 +512,6 @@ module core(
 		.fw_wb_to_exe_A(fw_wb_to_exe_A),
 		.fw_wb_to_exe_B(fw_wb_to_exe_B),
 		.load_hazard(load_hazard)
-	);
-
-	BUFG clk_buf(
-		.I(CLK),
-		.O(CLK_BUF)
-	);
-
-	BUFGCE en_iF (
-	 	.I(CLK),
-	 	.CE(if_clk_en),
-	 	.O(if_clk)
-	);
-
-	BUFGCE en_id (
-	 	.I(CLK),
-	 	.CE(id_clk_en),
-	 	.O(id_clk)
-	);
-
-	BUFGCE en_exe (
-	 	.I(CLK),
-	 	.CE(exe_clk_en),
-	 	.O(exe_clk)
-	);
-
-	BUFGCE en_mem (
-	 	.I(CLK),
-	 	.CE(mem_clk_en),
-	 	.O(mem_clk)
-	);
-
-	BUFGCE en_wb (
-	 	.I(CLK),
-	 	.CE(wb_clk_en),
-	 	.O(wb_clk)
-	);
-
-	BUFGCE en_rf(
-	 	.I(CLK),
-	 	.CE(rf_clk_en),
-	 	.O(rf_clk)
 	);
 
 
