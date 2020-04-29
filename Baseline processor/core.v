@@ -1,13 +1,13 @@
 //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-// core.v -- Pipelined RISCV Core
+// core.v -- Pipelined RISCV Core												//
 //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-// Author: Microlab 198 Pipelined RISC-V Group (2SAY1920)
+// Author: Microlab 198 Pipelined RISC-V Group (2SAY1920)						//
 //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 //
 //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 // Module Name: core.v
-// Description: This module contains the submodules needed to implement a five-stage
-//				RISC-V processor.
+// Description: This module contains the submodules needed to implement a
+//				five-stage RISC-V processor.
 //
 // Revisions:
 // Revision 0.01 - File Created
@@ -55,20 +55,20 @@ module core(
 
 );
 	
-/******************************* DECLARING WIRES ******************************/
+/******************************** DECLARING WIRES *******************************/
 
-// IF stage ========================================================
+// IF stage ======================================================================
 	reg [11:0] if_pcnew;		// Input to PC; new PC address
 	wire [11:0] if_PC;			// Output of PC, input to INSTMEM
 	wire [11:0] if_pc4;			// PC + 4
 	wire [31:0] if_inst;		// INSTMEM Output
-// &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+// &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 
 
 
 
 
-// ID Stage ========================================================
+// ID Stage ======================================================================
 	// Outputs of IF/ID Pipeline Register
 	wire [11:0] id_pc4;			// PC + 4
 	wire [31:0] id_inst;		// 32bit Instruction
@@ -91,23 +91,23 @@ module core(
 	// assign id_rsB = id_inst[24:20];
 	// assign id_rd = id_inst[11:7];
 
-	// Control signals //////////////////////////////////////////////////////
-	wire [3:0] id_ALU_op;								// For EXE stage 	/
-	wire id_div_valid;									// For EXE stage 	/
-	wire [1:0] id_div_op;								// For EXE stage 	/
-	wire id_sel_opA, id_sel_opB;						// For EXE stage 	/ 
-	wire id_is_stype;									// For EXE stage 	/
-	wire id_is_jump;									// For ID stage 	/
-	wire id_is_btype;									// For ID Stage 	/
-	wire id_is_nop; 									// For ID stage 	/
-	wire id_wr_en;										// For WB stage 	/
-	wire [2:0] id_dm_select;							// For MEM stage 	/
-	wire [2:0] id_imm_select;							// For ID stage 	/
-	wire id_sel_pc;										// For EXE stage 	/ 
-	wire [2:0] id_sel_data;								// For WB stage 	/
-	wire [1:0] id_store_select;							// For EXE stage 	/
-	wire id_sel_opBR;									// For ID stage 	/
-	/////////////////////////////////////////////////////////////////////////
+	// Control signals ///////////////////////////////////////////////////////////
+	wire [3:0] id_ALU_op;								// For EXE stage 		//
+	wire id_div_valid;									// For EXE stage 		//
+	wire [1:0] id_div_op;								// For EXE stage 		//
+	wire id_sel_opA, id_sel_opB;						// For EXE stage 		//
+	wire id_is_stype;									// For EXE stage 		//
+	wire id_is_jump;									// For ID stage 		//
+	wire id_is_btype;									// For ID Stage 		//
+	wire id_is_nop; 									// For ID stage 		//
+	wire id_wr_en;										// For WB stage 		//
+	wire [2:0] id_dm_select;							// For MEM stage 		//
+	wire [2:0] id_imm_select;							// For ID stage 		//
+	wire id_sel_pc;										// For EXE stage 		//
+	wire [2:0] id_sel_data;								// For WB stage 		//
+	wire [1:0] id_store_select;							// For EXE stage 		//
+	wire id_sel_opBR;									// For ID stage 		//
+	//////////////////////////////////////////////////////////////////////////////
 
 	// Inputs to ID/EXE Pipereg 														
 	wire [31:0] id_rfoutA, id_rfoutB;	// Regfile outputs 								
@@ -117,13 +117,13 @@ module core(
 
 	wire [31:0] id_fwdopA, id_fwdopB;	// Selected operands based on forwarded data
 	wire [31:0] id_fwdstore;			// Selected input to STOREBLOCK based on forwarded data
-// &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+// &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 
 
 
 
 
-// EXE Stage ========================================================
+// EXE Stage =====================================================================
 	// Outputs of ID/EXE Pipeline Register
 	wire [11:0] exe_pc4;			// PC + 4
 	wire [31:0] exe_fwdopA;			// Selected opA in ID stage based on forwarded data
@@ -174,19 +174,19 @@ module core(
 	wire [2:0] exe_dm_select;		// For MEM stage
 	wire [2:0] exe_sel_data;		// For WB stage
 	wire [1:0] exe_store_select;	// For EXE stage
-	wire exe_sel_opBR;		// For EXE stage
+	wire exe_sel_opBR;				// For EXE stage
 
 	// Inputs to EXE/MEM Pipereg
 	wire [31:0] exe_ALUout;			// ALU output
 	wire [31:0] exe_DIVout;			// Divider output
 	wire [31:0] exe_storedata;		// Output of STORE BLOCK
-// &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+// &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 
 
 
 
 
-// MEM Stage ========================================================
+// MEM Stage =====================================================================
 	// Outputs of EXE/MEM Pipeline Register
 	wire [11:0] mem_pc4;			// PC + 4
 	wire [31:0] mem_inst;			// 32bit instruction
@@ -208,13 +208,13 @@ module core(
 
 	// Inputs to MEM/WB Pipereg
 	wire [31:0] mem_loaddata;		// Output of LOAD BLOCK
-// &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+// &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 
 
 
 
 
-// WB Stage ========================================================
+// WB Stage ======================================================================
 	// Outputs of MEM/WB Pipeline Register
 	wire [11:0] wb_pc4;				// PC + 4
 	wire [31:0] wb_inst;			// 32bit instruction
@@ -231,13 +231,13 @@ module core(
 
 	// Datapath signals
 	wire [31:0] wb_wr_data;
-// &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+// &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 
 
 
 
 
-// Signals for BHT =================================================
+// Signals for BHT ===============================================================
 	wire if_prediction;				// Input to sel_PC mux
 	wire [1:0] exe_correction;		// input to sel_PC mux
 	wire [10:0] if_PBT;				// Predicted branch target
@@ -245,13 +245,13 @@ module core(
 	wire [10:0] exe_CNI;				// Correct Next Instruction
 	wire branch_flush;
 	wire jump_flush;
-// &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+// &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 
 
 
 
 
-// Data Forwarding Control Signals ================================
+// Data Forwarding Control Signals ===============================================
 	wire fw_exe_to_id_A;
     wire fw_exe_to_id_B;
 
@@ -265,13 +265,13 @@ module core(
     wire fw_wb_to_exe_B;
 
 	wire load_hazard;
-// &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+// &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 
 
 
 
 
-// Clock Gating + SF_Controller ====================================
+// Clock Gating + SF_Controller ==================================================
 	wire CLK_BUF;			// Clock buffer output
 	wire if_clk;			// CLK input to PC
 	wire id_clk;			// CLK input to IF/ID pipereg
@@ -298,13 +298,13 @@ module core(
 	wire exe_flush; 		// Controls ID/EXE flush
 	wire mem_flush; 		// Controls EXE/MEM flush
 	wire wb_flush; 			// Controls MEM/WB flush
-// &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+// &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 
 
 
 
 
-// ID Baseline Instructions ========================================
+// ID Baseline Instructions ======================================================
     wire [2:0] id_base_dm_select;
     wire [2:0] id_base_imm_select;
     wire [2:0] id_base_sel_data;
@@ -318,18 +318,18 @@ module core(
     wire [4:0] id_base_rsB = id_inst[24:20];
     wire [4:0] id_base_rd = id_inst[11:7];
     wire [31:0] id_base_imm;
-    // wire [31:0] id_base_jt;   
+    // wire [31:0] id_base_jt;
 	wire id_base_is_jump;
 	wire id_base_is_btype;
 	wire id_base_sel_pc;
 	wire id_base_sel_opBR;
-// &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+// &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 
 
 
 
 
-// Compressed Instructions ==========================================
+// Compressed Instructions =======================================================
     wire if_not_comp = (if_inst[1:0] == 2'd3);           // Compressed or not
     wire id_is_comp;
 	wire exe_is_comp;
@@ -364,13 +364,13 @@ module core(
 	wire exe_comp_use_A;
 	wire exe_comp_use_B;
 	wire [1:0] exe_c_btype;
-// &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&    
+// &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
     
 
 
 
 
-// Interrupt Controller Signals=====================================
+// Interrupt Controller Signals===================================================
 
 	wire ISR_PC_flush;
 	wire ISR_pipe_flush;
@@ -379,13 +379,13 @@ module core(
 	wire ISR_running;
 	wire [11:0] save_PC;
 
-// &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
+// &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 
 
 
-/******************************* DATAPATH (INSTANTIATING MODULES) ******************************/
+/********************** DATAPATH (INSTANTIATING MODULES) ************************/
 
-// STALL and FLUSH Controller ========================================================
+// STALL and FLUSH Controller ====================================================
 	sf_controller SF_CONTROLLER(
 		.clk(CLK_BUF),
 		.nrst(nrst),
@@ -470,6 +470,7 @@ module core(
 		.load_hazard(load_hazard)
 	);
 
+// CLOCKS ========================================================================
 	BUFG clk_buf(
 		.I(CLK),
 		.O(CLK_BUF)
@@ -512,7 +513,7 @@ module core(
 	);
 
 
-// IF Stage ========================================================
+// IF Stage ======================================================================
 	pc PC( 
 		.clk(if_clk),
 		.nrst(nrst),
@@ -604,8 +605,7 @@ module core(
 
 
 
-// ID Stage ========================================================
-	
+// ID Stage ======================================================================
 	// Selecting operands
 	// id_fwdopA is passed through ID/EXE pipeline register to the ALU
 	assign id_fwdopA = fw_exe_to_id_A?
@@ -820,7 +820,7 @@ module core(
 
 
 
-// EXE Stage ========================================================
+// EXE Stage =====================================================================
 	// Selecting operands
 	assign opA = fw_wb_to_exe_A? wb_loaddata : exe_fwdopA;
 	assign opB = (fw_wb_to_exe_B && !exe_is_stype) ? wb_loaddata : exe_fwdopB;
@@ -930,7 +930,7 @@ module core(
 
 
 
-// MEM Stage ========================================================
+// MEM Stage =====================================================================
 	datamem DATAMEM(
 		.core_clk(mem_clk),
 		.con_clk(CLK_BUF),
@@ -983,11 +983,14 @@ module core(
 
 
 
-// WB Stage ========================================================
+// WB Stage ======================================================================
 	// Selector MUX
 	assign wb_wr_data = (wb_sel_data == 3'd0) ? wb_pc4 : 
 						(wb_sel_data == 3'd1) ? wb_ALUout : 
 						(wb_sel_data == 3'd2) ? wb_imm :
 						(wb_sel_data == 3'd4) ? wb_DIVout :
 						wb_loaddata;
+
+
+
 endmodule
