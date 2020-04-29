@@ -271,9 +271,10 @@ module mcont(
 	end
 
 	// Interrupt only on the following conditions:
-	// SPI: when DONE = 1 (spi_rco_t[0])
+	// SPI: when DONE = 1 (spi_rco_t[1])
 	// UART: when RDDONE = 1 (uart_rco[8])
 	// I2C: when DONE = 1 (i2c_rco[1])
-	assign int_sig = (spi_rco_t[1] == 1'b1) | (uart_rco[8] == 1'b1) | (i2c_rco[1] == 1'b1);
+	// assign int_sig = (spi_rco_t[1] || uart_rco[8]) | i2c_rco[1];
+	assign int_sig = spi_rco_t[1]? 1 : uart_rco[8]? 1 : i2c_rco[1]? 1 : 0;
 	
 endmodule
