@@ -46,6 +46,7 @@ module top(
 // DECLARING WIRES
 	wire CLKIP_OUT;			// Output of CLKIP module
 	wire CLK_BUF;			// Global Clock buffer output
+	wire CLKFB;				// CLKIP Feedback
 	wire locked;			// determines stability of CLKIP output
 	// wire [3:0] db_btn;	// Debounced button inputs
 	wire int_sig;			// Interrupt signal
@@ -58,8 +59,8 @@ module top(
 
 	// Wires for the protocol controllers (based on top_tb.v from prev198)
 	// I2C
-	wire i2c_scl_i = ck_io38;		// SCL from slave device
-	wire i2c_sda_i = ck_io39;		// SDA from slave device
+	wire i2c_scl_i;					// SCL from slave device
+	wire i2c_sda_i;					// SDA from slave device
 	wire i2c_scl_o;					// SCL from master
 	wire i2c_scl_t;					// SCL Tristate buffer control
 	wire i2c_sda_o;					// SDA from master
@@ -67,7 +68,10 @@ module top(
 	wire i2c_slave_sda_o;			// ????????????????
 
 	// Tristate buffers for I2C
+	assign i2c_scl_i = i2c_scl_t? ck_io38 : 1'bZ;
 	assign ck_io38 = i2c_scl_t? 1'bZ : i2c_scl_o;
+
+	assign i2c_sda_i = (i2c_sda_t & i2c_slave_sda_o)? ck_io39 : 1'bZ;
 	assign ck_io39 = (i2c_sda_t & i2c_slave_sda_o)? 1'bZ : i2c_sda_o;
 
 	// SPI
@@ -90,7 +94,9 @@ module top(
 		.clk_in1(CLK100MHZ),
 		.clk_out1(CLKIP_OUT),
 		.resetn(nrst),
-		.locked(locked)
+		.locked(locked),
+		.clkfb_in(CLKFB),
+		.clkfb_out(CLKFB)
 	);
 
 	// Global clock buffer
@@ -102,7 +108,7 @@ module top(
 
 	// RISC-V CORE
 	core RISCVCORE(
-		.CLK(CLK_BUF),
+		.CLK(CLKIP_OUT),
 		.nrst(nrst & locked),
 
 		.int_sig(int_sig),
