@@ -1,6 +1,21 @@
 # ISR for uart_test.s
 isr:
 	c.li a5, 0			# reset a5 to 0
+	# NOP for 13 cycles to give enough time for the
+	# protocol controller (mcont.v) to write to datamem
+	c.nop
+	c.nop
+	c.nop
+	c.nop
+	c.nop
+	c.nop
+	c.nop
+	c.nop
+	c.nop
+	c.nop
+	c.nop
+	c.nop
+	c.nop
 	
 	# check if UART interrupted
 	# Registers used:
