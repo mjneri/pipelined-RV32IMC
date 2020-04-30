@@ -384,7 +384,6 @@ module core(
 
 
 /******************************* DATAPATH (INSTANTIATING MODULES) ******************************/
-
 // STALL and FLUSH Controller ========================================================
 	sf_controller SF_CONTROLLER(
 		.clk(CLK_BUF),
@@ -470,6 +469,7 @@ module core(
 		.load_hazard(load_hazard)
 	);
 
+// CLOCKS ========================================================
 	BUFG clk_buf(
 		.I(CLK),
 		.O(CLK_BUF)
