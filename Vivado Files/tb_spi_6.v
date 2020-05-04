@@ -1,5 +1,5 @@
 `timescale 1ns / 1ps
-
+// Adjusted delays for 50 MHz clock
 module tb_spi();
         reg clk;
 	
@@ -88,34 +88,36 @@ module tb_spi();
 
                 clk = 0;
 
-                #40 
-                #20 test_spi(0, 0, 0, {20'd0, $random%4}, $random%32, $random%2, 0, 0, 0, 0);
-                #20 test_spi(0, 0, 0, {20'd0, $random%4}, $random%32, $random%2, 0, 0, 0, 0);
-                #20 test_spi(0, 0, 0, {20'd0, $random%4}, $random%32, $random%2, 0, 1, 0, 1);
-                #20 test_spi(0, 1, 0, {20'd0, $random%4}, $random%32, $random%2, 0, 0, 1, 1);
-                #200 test_spi(1, 1, 0, {20'd0, $random%4}, $random%32, $random%2, 1, 0, 1, 1);
-                
-                #300 test_spi(1, 0, 1, {20'd0, $random%4}, $random%32, $random%2, 1, 0, 1, 1);
+                #100 
+                #200 test_spi(0, 0, 0, {20'd0, $random%4}, $random%32, $random%2, 0, 0, 0, 0);
+                #200 test_spi(0, 0, 0, {20'd0, $random%4}, $random%32, $random%2, 0, 0, 0, 0);
+                #200 test_spi(0, 0, 0, {20'd0, $random%4}, $random%32, $random%2, 0, 1, 0, 1);
+                // Enable
+                #200 test_spi(0, 1, 0, {20'd0, $random%4}, $random%32, $random%2, 0, 0, 1, 1);
+                // Turn on
+                #2000 test_spi(1, 1, 0, {20'd0, $random%4}, $random%32, $random%2, 1, 0, 1, 1);
+                // Turn on, disable, mb
+                #3000 test_spi(1, 0, 1, {20'd0, $random%4}, $random%32, $random%2, 1, 0, 1, 1);
          
-                #50 test_spi(0, 1, 1, {20'd0, $random%4}, $random%32, $random%2, 1, 0, 0, 0);
-                #200 test_spi(1, 1, 1, {20'd0, $random%4}, $random%32, $random%2, 1, 1, 0, 0);
-                #20 test_spi(1, 1, 1, {20'd0, $random%4}, $random%32, $random%2, 1, 0, 0, 0);
-                #20 test_spi(1, 1, 1, {20'd0, $random%4}, $random%32, $random%2, 0, 1, 0, 1);
+                #500 test_spi(0, 1, 1, {20'd0, $random%4}, $random%32, $random%2, 1, 0, 0, 0);
+                #2000 test_spi(1, 1, 1, {20'd0, $random%4}, $random%32, $random%2, 1, 1, 0, 0);
+                #2000 test_spi(1, 1, 1, {20'd0, $random%4}, $random%32, $random%2, 1, 0, 0, 0);
+                #200 test_spi(1, 1, 1, {20'd0, $random%4}, $random%32, $random%2, 0, 1, 0, 1);
 
                 #300 test_spi(0, 0, 1, {20'd0, $random%4}, $random%32, $random%2, 1, 0, 1, 1);
          
                 #250 test_spi(1, 0, 1, {20'd0, $random%4}, $random%32, $random%2, 1, 0, 0, 0);
-                #20 test_spi(1, 1, 1, {20'd0, $random%4}, $random%32, $random%2, 1, 1, 0, 0);
-                #50 test_spi(1, 1, 1, {20'd0, $random%4}, $random%32, $random%2, 1, 1, 0, 1);
+                #200 test_spi(1, 1, 1, {20'd0, $random%4}, $random%32, $random%2, 1, 1, 0, 0);
+                #500 test_spi(1, 1, 1, {20'd0, $random%4}, $random%32, $random%2, 1, 1, 0, 1);
 
-                #200 test_spi(1, 1, 1, {20'd0, $random%4}, $random%32, $random%2, 1, 1, 1, 1);
+                #2000 test_spi(1, 1, 1, {20'd0, $random%4}, $random%32, $random%2, 1, 1, 1, 1);
 
-                #20 test_spi(0, 1, 1, {20'd0, $random%4}, $random%32, $random%2, 1, 1, 1, 0);
+                #200 test_spi(0, 1, 1, {20'd0, $random%4}, $random%32, $random%2, 1, 1, 1, 0);
 
-                #600 test_spi(1, 0, 1, {20'd0, $random%4}, $random%32, $random%2, 0, 1, 1, 0);
-                #60 test_spi(1, 1, 1, {20'd0, $random%4}, $random%32, $random%2, 0, 1, 0, 1);
+                #6000 test_spi(1, 0, 1, {20'd0, $random%4}, $random%32, $random%2, 0, 1, 1, 0);
+                #600 test_spi(1, 1, 1, {20'd0, $random%4}, $random%32, $random%2, 0, 1, 0, 1);
 
-                #700 test_spi(1, 1, 1, {20'd0, $random%4}, $random%32, $random%2, 0, 0, 1, 1);
+                #7000 test_spi(1, 1, 1, {20'd0, $random%4}, $random%32, $random%2, 0, 0, 1, 1);
 
 
 
