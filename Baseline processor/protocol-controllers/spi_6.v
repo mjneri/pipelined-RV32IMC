@@ -115,7 +115,7 @@ module spi(
 	// Extended clock state machine
 	always@(posedge clk) begin						
 		if(!turnon)	e_clk <= ~e_clk;				// If not turned on, e_clk is a pulse train with HALF the frequency of clk
-		else if(ctr == prescale) e_clk <= ~e_clk;	// If turned on, eclk has a frequency of clk divided by (prescale value*4)
+		else if(ctr == prescale) e_clk <= ~e_clk;	// If turned on, eclk has a frequency of clk divided by 2^(prescale+1)
 		else e_clk <= e_clk;
 	end
 	
@@ -210,7 +210,7 @@ module spi(
 						else dout <= dout;
 				else dout <= dout;
 			
-			// SCK operates at the frequency of clk divided by (prescale*8)
+			// SCK operates at the frequency of clk divided by 2^(prescale+2)
 			if(!busy) sck <= cpol;
 			else if(toggle && cpha && (state == last)) sck <= cpol;
 			else if(!cpha && (state == 8'hEE)) sck <= cpol;

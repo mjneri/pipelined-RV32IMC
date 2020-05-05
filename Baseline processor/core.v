@@ -1,7 +1,7 @@
 //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-// core.v -- Pipelined RISCV Core												//
+// core.v -- Pipelined RISCV Core
 //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-// Author: Microlab 198 Pipelined RISC-V Group (2SAY1920)						//
+// Author: Microlab 198 Pipelined RISC-V Group (2SAY1920)
 //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 //
 //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
@@ -384,8 +384,8 @@ module core(
 
 
 
-/******************************* DATAPATH (INSTANTIATING MODULES) ******************************/
-// STALL and FLUSH Controller ========================================================
+/*********************** DATAPATH (INSTANTIATING MODULES) ***********************/
+// STALL, FLUSH, and FORWARDING Controller =======================================
 	sf_controller SF_CONTROLLER(
 		.clk(CLK_BUF),
 		.nrst(nrst),
