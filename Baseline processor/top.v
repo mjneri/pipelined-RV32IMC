@@ -47,6 +47,7 @@ module top(
 	wire CLKIP_OUT;			// Output of CLKIP module
 	wire CLK_BUF;			// Global Clock buffer output
 	wire CLKFB;				// CLKIP Feedback
+	wire CLKFB_BUF;			// CLKFB buffer output
 	wire locked;			// determines stability of CLKIP output
 	// wire [3:0] db_btn;	// Debounced button inputs
 	wire int_sig;			// Interrupt signal
@@ -95,7 +96,7 @@ module top(
 		.clk_out1(CLKIP_OUT),
 		.resetn(nrst),
 		.locked(locked),
-		.clkfb_in(CLKFB),
+		.clkfb_in(CLKFB_BUF),
 		.clkfb_out(CLKFB)
 	);
 
@@ -105,10 +106,17 @@ module top(
 		.O(CLK_BUF)
 	);
 
+	// Feedback clock buffer
+	BUFG clkfb_buf(
+		.I(CLKFB),
+		.O(CLKFB_BUF)
+	);
+
 
 	// RISC-V CORE
 	core RISCVCORE(
-		.CLK(CLKIP_OUT),
+		.CLKIP_OUT(CLKIP_OUT),
+		.CLK_BUF(CLK_BUF),
 		.nrst(nrst & locked),
 
 		.int_sig(int_sig),

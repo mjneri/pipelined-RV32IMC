@@ -18,7 +18,8 @@
 `timescale 1ns / 1ps
 
 module core(
-	input CLK,
+	input CLKIP_OUT,			// 50MHz unbuffered clock
+	input CLK_BUF,				// 50MHz buffered clock
 	input nrst,
 
 	// Interrupt related signals
@@ -272,7 +273,7 @@ module core(
 
 
 // Clock Gating + SF_Controller ==================================================
-	wire CLK_BUF;			// Clock buffer output
+	// wire CLK_BUF;			// Clock buffer output
 	wire if_clk;			// CLK input to PC
 	wire id_clk;			// CLK input to IF/ID pipereg
 	wire exe_clk;			// CLK input to ID/EXE pipereg
@@ -470,43 +471,43 @@ module core(
 	);
 
 // CLOCKS ========================================================
-	BUFG clk_buf(
-		.I(CLK),
-		.O(CLK_BUF)
-	);
+	// BUFG clk_buf(
+	// 	.I(CLK),
+	// 	.O(CLK_BUF)
+	// );
 
 	BUFGCE en_iF (
-	 	.I(CLK),
+	 	.I(CLKIP_OUT),
 	 	.CE(if_clk_en),
 	 	.O(if_clk)
 	);
 
 	BUFGCE en_id (
-	 	.I(CLK),
+	 	.I(CLKIP_OUT),
 	 	.CE(id_clk_en),
 	 	.O(id_clk)
 	);
 
 	BUFGCE en_exe (
-	 	.I(CLK),
+	 	.I(CLKIP_OUT),
 	 	.CE(exe_clk_en),
 	 	.O(exe_clk)
 	);
 
 	BUFGCE en_mem (
-	 	.I(CLK),
+	 	.I(CLKIP_OUT),
 	 	.CE(mem_clk_en),
 	 	.O(mem_clk)
 	);
 
 	BUFGCE en_wb (
-	 	.I(CLK),
+	 	.I(CLKIP_OUT),
 	 	.CE(wb_clk_en),
 	 	.O(wb_clk)
 	);
 
 	BUFGCE en_rf(
-	 	.I(CLK),
+	 	.I(CLKIP_OUT),
 	 	.CE(rf_clk_en),
 	 	.O(rf_clk)
 	);
