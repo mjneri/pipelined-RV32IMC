@@ -7,7 +7,7 @@
 # Clock signal
 
 set_property -dict {PACKAGE_PIN E3 IOSTANDARD LVCMOS33} [get_ports CLK100MHZ]
-create_clock -period 10.000 -name sys_clk -waveform {0.000 5.000} -add [get_ports CLK100MHZ]
+# create_clock -period 10.000 -name sys_clk -waveform {0.000 5.000} -add [get_ports CLK100MHZ]
 
 ##ChipKit Digital I/O Low
 
@@ -246,43 +246,59 @@ set_property -dict {PACKAGE_PIN A8 IOSTANDARD LVCMOS33} [get_ports nrst]
 
 # Timing constraints
 
-create_clock -period 80.000 -name VIRTUAL_PROTOCOL_CON/SPI1/e_clk -waveform {0.000 40.000}
+# create_clock -period 80.000 -name VIRTUAL_PROTOCOL_CON/SPI1/e_clk -waveform {0.000 40.000}
 create_clock -period 20.000 -name VIRTUAL_CLKIP_OUT -waveform {0.000 10.000}
-set_clock_groups -physically_exclusive -group [get_clocks -include_generated_clocks CLKFB] -group [get_clocks -include_generated_clocks CLKFB_1]
-set_clock_groups -physically_exclusive -group [get_clocks -include_generated_clocks CLKIP_OUT] -group [get_clocks -include_generated_clocks CLKIP_OUT_1]
-set_clock_groups -logically_exclusive -group [get_clocks -include_generated_clocks {CLKFB CLKIP_OUT}] -group [get_clocks -include_generated_clocks {CLKFB_1 CLKIP_OUT_1}]
-
-set_input_delay -clock [get_clocks VIRTUAL_PROTOCOL_CON/SPI1/e_clk] -min -add_delay 1.000 [get_ports ck_io1]
-set_input_delay -clock [get_clocks VIRTUAL_PROTOCOL_CON/SPI1/e_clk] -max -add_delay 2.000 [get_ports ck_io1]
-set_input_delay -clock [get_clocks VIRTUAL_CLKIP_OUT] -min -add_delay 1.000 [get_ports ck_io38]
-set_input_delay -clock [get_clocks VIRTUAL_CLKIP_OUT] -max -add_delay 2.000 [get_ports ck_io38]
-set_input_delay -clock [get_clocks VIRTUAL_CLKIP_OUT] -min -add_delay 1.000 [get_ports ck_io39]
-set_input_delay -clock [get_clocks VIRTUAL_CLKIP_OUT] -max -add_delay 2.000 [get_ports ck_io39]
-set_input_delay -clock [get_clocks VIRTUAL_CLKIP_OUT] -min -add_delay 1.000 [get_ports ck_io8]
-set_input_delay -clock [get_clocks VIRTUAL_CLKIP_OUT] -max -add_delay 2.000 [get_ports ck_io8]
-set_input_delay -clock [get_clocks VIRTUAL_CLKIP_OUT] -min -add_delay 1.000 [get_ports nrst]
-set_input_delay -clock [get_clocks VIRTUAL_CLKIP_OUT] -max -add_delay 2.000 [get_ports nrst]
-set_output_delay -clock [get_clocks VIRTUAL_PROTOCOL_CON/SPI1/e_clk] -min -add_delay -0.500 [get_ports ck_io0]
-set_output_delay -clock [get_clocks VIRTUAL_PROTOCOL_CON/SPI1/e_clk] -max -add_delay 2.000 [get_ports ck_io0]
-set_output_delay -clock [get_clocks VIRTUAL_CLKIP_OUT] -min -add_delay -0.500 [get_ports ck_io2]
-set_output_delay -clock [get_clocks VIRTUAL_CLKIP_OUT] -max -add_delay 2.000 [get_ports ck_io2]
-set_output_delay -clock [get_clocks VIRTUAL_PROTOCOL_CON/SPI1/e_clk] -min -add_delay -0.500 [get_ports ck_io2]
-set_output_delay -clock [get_clocks VIRTUAL_PROTOCOL_CON/SPI1/e_clk] -max -add_delay 2.000 [get_ports ck_io2]
-set_output_delay -clock [get_clocks VIRTUAL_PROTOCOL_CON/SPI1/e_clk] -min -add_delay -0.500 [get_ports ck_io3]
-set_output_delay -clock [get_clocks VIRTUAL_PROTOCOL_CON/SPI1/e_clk] -max -add_delay 2.000 [get_ports ck_io3]
-set_output_delay -clock [get_clocks VIRTUAL_CLKIP_OUT] -min -add_delay -0.500 [get_ports ck_io38]
-set_output_delay -clock [get_clocks VIRTUAL_CLKIP_OUT] -max -add_delay 2.000 [get_ports ck_io38]
-set_output_delay -clock [get_clocks VIRTUAL_CLKIP_OUT] -min -add_delay -0.500 [get_ports ck_io39]
-set_output_delay -clock [get_clocks VIRTUAL_CLKIP_OUT] -max -add_delay 2.000 [get_ports ck_io39]
-set_output_delay -clock [get_clocks VIRTUAL_PROTOCOL_CON/SPI1/e_clk] -min -add_delay -0.500 [get_ports ck_io4]
-set_output_delay -clock [get_clocks VIRTUAL_PROTOCOL_CON/SPI1/e_clk] -max -add_delay 2.000 [get_ports ck_io4]
-set_output_delay -clock [get_clocks VIRTUAL_PROTOCOL_CON/SPI1/e_clk] -min -add_delay -0.500 [get_ports ck_io5]
-set_output_delay -clock [get_clocks VIRTUAL_PROTOCOL_CON/SPI1/e_clk] -max -add_delay 2.000 [get_ports ck_io5]
-set_output_delay -clock [get_clocks VIRTUAL_PROTOCOL_CON/SPI1/e_clk] -min -add_delay -0.500 [get_ports ck_io6]
-set_output_delay -clock [get_clocks VIRTUAL_PROTOCOL_CON/SPI1/e_clk] -max -add_delay 2.000 [get_ports ck_io6]
-set_output_delay -clock [get_clocks VIRTUAL_CLKIP_OUT] -min -add_delay -0.500 [get_ports ck_io7]
-set_output_delay -clock [get_clocks VIRTUAL_CLKIP_OUT] -max -add_delay 2.000 [get_ports ck_io7]
 
 create_generated_clock -name PROTOCOL_CON/SPI1/e_clk -source [get_pins CLKIP/inst/plle2_adv_inst/CLKOUT0] -divide_by 4 -add -master_clock CLKIP_OUT [get_pins PROTOCOL_CON/SPI1/e_clk_reg/Q]
-create_generated_clock -name PROTOCOL_CON/SPI1/e_clk_1 -source [get_pins CLKIP/inst/plle2_adv_inst/CLKOUT0] -divide_by 4 -add -master_clock CLKIP_OUT_1 [get_pins PROTOCOL_CON/SPI1/e_clk_reg/Q]
-set_clock_groups -physically_exclusive -group [get_clocks -include_generated_clocks PROTOCOL_CON/SPI1/e_clk] -group [get_clocks -include_generated_clocks PROTOCOL_CON/SPI1/e_clk_1]
+
+
+create_clock -period 80.000 -name VIRTUAL_PROTOCOL_CON/SPI1/e_clk -waveform {0.000 40.000}
+set_input_delay -clock [get_clocks PROTOCOL_CON/SPI1/e_clk] -clock_fall -min -add_delay 1.000 [get_ports ck_io1]
+set_input_delay -clock [get_clocks PROTOCOL_CON/SPI1/e_clk] -clock_fall -max -add_delay 2.000 [get_ports ck_io1]
+set_input_delay -clock [get_clocks PROTOCOL_CON/SPI1/e_clk] -min -add_delay 1.000 [get_ports ck_io1]
+set_input_delay -clock [get_clocks PROTOCOL_CON/SPI1/e_clk] -max -add_delay 2.000 [get_ports ck_io1]
+set_input_delay -clock [get_clocks CLKIP_OUT] -min -add_delay 1.000 [get_ports ck_io38]
+set_input_delay -clock [get_clocks CLKIP_OUT] -max -add_delay 2.000 [get_ports ck_io38]
+set_input_delay -clock [get_clocks CLKIP_OUT] -min -add_delay 1.000 [get_ports ck_io39]
+set_input_delay -clock [get_clocks CLKIP_OUT] -max -add_delay 2.000 [get_ports ck_io39]
+set_input_delay -clock [get_clocks CLKIP_OUT] -min -add_delay 1.000 [get_ports ck_io8]
+set_input_delay -clock [get_clocks CLKIP_OUT] -max -add_delay 2.000 [get_ports ck_io8]
+set_input_delay -clock [get_clocks CLKIP_OUT] -min -add_delay 1.000 [get_ports nrst]
+set_input_delay -clock [get_clocks CLKIP_OUT] -max -add_delay 2.000 [get_ports nrst]
+set_output_delay -clock [get_clocks PROTOCOL_CON/SPI1/e_clk] -clock_fall -min -add_delay 0.500 [get_ports ck_io0]
+set_output_delay -clock [get_clocks PROTOCOL_CON/SPI1/e_clk] -clock_fall -max -add_delay 2.000 [get_ports ck_io0]
+set_output_delay -clock [get_clocks PROTOCOL_CON/SPI1/e_clk] -min -add_delay 0.500 [get_ports ck_io0]
+set_output_delay -clock [get_clocks PROTOCOL_CON/SPI1/e_clk] -max -add_delay 2.000 [get_ports ck_io0]
+set_output_delay -clock [get_clocks PROTOCOL_CON/SPI1/e_clk] -clock_fall -min -add_delay 0.500 [get_ports ck_io2]
+set_output_delay -clock [get_clocks PROTOCOL_CON/SPI1/e_clk] -clock_fall -max -add_delay 2.000 [get_ports ck_io2]
+set_output_delay -clock [get_clocks PROTOCOL_CON/SPI1/e_clk] -min -add_delay 0.500 [get_ports ck_io2]
+set_output_delay -clock [get_clocks PROTOCOL_CON/SPI1/e_clk] -max -add_delay 2.000 [get_ports ck_io2]
+set_output_delay -clock [get_clocks PROTOCOL_CON/SPI1/e_clk] -clock_fall -min -add_delay 0.500 [get_ports ck_io3]
+set_output_delay -clock [get_clocks PROTOCOL_CON/SPI1/e_clk] -clock_fall -max -add_delay 2.000 [get_ports ck_io3]
+set_output_delay -clock [get_clocks PROTOCOL_CON/SPI1/e_clk] -min -add_delay 0.500 [get_ports ck_io3]
+set_output_delay -clock [get_clocks PROTOCOL_CON/SPI1/e_clk] -max -add_delay 2.000 [get_ports ck_io3]
+set_output_delay -clock [get_clocks CLKIP_OUT] -min -add_delay 0.500 [get_ports ck_io38]
+set_output_delay -clock [get_clocks CLKIP_OUT] -max -add_delay 2.000 [get_ports ck_io38]
+set_output_delay -clock [get_clocks CLKIP_OUT] -min -add_delay 0.500 [get_ports ck_io39]
+set_output_delay -clock [get_clocks CLKIP_OUT] -max -add_delay 2.000 [get_ports ck_io39]
+set_output_delay -clock [get_clocks PROTOCOL_CON/SPI1/e_clk] -clock_fall -min -add_delay 0.500 [get_ports ck_io4]
+set_output_delay -clock [get_clocks PROTOCOL_CON/SPI1/e_clk] -clock_fall -max -add_delay 2.000 [get_ports ck_io4]
+set_output_delay -clock [get_clocks PROTOCOL_CON/SPI1/e_clk] -min -add_delay 0.500 [get_ports ck_io4]
+set_output_delay -clock [get_clocks PROTOCOL_CON/SPI1/e_clk] -max -add_delay 2.000 [get_ports ck_io4]
+set_output_delay -clock [get_clocks PROTOCOL_CON/SPI1/e_clk] -clock_fall -min -add_delay 0.500 [get_ports ck_io5]
+set_output_delay -clock [get_clocks PROTOCOL_CON/SPI1/e_clk] -clock_fall -max -add_delay 2.000 [get_ports ck_io5]
+set_output_delay -clock [get_clocks PROTOCOL_CON/SPI1/e_clk] -min -add_delay 0.500 [get_ports ck_io5]
+set_output_delay -clock [get_clocks PROTOCOL_CON/SPI1/e_clk] -max -add_delay 2.000 [get_ports ck_io5]
+set_output_delay -clock [get_clocks PROTOCOL_CON/SPI1/e_clk] -clock_fall -min -add_delay 0.500 [get_ports ck_io6]
+set_output_delay -clock [get_clocks PROTOCOL_CON/SPI1/e_clk] -clock_fall -max -add_delay 2.000 [get_ports ck_io6]
+set_output_delay -clock [get_clocks PROTOCOL_CON/SPI1/e_clk] -min -add_delay 0.500 [get_ports ck_io6]
+set_output_delay -clock [get_clocks PROTOCOL_CON/SPI1/e_clk] -max -add_delay 2.000 [get_ports ck_io6]
+set_output_delay -clock [get_clocks CLKIP_OUT] -min -add_delay 0.500 [get_ports ck_io7]
+set_output_delay -clock [get_clocks CLKIP_OUT] -max -add_delay 2.000 [get_ports ck_io7]
+
+
+create_generated_clock -name CLKIP_OUT -source [get_ports CLK100MHZ] -divide_by 2 -add -master_clock CLK100MHZ [get_pins CLKIP/inst/plle2_adv_inst/CLKOUT0]
+
+
+set_output_delay -clock [get_clocks CLKIP_OUT] -min -add_delay 0.500 [get_ports ck_io2]
+set_output_delay -clock [get_clocks CLKIP_OUT] -max -add_delay 2.000 [get_ports ck_io2]
