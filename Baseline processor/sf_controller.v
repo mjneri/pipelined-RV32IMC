@@ -262,22 +262,36 @@ module sf_controller(
     assign wb_flush = 1'b0;
 
     // Enables
-    
-    assign if_clk_en = ~(if_stall || (loop_jump && ~ISR_pipe_flush));
-    assign id_clk_en = ~(id_stall || (loop_jump && ~ISR_pipe_flush));
-    assign exe_clk_en = ~(exe_stall || id_prev_flush || is_nop);
-    assign mem_clk_en = ~(mem_flush || exe_prev_flush);
-    assign wb_clk_en = ~(mem_prev_flush);
-    assign rf_clk_en = ~wb_prev_flush && wb_wr_en;
+	
+    assign shut_down = (prev_nrst && ~nrst);
+	// A note: the shut_down signal is meant to be a stopgap measure that should be re-evaluated depending on
+	// how the processor core is meant to reset or not between cases of nrst deasserting.
+	// In other words, this signal solves a problem where the processor does not actually reset when nrst is deasserted
+	// due to the nature of the clock enable signals.
+	//
+	// The processor resetting when nrst is deasserted is intended, but other behavior may be desired.
+	// For example, a signal to put the processor to sleep until it is meant to wake up, without going through polling loop
+	// or waiting for an interrupt.
+	//
+	// I'm definitely overthinking this.
+
+    assign if_clk_en = shut_down || ~(if_stall || (loop_jump && ~ISR_pipe_flush));
+    assign id_clk_en = shut_down || ~(id_stall || (loop_jump && ~ISR_pipe_flush));
+    assign exe_clk_en = shut_down || ~(exe_stall || id_prev_flush || is_nop);
+    assign mem_clk_en = shut_down || ~(mem_flush || exe_prev_flush);
+    assign wb_clk_en = shut_down || ~(mem_prev_flush);
+    assign rf_clk_en = shut_down || = ~wb_prev_flush && wb_wr_en;
 
     always@(posedge clk) begin
         if (!nrst) begin
+			prev_nrst <= 1'b0;
             id_prev_flush <= 1'b0;
             exe_prev_flush <= 1'b0;
             mem_prev_flush <= 1'b0;
             wb_prev_flush <= 1'b0;
         end
         else begin
+			prev_nrst <= 1'b1;
             id_prev_flush <= ((id_flush || loop_jump) && ~ISR_pipe_flush);
             exe_prev_flush <= (id_prev_flush ? id_prev_flush : exe_flush);
             mem_prev_flush <= (exe_prev_flush ? exe_prev_flush : mem_flush);
