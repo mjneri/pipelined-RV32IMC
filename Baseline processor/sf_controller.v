@@ -221,10 +221,10 @@ module sf_controller(
 		  Thus, it corresponds to the EXE stage on the current cycle.
 
 	*/
-	reg id_prev_flush;
-	reg exe_prev_flush;
-	reg mem_prev_flush;
-    reg wb_prev_flush;
+	reg id_prev_flush = 0;
+	reg exe_prev_flush = 0;
+	reg mem_prev_flush = 0;
+    reg wb_prev_flush = 0;
 
     // results of forwarding
     assign fw_exe_to_id_A = t_fw_exe_to_id_A;
@@ -262,8 +262,8 @@ module sf_controller(
     assign wb_flush = 1'b0;
 
     // Enables
-	
-    assign shut_down = (prev_nrst && ~nrst);
+	reg prev_nrst = 0;
+    wire shut_down = (prev_nrst && ~nrst);
 	// A note: the shut_down signal is meant to be a stopgap measure that should be re-evaluated depending on
 	// how the processor core is meant to reset or not between cases of nrst deasserting.
 	// In other words, this signal solves a problem where the processor does not actually reset when nrst is deasserted
@@ -275,12 +275,12 @@ module sf_controller(
 	//
 	// I'm definitely overthinking this.
 
-    assign if_clk_en = shut_down || ~(if_stall || (loop_jump && ~ISR_pipe_flush));
-    assign id_clk_en = shut_down || ~(id_stall || (loop_jump && ~ISR_pipe_flush));
-    assign exe_clk_en = shut_down || ~(exe_stall || id_prev_flush || is_nop);
-    assign mem_clk_en = shut_down || ~(mem_flush || exe_prev_flush);
-    assign wb_clk_en = shut_down || ~(mem_prev_flush);
-    assign rf_clk_en = shut_down || = ~wb_prev_flush && wb_wr_en;
+    assign if_clk_en = shut_down || (~(if_stall || (loop_jump && ~ISR_pipe_flush)) && nrst);
+    assign id_clk_en = shut_down || (~(id_stall || (loop_jump && ~ISR_pipe_flush)) && nrst);
+    assign exe_clk_en = shut_down || (~(exe_stall || id_prev_flush || is_nop) && nrst);
+    assign mem_clk_en = shut_down || (~(mem_flush || exe_prev_flush) && nrst);
+    assign wb_clk_en = shut_down || (~mem_prev_flush && nrst);
+    assign rf_clk_en = shut_down ||  (~wb_prev_flush && wb_wr_en && nrst);
 
     always@(posedge clk) begin
         if (!nrst) begin
