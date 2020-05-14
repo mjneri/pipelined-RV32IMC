@@ -57,7 +57,7 @@ module i2c_main_controller(
 						R6 = "_R06",
 						R7 = "_R07",
 						R8 = "_R08",
-						// RX = "RSET",
+						RX = "_RXX",
 						
 						W0 = "_W00",
 						W1 = "_W01",
@@ -215,7 +215,7 @@ module i2c_main_controller(
 								wbm_stb_o <= 1'b1;
 								wbm_cyc_o <= 1'b1;
 							
-								i2c_substate_count <= R8;
+								i2c_substate_count <= RX;
 							end
 							else begin
 								wbm_adr_o <= 3'd0;
@@ -250,7 +250,7 @@ module i2c_main_controller(
 								wbm_stb_o <= 1'b1;
 								wbm_cyc_o <= 1'b1;
 							
-								i2c_substate_count <= R8;
+								i2c_substate_count <= RX;
 							end
 							else begin
 								if (i2c_data_sent_counter == i2c_data_length) begin //all bytes received by the I2C module, send stop command
@@ -336,13 +336,13 @@ module i2c_main_controller(
 					i2c_data_sent_counter <= 4'd0;
 					i2c_state <= I2C_STATE_DONE;
 				end
-				// else if( i2c_substate_count == RX ) begin
-				// 	//reset values
-				// 	i2c_data_length <= 4'd1;
-				// 	i2c_data_length_counter <= 4'd0;
-				// 	i2c_data_sent_counter <= 4'd0;
-				// 	i2c_state <= I2C_STATE_IDLE;
-				// end
+				else if( i2c_substate_count == RX ) begin
+					//reset values
+					i2c_data_length <= 4'd1;
+					i2c_data_length_counter <= 4'd0;
+					i2c_data_sent_counter <= 4'd0;
+					i2c_state <= I2C_STATE_IDLE;
+				end
 			end
 			
 			else if (i2c_state == I2C_STATE_WRITE) begin
