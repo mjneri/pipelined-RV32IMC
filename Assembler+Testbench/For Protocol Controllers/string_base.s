@@ -17,11 +17,11 @@ addi a3, a2, 46				# address of last char in string
 
 uart_setup:
 # settings:
-# 115200 baudrate
+# 9600 baudrate
 # no parity
 # 1 stop bit
-addi t0, x0, 434			# 115200 bps baudrate
-slli t0, t0, 8	#from c.slli t0, 8				# shift to baudcontrol field
+lui t0, 0x1457				# 9600 bps baudrate
+srli t0, t0, 4				# shift to baudcontrol field
 add a0, x0, t0	#from c.mv a0, t0					# move t0 contents to a0
 sw a0, 16(s0)	#from c.sw a0, 4(s0)				# store to UART Input control
 

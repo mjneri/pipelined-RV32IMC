@@ -17,11 +17,11 @@ init:
 
 uart_setup:
 	# settings:
-	# 115200 baudrate
+	# 9600 baudrate
 	# no parity
 	# 1 stop bit
-	addi t0, x0, 434			# 115200 bps baudrate
-	c.slli t0, 8				# shift to baudcontrol field
+	lui t0, 0x1457				# 9600 bps baudrate
+	srli t0, t0, 4				# shift to baudcontrol field
 	c.mv a0, t0					# move t0 contents to a0
 	c.sw a0, 4(s0)				# store to UART Input control
 
