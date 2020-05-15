@@ -10,9 +10,9 @@ init:
 uart_transact:
 	# Settings: 115200bps, even parity, 2 stop bits
 	# Send data: 0xdc
-	addi a0, x0, 434		# 115200 bps
+	addi a0, x0, 433		# 115200 bps
 	c.slli a0, 8			# shift to baudcontrol field
-	c.addi a0, 5			# STOPSEL = 1, PARITY = 1
+	c.addi a0, 10			# STOPSEL = 1, PARITY = 1
 	c.sw a0, 4(s0)			# store to input control
 
 	addi a1, x0, 0xdc		# data to be sent
@@ -31,15 +31,15 @@ uart_transact:
 
 spi_transact:
 	# Settings: 100kbps, cpha = 1, cpol = 1, ss = 0x2, ord = 0
-	# Send data: 0xadelb055
-	addi a0, x0, 499		# 100kbps
+	# Send data: 0xade1
+	addi a0, x0, 124		# 100kbps
 	c.slli a0, 8			# shift to prescale field
 	c.addi a0, 0xC			# ORD=0, CPHA=1, CPOL=1
 	c.addi a0, 2			# ON = 1
-	c.sw a0, 2(s0)			# store to input control
 
-	lui a1, 0xade1b
-	addi a1, a1, 0x55		# data = 0xade1b055
+	addi a1, x0, 0xad
+	c.slli a1, 8
+	ori a1, a1, 0xe1		# data = 0xade1
 	c.sw a1, 1(s0)			# store to data in
 
 	ori a0, a0, 0x40		# set SS = 0x2
@@ -55,8 +55,8 @@ spi_transact:
 	c.li a1, 0
 
 i2c_transact:
-	# settings: 100kbps, send 4 bytes, slave addr = 0x5a, data = 0xdeadb6ef
-	addi a0, x0, 62			# 100kbps prescale
+	# settings: 100kbps, send 4 bytes, slave addr = 0x5a, data = 0xdeadb6ef (will be received as 0xefb6adde)
+	addi a0, x0, 124		# 100kbps prescale
 	c.slli a0, 16			# shift to prescale field
 	c.addi a0, 8			# SETPRESCALE = 1
 	c.addi a0, 1			# START = 1
@@ -70,6 +70,7 @@ i2c_transact:
 	c.sw a1, 5(s0)			# store to data in
 
 	lui a0, 0x00002			# # BYTES = 4
+	ori a0, a0, 0x5A0		# Set Slave address
 	c.addi a0, 4			# WRITE = 1
 	c.addi a0, 1			# START = 1
 	c.sw a0, 6(s0)			# store to input control
