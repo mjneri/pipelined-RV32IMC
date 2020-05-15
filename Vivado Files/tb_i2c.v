@@ -102,7 +102,7 @@ module tb_i2c;
         mem_control = {16'd0,16'b0000000000000};
         
         #60
-        mem_control = {16'd125, 16'h9};   //set prescale
+        mem_control = {16'd29, 16'h9};   //set prescale
         
         #60 
         mem_data = 32'h14;

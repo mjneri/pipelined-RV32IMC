@@ -282,6 +282,14 @@ module sf_controller(
     assign wb_clk_en = shut_down || (~mem_prev_flush && nrst);
     assign rf_clk_en = shut_down ||  (~wb_prev_flush && wb_wr_en && nrst);
 
+	initial begin
+		prev_nrst <= 1'b0;
+		id_prev_flush <= 1'b0;
+		exe_prev_flush <= 1'b0;
+		mem_prev_flush <= 1'b0;
+		wb_prev_flush <= 1'b0;
+	end
+
     always@(posedge clk) begin
         if (!nrst) begin
 			prev_nrst <= 1'b0;

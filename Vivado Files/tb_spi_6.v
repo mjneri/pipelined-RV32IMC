@@ -53,75 +53,95 @@ module tb_spi();
                 .dat(dat)
         );
 
-        task test_spi();
-                // inputs 
-	        input TURNON;
-	        input EN;
-	        input MB;
-	        input [23:0] PRESCALE;
-	        input [31:0] DIN;
-	        input [1:0] SEL;
-	        input CPOL;
-	        input CPHA;
-	        input ORDER;
-	        input MISO;
+        // task test_spi();
+        //         // inputs 
+	    //     input TURNON;
+	    //     input EN;
+	    //     input MB;
+	    //     input [23:0] PRESCALE;
+	    //     input [31:0] DIN;
+	    //     input [1:0] SEL;
+	    //     input CPOL;
+	    //     input CPHA;
+	    //     input ORDER;
+	    //     input MISO;
 
-                begin
-                        turnon = TURNON;
-                        enable = EN;
-                        mb = MB;
-                        prescale = PRESCALE;
-                        din = DIN;
-                        select = SEL;
-                        cpol = CPOL;
-                        cpha = CPHA;
-                        order = ORDER;
-                        miso = MISO;  
+        //         begin
+        //                 turnon = TURNON;
+        //                 enable = EN;
+        //                 mb = MB;
+        //                 prescale = PRESCALE;
+        //                 din = DIN;
+        //                 select = SEL;
+        //                 cpol = CPOL;
+        //                 cpha = CPHA;
+        //                 order = ORDER;
+        //                 miso = MISO;  
 
-                end
-        endtask
+        //         end
+        // endtask
 
         always
-                #10 clk = ~clk;
+            #10 clk = ~clk;
 
         initial begin
 
-                clk = 0;
+			clk = 0;
+			turnon = 0;
+			enable = 0;
+			mb = 0;
+			prescale = 0;
+			din = 0;
+			select = 0;
+			order = 0;
+			cpha = 0;
+			cpol = 0;
+			miso = 0;
 
-                #100 
-                #200 test_spi(0, 0, 0, {20'd0, $random%4}, $random%32, $random%2, 0, 0, 0, 0);
-                #200 test_spi(0, 0, 0, {20'd0, $random%4}, $random%32, $random%2, 0, 0, 0, 0);
-                #200 test_spi(0, 0, 0, {20'd0, $random%4}, $random%32, $random%2, 0, 1, 0, 1);
-                // Enable
-                #200 test_spi(0, 1, 0, {20'd0, $random%4}, $random%32, $random%2, 0, 0, 1, 1);
-                // Turn on
-                #2000 test_spi(1, 1, 0, {20'd0, $random%4}, $random%32, $random%2, 1, 0, 1, 1);
-                // Turn on, disable, mb
-                #3000 test_spi(1, 0, 1, {20'd0, $random%4}, $random%32, $random%2, 1, 0, 1, 1);
-         
-                #500 test_spi(0, 1, 1, {20'd0, $random%4}, $random%32, $random%2, 1, 0, 0, 0);
-                #2000 test_spi(1, 1, 1, {20'd0, $random%4}, $random%32, $random%2, 1, 1, 0, 0);
-                #2000 test_spi(1, 1, 1, {20'd0, $random%4}, $random%32, $random%2, 1, 0, 0, 0);
-                #200 test_spi(1, 1, 1, {20'd0, $random%4}, $random%32, $random%2, 0, 1, 0, 1);
-
-                #300 test_spi(0, 0, 1, {20'd0, $random%4}, $random%32, $random%2, 1, 0, 1, 1);
-         
-                #250 test_spi(1, 0, 1, {20'd0, $random%4}, $random%32, $random%2, 1, 0, 0, 0);
-                #200 test_spi(1, 1, 1, {20'd0, $random%4}, $random%32, $random%2, 1, 1, 0, 0);
-                #500 test_spi(1, 1, 1, {20'd0, $random%4}, $random%32, $random%2, 1, 1, 0, 1);
-
-                #2000 test_spi(1, 1, 1, {20'd0, $random%4}, $random%32, $random%2, 1, 1, 1, 1);
-
-                #200 test_spi(0, 1, 1, {20'd0, $random%4}, $random%32, $random%2, 1, 1, 1, 0);
-
-                #6000 test_spi(1, 0, 1, {20'd0, $random%4}, $random%32, $random%2, 0, 1, 1, 0);
-                #600 test_spi(1, 1, 1, {20'd0, $random%4}, $random%32, $random%2, 0, 1, 0, 1);
-
-                #7000 test_spi(1, 1, 1, {20'd0, $random%4}, $random%32, $random%2, 0, 0, 1, 1);
+			#100 prescale = 24'd1301;
+			#100 cpol = 1;
+					cpha = 1;
+					order = 0;
+			#100 turnon = 1;
+			#100 din = 32'hade1b055;
+			#100 select = 2'h2;
+			#100 enable = 1;
 
 
+			// #100 
+			// #200 test_spi(0, 0, 0, {20'd0, $random%4}, $random%32, $random%2, 0, 0, 0, 0);
+			// #200 test_spi(0, 0, 0, {20'd0, $random%4}, $random%32, $random%2, 0, 0, 0, 0);
+			// #200 test_spi(0, 0, 0, {20'd0, $random%4}, $random%32, $random%2, 0, 1, 0, 1);
+			// // Enable
+			// #200 test_spi(0, 1, 0, {20'd0, $random%4}, $random%32, $random%2, 0, 0, 1, 1);
+			// // Turn on
+			// #2000 test_spi(1, 1, 0, {20'd0, $random%4}, $random%32, $random%2, 1, 0, 1, 1);
+			// // Turn on, disable, mb
+			// #3000 test_spi(1, 0, 1, {20'd0, $random%4}, $random%32, $random%2, 1, 0, 1, 1);
+		
+			// #500 test_spi(0, 1, 1, {20'd0, $random%4}, $random%32, $random%2, 1, 0, 0, 0);
+			// #2000 test_spi(1, 1, 1, {20'd0, $random%4}, $random%32, $random%2, 1, 1, 0, 0);
+			// #2000 test_spi(1, 1, 1, {20'd0, $random%4}, $random%32, $random%2, 1, 0, 0, 0);
+			// #200 test_spi(1, 1, 1, {20'd0, $random%4}, $random%32, $random%2, 0, 1, 0, 1);
 
-                #500 $finish;          
+			// #300 test_spi(0, 0, 1, {20'd0, $random%4}, $random%32, $random%2, 1, 0, 1, 1);
+		
+			// #250 test_spi(1, 0, 1, {20'd0, $random%4}, $random%32, $random%2, 1, 0, 0, 0);
+			// #200 test_spi(1, 1, 1, {20'd0, $random%4}, $random%32, $random%2, 1, 1, 0, 0);
+			// #500 test_spi(1, 1, 1, {20'd0, $random%4}, $random%32, $random%2, 1, 1, 0, 1);
+
+			// #2000 test_spi(1, 1, 1, {20'd0, $random%4}, $random%32, $random%2, 1, 1, 1, 1);
+
+			// #200 test_spi(0, 1, 1, {20'd0, $random%4}, $random%32, $random%2, 1, 1, 1, 0);
+
+			// #6000 test_spi(1, 0, 1, {20'd0, $random%4}, $random%32, $random%2, 0, 1, 1, 0);
+			// #600 test_spi(1, 1, 1, {20'd0, $random%4}, $random%32, $random%2, 0, 1, 0, 1);
+
+			// #7000 test_spi(1, 1, 1, {20'd0, $random%4}, $random%32, $random%2, 0, 0, 1, 1);
+
+
+
+			// #500 $finish;          
 
 
         end
