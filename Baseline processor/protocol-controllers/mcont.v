@@ -17,6 +17,8 @@
 
 `timescale 1ns/1ps
 
+`define INT_SIG_WIDTH 4
+
 module mcont(
 	input				clk,
 	input				nrst,
@@ -48,8 +50,8 @@ module mcont(
 	output 	wire		i2c_sda_t,
 	output 	wire 		i2c_slave_sda_o,
 
-	// Interrupt signal
-	output int_sig
+	// Interrupt signals
+	output [`INT_SIG_WIDTH-1:0] int_sig
 );
 	
 	wire		[31:0]	spi_rco_t;
@@ -273,8 +275,8 @@ module mcont(
 	// Interrupt only on the following conditions:
 	// SPI: when DONE = 1 (spi_rco_t[1])
 	// UART: when RDDONE = 1 (uart_rco[8])
+	// UART: when WRDONE = 1 (uart_rco[0])
 	// I2C: when DONE = 1 (i2c_rco[1])
-	// assign int_sig = (spi_rco_t[1] || uart_rco[8]) | i2c_rco[1];
-	assign int_sig = spi_rco_t[1]? 1 : uart_rco[8]? 1 : i2c_rco[1]? 1 : 0;
+	assign int_sig = {spi_rco_t[1], uart_rco[8], uart_rco[0], i2c_rco[1]};
 	
 endmodule

@@ -8,6 +8,8 @@
 // Module Name: core.v
 // Description: This module contains the submodules needed to implement a
 //				five-stage RISC-V processor.
+//				Signal names:
+//					+ if_XXXXX : IF stage, id_XXXXX : ID stage, etc.
 //
 // Revisions:
 // Revision 0.01 - File Created
@@ -17,16 +19,15 @@
 
 `timescale 1ns / 1ps
 
+`define INT_SIG_WIDTH 4
+
 module core(
 	input CLKIP_OUT,			// 50MHz unbuffered clock
 	input CLK_BUF,				// 50MHz buffered clock
 	input nrst,
 
-	// Interrupt related signals
-	input int_sig,				// Interrupt signal
-	// input [3:0] BTN,			// Button input
-	// input [2:0] SW,				// Switch input
-	// output [3:0] LED,			// LED output
+	// Interrupt signals
+	input [`INT_SIG_WIDTH-1:0] int_sig,
 
 	// inputs from protocol controllers
 	input [3:0] con_write,
@@ -540,7 +541,7 @@ module core(
 
 		.if_pcnew(if_pcnew),
 		.if_PC(if_PC),
-		.if_opcode(if_inst[6:0]),
+		.exe_opcode(exe_opcode),
 		.int_sig(int_sig),
 
 		.if_prediction(if_prediction),
@@ -589,7 +590,7 @@ module core(
 				end
 			endcase
 		end
-		end
+	end
 
 	pipereg_if_id IF_ID(
 		.clk(id_clk),

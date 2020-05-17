@@ -19,6 +19,9 @@
 
 
 `timescale 1ns / 1ps
+
+`define INT_SIG_WIDTH 4
+
 module top(
 	input CLK100MHZ,
 	input nrst,
@@ -50,7 +53,9 @@ module top(
 	wire CLKFB_BUF;			// CLKFB buffer output
 	wire locked;			// determines stability of CLKIP output
 	// wire [3:0] db_btn;	// Debounced button inputs
-	wire int_sig;			// Interrupt signal
+	
+	// Interrupt signals
+	wire [`INT_SIG_WIDTH-1:0] int_sig;
 
 	// Uncomment the following if needed:
 	wire [10:0] con_addr;	// Output datamem address from protocol controllers
@@ -94,7 +99,7 @@ module top(
 	clk_wiz_0 CLKIP(
 		.clk_in1(CLK100MHZ),
 		.clk_out1(CLKIP_OUT),
-		.resetn(nrst),
+		// .resetn(nrst),
 		.locked(locked),
 		.clkfb_in(CLKFB_BUF),
 		.clkfb_out(CLKFB)
@@ -231,5 +236,12 @@ module top(
 	// 	.probe_in16(wb_sel_data),
 	// 	.probe_in17(wb_wr_data)
 	// );
+
+	// For Vivado ILA Capture control
+	(* dont_touch = "yes" *) reg [31:0] ila_ctr = 0;
+	always@(posedge CLK_BUF) begin
+		if(nrst & locked) ila_ctr <= ila_ctr + 1;
+		else ila_ctr <= 0;
+	end
 
 endmodule
