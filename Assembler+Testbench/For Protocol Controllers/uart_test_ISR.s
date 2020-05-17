@@ -50,3 +50,15 @@ uart_check:
 
 eret:
 	uret
+
+# Add at least 4 NOPs to prevent don't cares from entering the pipeline
+	c.nop
+	c.nop
+	c.nop
+	c.nop
+	c.nop
+	c.nop
+	c.nop
+	c.nop
+	c.nop
+	c.nop
