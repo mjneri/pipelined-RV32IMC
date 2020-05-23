@@ -175,7 +175,7 @@ module tb_top();
 
 	// for generating 115.2kHz clock w/ delayed start
 	initial begin
-		#90000 uart_clk = 1;
+		#2655 uart_clk = 1;
 		forever begin
 			#4350 uart_clk = ~uart_clk;
 		end
@@ -244,7 +244,7 @@ module tb_top();
 		else i2c_counter <= i2c_counter + 1;
 	end
 
-	// Sample data bits only. Skip ACK bits
+	// Sample the data bits only. Skip ACK bits
 	always@(posedge SCL) begin
 		if(nrst) begin
 			if(i2c_counter != 8) begin
@@ -254,4 +254,8 @@ module tb_top();
 			end
 		end
 	end
+
+	// Drive inout ports of the module
+	assign ck_io39 = (TOP.i2c_sda_t)? 1'b1 : 1'bZ;
+	assign ck_io38 = (TOP.i2c_scl_t)? 1'b1 : 1'bZ;
 endmodule
