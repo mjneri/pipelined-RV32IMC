@@ -19,9 +19,7 @@
 
 `timescale 1ns / 1ps
 
-`define MEM_DEPTH 2048
-`define MEM_WIDTH 16
-`define WORD_WIDTH 32
+`include "constants.vh"
 
 module instmem(
 	input clk,

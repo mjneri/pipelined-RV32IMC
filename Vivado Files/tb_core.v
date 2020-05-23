@@ -1,11 +1,13 @@
 `timescale 1ns / 1ps
 
+`include "constants.vh"
+
 module tb_core();
 	
 	reg CLK;
 	reg nrst;
 
-	reg int_sig;
+	reg [`INT_SIG_WIDTH-1:0] int_sig;
 	// reg [3:0] BTN;
 	// reg [2:0] SW;
 	// wire [3:0] LED;
@@ -18,7 +20,8 @@ module tb_core();
 	reg [31:0] last_inst;
 
 	core CORE(
-		.CLK(CLK),
+		.CLKIP_OUT(CLK),
+		.CLK_BUF(CLK),
 		.nrst(nrst),
 
 		.int_sig(int_sig),
@@ -101,8 +104,8 @@ module tb_core();
 		rf_clk_counter = 0;
 
 		#100 nrst = 1;
-		#5000 int_sig = 0;
-		#2000 int_sig = 0;
+		// #5000 int_sig = 0;
+		// #2000 int_sig = 0;
 	end
 
 	// NOTE: THIS SECTION SHOULD BE USED ONCE EXE_INST, MEM_INST, & WB_INST ARE REMOVED
@@ -298,37 +301,34 @@ module tb_core();
 				nop_counter <= nop_counter + 1;
 	end
 
-	// always@(posedge CLK) begin
-	// 	if(clock_counter == 20) begin
-	// 		#3 BTN[1] = 1;
-	// 		int_sig = 1;	
-	// 	end
+	// For simulating int_sig
+	// Test interrupts for the following conditions:
+	//		+ during "normal operation" -> no stalls
+	//		+ during stalls (division)
+	//		+ a stall occurs before the ISR executes (load hazard, etc.)
+	//		+ while a branch instruction is still in the pipeline before ISR executes
+	always@(posedge CLK) begin
+		if(clock_counter == 20) int_sig[0] = 1;
+		if(clock_counter == 55) int_sig[1] = 1;
+		if(clock_counter == 100) int_sig[0] = 0;
+		if(clock_counter == 105) int_sig[1] = 0;
 
-		// if(clock_counter == 100) begin
-		// 	#3 BTN[1] = 0;
-		// 	int_sig = 0;	
-		// end
+		if(clock_counter == 213) int_sig[0] = 1;
+		// if(clock_counter == 250) int_sig[0] = 0;
 
-		// if(clock_counter == 4976) begin
-		// 	#3 BTN[2] = 1;
-		// 	int_sig = 1;	
-		// end
+		if(clock_counter == 239) int_sig[1] = 1;
+		if(clock_counter == 241) int_sig[2] = 1;
+		if(clock_counter == 243) int_sig[2] = 0;
 
-		// if(clock_counter == 5100) begin
-		// 	#3 BTN[2] = 0;
-		// 	int_sig = 0;	
-		// end
+		if(clock_counter == 460) int_sig[2] = 1;
+		if(clock_counter == 462) int_sig[0] = 0;
+		// if(clock_counter == 500) int_sig[0] = 0;
 
-		// if(clock_counter == 7400) begin
-		// 	#3 BTN[3] = 1;
-		// 	int_sig = 1;	
-		// end
+		if(clock_counter == 7376) int_sig[3] = 1;
+		if(clock_counter == 7400) int_sig[3] = 0;
 
-		// if(clock_counter == 7500) begin
-		// 	#3 BTN[3] = 0;
-		// 	int_sig = 0;	
-		// end
-	// end
+		if(clock_counter == 8000) int_sig = 4'hF;
+	end
 
 	// The following code is for checking the contents
 	// of BLOCKMEM

@@ -19,7 +19,7 @@
 
 `timescale 1ns / 1ps
 
-`define INT_SIG_WIDTH 4
+`include "constants.vh"
 
 module core(
 	input CLKIP_OUT,			// 50MHz unbuffered clock

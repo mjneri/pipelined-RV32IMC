@@ -18,6 +18,7 @@
 
 `timescale 1ns / 1ps
 
+`include "constants.vh"
 module pc(
 	input clk,
 	input nrst,
@@ -25,17 +26,17 @@ module pc(
 	input flush,
 	input stall,
 	
-	input [11:0] addr_in,
+	input [`PC_ADDR_BITS-1:0] addr_in,
 	
-	output reg [11:0] inst_addr
+	output reg [`PC_ADDR_BITS-1:0] inst_addr
 );
 	initial begin
-		inst_addr = 12'h0;
+		inst_addr = 0;
 	end
 
 	always@(posedge clk)
 		if(!nrst || flush)
-			inst_addr <= 12'h0;
+			inst_addr <= 0;
 		else if(!stall)
 			inst_addr <= addr_in;
 endmodule
