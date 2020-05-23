@@ -36,7 +36,6 @@ addi a0, x0, 124		# 100kbps
 slli a0, a0, 8	#from c.slli a0, 8			# shift to prescale field
 addi a0, a0, 0xC	#from c.addi a0, 0xC			# ORD=0, CPHA=1, CPOL=1
 addi a0, a0, 2	#from c.addi a0, 2			# ON = 1
-# c.sw a0, 2(s0)			# store to input control
 
 addi a1, x0, 0xad
 slli a1, a1, 8	#from c.slli a1, 8
@@ -46,10 +45,7 @@ sw a1, 4(s0)	#from c.sw a1, 1(s0)			# store to data in
 ori a0, a0, 0x40		# set SS = 0x2
 addi a0, a0, 1	#from c.addi a0, 1			# set EN = 1
 sw a0, 8(s0)	#from c.sw a0, 2(s0)			# store to input control
-
-spi_wait_busy:			# Wait until BUSY = 1 so that we're sure that the transaction has started
-lw a2, 4(x2)	#from c.lwsp a2, 1			# load Output control
-beq a2, x0, spi_wait_busy	#from c.beqz a2, spi_wait_busy
+jal x1, nop_13	#from c.jal nop_13
 
 addi a0, a0, -1	#from c.addi a0, -1			# set EN = 0
 sw a0, 8(s0)	#from c.sw a0, 2(s0)			# store to input control
@@ -59,7 +55,7 @@ addi a0, x0, 0	#from c.li a0, 0				# Reset a0 & a1 contents
 addi a1, x0, 0	#from c.li a1, 0
 
 i2c_transact:
-# settings: 100kbps, send 4 bytes, slave addr = 0x5a, data = 0xdeadb6ef
+# settings: 100kbps, send 4 bytes, slave addr = 0x5a, data = 0xdeadb6ef (will be received as 0xefb6adde)
 addi a0, x0, 124		# 100kbps prescale
 slli a0, a0, 16	#from c.slli a0, 16			# shift to prescale field
 addi a0, a0, 8	#from c.addi a0, 8			# SETPRESCALE = 1
@@ -75,12 +71,14 @@ sw a1, 20(s0)	#from c.sw a1, 5(s0)			# store to data in
 
 lui a0, 0x00002			# # BYTES = 4
 ori a0, a0, 0x5A0		# Set Slave address
-addi a0, a0, 4	#from c.addi a0, 4			# WRITE = 1
+# c.addi a0, 4			# WRITE = 1
+addi a0, a0, 2	#from c.addi a0, 2			# READ = 1
 addi a0, a0, 1	#from c.addi a0, 1			# START = 1
 sw a0, 24(s0)	#from c.sw a0, 6(s0)			# store to input control
 jal x1, nop_13	#from c.jal nop_13
 
-xori a0, a0, 5			# WRITE = 0, START = 0
+# xori a0, a0, 5			# WRITE = 0, START = 0
+xori a0, a0, 3			# READ = 0, START = 0
 sw a0, 24(s0)	#from c.sw a0, 6(s0)			# store to input control
 
 addi a0, x0, 0	#from c.li a0, 0				# Reset a0 & a1 contents

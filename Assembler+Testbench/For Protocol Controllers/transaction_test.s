@@ -71,12 +71,14 @@ i2c_transact:
 
 	lui a0, 0x00002			# # BYTES = 4
 	ori a0, a0, 0x5A0		# Set Slave address
-	c.addi a0, 4			# WRITE = 1
+	# c.addi a0, 4			# WRITE = 1
+	c.addi a0, 2			# READ = 1
 	c.addi a0, 1			# START = 1
 	c.sw a0, 6(s0)			# store to input control
 	c.jal nop_13
 
-	xori a0, a0, 5			# WRITE = 0, START = 0
+	# xori a0, a0, 5			# WRITE = 0, START = 0
+	xori a0, a0, 3			# READ = 0, START = 0
 	c.sw a0, 6(s0)			# store to input control
 
 	c.li a0, 0				# Reset a0 & a1 contents
