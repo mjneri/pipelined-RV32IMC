@@ -10,11 +10,12 @@
 //			The divider modules are generated through Vivado's IP Catalog
 //			using the Divider Generator IP module. Both dividers use Radix2
 //			since it naturally generates integer remainders (which is needed for REM[U]).
-//			Both modules are generated with 32-bit Divisor & dividend widths,
-//			detect divide-by-zero enabled, Clocks per division set to 8, Flow control
-//			set to Blocking, ACLKEN and ARESETN enabled. One divider is generated
+//			Both modules are generated with 32-bit Divisor & dividend widths, remainder type set to Remainder,
+//			detect divide-by-zero disabled, Clocks per division set to 8, Flow control
+//			set to Blocking, optimize goal set to Performance, ACLKEN and ARESETN enabled. One divider is generated
 //	 		signed, while the other is unsigned.
 //			The pipeline will stall until the operation is completed.
+//			Latency is around 40-45 cycles.
 // Revision:
 // Revision 0.01 - File Created
 // Additional Comments:
@@ -94,7 +95,7 @@ module divider_unit(
 	// assert tvalid for one divider module only (depending if the operation is signed/unsigned)	
 	// Note: the tvalid inputs are ANDed w/ div_state == WAIT because
 	// we want them to be asserted for only one clock cycle during WAIT.
-	// (We want them to be asserted by the next cycle (starting at state DIVIDING))
+	// (put another way, we want them to be asserted by the next cycle (starting at state DIVIDING))
 	assign div_signed_input_tvalid = exe_div_valid & ~exe_div_op[0] & (div_state == WAIT) & ~load_hazard;
 	assign div_unsigned_input_tvalid = exe_div_valid & exe_div_op[0] & (div_state == WAIT) & ~load_hazard;
 
