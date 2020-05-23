@@ -13,10 +13,8 @@
 // Revision 1.00 - File modified by Pipelined RISC-V Group (2SAY1920)
 // Additional Comments:
 //		(!en & en_reg) is used for TX_BUFFER.wr due to how mcont.v & tx_buffer.v work.
-//		Basically, since we want tx_buffer to store data_in at least once, we want TX_BUFFER.wr to
-//		assert for one cycle only. Which is why even if Encoder.en is asserted for more than
-//		one cycle, once it deasserts, en_reg will remain asserted until the next cycle.
-//		(Effectively, the logic !en & en_reg will assert for one cycle only).
+//		(Effectively, the logic !en & en_reg will assert for one cycle only, which allows
+//      input data to be stored only once in the buffer).
 // 
 //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 
@@ -106,6 +104,7 @@ module Encoder(
 		parity_bit <= 0;
 		stop_bit <= 0;
         en_reg <= 0;
+        uart_rco <= 0;
     end
 
     // This controls en_reg
@@ -211,40 +210,23 @@ module Encoder(
 	// This controls the UART Output Control contents (uart_rco[7:0]) and 
 	// the uart_enc port (which corresponds to the TX pin of the UART module).
     always@(*) begin
+        uart_rco[0] = (state == s_stop && ((stop_sel && stop_bit) || !stop_sel))? 1'b1 : 1'b0;      // WRDONE
 		uart_rco[5:1] = buffer_count;	// BUFFER_COUNT
 		uart_rco[6] = buffer_full;		// TXBF
 		uart_rco[7] = buffer_empty;		// TRMT
 
         case(state)
-            s_idle: begin
-                uart_enc = 1;
-                uart_rco[0] = 0;
-            end
+            s_idle: uart_enc = 1;
 
-            s_start: begin
-                uart_enc = 0;
-                uart_rco[0] = 0;
-            end
+            s_start: uart_enc = 0;
 
-            s_data: begin
-                uart_enc = data[0];
-                uart_rco[0] = 0;
-            end
+            s_data: uart_enc = data[0];
 
-            s_parity: begin
-                uart_enc = parity_bit;
-                uart_rco[0] = 0;
-            end
+            s_parity: uart_enc = parity_bit;
 
-            s_stop: begin
-                uart_enc = 1;
-                uart_rco[0] = ((stop_sel && stop_bit) || !stop_sel)? 1 : 0;
-            end
+            s_stop: uart_enc = 1;
 
-            default: begin
-                uart_enc = 1;
-                uart_rco[0] = 0;
-            end
+            default: uart_enc = 1;
         endcase
     end
 endmodule
