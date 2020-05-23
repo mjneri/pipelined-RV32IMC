@@ -379,10 +379,17 @@ uart_send:
 	c.sw a1, 3(s0)				# store to UART Data In (addr 0xC)
 	c.addi a0, 1				# set EN = 1 in UART Input Control
 	c.sw a0, 4(s0)				# store to input control
+
+	c.addi sp, -4				# push to stack
+	c.swsp ra, 0				# store return address to stack
 	c.jal nop_13				# NOP for 13 cycles until mcont.v reads from input control
+
 	c.addi a0, -1				# set EN = 0
 	c.sw a0, 4(s0)				# store back to input control
+
 	c.jal nop_13				# NOP for 13 cycles
+	c.lwsp ra, 0				# get return address from stack
+	c.addi sp, 4				# pop stack
 	
 	lbu s4, 0xD(gp)				# get TXBF from Output control
 	andi s4, s4, 0x40
