@@ -429,17 +429,17 @@ always @* begin
         if (wbs_we_i) begin
             // write cycle
             case (wbs_adr_i)
-                4'h0: begin
+                3'h0: begin
                     // status register
                 end
-                4'h1: begin
+                3'h1: begin
                     // status register
                 end
-                4'h2: begin
+                3'h2: begin
                     // command address
                     cmd_address_next = wbs_dat_i;
                 end
-                4'h3: begin
+                3'h3: begin
                     // command
                     cmd_start_next = wbs_dat_i[0];
                     cmd_read_next = wbs_dat_i[1];
@@ -450,23 +450,23 @@ always @* begin
 
                     cmd_fifo_overflow_next = cmd_fifo_overflow_next | (cmd_valid_next & ~cmd_ready);
                 end
-                4'h4: begin
+                3'h4: begin
                     // data
                     data_in_next = wbs_dat_i;
                     data_in_valid_next = ~wbs_ack_o_reg;
 
                     write_fifo_overflow_next = write_fifo_overflow_next | ~data_in_ready;
                 end
-                4'h5: begin
+                3'h5: begin
                     // reserved
                 end
-                4'h6: begin
+                3'h6: begin
                     // prescale low
                     if (!FIXED_PRESCALE) begin
                         prescale_next[7:0] = wbs_dat_i;
                     end
                 end
-                4'h7: begin
+                3'h7: begin
                     // prescale high
                     if (!FIXED_PRESCALE) begin
                         prescale_next[15:8] = wbs_dat_i;
@@ -477,7 +477,7 @@ always @* begin
         end else begin
             // read cycle
             case (wbs_adr_i)
-                4'h0: begin
+                3'h0: begin
                     // status
                     wbs_dat_o_next[0] = busy_int;
                     wbs_dat_o_next[1] = bus_control_int;
@@ -490,7 +490,7 @@ always @* begin
 
                     missed_ack_next = missed_ack_int;
                 end
-                4'h1: begin
+                3'h1: begin
                     // status
                     wbs_dat_o_next[0] = cmd_fifo_empty;
                     wbs_dat_o_next[1] = cmd_fifo_full;
@@ -504,11 +504,11 @@ always @* begin
                     cmd_fifo_overflow_next = 1'b0;
                     write_fifo_overflow_next = 1'b0;
                 end
-                4'h2: begin
+                3'h2: begin
                     // command address
                     wbs_dat_o_next = cmd_address_reg;
                 end
-                4'h3: begin
+                3'h3: begin
                     // command
                     wbs_dat_o_next[0] = cmd_start_reg;
                     wbs_dat_o_next[1] = cmd_read_reg;
@@ -519,20 +519,20 @@ always @* begin
                     wbs_dat_o_next[6] = 1'b0;
                     wbs_dat_o_next[7] = 1'b0;
                 end
-                4'h4: begin
+                3'h4: begin
                     // data
                     wbs_dat_o_next = data_out;
                     data_out_ready_next = ~wbs_ack_o_reg;
                 end
-                4'h5: begin
+                3'h5: begin
                     // reserved
                     wbs_dat_o_next = 8'd0;
                 end
-                4'h6: begin
+                3'h6: begin
                     // prescale low
                     wbs_dat_o_next = prescale_reg[7:0];
                 end
-                4'h7: begin
+                3'h7: begin
                     // prescale high
                     wbs_dat_o_next = prescale_reg[15:8];
                 end
