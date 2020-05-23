@@ -14,7 +14,7 @@ uart_setup:
 # Loop until RDDONE = 1.
 # check a5 for looping
 uart_wait:
-	c.beqz a5, uart_wait	# if a5 == 0, either RDDONE == 0 or PERR is asserted
+	c.beqz a5, uart_wait	# if a5 == 0, valid data not yet received
 
 # send the received data back after some modifications (flip byte order)
 uart_read:
