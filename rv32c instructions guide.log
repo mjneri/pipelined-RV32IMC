@@ -7,12 +7,12 @@ C.SW rs2', uimm[6:2](rs1')			SW rs2', uimm[6:2](rs1')		uimm range: [0, 31]*4; of
 C.LWSP rd, uimm[7:2]				LW rd, uimm[7:2](x2)			uimm range: [0, 63]*4; offsets are word-aligned
 C.SWSP rs2, uimm[7:2]				SW rs2, uimm[7:2](x2)			uimm range: [0, 63]*4; offsets are word-aligned
 
-C.JAL target						JAL x1, target
-C.J	target							JAL x0, target
-C.BEQZ rs1', target					BEQ rs1', x0, target
-C.BNEZ rs1', target					BNE rs1', x0, target
-C.JR rs1							JALR x0, 0(rs1)
-C.JALR rs1							JALR x1, 0(rs1)
+C.JAL target						JAL x1, target					range: [-2048, 2046], multiples of 2
+C.J	target							JAL x0, target					range: [-2048, 2046], multiples of 2
+C.BEQZ rs1', target					BEQ rs1', x0, target			range: [-256, +254], in multiples of 2
+C.BNEZ rs1', target					BNE rs1', x0, target			range: [-256, +254], in multiples of 2
+C.JR rs1							JALR x0, 0(rs1)					range: depending on contents of rs1
+C.JALR rs1							JALR x1, 0(rs1)					range: depending on contents of rs1
 
 C.LI rd, imm[5:0]					ADDI rd, x0, imm[5:0]			imm range: [-32, 31]
 C.LUI rd, nzimm[17:12]				LUI rd, nzimm[17:12]			nzimm is sign extended non-zero imm
@@ -53,6 +53,20 @@ REGISTER ALIASES:
  "a3"  : x13			"t4"  : x29
  "a4"  : x14			"t5"  : x30
  "a5"  : x15			"t6"  : x31
+
+ASSEMBLY GUIDE:									SAVER
+x0 -> hardwired zero							-----
+ra -> return address							caller
+sp -> stack pointer								callee
+gp-> global pointer								-----
+tp -> thread pointer/temporary register			-----
+t0-t2 -> temporaries							caller
+s0/fp -> saved register/frame pointer			callee
+s1 -> saved register							callee
+a0-a1 -> args/return values						caller
+a2-a7 -> function arguments						caller
+s2-s11 -> saved registers						callee
+t3-t6 -> temporaries							caller
 
 BASE INSTRUCTIONS USAGE GUIDE
 
