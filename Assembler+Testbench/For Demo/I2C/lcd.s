@@ -248,8 +248,7 @@ lcd_print:
 
 		c.addi s6, 1				# increment loop index
 		c.addi s9, 1				# increment data address pointer
-		bltu s6, s8, lcd_print_loop1# if loop index < 32, loop again
-									# String has been sent
+		bltu s6, s8, lcd_print_loop2# if loop index < 32, loop again
 
 inf:
 	c.j inf
@@ -332,6 +331,7 @@ lcd_pulse_en:
 	c.swsp t3, 1				# pass #Bytes to i2c_send
 	c.swsp t1, 2				# pass slave address
 	c.jal i2c_send				# call i2c_send()
+	c.jal delay_100us			# call delay_100us()
 
 	c.lwsp ra, 0				# get return address from the stack
 	c.addi sp, 4				# pop stack
