@@ -68,6 +68,7 @@ module i2c_main_controller(
 						W6 = "_W06",
 						W7 = "_W07",
 						W8 = "_W08",
+						WX = "_WXX",
 						
 						P0 = "_P00",
 						P1 = "_P01",
@@ -430,7 +431,7 @@ module i2c_main_controller(
 								wbm_stb_o <= 1'b1;
 								wbm_cyc_o <= 1'b1;
 							
-								i2c_substate_count <= W8;
+								i2c_substate_count <= WX;
 							end
 							else begin //keep waiting for busy to go high
 								wbm_adr_o <= 3'd0;
@@ -464,7 +465,7 @@ module i2c_main_controller(
 								wbm_stb_o <= 1'b1;
 								wbm_cyc_o <= 1'b1;
 							
-								i2c_substate_count <= W8;
+								i2c_substate_count <= WX;
 							end
 							else if (i2c_data_sent_counter == i2c_data_length) begin //all bytes sent by the I2C module, send stop command
 								wbm_adr_o <= 3'd3;
@@ -494,6 +495,25 @@ module i2c_main_controller(
 					end
 				end
 				else if (i2c_substate_count == W8) begin
+					if (wbm_ack_i == 1'b0) begin
+						wbm_stb_o <= 1'b0;
+					end
+					else begin
+						//reset values
+						wbm_adr_o <= 3'd0;
+						wbm_dat_o <= 8'd0;
+						wbm_we_o <= 1'b0;
+						wbm_stb_o <= 1'b0;
+						wbm_cyc_o <= 1'b0;
+						
+						i2c_data_length <= 4'd1;
+						i2c_data_length_counter <= 4'd0;
+						i2c_data_sent_counter <= 4'd0;
+						i2c_substate_count <= "_I00";
+						i2c_state <= I2C_STATE_DONE;
+					end
+				end
+				else if (i2c_substate_count == WX) begin
 					if (wbm_ack_i == 1'b0) begin
 						wbm_stb_o <= 1'b0;
 					end
