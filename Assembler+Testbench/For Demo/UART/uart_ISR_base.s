@@ -1,36 +1,26 @@
 # This test code is to demonstrate UART functionality of the
 # Pipelined RV32IMC + Protocol controllers
 #
-# An external device sends a command to the FPGA, and outputs
-# a corresponding answer.
-# Commands:
-# ADD XXX,YYY -> add
-# SUB XXX,YYY -> sub
-# DIV XXX,YYY -> div
-# REM XXX,YYY -> rem
-# MUL XXX,YYY -> mul
-# MHU XXX,YYY -> mulhu
-# ==========================
-# 3 digits per operand only. Expected inputs are unsigned
-# Received data is stored starting at addr 0x100:
-# 0x100: "COM[]" (contains ADD , SUB , etc.)
-# 0x104: "XXX,"
-# 0x108: "YYY"
-# 13 bytes are expected, including \r\n
+# An external device sends a lowercase character to the FPGA, and outputs
+# the uppercase character.
 # ==========================
 # Register usage:
-# 		s1 -> # of bytes received
-#		s4 -> TXBF
-#		s11-> wrdone & rddone status from previous interrupt
-#		a3 -> == 1 if 13 bytes received, 0 otherwise
+#		gp -> points to PROTOCOLMEM addresses
+#		s0 -> x0 for compressed instructions
+#		s1 -> TXBF
+#		s2 -> Asserted if valid data has been received
+#		s11 -> WRDONE & RDDONE status from previous interrupt
 #		t0-t6 -> local subroutine registers (not saved between calls)
+#		a0-a1 -> subroutine return values
+#		a2-a7 -> subroutine arguments
 # ==========================
-# NOTE: when addressing strings (.ascii), LSByte corresponds to first character in the string.
+# NOTE: ISR should save a0-a7 & t0-t6 in the stack to preserve their value.
+# Also, should the ISR need to use c.jal, dont forget to save ra to the stack first.
 
 .text
 isr:
 # push temporary register contents to the stack
-addi sp, sp, -28	#from c.addi sp, -28
+addi sp, sp, -60			# formula: sp - (# of registers to save)*4
 sw t0, 0(x2)	#from c.swsp t0, 0
 sw t1, 4(x2)	#from c.swsp t1, 1
 sw t2, 8(x2)	#from c.swsp t2, 2
@@ -38,23 +28,23 @@ sw t3, 12(x2)	#from c.swsp t3, 3
 sw t4, 16(x2)	#from c.swsp t4, 4
 sw t5, 20(x2)	#from c.swsp t5, 5
 sw t6, 24(x2)	#from c.swsp t6, 6
+sw a0, 28(x2)	#from c.swsp a0, 7
+sw a1, 32(x2)	#from c.swsp a1, 8
+sw a2, 36(x2)	#from c.swsp a2, 9
+sw a3, 40(x2)	#from c.swsp a3, 10
+sw a4, 44(x2)	#from c.swsp a4, 11
+sw a5, 48(x2)	#from c.swsp a5, 12
+sw a6, 52(x2)	#from c.swsp a6, 13
+sw a7, 56(x2)	#from c.swsp a7, 14
 
-addi a3, x0, 0	#from c.li a3, 0					# initialize a3 to 0
-
-# NOP for 5 more cycles to give enough time for the
-# protocol controller (mcont.v) to write to datamem
-nop	#from c.nop
-nop	#from c.nop
-nop	#from c.nop
-nop	#from c.nop
-nop	#from c.nop
+addi s2, x0, 0	#from c.li s2, 0					# initialize s2 to 0
 
 # check if UART interrupted
-lw t0, 0xc(gp)				# load UART Output Control
+lw t0, 0xc(gp)				# load UART Output Control to t0
 andi t1, t0, 0x101			# get RDDONE & WRDONE
 beq t1, x0, eret			# if both are deasserted, UART didn't interrupt. execute URET
 
-andi s4, t0, 0x40			# get TXBF & store to s4 so main program can check if buffer is still full
+andi s1, t0, 0x40			# get TXBF & store to s4 so main program can check if buffer is still full
 
 add t2, x0, s11	#from c.mv t2, s11				# copy s11 contents to t2
 andi t2, t2, 0x100			# get RDDONE from s11
@@ -67,21 +57,7 @@ beq t1, x0, eret			# if interrupt wasn't due to received data, exit ISR
 # Check if data received is valid
 andi t1, t0, 0x200			# get PERR
 bne t1, x0, eret			# if PERR is asserted, data is invalid; exit ISR
-
-# Load received data
-lw t2, 0x10(gp)				# get received data from UART Data Out
-addi s1, s1, 1	#from c.addi s1, 1				# increment # of bytes received
-addi t1, x0, 12	#from c.li t1, 12					# check if byte received is 12th byte ('\r')
-bge s1, t1, isr_skipstore	# if bytes received >= 12, don't store to datamem
-
-addi t1, s1, -1				# offset = bytes received - 1
-sb t2, 0x100(t1)			# store data starting at 0x100
-
-isr_skipstore:
-addi t1, x0, 13	#from c.li t1, 13					# check if 13 bytes have been received
-blt s1, t1, eret			# if bytes received < 13, don't assert a3
-addi a3, x0, 1	#from c.li a3, 1					# assert a3 so main program knows 13 bytes have been received
-addi s1, x0, 0	#from c.li s1, 0					# reset bytes received to 0
+addi s2, x0, 1	#from c.li s2, 1					# if data is valid, assert s2
 
 eret:
 # Pop registers from stack
@@ -92,7 +68,15 @@ lw t3, 12(x2)	#from c.lwsp t3, 3
 lw t4, 16(x2)	#from c.lwsp t4, 4
 lw t5, 20(x2)	#from c.lwsp t5, 5
 lw t6, 24(x2)	#from c.lwsp t6, 6
-addi sp, sp, 28	#from c.addi sp, 28
+lw a0, 28(x2)	#from c.lwsp a0, 7
+lw a1, 32(x2)	#from c.lwsp a1, 8
+lw a2, 36(x2)	#from c.lwsp a2, 9
+lw a3, 40(x2)	#from c.lwsp a3, 10
+lw a4, 44(x2)	#from c.lwsp a4, 11
+lw a5, 48(x2)	#from c.lwsp a5, 12
+lw a6, 52(x2)	#from c.lwsp a6, 13
+lw a7, 56(x2)	#from c.lwsp a7, 14
+addi sp, sp, 60
 
 lw s11, 0xc(gp)				# load Output control
 andi s11, s11, 0x101		# get updated RDDONE & WRDONE
