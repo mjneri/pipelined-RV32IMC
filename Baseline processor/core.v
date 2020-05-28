@@ -390,30 +390,38 @@ module core(
 	sf_controller SF_CONTROLLER(
 		.clk(CLK_BUF),
 		.nrst(nrst),
-		.ISR_PC_flush(ISR_PC_flush),
-		.ISR_pipe_flush(ISR_pipe_flush),
+
+		// Inputs from IF stage
 		.if_pc(if_PC),
-		.id_pc(id_PC),
+		.if_pcnew(if_pcnew),
+
+		// Inputs from ID stage
 		.is_jump(id_is_jump),
 		.is_nop(id_is_nop),
+
+		// Inputs from EXE stage
+		.ISR_PC_flush(ISR_PC_flush),
+		.ISR_pipe_flush(ISR_pipe_flush),
 		.branch_flush(branch_flush),
 		.jump_flush(jump_flush),
-
 		.mul_stall(mul_stall),
 		.div_running(exe_div_running),
 
+		// Stall signals
 		.if_stall(if_stall),
 		.id_stall(id_stall),
 		.exe_stall(exe_stall),
 		.mem_stall(mem_stall),
 		.wb_stall(wb_stall),
 
+		// Flushes/resets
 		.if_flush(if_flush),
 		.id_flush(id_flush),
 		.exe_flush(exe_flush),
 		.mem_flush(mem_flush),
 		.wb_flush(wb_flush),
 
+		// Clock enables
 		.if_clk_en(if_clk_en),
 		.id_clk_en(id_clk_en),
 		.exe_clk_en(exe_clk_en),
