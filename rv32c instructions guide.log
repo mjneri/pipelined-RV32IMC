@@ -34,22 +34,22 @@ C.SUB rs1', rs2'					SUB rs1', rs1', rs2'
 
 C.NOP								NOP
 
-REGISTER ALIASES:
- # aliases
+REGISTER ALIASES:								DATAMEM MEMORY MAPPING		BYTE-ADDR	WORD-ADDR
+ # aliases										======================		=========	=========
  "zero": x0				
- "ra"  : x1				"a6"  : x16
- "sp"  : x2				"a7"  : x17
- "gp"  : x3				"s2"  : x18
- "tp"  : x4				"s3"  : x19
- "t0"  : x5				"s4"  : x20
- "t1"  : x6				"s5"  : x21
+ "ra"  : x1				"a6"  : x16				SPI Data In					0x004		0x001
+ "sp"  : x2				"a7"  : x17				SPI Input Control 1			0x008		0x002
+ "gp"  : x3				"s2"  : x18				UART Data In				0x00c		0x003
+ "tp"  : x4				"s3"  : x19				UART Input Control 1		0x010		0x004
+ "t0"  : x5				"s4"  : x20				I2C Data In					0x014		0x005
+ "t1"  : x6				"s5"  : x21				I2C Input Control 1			0x018		0x006
  "t2"  : x7				"s6"  : x22
- "s0"  : x8				"s7"  : x23
- "fp"  : x8				"s8"  : x24
- "s1"  : x9				"s9"  : x25
- "a0"  : x10			"s10" : x26
- "a1"  : x11			"s11" : x27
- "a2"  : x12			"t3"  : x28
+ "s0"  : x8				"s7"  : x23				SPI Output Control 1		0x1004		0x401
+ "fp"  : x8				"s8"  : x24				SPI Output Data				0x1008		0x402
+ "s1"  : x9				"s9"  : x25				UART Output Control 1		0x100c		0x403
+ "a0"  : x10			"s10" : x26				UART Data Out				0x1010		0x404
+ "a1"  : x11			"s11" : x27				I2C Data Out				0x1014		0x405
+ "a2"  : x12			"t3"  : x28				I2C Output Control 1		0x1018		0x406
  "a3"  : x13			"t4"  : x29
  "a4"  : x14			"t5"  : x30
  "a5"  : x15			"t6"  : x31

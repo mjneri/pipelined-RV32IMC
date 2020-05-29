@@ -34,34 +34,6 @@ module instmem(
 	wire [11:0] addr_1 = addr[11:1];
     wire [11:0] addr_2 = addr[11:1] + 11'd1;
 
-	/*
-	// Instmem that uses BLOCKMEM from Vivado IP Catalog
-	// Generate as DUAL port ROM
-	// Synchronous read
-	blk_mem_gen_instmem BLK_INST(
-		.clka(~clk),
-		.addra(addr_1[11:1]),
-		.douta(prog[15:0]),
-
-		.clkb(~clk),
-		.addrb(addr_2[10:0]),
-		.doutb(prog[31:16])
-	);
-
-	blk_mem_gen_isr BLK_ISR(
-		.clka(~clk),
-		.addra(addr_1[11:1]),
-		.douta(isr[15:0]),
-
-		.clkb(~clk),
-		.addrb(addr_2[10:0]),
-		.doutb(isr[31:16])
-	);
-    */
-
-	// For this part:
-	// Instmem that was coded s.t. Vivado generates an RTL_ROM
-	// Asynchronous read
 	reg [`MEM_WIDTH-1:0] instmem [0:`MEM_DEPTH-1];
 	reg [`MEM_WIDTH-1:0] isr_mem [0:`MEM_DEPTH-1];
 	initial begin
