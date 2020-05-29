@@ -82,7 +82,7 @@ uart_send:
 	# Subroutine that sends 1 byte to UART Transmit buffer. UART sends automatically start after
 	# Check if transmit buffer is full
 	#; if TXBF is asserted, program will loop here until the ISR deasserts it
-	lbu s1, 0xD(gp)				# get TXBF from Output control
+	lbu s1, 0xc(gp)				# get TXBF from Output control
 	andi s1, s1, 0x40
 	
 	uart_txbufcheck:

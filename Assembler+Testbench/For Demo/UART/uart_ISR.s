@@ -44,7 +44,7 @@ isr:
 	andi t1, t0, 0x101			# get RDDONE & WRDONE
 	beq t1, x0, eret			# if both are deasserted, UART didn't interrupt. execute URET
 
-	andi s1, t0, 0x40			# get TXBF & store to s4 so main program can check if buffer is still full
+	andi s1, t0, 0x40			# get TXBF & store to s1 so main program can check if buffer is still full
 	
 	c.mv t2, s11				# copy s11 contents to t2
 	andi t2, t2, 0x100			# get RDDONE from s11
