@@ -50,14 +50,12 @@ module sf_controller(
     input nrst,
 
     // IF stage
-	input [`PC_ADDR_BITS-1:0] if_pcnew,
     input [`PC_ADDR_BITS-1:0] if_pc,
 
     // ID stage inputs
+	input [`PC_ADDR_BITS-1:0] id_pc,
     input is_jump,				// uses controller1 to find if jump or not
     input is_nop,				// ID Stage NOP
-    
-    // EXE stage inputs
     
     input ISR_PC_flush,			// Output flush signals of interrupt controller
     input ISR_pipe_flush,
@@ -237,7 +235,7 @@ module sf_controller(
     assign fw_wb_to_exe_A = t_fw_wb_to_exe_A && !wb_prev_flush;
     assign fw_wb_to_exe_B = t_fw_wb_to_exe_B && !wb_prev_flush;
 
-    wire loop_jump = (if_pc == if_pcnew) && is_jump && ~id_sel_opBR && ~id_stall;
+    wire loop_jump = (if_pc == id_pc) && is_jump && ~id_sel_opBR && ~id_stall && ~exe_flush;
     
     wire jalr_hazard = hzd_exe_to_id_A;							// LOAD -> JALR will result in a one-cycle stall for IF and ID stages
     assign load_hazard = (hzd_mem_to_exe_A || hzd_mem_to_exe_B) && !mem_prev_flush;	// LOAD -> Other instruction

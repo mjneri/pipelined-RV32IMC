@@ -393,13 +393,12 @@ module core(
 
 		// Inputs from IF stage
 		.if_pc(if_PC),
-		.if_pcnew(if_pcnew),
 
 		// Inputs from ID stage
+		.id_pc(id_PC),
 		.is_jump(id_is_jump),
 		.is_nop(id_is_nop),
 
-		// Inputs from EXE stage
 		.ISR_PC_flush(ISR_PC_flush),
 		.ISR_pipe_flush(ISR_pipe_flush),
 		.branch_flush(branch_flush),
