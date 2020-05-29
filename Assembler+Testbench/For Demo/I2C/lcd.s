@@ -19,9 +19,9 @@
 	.ascii "IMC"		# 0x20
 	
 .data 0x30
-	.ascii "Abcd"		# 0x30
-	.ascii "efgh"		# 0x34
-	.ascii "i"			# 0x38
+	.ascii "Proc"		# 0x30
+	.ascii "esso"		# 0x34
+	.ascii "r"			# 0x38
 
 .text
 init:
@@ -95,7 +95,7 @@ lcd_init:
 	c.jal lcd_send				# pulse E
 	c.jal delay_100us			# 100us delay
 
-	addi a2, x0, 0x18				# clear low
+	addi a2, x0, 0x18			# clear low
 	addi a3, x0, 0x27			# slave address of i2c
 	c.jal lcd_send				# pulse E
 	c.jal delay_20ms			# 20ms delay
@@ -201,10 +201,10 @@ lcd_print:
 	lcd_print_line2:
 		# send line 2 to LCD
 		# send high order bits
-		lbu a2, 0x30(t0)			# load character from datamem
-		andi a2, a2, 0xf0			# take high bits
-		ori a2, a2, 0x09			# assert Backlight & RS
-		addi a3, x0, 0x27			# slave address of i2c
+		lbu a2, 0x30(t0)
+		andi a2, a2, 0xf0
+		ori a2, a2, 0x9
+		addi a3, x0, 0x27
 
 		c.addi sp, -8				# store t0 & t1 to stack
 		c.swsp t0, 0
@@ -218,11 +218,11 @@ lcd_print:
 		c.addi sp, 8
 
 		# send low order bits
-		lbu a2, 0x30(t0)			# load character from datamem
-		andi a2, a2, 0x0f			# take low bits
-		c.slli a2, 4				# shift left 4 bits to D<7:4>
-		ori a2, a2, 0x09			# assert Backlight & RS
-		addi a3, x0, 0x27			# slave address of i2c
+		lbu a2, 0x30(t0)
+		andi a2, a2, 0x0f
+		c.slli a2, 4
+		ori a2, a2, 0x9
+		addi a3, x0, 0x27
 
 		c.addi sp, -8				# store t0 & t1 to stack
 		c.swsp t0, 0
@@ -252,7 +252,7 @@ i2c_send:
 
 	# Check first if a transaction is still in progress
 	lw s1, 0x18(gp)				# load I2C output control
-	c.andi s1, 1				# update BUSY field
+	c.andi s1, 1				# get BUSY field
 
 	i2c_wait1:
 	bne s1, x0, i2c_wait1		# if I2C is busy, wait here. ISR will clear s1 once I2C is done executing
@@ -283,6 +283,12 @@ i2c_send:
 	c.jal nop_13
 	c.lwsp ra, 0				# get return address from stack
 	c.addi sp, 4				# pop stack
+
+	# Don't return until transaction is finished
+	lw s1, 0x18(gp)				# load I2C output control
+	c.andi s1, 1				# get BUSY field
+	i2c_wait2:
+	bne s1, x0, i2c_wait2		# if I2C is busy, wait here. ISR will clear s1 once I2C is done executing
 
 	c.jr ra
 
