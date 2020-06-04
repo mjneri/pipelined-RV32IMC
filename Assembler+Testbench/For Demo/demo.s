@@ -24,11 +24,9 @@
 #		s2 -> I2C Output Control
 #		s3 -> SPI Output Control
 #		s4 -> UART Data Out
-#		s5 -> I2C Data Out
+#		s5 -> I2C Data Out (not used in this program)
 #		s6 -> SPI Data Out
 #		s7 -> UART data has been received
-#		s8 -> I2C data has been received
-#		s9 -> SPI data has been received
 #		--
 #		a0-a1 -> return values
 #		a2-a7 -> subroutine arguments
@@ -52,7 +50,7 @@
 # Declaring "Global variables" (mostly just memory addresses)
 # #define BUFSIZE 64 (64 bytes/16 word addresses)
 # static char Rxbuffer[BUFSIZE]; (0x50 -> 0x8c)
-# static char prevRx[BUFSIZE]; (0x90 -> 0xcc)
+# static char prevRx[BUFSIZE]; (0xa0 -> 0xdc)
 
 .text
 init:
@@ -112,24 +110,41 @@ loop:
 	c.j song_check				# no buttons were pressed; wait for data from ESP8266
 
 	btn_playpause:
-	# send "PLAYPAUSE\r\n" to ESP8266
+		# send "PLAYPAUSE\r\n" to ESP8266
+		addi a2, x0, 0x1c		# address of "PLAYPAUSE\r\n"
+		c.jal uart_write		# call uart_write(a2)
+		c.j song_check
 
 	btn_next:
-	# send "NEXT\r\n" to ESP8266
+		# send "NEXT\r\n" to ESP8266
+		addi a2, x0, 0x40		# address of "NEXT\r\n"
+		c.jal uart_write		# call uart_write(a2)
+		c.j song_check
 	
 	btn_prev:
-	# send "PREV\r\n" to ESP8266
+		# send "PREV\r\n" to ESP8266
+		addi a2, x0, 0x30		# address of "PREV\r\n"
+		c.jal uart_write		# call uart_write(a2)
 
 	song_check:
-	# wait for data from ESP8266 to see if song changed
+		# wait for data from ESP8266 to see if song changed
+		c.jal uart_read			# call uart_read()
+		addi a2, x0, 0xa0		# address of prevRx
+		addi a3, x0, 0x50		# address of Rxbuffer
+		c.jal strcmp			# call strcmp(prevRx, Rxbuffer)
+		c.beqz a0, loop			# if prevRx == Rxbuffer, go back to loop. Else, print new string to LCD
+		
+		c.jal lcd_clear			# clear LCD
+		addi a2, x0, 0x50		# address of Rxbuffer
+		c.jal lcd_print			# call lcd_print(Rxbuffer)
+		c.j loop				# go back to start of loop
 
 # ======================================================= #
 #	 					SUBROUTINES						  #
 # ======================================================= #
 
 # HIGH-LEVEL SUBROUTINES
-lcd_init:
-	# equivalent: void lcd_init(void)
+lcd_init: 						# equivalent: void lcd_init(void)
 	# Refer to pg. 46 of https://www.sparkfun.com/datasheets/LCD/HD44780.pdf
 	# on how to setup an LCD in 4-bit mode.
 	# NOTE: Sent data bits in I2C correspond to the following pins:
@@ -204,8 +219,7 @@ lcd_init:
 	c.addi sp, 4
 	c.jr ra						# return to calling function
 
-lcd_print:
-	# equivalent: void lcd_print(char *str)
+lcd_print:						# equivalent: void lcd_print(char *str)
 	# sends the string to LCD
 	# args: a2 = *str
 	# <Command bits> = <Backlight, E, RW, RS>
@@ -264,8 +278,7 @@ lcd_print:
 	c.addi sp, 4
 	c.jr ra						# return
 
-lcd_clear:
-	# equivalent: void lcd_clear(void)
+lcd_clear:						# equivalent: void lcd_clear(void)
 	# Store ra to stack
 	c.addi sp, -4
 	c.swsp ra, 0
@@ -283,8 +296,7 @@ lcd_clear:
 	c.addi sp, 4
 	c.jr ra						# return
 
-lcd_returnhome:
-	# equivalent: void lcd_returnhome(void)
+lcd_returnhome:					# equivalent: void lcd_returnhome(void)
 	# Store ra to stack
 	c.addi sp, -4
 	c.swsp ra, 0
@@ -303,8 +315,7 @@ lcd_returnhome:
 	c.jr ra						# return
 
 # MID-LEVEL SUBROUTINES
-lcd_send:
-	# equivalent: void lcd_send(uint_8 data)
+lcd_send:						# equivalent: void lcd_send(uint_8 data)
 	# sends a command to the LCD, making sure E input to LCD is pulsed
 	# args: data = a2
 	# Set args to be sent to i2c_write()
@@ -335,8 +346,7 @@ lcd_send:
 	c.addi sp, 4				# pop stack
 	c.jr ra
 
-i2c_write:
-	# equivalent: void i2c_write (int data, int byte_amt, int slave_addr)
+i2c_write: 						# equivalent: void i2c_write (int data, int byte_amt, int slave_addr)
 	# args: a2 = data, a3 = byte amt, a4 = slave_addr
 	# Check first if a transaction is still in progress
 	lw s2, 0x18(gp)				# load I2C output control
@@ -380,8 +390,7 @@ i2c_write:
 
 	c.jr ra
 
-uart_write:
-	# equivalent: void uart_write(char *str); Args: a2 = char *str
+uart_write: 					# equivalent: void uart_write(char *str); Args: a2 = char *str
 	# Subroutine that sends a string to UART Transmit buffer. UART sends automatically start after
 	c.addi sp, -4				# push to stack
 	c.swsp ra, 0				# store return address to stack
@@ -431,14 +440,16 @@ uart_write:
 	c.addi sp, 4
 	c.jr ra						# return to calling function
 
-uart_read:
-	# equivalent: void uart_read(void)
+uart_read:						# equivalent: void uart_read(void)
 	# Subroutine that reads data sent over UART & stores to memory
 	# Data is saved to Rxbuffer (occupies 0x50-0x8c)
-	# Before overwriting Rxbuffer, its contents are copied to prevRx (0x90-0xcc)
+	# Before overwriting Rxbuffer, its contents are copied to prevRx (0xa0-0xdc)
 	# We assume that most data received won't exceed 64 bytes, but to prevent
 	# overflows, we limit data that we want to receive to just 64 bytes.
-	# Register usage: s1 (UART Output Control), s4 (UART Data Out), s7(UART Data has been received)
+	# Register usage: 
+	# s1 (UART Output Control)
+	# s4 (UART Data Out)
+	# s7 (UART Data has been received)
 	c.addi sp, -4				# store ra to stack
 	c.swsp ra, 0
 
@@ -446,7 +457,7 @@ uart_read:
 	c.li t0, 0					# loop index
 	addi t1, x0, 64				# loop limit
 	__memset_1:					# for(t0=0; t0<64; t0=t0+4)
-		sw x0, 0x90(t0)			# prevRx
+		sw x0, 0xa0(t0)			# prevRx
 		c.addi t0, 4
 		bltu t0, t1, __memset_1
 	
@@ -455,10 +466,21 @@ uart_read:
 	addi t1, x0, 64				# loop limit
 	__strcpy_1:					# for(t0=0; t0<64; t0=t0+4)
 		lw t2, 0x50(t0)			# load Rxbuffer
-		sw t2, 0x90(t0)			# store to prevRx
+		sw t2, 0xa0(t0)			# store to prevRx
 		c.addi t0, 4
 		bltu t0, t1, __strcpy_1
 	
+	# Check if data has been received first
+	beq s7, x0, uart_read_ret	# if s7==0, no data recvd yet; return to calling function
+								# This is so that if no data has been received, Rxbuffer will not
+								# be initialized to 0.
+	
+	# If data received, start storing to Rxbuffer. Keep waiting for data as long as <50ms 
+	# have passed between bytes.
+	# NOTE: it's the ISR's job to store recvd data to s4
+	# If >50ms pass & no data is received, the subroutine will just return to caller
+	c.li s7, 0					# reset s7 to 0
+
 	# initialize Rxbuffer to \0; (memset(Rxbuffer, 0, sizeof(Rxbuffer));
 	c.li t0, 0					# loop index
 	addi t1, x0, 64				# loop limit
@@ -467,8 +489,6 @@ uart_read:
 		c.addi t0, 4
 		bltu t0, t1, __memset_2
 
-	# start storing to Rxbuffer. Keep waiting for data as long as <50ms have passed between bytes
-	# NOTE: it's the ISR's job to store recvd data to s4
 	c.li t0, 0					# Rxbuffer[t0]; equiv: int i = 0;
 	addi t1, x0, 64				# 64 byte limit
 	lui t2, 0xcb735				# ~50ms delay; Formula: (50MHz*50ms)/(3 instructions in loop)
@@ -496,19 +516,18 @@ uart_read:
 	c.addi sp, 4
 	c.jr ra						# return to calling function
 
-spi_write:
-	# equivalent: void spi_write(char *data, int ss)
+spi_write: 						# equivalent: void spi_write(char *data, int ss)
 	# args: a2 = data, a3 = ss
 	# NOTE: data is 2 bytes
 	# Register usage:
-	# s3 -> asserted if SPI is BUSY
+	# s3 -> SPI Output control
 
 	# Check first if a transaction is still in progress
 	lbu s3, 0x4(gp)				# load SPI Output Control
 	c.li t0, 1					# for comparing w/ BUSY field
 
 	spi_write_wait:
-	beq s3, t0, spi_write_wait	# loop until SPI is not BUSY; ISR will deassert s3
+	beq s3, t0, spi_write_wait	# loop until SPI is not BUSY; ISR will update s3
 
 	# Set data & SS
 	sh a2, 0x4(x0)				# store data to SPI Data In
@@ -538,8 +557,7 @@ spi_write:
 
 	c.jr ra						# jump back to calling function
 
-spi_read:
-	# equivalent: int spi_read(int ss)
+spi_read: 						# equivalent: int spi_read(int ss)
 	# args: a2 = ss
 	# return value: a0 = valid data
 	# Register usage:
@@ -552,7 +570,7 @@ spi_read:
 	c.li t0, 1					# for comparing w/ BUSY field
 
 	spi_read_wait:
-	beq s3, t0, spi_read_wait	# loop until BUSY is not asserted; ISR will set s3 to 0
+	beq s3, t0, spi_read_wait	# loop until BUSY is not asserted; ISR will update s3
 
 	# set slave select & data
 	sw x0, 0x4(x0)				# store 0 to SPI Data In
@@ -590,11 +608,35 @@ spi_read:
 	c.jr ra						# jump back to calling function
 
 # LOW-LEVEL SUBROUTINES (Subroutines that don't call other subroutines)
-strlen:
-	# equivalent: unsigned int strlen(char *str)
+strcmp:							# equivalent: int strcmp(char *str1, char *str2)
+	# args: a2 = *str1, a3 = *str2
+	# ret: a0 = 0 if strings are equal, 1 otherwise
+	# subroutine compares strings by byte
+	c.li t2, 0xd				# for checking '\r
+	__strcmp_loop:
+		lbu t0, 0(a2)			# load from str1
+		lbu t1, 0(a3)			# load from str2
+
+		c.li a0, 1				# set a0 = 1 in case bytes are not equal
+		bne t0, t1, strcmp_ret	# if bytes are not equal, break from loop
+		c.li a0, 0				# reset a0 = 0; skipped if t0!=t1
+		
+		beq t0, x0, strcmp_ret	# if t0=='\0', break loop
+		beq t0, t2, strcmp_ret	# if t0=='\r', break loop
+		beq t1, x0, strcmp_ret	# if t0=='\0', break loop
+		beq t1, t2, strcmp_ret	# if t0=='\r', break loop
+		
+		c.addi a2, 1			# increment *str1
+		c.addi a3, 1			# increment *str2
+		c.j __strcmp_loop
+
+	strcmp_ret:
+	c.jr ra						# return a0;
+
+strlen: 						# equivalent: unsigned int strlen(char *str)
 	# args: a2 = *str
 	# ret: a0 = strlen
-	# in this case, strings do not end w/ '\0'. They end w/ '\r' (0x0D)
+	# in this case, strings can also end w/ '\r' (0x0D)
 	c.li a0, 0					# loop index; equivalent: int count = 0;
 	c.li t0, 0x0D				# for checking '\r'
 
@@ -602,6 +644,7 @@ strlen:
 	# loop until char == '\r'
 	lbu t1, 0(a2)				# load char
 	beq t1, t0, __strlen		# keep looping while char != '\r'; if char == '\r', break from loop
+	beq t1, x0, __strlen		# if char =='\0', break from loop
 	c.addi a2, 1				# increment str pointer
 	c.addi a0, 1				# increment count
 	c.j strlen_loop
@@ -609,8 +652,7 @@ strlen:
 	__strlen:
 	c.jr ra						# return a0
 
-char_codelcd:
-	# equivalent: unsigned int char_codelcd(char c)
+char_codelcd: 					# equivalent: unsigned int char_codelcd(char c)
 	# returns ASCII value of c w/ <Backlight, E, RW, RS> bits for use w/ an I2C LCD
 	# args: a2 = c
 	# ret: a0 = ASCII code + commands; format: <D7:D4> <D3:D0> <Backlight, E, RW, RS> 
