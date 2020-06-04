@@ -68,7 +68,6 @@ ENTITY div_gen_unsigned IS
     s_axis_dividend_tready : OUT STD_LOGIC;
     s_axis_dividend_tdata : IN STD_LOGIC_VECTOR(31 DOWNTO 0);
     m_axis_dout_tvalid : OUT STD_LOGIC;
-    m_axis_dout_tuser : OUT STD_LOGIC_VECTOR(0 DOWNTO 0);
     m_axis_dout_tdata : OUT STD_LOGIC_VECTOR(63 DOWNTO 0)
   );
 END div_gen_unsigned;
@@ -127,8 +126,7 @@ ARCHITECTURE div_gen_unsigned_arch OF div_gen_unsigned IS
   ATTRIBUTE X_INTERFACE_INFO : STRING;
   ATTRIBUTE X_INTERFACE_PARAMETER : STRING;
   ATTRIBUTE X_INTERFACE_INFO OF m_axis_dout_tdata: SIGNAL IS "xilinx.com:interface:axis:1.0 M_AXIS_DOUT TDATA";
-  ATTRIBUTE X_INTERFACE_INFO OF m_axis_dout_tuser: SIGNAL IS "xilinx.com:interface:axis:1.0 M_AXIS_DOUT TUSER";
-  ATTRIBUTE X_INTERFACE_PARAMETER OF m_axis_dout_tvalid: SIGNAL IS "XIL_INTERFACENAME M_AXIS_DOUT, TDATA_NUM_BYTES 8, TDEST_WIDTH 0, TID_WIDTH 0, TUSER_WIDTH 1, HAS_TREADY 0, HAS_TSTRB 0, HAS_TKEEP 0, HAS_TLAST 0, FREQ_HZ 100000000, PHASE 0.000, LAYERED_METADATA undef, INSERT_VIP 0";
+  ATTRIBUTE X_INTERFACE_PARAMETER OF m_axis_dout_tvalid: SIGNAL IS "XIL_INTERFACENAME M_AXIS_DOUT, TDATA_NUM_BYTES 8, TDEST_WIDTH 0, TID_WIDTH 0, TUSER_WIDTH 0, HAS_TREADY 0, HAS_TSTRB 0, HAS_TKEEP 0, HAS_TLAST 0, FREQ_HZ 100000000, PHASE 0.000, LAYERED_METADATA undef, INSERT_VIP 0";
   ATTRIBUTE X_INTERFACE_INFO OF m_axis_dout_tvalid: SIGNAL IS "xilinx.com:interface:axis:1.0 M_AXIS_DOUT TVALID";
   ATTRIBUTE X_INTERFACE_INFO OF s_axis_dividend_tdata: SIGNAL IS "xilinx.com:interface:axis:1.0 S_AXIS_DIVIDEND TDATA";
   ATTRIBUTE X_INTERFACE_INFO OF s_axis_dividend_tready: SIGNAL IS "xilinx.com:interface:axis:1.0 S_AXIS_DIVIDEND TREADY";
@@ -158,7 +156,7 @@ BEGIN
       DIVCLK_SEL => 8,
       FRACTIONAL_B => 0,
       FRACTIONAL_WIDTH => 32,
-      C_HAS_DIV_BY_ZERO => 1,
+      C_HAS_DIV_BY_ZERO => 0,
       C_THROTTLE_SCHEME => 4,
       C_TLAST_RESOLUTION => 0,
       C_HAS_S_AXIS_DIVISOR_TUSER => 0,
@@ -188,7 +186,6 @@ BEGIN
       s_axis_dividend_tdata => s_axis_dividend_tdata,
       m_axis_dout_tvalid => m_axis_dout_tvalid,
       m_axis_dout_tready => '0',
-      m_axis_dout_tuser => m_axis_dout_tuser,
       m_axis_dout_tdata => m_axis_dout_tdata
     );
 END div_gen_unsigned_arch;
