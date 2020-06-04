@@ -23,17 +23,36 @@
 #		s1 -> UART Output Control
 #		s2 -> I2C Output Control
 #		s3 -> SPI Output Control
-#		s4 -> UART Previous Interrupt status
-#		s5 -> UART Data Out
-#		s6 -> I2C Data Out
-#		s7 -> SPI Data Out
+#		s4 -> UART Data Out
+#		s5 -> I2C Data Out
+#		s6 -> SPI Data Out
+#		s7 -> UART data has been received
+#		s8 -> I2C data has been received
+#		s9 -> SPI data has been received
 #		--
 #		a0-a1 -> return values
 #		a2-a7 -> subroutine arguments
 #		t0-t6 -> local subroutine registers (not saved between calls)
 #		ISR stores ax & tx registers to stack before running.
 
-.data 0x1C
+# Strings used for sending commands to the ESP8266
+.data 0x1C				# "PLAYPAUSE\r\n"
+	.ascii "PLAY"		# 0x1c
+	.ascii "PAUS"		# 0x20
+	.ascii "E\r\n"		# 0x24
+
+.data 0x30				# "PREV\r\n"
+	.ascii "PREV"		# 0x30
+	.ascii "\r\n"		# 0x34
+
+.data 0x40				# "NEXT\r\n"
+	.ascii "NEXT"		# 0x40
+	.ascii "\r\n"		# 0x44
+
+# Declaring "Global variables" (mostly just memory addresses)
+# #define BUFSIZE 64 (64 bytes/16 word addresses)
+# static char Rxbuffer[BUFSIZE]; (0x50 -> 0x8c)
+# static char prevRx[BUFSIZE]; (0x90 -> 0xcc)
 
 .text
 init:
@@ -124,107 +143,184 @@ lcd_init:
 	c.jal delay_20ms			# 20ms delay
 
 	addi a2, x0, 0x38			# function set 1
-	addi a3, x0, 0x27			# slave address of i2c
 	c.jal lcd_send				# pulse E
 	c.jal delay_5ms				# 5ms delay
 
 	addi a2, x0, 0x38			# function set 2
-	addi a3, x0, 0x27			# slave address of i2c
 	c.jal lcd_send				# pulse E
 	c.jal delay_100us			# 100us delay
 
 	addi a2, x0, 0x38			# function set 3
-	addi a3, x0, 0x27			# slave address of i2c
 	c.jal lcd_send				# pulse E
 	c.jal delay_100us			# 100us delay
 
 	addi a2, x0, 0x28			# function set 4
-	addi a3, x0, 0x27			# slave address of i2c
 	c.jal lcd_send				# pulse E
 	c.jal delay_100us			# 100us delay
 
 	# Send commands
 	addi a2, x0, 0x28			# function set high
-	addi a3, x0, 0x27			# slave address of i2c
 	c.jal lcd_send				# pulse E
 	c.jal delay_100us			# 100us delay
 
 	addi a2, x0, 0x88			# function set low
-	addi a3, x0, 0x27			# slave address of i2c
 	c.jal lcd_send				# pulse E
 	c.jal delay_100us			# 100us delay
 
 	addi a2, x0, 0x08			# display_off high
-	addi a3, x0, 0x27			# slave address of i2c
 	c.jal lcd_send				# pulse E
 	c.jal delay_100us			# 100us delay
 
 	addi a2, x0, 0x88			# display off low
-	addi a3, x0, 0x27			# slave address of i2c
 	c.jal lcd_send				# pulse E
 	c.jal delay_100us			# 100us delay
 
 	addi a2, x0, 0x08			# clear high
-	addi a3, x0, 0x27			# slave address of i2c
 	c.jal lcd_send				# pulse E
 	c.jal delay_100us			# 100us delay
 
 	addi a2, x0, 0x18			# clear low
-	addi a3, x0, 0x27			# slave address of i2c
 	c.jal lcd_send				# pulse E
 	c.jal delay_20ms			# 20ms delay
 
 	addi a2, x0, 0x08			# entry mode set high
-	addi a3, x0, 0x27			# slave address of i2c
 	c.jal lcd_send				# pulse E
 	c.jal delay_100us			# 100us delay
 
 	addi a2, x0, 0x68			# entry mode set low
-	addi a3, x0, 0x27			# slave address of i2c
 	c.jal lcd_send				# pulse E
 	c.jal delay_100us			# 100us delay
 
 	addi a2, x0, 0x08			# display on high
-	addi a3, x0, 0x27			# slave address of i2c
 	c.jal lcd_send				# pulse E
 	c.jal delay_100us			# 100us delay
 
 	addi a2, x0, 0xf8			# display on low
-	addi a3, x0, 0x27			# slave address of i2c
 	c.jal lcd_send				# pulse E
 	c.jal delay_100us
 
 	# Reload ra from stack
 	c.lwsp ra, 0
 	c.addi sp, 4
-
 	c.jr ra						# return to calling function
 
 lcd_print:
 	# equivalent: void lcd_print(char *str)
 	# sends the string to LCD
 	# args: a2 = *str
+	# <Command bits> = <Backlight, E, RW, RS>
+	c.addi sp, -4				# store ra to stack
+	c.swsp ra, 0
+
+	c.addi sp, -4
+	c.swsp a2, 0				# store *str to stack
+	c.jal strlen				# strlen(a2); a0 = strlen
+	c.lwsp a2, 0				# reload *str from stack
+	c.addi sp, 4
+
+	c.li t0, 0					# loop index; int i = 0;
+	c.mv t1, a2					# move *str to t1
+	c.mv t2, a0					# move strlen to t2
+	
+	lcd_print_loop:				# send all characters to LCD
+		lbu a2, 0(t1)			# load char to a2 (arg for char_codelcd())
+
+		c.addi sp, -12			# store loop index, *str & strlen to stack
+		c.swsp t0, 0			# loop index
+		c.swsp t1, 1			# *str
+		c.swsp t2, 2			# strlen
+
+		c.jal char_codelcd		# char_codelcd(a2); a0 = ascii value
+		c.mv a2, a0				# move return value to a2 (arg for lcd_send())
+		c.addi sp, -4			# preserve a2 value
+		c.swsp a2, 0
+
+		# Get <D7:D4> + <Command bits> first
+		lui t3, 0x00f0f
+		srli t3, t3, 12			# t3 = 0x00000f0f
+		and a2, a2, t3			# <D7:D4> <0,0,0,0> <Command bits>
+		srli t3, a2, 8			# get <D7:D4> only
+		c.slli t3, 4			# shift back to bits <7:4>
+		or a2, a2, t3			# combine
+		andi a2, a2, 0xff		# take 8 bits only; a2 now contains <D7:D4> <Command bits>
+		c.jal lcd_send			# lcd_send(a2)
+
+		# Get <D3:D0> + <Command bits>
+		c.lwsp a2, 0			# reload preserved a2
+		c.addi sp, 4			# pop stack
+		andi a2, a2, 0xff		# a2 now contains <D3:D0> <Command bits>
+		c.jal lcd_send			# lcd_send(a2)
+
+		c.lwsp t0, 0			# reload from stack; loop index
+		c.lwsp t1, 1			# *str
+		c.lwsp t2, 2			# strlen
+		c.addi sp, 12			# pop stack
+
+		c.addi t0, 1			# increment loop index
+		c.addi t1, 1			# increment *str
+		bltu t0, t2, lcd_print_loop	# if loop index < strlen, loop again
+
+	c.lwsp ra, 0				# load ra from stack
+	c.addi sp, 4
+	c.jr ra						# return
+
+lcd_clear:
+	# equivalent: void lcd_clear(void)
+	# Store ra to stack
+	c.addi sp, -4
+	c.swsp ra, 0
+
+	addi a2, x0, 0x08			# clear high
+	c.jal lcd_send				# pulse E
+	c.jal delay_100us			# 100us delay
+
+	addi a2, x0, 0x18			# clear low
+	c.jal lcd_send				# pulse E
+	c.jal delay_20ms			# 20ms delay
+
+	# Load ra from stack
+	c.lwsp ra, 0
+	c.addi sp, 4
+	c.jr ra						# return
+
+lcd_returnhome:
+	# equivalent: void lcd_returnhome(void)
+	# Store ra to stack
+	c.addi sp, -4
+	c.swsp ra, 0
+
+	addi a2, x0, 0x08			# return home high
+	c.jal lcd_send				# pulse E
+	c.jal delay_100us			# 100us delay
+
+	addi a2, x0, 0x28			# return home low
+	c.jal lcd_send				# pulse E
+	c.jal delay_100us			# 100us delay
+
+	# Load ra from stack
+	c.lwsp ra, 0
+	c.addi sp, 4
+	c.jr ra						# return
 
 # MID-LEVEL SUBROUTINES
 lcd_send:
-	# equivalent: void lcd_send(int data, int slave_addr)
+	# equivalent: void lcd_send(uint_8 data)
 	# sends a command to the LCD, making sure E input to LCD is pulsed
-	# args: data = a2; slave_addr = a3
-
-	# Set args to be sent to i2c_send()
+	# args: data = a2
+	# Set args to be sent to i2c_write()
 	ori a2, a2, 0x04			# assert E in data bits
-	c.mv a4, a3					# copy a3(slave_addr) to a4(slave_addr of i2c_send)
 	c.li a3, 1					# send 1 byte only
+	addi a4, x0, 0x27			# slave_addr of LCD
 	
 	c.addi sp, -12				# push to stack
 	c.swsp a2, 0				# preserve data passed to lcd_send
 	c.swsp a4, 1				# preserve slave address
 	c.swsp ra, 2				# store return address to stack
 
-	c.jal i2c_send				# call i2c_send()
+	c.jal i2c_write				# call i2c_write()
 	c.jal delay_100us			# call delay_100us()
 
-	# Set args to be sent to i2c_send()
+	# Set args to be sent to i2c_write()
 	c.lwsp a2, 0				# get preserved data back from stack
 	c.lwsp a4, 1				# get preserved slave address
 	c.addi sp, 8				# pop stack
@@ -232,20 +328,19 @@ lcd_send:
 	andi a2, a2, 0xfb			# deassert E
 	c.li a3, 1					# send 1 byte only
 	
-	c.jal i2c_send				# call i2c_send()
+	c.jal i2c_write				# call i2c_write()
 	c.jal delay_100us			# call delay_100us()
 
 	c.lwsp ra, 0				# get return address from the stack
 	c.addi sp, 4				# pop stack
 	c.jr ra
 
-i2c_send:
-	# equivalent: void i2c_send (int data, int byte_amt, int slave_addr)
+i2c_write:
+	# equivalent: void i2c_write (int data, int byte_amt, int slave_addr)
 	# args: a2 = data, a3 = byte amt, a4 = slave_addr
-
 	# Check first if a transaction is still in progress
 	lw s2, 0x18(gp)				# load I2C output control
-	c.andi s2, 1				# get BUSY field
+	andi s2, s2, 1				# get BUSY field
 
 	i2c_wait1:
 	bne s2, x0, i2c_wait1		# if I2C is busy, wait here. ISR will clear s2 once I2C is done executing
@@ -279,46 +374,110 @@ i2c_send:
 
 	# Don't return until transaction is finished
 	lw s2, 0x18(gp)				# load I2C output control
-	c.andi s2, 1				# get BUSY field
+	andi s2, s2, 1				# get BUSY field
 	i2c_wait2:
 	bne s2, x0, i2c_wait2		# if I2C is busy, wait here. ISR will clear s2 once I2C is done executing
 
 	c.jr ra
 
-uart_send:
-	# equivalent: void uart_send(char c); Args: a2 = char c
-	# Subroutine that sends 1 byte to UART Transmit buffer. UART sends automatically start after
-	# Check if transmit buffer is full
-	#; if TXBF is asserted, program will loop here until the ISR deasserts it
-	lbu s1, 0xc(gp)				# get TXBF from Output control
-	andi s1, s1, 0x40
-	
-	uart_txbufcheck:
-	c.bnez s1, uart_txbufcheck	# wait until TXBF is not asserted anymore
-
-	# Send char to TXBUFFER
-	c.sw a2, 3(s0)				# store to UART Data In (addr 0xC)
-	
-	lw t0, 0x10(x0)				# Load UART Input Control
-	ori t0, t0, 1				# set EN = 1
-	sw t0, 0x10(x0)				# store back to Input Control
-
+uart_write:
+	# equivalent: void uart_write(char *str); Args: a2 = char *str
+	# Subroutine that sends a string to UART Transmit buffer. UART sends automatically start after
 	c.addi sp, -4				# push to stack
 	c.swsp ra, 0				# store return address to stack
-	c.jal nop_13				# NOP for 13 cycles until mcont.v reads from input control
-	c.lwsp ra, 0				# pop ra from stack
+
+	# get strlen(str)
+	c.addi sp, -4
+	c.swsp a2, 0				# preserve *str
+	c.jal strlen				# call strlen(str); a0 = strlen
+	c.lwsp a2, 0				# reload *str from stack
 	c.addi sp, 4
 
-	lw t0, 0x10(x0)				# Load input control
-	xori t0, t0, 1				# set EN = 0
-	sw t0, 0x10(x0)				# store back to input control
+	c.li t2, 0					# loop index; int i = 0;
+	c.mv t1, a2					# move *str to t1
 
-	c.addi sp, -4				# push to stack
-	c.swsp ra, 0				# store ra to stack
-	c.jal nop_13				# NOP for 13 cycles
-	c.lwsp ra, 0				# get return address from stack
-	c.addi sp, 4				# pop stack
+	uart_write_loop:			# Send char to TXBUFFER
+		lbu s1, 0xc(gp)			# Check if transmit buffer is full; get TXBF from Output control
+		andi s1, s1, 0x40		#; if TXBF is asserted, program will loop here until the ISR updates s1
+		addi t3, x0, 0x40		# for checking w/ TXBF field
+		uart_txbufcheck:
+		beq s1, t3, uart_txbufcheck	# wait until TXBF is not asserted anymore
+		
+		lbu a2, 0(t1)			# load byte pointed to by *str
+		c.sw a2, 3(s0)			# store to UART Data In (addr 0xC)
+		
+		lw t0, 0x10(x0)			# Load UART Input Control
+		ori t0, t0, 1			# set EN = 1
+		sw t0, 0x10(x0)			# store back to Input Control
 
+		c.jal nop_13			# NOP for 13 cycles
+		lw t0, 0x10(x0)			# Load input control
+		xori t0, t0, 1			# set EN = 0
+		sw t0, 0x10(x0)			# store back to input control
+		c.jal nop_13			# NOP for 13 cycles
+
+		c.addi t2, 1			# increment loop index
+		c.addi t1, 1			# increment *str
+		bltu t2, a0, uart_write_loop# if loop index < strlen, loop again
+
+	# Once all bytes have been stored to TXBUFFER, wait for transmission to finish
+	lbu s1, 0xc(gp)				# Check if transmit buffer is empty; get TRMT from Output control
+	andi s1, s1, 0x80			#; if TRMT is not asserted, program will loop here until the ISR updates s1
+	addi t3, x0, 0x80			# for checking w/ TRMT field
+	uart_trmtcheck:
+	bne s1, t3, uart_trmtcheck	# wait until TRMT is asserted
+
+	c.lwsp ra, 0				# load ra from stack
+	c.addi sp, 4
+	c.jr ra						# return to calling function
+
+uart_read:
+	# equivalent: void uart_read(void)
+	# Subroutine that reads data sent over UART & stores to memory
+	# Data is saved to Rxbuffer (occupies 0x50-0x8c)
+	# Before overwriting Rxbuffer, its contents are copied to prevRx (0x90-0xcc)
+	# We assume that most data received won't exceed 64 bytes, but to prevent
+	# overflows, we limit data that we want to receive to just 64 bytes.
+	# Register usage: s1 (UART Output Control), s4 (UART Data Out), s7(UART Data has been received)
+	c.addi sp, -4				# store ra to stack
+	c.swsp ra, 0
+
+	# initialize prevRx to \0; equiv: memset(prevRx, 0, sizeof(prevRx));
+	c.li t0, 0					# loop index
+	addi t1, x0, 64				# loop limit
+	__memset_1:					# for(t0=0; t0<64; t0=t0+4)
+		sw x0, 0x90(t0)			# prevRx
+		c.addi t0, 4
+		bltu t0, t1, __memset_1
+	
+	# copy Rxbuffer contents to prevRx; equiv: strcpy(prevRx, Rxbuffer);
+	c.li t0, 0					# loop index
+	addi t1, x0, 64				# loop limit
+	__strcpy_1:					# for(t0=0; t0<64; t0=t0+4)
+		lw t2, 0x50(t0)			# load Rxbuffer
+		sw t2, 0x90(t0)			# store to prevRx
+		c.addi t0, 4
+		bltu t0, t1, __strcpy_1
+	
+	# initialize Rxbuffer to \0; (memset(Rxbuffer, 0, sizeof(Rxbuffer));
+	c.li t0, 0					# loop index
+	addi t1, x0, 64				# loop limit
+	__memset_2:					# for(t0=0; t0<64; t0=t0+4)
+		sw x0, 0x50(t0)			# Rxbuffer
+		c.addi t0, 4
+		bltu t0, t1, __memset_2
+
+	# start storing to Rxbuffer
+	# NOTE: it's the ISR's job to store recvd data to s4
+	c.li t0, 0					# Rxbuffer[t0]; equiv: int i = 0;
+	uart_read_rxbuffer:
+		# Wait for data received
+		uart_read_datawait:
+		beq s7, x0, uart_read_datawait
+		c.li s7, 0				# reset s7 to 0
+
+	c.lwsp ra, 0				# reload ra from stack
+	c.addi sp, 4
 	c.jr ra						# return to calling function
 
 spi_write:
@@ -369,7 +528,7 @@ spi_read:
 	# return value: a0 = valid data
 	# Register usage:
 	# s3 -> SPI Output Control
-	# s7 -> SPI Data Out
+	# s6 -> SPI Data Out
 	# NOTE: when only a read is performed in a transaction, "send" 0 to the slave device
 
 	# check if a transaction is still in progress
@@ -411,7 +570,7 @@ spi_read:
 	spi_read_datawait:
 	bne s3, t0, spi_read_datawait	# wait until DONE is asserted; ISR will assert s3
 
-	c.mv a0, s7					# load SPI Output Data as return value
+	c.mv a0, s6					# load SPI Output Data as return value
 	c.jr ra						# jump back to calling function
 
 # LOW-LEVEL SUBROUTINES (Subroutines that don't call other subroutines)
@@ -419,7 +578,7 @@ strlen:
 	# equivalent: unsigned int strlen(char *str)
 	# args: a2 = *str
 	# ret: a0 = strlen
-	# in this case, strings do not end w/ '\0'. They end w/ '\r' (0x0A)
+	# in this case, strings do not end w/ '\0'. They end w/ '\r' (0x0D)
 	c.li a0, 0					# loop index; equivalent: int count = 0;
 	c.li t0, 0x0D				# for checking '\r'
 
@@ -433,6 +592,33 @@ strlen:
 
 	__strlen:
 	c.jr ra						# return a0
+
+char_codelcd:
+	# equivalent: unsigned int char_codelcd(char c)
+	# returns ASCII value of c w/ <Backlight, E, RW, RS> bits for use w/ an I2C LCD
+	# args: a2 = c
+	# ret: a0 = ASCII code + commands; format: <D7:D4> <D3:D0> <Backlight, E, RW, RS> 
+	# Most args are expected to be in ASCII already; this function pretty much
+	# converts only '\r' & '\n' to SETDDRAM commands
+	addi a0, x0, 0x0A			# '\n'
+	beq a2, a0, __char_code_setddram
+	addi a0, x0, 0x0D			# '\r'
+	beq a2, a0, __char_code_setddram
+
+	c.mv a0, a2					# default: return same value as arg
+	addi t0, x0, 0x9			# assert Backlight & RS
+	c.slli a0, 4				# shift to <11:8>
+	or a0, a0, t0
+	c.j __char_code_ret
+
+	__char_code_setddram:
+	addi a0, x0, 0xC0			# SETDDRAM to 0x40
+	addi t0, x0, 0x8			# assert Backlight
+	c.slli a0, 4				# shift to <11:8>
+	or a0, a0, t0
+
+	__char_code_ret:
+	c.jr ra						# return to calling function
 
 
 # -- Delay subroutines --
