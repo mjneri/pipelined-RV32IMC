@@ -467,15 +467,31 @@ uart_read:
 		c.addi t0, 4
 		bltu t0, t1, __memset_2
 
-	# start storing to Rxbuffer
+	# start storing to Rxbuffer. Keep waiting for data as long as <50ms have passed between bytes
 	# NOTE: it's the ISR's job to store recvd data to s4
 	c.li t0, 0					# Rxbuffer[t0]; equiv: int i = 0;
+	addi t1, x0, 64				# 64 byte limit
+	lui t2, 0xcb735				# ~50ms delay; Formula: (50MHz*50ms)/(3 instructions in loop)
+	srli t2, t2, 12				# align to LSB
 	uart_read_rxbuffer:
-		# Wait for data received
-		uart_read_datawait:
-		beq s7, x0, uart_read_datawait
+		beq s7, x0, __rxbuffer	# check if data has been received; if s7==0, no data recvd yet;
+		# Store recvd data to Rxbuffer
 		c.li s7, 0				# reset s7 to 0
+		sb s4, 0x50(t0)			# Rxbuffer[t0] = RXData;
+		c.addi t0, 1			# t0++;
+		
+		#; if 64 bytes have been stored already, return to caller
+		bgeu t0, t1, uart_read_ret
 
+		# Reinitialize delay counter to restart the 'timer'
+		lui t2, 0xcb735
+		srli t2, t2, 12
+
+		__rxbuffer:
+		c.addi t2, -1			# decrement; if constant > 0, keep looping
+		bne t2, x0, uart_read_rxbuffer
+
+	uart_read_ret:
 	c.lwsp ra, 0				# reload ra from stack
 	c.addi sp, 4
 	c.jr ra						# return to calling function
