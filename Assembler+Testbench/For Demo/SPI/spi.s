@@ -9,13 +9,14 @@
 # Arduino: Slave 3
 # Program flow:
 # 1. CORE sends 2 byte packages to both slaves in ASCII (ES (ESP), AU (Arduino)).
-# 2. If both slaves receive the correct package, they send a reply: (EK (ESP), AK (Arduino)). 
+# 2. If both slaves receive the correct package, they send a reply: (0xAA). 
 #  	 If reply matches expected data, send command to both slaves to turn on their built-in LEDs (EL, AL)
 # 	 Else, send "XX"
 # =========================================================
 # Register usage:
 #		s0 -> SPI BUSY
 #		s1 -> SPI DONE
+#		s2 -> SPI Data Out
 #		sp -> Stack pointer; points to word address 0x3FF
 #		gp -> points to PROTOCOLMEM address (0x400)
 #		a0-a1 -> return values
@@ -29,11 +30,10 @@ init:
 	c.slli gp, 2
 
 spi_setup:
-	# Settings: 100kbps, cpha = 1, cpol = 1 (shift@negedge, sample@posedge), ord = 0 (send MSB first)
-	addi t0, x0, 123			# 100kbps prescale
+	# Settings: 100kbps, cpha = 0, cpol = 0 (shift@negedge, sample@posedge), ord = 0 (send MSB first)
+	addi t0, x0, 124			# 100kbps prescale
 	c.slli t0, 8				# shift to prescale field
-	c.addi t0, 0xc				# ord = 0, cpha=1, cpol=1
-	c.addi t0, 0x2				# turn on SPI controller
+	# c.addi t0, 0xc				# ord = 0, cpha=1, cpol=1
 	sw t0, 0x8(x0)				# store to SPI Input Control
 
 main:
@@ -54,8 +54,7 @@ main:
 	# Get ESP reply
 	c.li a2, 2					# select slave 2
 	c.jal spi_read				# call spi_read
-	lui t0, 0x0454B				# "EK"
-	srli t0, t0, 12				# shift s.t. LSB is at bit0
+	addi t0, x0, 0xAA			# "0xAA"
 
 	lui a2, 0x0454C				# "EL"
 	beq a0, t0, main1			# check if data matches expected. If yes, skip "XX"
@@ -68,8 +67,7 @@ main:
 	# Get Arduino reply
 	c.li a2, 3					# select slave 3
 	c.jal spi_read				# call spi_read(a2)
-	lui t0, 0x0414B				# "AK"
-	srli t0, t0, 12				# shift s.t. LSB at bit0
+	addi t0, x0, 0xAA			# 0xAA
 
 	lui a2, 0x0414C				# "AL"
 	beq a0, t0, main2			# check if data matches expected. If yes, skip "XX"
@@ -105,15 +103,15 @@ spi_write:
 	c.andi a3, 0x3				# make sure to take only bit1 & bit0
 	c.slli a3, 5				# shift slave select to SS field
 	lw t0, 0x8(x0)				# load SPI Input Control
-	or t0, t0, a3				# add SS to Input control
-	c.addi t0, 1				# set EN = 1
+	andi t0, t0, -97			# set SS field to 0
+	or t0, t0, a3				# insert new SS to Input control
+	ori t0, t0, 3				# set ON = 1, EN = 1
 	sw t0, 0x8(x0)				# store back to SPI Input Control
-
-	c.addi sp, -4				# push ra to stack
-	c.swsp ra, 0
-	c.jal nop_13
-	c.lwsp ra, 0				# reload ra from stack
-	c.addi sp, 4				
+			
+	c.li t1, 1					# for checking BUSY
+	spi_write_waitbusy:			# SPI output control is polled until BUSY is asserted, so we are certain that e_clk
+	lbu t0, 0x4(gp)				# has captured EN & the transaction has started.
+	bne t0, t1, spi_write_waitbusy
 
 	lw t0, 0x8(x0)				# load SPI Input control
 	c.addi t0, -1				# set EN = 0
@@ -123,7 +121,7 @@ spi_write:
 	c.swsp ra, 0
 	c.jal nop_13
 	c.lwsp ra, 0				# reload ra from stack
-	c.addi sp, 4		
+	c.addi sp, 4
 
 	c.jr ra						# jump back to calling function
 
@@ -149,15 +147,15 @@ spi_read:
 	c.andi a2, 0x3				# make sure to take only first two bits from arg
 	c.slli a2, 5				# shift to SS field
 	lw t0, 0x8(x0)				# load SPI Input Control
-	or t0, t0, a2				# add SS to input control
-	c.addi t0, 1				# set EN = 1
-	sw t0, 0x8(s0)				# store back to Input control
+	andi t0, t0, -97			# set SS field to 0
+	or t0, t0, a2				# insert new SS to input control
+	ori t0, t0, 3				# set ON = 1, EN = 1
+	sw t0, 0x8(x0)				# store back to Input control
 
-	c.addi sp, -4				# push ra to stack
-	c.swsp ra, 0
-	c.jal nop_13
-	c.lwsp ra, 0				# reload ra from stack
-	c.addi sp, 4
+	c.li t1, 1					# for checking BUSY
+	spi_read_waitbusy:			# SPI output control is polled until BUSY is asserted, so we are certain that e_clk
+	lbu t0, 0x4(gp)				# has captured EN & the transaction has started.
+	bne t0, t1, spi_read_waitbusy
 
 	lw t0, 0x8(x0)				# load SPI Input control
 	c.addi t0, -1				# set EN = 0
@@ -175,7 +173,7 @@ spi_read:
 	spi_read_datawait:
 	c.beqz s1, spi_read_datawait# wait until DONE is asserted; ISR will assert s1
 
-	lhu a0, 0x8(gp)				# load SPI Output Data as return value
+	c.mv a0, s2					# load SPI Output Data as return value
 	c.jr ra						# jump back to calling function
 
 

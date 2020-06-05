@@ -71,14 +71,14 @@ sw a1, 20(s0)	#from c.sw a1, 5(s0)			# store to data in
 
 lui a0, 0x00002			# # BYTES = 4
 ori a0, a0, 0x5A0		# Set Slave address
-# c.addi a0, 4			# WRITE = 1
-addi a0, a0, 2	#from c.addi a0, 2			# READ = 1
+addi a0, a0, 4	#from c.addi a0, 4			# WRITE = 1
+# c.addi a0, 2			# READ = 1
 addi a0, a0, 1	#from c.addi a0, 1			# START = 1
 sw a0, 24(s0)	#from c.sw a0, 6(s0)			# store to input control
 jal x1, nop_13	#from c.jal nop_13
 
-# xori a0, a0, 5			# WRITE = 0, START = 0
-xori a0, a0, 3			# READ = 0, START = 0
+xori a0, a0, 5			# WRITE = 0, START = 0
+# xori a0, a0, 3			# READ = 0, START = 0
 sw a0, 24(s0)	#from c.sw a0, 6(s0)			# store to input control
 
 addi a0, x0, 0	#from c.li a0, 0				# Reset a0 & a1 contents

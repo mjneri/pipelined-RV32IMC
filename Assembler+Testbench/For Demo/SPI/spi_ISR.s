@@ -26,10 +26,22 @@ isr:
 	c.swsp a6, 13
 	c.swsp a7, 14
 
+	# Load SPI Data Out
+	lhu s2, 0x8(gp)
+	
 	# Update SPI BUSY & SPI DONE registers (s0&s1)
 	lw t0, 0x4(gp)				# load SPI Output Control
-	c.andi s0, 1				# get BUSY field
-	c.andi s0, 2				# get DONE field
+	andi s0, t0, 1				# get BUSY field
+	andi s1, t0, 2				# get DONE field
+
+	# Turn off SPI controller
+	# This is done due to how e_clk in the SPI controller works.
+	# By turning off the controller, e_clk starts running at 25MHz again, allowing
+	# it to capture EN. If we leave ON = 1, e_clk will stay running at the prescale frequency,
+	# which lessens the chance of e_clk capturing EN.
+	lw t0, 0x8(x0)				# load SPI Input Control
+	xori t0, t0, 2				# set ON = 0
+	sw t0, 0x8(x0)				# store back to Input Control
 
 eret:
 	# reload temp registers
