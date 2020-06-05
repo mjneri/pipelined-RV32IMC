@@ -27,6 +27,7 @@
 #		s5 -> I2C Data Out (not used in this program)
 #		s6 -> SPI Data Out
 #		s7 -> UART data has been received
+#		s11 -> WRDONE&RDDONE status of previous interrupt
 #		--
 #		a0-a1 -> return values
 #		a2-a7 -> subroutine arguments
@@ -95,7 +96,7 @@ loop:
 	# 0x12 -> NEXT
 	# 0x13 -> PREV
 	# --
-	# 0x0000 -> sent to Arduino, indicating that we want to read from it
+	# 0x00FF -> sent to Arduino, indicating that we want to read from it
 	c.li a2, 0					# select Slave 0
 	c.jal spi_read				# call spi_read(ss); a0 contains return value
 
@@ -135,6 +136,7 @@ loop:
 		c.beqz a0, loop			# if prevRx == Rxbuffer, go back to loop. Else, print new string to LCD
 		
 		c.jal lcd_clear			# clear LCD
+		c.jal lcd_returnhome	# return cursor to 0x00
 		addi a2, x0, 0x50		# address of Rxbuffer
 		c.jal lcd_print			# call lcd_print(Rxbuffer)
 		c.j loop				# go back to start of loop
@@ -289,7 +291,7 @@ lcd_clear:						# equivalent: void lcd_clear(void)
 
 	addi a2, x0, 0x18			# clear low
 	c.jal lcd_send				# pulse E
-	c.jal delay_20ms			# 20ms delay
+	c.jal delay_1s			# 1s delay
 
 	# Load ra from stack
 	c.lwsp ra, 0
@@ -350,10 +352,10 @@ i2c_write: 						# equivalent: void i2c_write (int data, int byte_amt, int slave
 	# args: a2 = data, a3 = byte amt, a4 = slave_addr
 	# Check first if a transaction is still in progress
 	lw s2, 0x18(gp)				# load I2C output control
-	andi s2, s2, 1				# get BUSY field
+	c.li t0, 1					# for comparing w/ BUSY field
 
 	i2c_wait1:
-	bne s2, x0, i2c_wait1		# if I2C is busy, wait here. ISR will clear s2 once I2C is done executing
+	beq s2, t0, i2c_wait1		# if I2C is busy, wait here. ISR will update s2 once I2C is done executing
 
 	# Setting I2C Input control
 	sw a2, 0x14(x0)				# store data in I2C Data In
@@ -384,9 +386,9 @@ i2c_write: 						# equivalent: void i2c_write (int data, int byte_amt, int slave
 
 	# Don't return until transaction is finished
 	lw s2, 0x18(gp)				# load I2C output control
-	andi s2, s2, 1				# get BUSY field
+	c.li t0, 1					# for comparing w/ BUSY field
 	i2c_wait2:
-	bne s2, x0, i2c_wait2		# if I2C is busy, wait here. ISR will clear s2 once I2C is done executing
+	beq s2, t0, i2c_wait2		# if I2C is busy, wait here. ISR will update s2 once I2C is done executing
 
 	c.jr ra
 
@@ -406,11 +408,11 @@ uart_write: 					# equivalent: void uart_write(char *str); Args: a2 = char *str
 	c.mv t1, a2					# move *str to t1
 
 	uart_write_loop:			# Send char to TXBUFFER
-		lbu s1, 0xc(gp)			# Check if transmit buffer is full; get TXBF from Output control
-		andi s1, s1, 0x40		#; if TXBF is asserted, program will loop here until the ISR updates s1
+		lhu s1, 0xc(gp)			# Check if transmit buffer is full; get TXBF&TRMT from Output control
+		andi s1, s1, 0xc0		#; if TXBF is asserted, program will loop here until the ISR updates s1
 		addi t3, x0, 0x40		# for checking w/ TXBF field
-		uart_txbufcheck:
-		beq s1, t3, uart_txbufcheck	# wait until TXBF is not asserted anymore
+		uart_txbfcheck:
+		beq s1, t3, uart_txbfcheck	# wait until TXBF is not asserted anymore
 		
 		lbu a2, 0(t1)			# load byte pointed to by *str
 		c.sw a2, 3(s0)			# store to UART Data In (addr 0xC)
@@ -430,8 +432,8 @@ uart_write: 					# equivalent: void uart_write(char *str); Args: a2 = char *str
 		bltu t2, a0, uart_write_loop# if loop index < strlen, loop again
 
 	# Once all bytes have been stored to TXBUFFER, wait for transmission to finish
-	lbu s1, 0xc(gp)				# Check if transmit buffer is empty; get TRMT from Output control
-	andi s1, s1, 0x80			#; if TRMT is not asserted, program will loop here until the ISR updates s1
+	lhu s1, 0xc(gp)				# Check if transmit buffer is empty; get TXBF&TRMT from Output control
+	andi s1, s1, 0xc0			#; if TRMT is not asserted, program will loop here until the ISR updates s1
 	addi t3, x0, 0x80			# for checking w/ TRMT field
 	uart_trmtcheck:
 	bne s1, t3, uart_trmtcheck	# wait until TRMT is asserted
@@ -541,7 +543,7 @@ spi_write: 						# equivalent: void spi_write(char *data, int ss)
 	sw t0, 0x8(x0)				# store back to SPI Input Control
 		
 	c.li t1, 1					# for checking BUSY
-	spi_write_waitbusy:			# SPI output control is polled until BUSY is asserted, so we are certain that e_clk
+	spi_write_waitbusy:			# SPI output control is <polled> until BUSY is asserted, so we are certain that e_clk
 	lbu t0, 0x4(gp)				# has captured EN & the transaction has started.
 	bne t0, t1, spi_write_waitbusy
 
@@ -563,7 +565,7 @@ spi_read: 						# equivalent: int spi_read(int ss)
 	# Register usage:
 	# s3 -> SPI Output Control
 	# s6 -> SPI Data Out
-	# NOTE: when only a read is performed in a transaction, "send" 0 to the slave device
+	# NOTE: when only a read is performed in a transaction, "send" 0x00FF to the slave device
 
 	# check if a transaction is still in progress
 	lbu s3, 0x4(gp)				# load SPI Output Control
@@ -573,7 +575,8 @@ spi_read: 						# equivalent: int spi_read(int ss)
 	beq s3, t0, spi_read_wait	# loop until BUSY is not asserted; ISR will update s3
 
 	# set slave select & data
-	sw x0, 0x4(x0)				# store 0 to SPI Data In
+	addi t0, x0, 0xff			# 0xff
+	sh t0, 0x4(x0)				# store 0x00FF to SPI Data In
 
 	c.andi a2, 0x3				# make sure to take only first two bits from arg
 	c.slli a2, 5				# shift to SS field
@@ -638,12 +641,10 @@ strlen: 						# equivalent: unsigned int strlen(char *str)
 	# ret: a0 = strlen
 	# in this case, strings can also end w/ '\r' (0x0D)
 	c.li a0, 0					# loop index; equivalent: int count = 0;
-	c.li t0, 0x0D				# for checking '\r'
 
 	strlen_loop:
-	# loop until char == '\r'
+	# loop until char == '\0'
 	lbu t1, 0(a2)				# load char
-	beq t1, t0, __strlen		# keep looping while char != '\r'; if char == '\r', break from loop
 	beq t1, x0, __strlen		# if char =='\0', break from loop
 	c.addi a2, 1				# increment str pointer
 	c.addi a0, 1				# increment count

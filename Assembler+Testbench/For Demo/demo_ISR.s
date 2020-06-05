@@ -27,6 +27,7 @@
 #		s5 -> I2C Data Out
 #		s6 -> SPI Data Out
 #		s7 -> UART data has been received
+#		s11 -> WRDONE&RDDONE status of previous interrupt
 #		--
 #		a0-a1 -> return values
 #		a2-a7 -> subroutine arguments
@@ -59,9 +60,9 @@ isr:
 	lbu s6, 0x8(gp)				# SPI Data Out
 
 	# Load Output Control registers
-	lw s1, 0xc(gp)				# UART Output Control
-	lw s2, 0x18(gp)				# I2C Output Control
-	lw s3, 0x4(gp)				# SPI Output Control
+	lhu s1, 0xc(gp)				# UART Output Control
+	lbu s2, 0x18(gp)			# I2C Output Control
+	lbu s3, 0x4(gp)				# SPI Output Control
 
 	# Turn off SPI controller
 	# This is done due to how e_clk in the SPI controller works.
@@ -72,10 +73,21 @@ isr:
 	xori t0, t0, 2				# set ON = 0
 	sw t0, 0x8(x0)				# store back to Input Control
 
-	# Check if data received for UART is valid
-	andi t0, s1, 0x200			# get PERR field from UART Output Control
-	bne t0, x0, eret			# if PERR is asserted, data is invalid; skip asserting s7
-	c.li s7, 1					# assert s7 if data received is valid
+	# Check previous UART interrupt status to determine whether s7 should be asserted
+	c.li s7, 0					# reset s7
+	c.mv t2, s11				# copy s11 contents to t2
+	andi t2, t2, 0x100			# get RDDONE from s11
+	bne t2, x0, __isr			# if RDDONE was asserted from the previous interrupt, then current interrupt is due to WRDONE.
+								# Don't update s7
+
+	andi s7, s1, 0x100			# get RDDONE field from UART Output Control & store to s7
+
+	__isr:
+	# update s1 to contain updated TRMT & TXBF
+	andi s1, s1, 0xc0			# get TRMT & TXBF fields from UART Output Control only; used by uart_write() for checking TXBUFFER status
+
+	lw s11, 0xC(gp)				# load Output control
+	andi s11, s11, 0x101		# get updated RDDONE & WRDONE
 
 eret:
 	# reload temp registers
