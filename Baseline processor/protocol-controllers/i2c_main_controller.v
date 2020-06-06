@@ -9,6 +9,7 @@ module i2c_main_controller(
 		//Control Signal Output
 		output wire done,
 		output wire busy,
+		output reg nack,
 		
 		//From Data MEMORY
 		input wire [31:0] memory_control,
@@ -85,7 +86,7 @@ module i2c_main_controller(
 	reg [15:0] i2c_prescale; // 16-bit prescale value
 	reg [6:0] i2c_addr; // 7-bit i2c addresses
 
-    assign done = (i2c_state == I2C_STATE_DONE);	// asserts only when READs are done
+    assign done = (i2c_state == I2C_STATE_DONE);
     assign busy = ((i2c_state == I2C_STATE_READ) || (i2c_state == I2C_STATE_WRITE));
     
 	// Initializing registers
@@ -105,6 +106,8 @@ module i2c_main_controller(
 		i2c_prescale <= 16'd0;// = 75; 60 MHz / (4 * 200 kHz); Fclk = 60 MHz, Fi2c = 200 kHz
 		buffer_data <= 16'b0;
 		i2c_addr <= 7'd0;
+
+		nack <= 0;
 	end
 
 	always@(posedge clk) begin
@@ -125,6 +128,8 @@ module i2c_main_controller(
 			i2c_prescale <= 16'd0;// = 75; 60 MHz / (4 * 200 kHz); Fclk = 60 MHz, Fi2c = 200 kHz
 			buffer_data <= 16'b0;
 			i2c_addr <= 7'd0;
+
+			nack <= 0;
 		end
 		else begin
 			
@@ -137,19 +142,20 @@ module i2c_main_controller(
 						i2c_state <= I2C_STATE_READ;
 						i2c_data_length <= memory_control[14:11]; //8bits data
 						i2c_substate_count <= R0;
-					
+						nack <= 0;
 					end
 					else if (memory_control[2] == 1'b1) begin // If WRITE = 1
 						i2c_state <= I2C_STATE_WRITE;
 						i2c_data_length <= memory_control[14:11]; //8bits data
 						i2c_substate_count <= W0;
-						
+						nack <= 0;
 					end
 					else if (memory_control[3] == 1'b1) begin //If SET_PRESCALE = 1
 						i2c_state <= I2C_STATE_PRESCALE;
 						i2c_data_length <= memory_control[14:11]; //8bits data
 						i2c_prescale <= memory_control[31:16]; //16'd125;//16'd2500;
 						i2c_substate_count <= P0;
+						nack <= 0;
 					end
 				end
 			end
@@ -336,13 +342,15 @@ module i2c_main_controller(
 					i2c_data_length_counter <= 4'd0;
 					i2c_data_sent_counter <= 4'd0;
 					i2c_state <= I2C_STATE_DONE;
+					nack <= 0;
 				end
 				else if( i2c_substate_count == RX ) begin
 					//reset values
 					i2c_data_length <= 4'd1;
 					i2c_data_length_counter <= 4'd0;
 					i2c_data_sent_counter <= 4'd0;
-					i2c_state <= I2C_STATE_IDLE;
+					i2c_state <= I2C_STATE_DONE;
+					nack <= 1;
 				end
 			end
 			
@@ -511,6 +519,7 @@ module i2c_main_controller(
 						i2c_data_sent_counter <= 4'd0;
 						i2c_substate_count <= "_I00";
 						i2c_state <= I2C_STATE_DONE;
+						nack <= 0;
 					end
 				end
 				else if (i2c_substate_count == WX) begin
@@ -529,7 +538,8 @@ module i2c_main_controller(
 						i2c_data_length_counter <= 4'd0;
 						i2c_data_sent_counter <= 4'd0;
 						i2c_substate_count <= "_I00";
-						i2c_state <= I2C_STATE_IDLE;
+						i2c_state <= I2C_STATE_DONE;
+						nack <= 1;
 					end
 				end
 			end

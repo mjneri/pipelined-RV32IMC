@@ -45,9 +45,10 @@
 	wire busy_int;
 	wire busy;
 	wire done;
+	wire nack;
 	wire [7:0] i_dat_temp;
 	
-	assign con_out = {30'h0, done, busy};
+	assign con_out = {29'h0, nack, done, busy};
 	//assign data_out = {24'h0, wb_dat_mo_int};
 	assign i_dat = {24'h0, i_dat_temp};
 	
@@ -64,6 +65,7 @@
 		.nrst(nrst),
 		.done(done),
 		.busy(busy),
+		.nack(nack),
 		.memory_control(memory_control),
 		.memory_data(memory_data),
 		.wbm_adr_o(wb_adr_int), 
