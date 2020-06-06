@@ -34,9 +34,7 @@ module spi(
 	input				clk,		// Clock from core (50MHz)
 
 	input				turnon,		// Toggles module on or off
-	input				enable,		// Controls SPI funtionality
-	
-	input				mb, 
+	input				enable,		// Controls SPI transactions
 
 	input		[23:0]	prescale,
 
@@ -62,7 +60,6 @@ module spi(
 	);
 	
 	reg [31:0]	din_tmp;			// 32-bit data in buffer
-	reg [7:0]	din_reg;			// 8-bit data in buffer
 	
 	reg	[7:0]	dout;				// 8-bit data out buffer
 	reg			busy;
@@ -98,8 +95,8 @@ module spi(
 	initial begin
 		e_clk <= 0;
 		ctr <= 24'h0;
-		din_tmp <= din;
-		sck <= cpol;
+		din_tmp <= 32'h0;
+		sck <= 1'h1;
 		dout <= 8'h0;
 		state <= 8'hFF;
 		toggle <= 0;
@@ -109,7 +106,6 @@ module spi(
 		ss[1] <= 1;
 		ss[2] <= 1;
 		ss[3] <= 1;
-		din_reg <= 8'h0;
 	end
 
 	// Extended clock state machine
@@ -147,7 +143,6 @@ module spi(
 			ss[1] <= 1;
 			ss[2] <= 1;
 			ss[3] <= 1;
-			din_reg <= 8'h0;
 		end
 		else begin
 			// Toggle Register (Provides a stable enable signal)
@@ -215,10 +210,6 @@ module spi(
 			else if(toggle && cpha && (state == last)) sck <= cpol;
 			else if(!cpha && (state == 8'hEE)) sck <= cpol;
 			else sck <= ~sck;
-			
-			// DIN_REG
-			if(enable) din_reg <= din_tmp[7:0];
-			else if(done && mb) din_reg <= din_tmp[15:8];
 		end
 	end
 endmodule

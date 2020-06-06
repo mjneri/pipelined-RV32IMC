@@ -83,8 +83,6 @@ module mcont(
 		.turnon(spi_con[1]),
 		.enable(spi_con[0]),
 
-		.mb(spi_con[7]),
-
 		.prescale(spi_con[31:8]),
 
 		.din(spi_din),
