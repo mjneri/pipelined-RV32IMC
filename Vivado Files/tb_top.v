@@ -69,7 +69,7 @@ module tb_top();
 		nrst = 0;
 		// BTN = 0;
 		// SW = 0;
-		ck_io1 = 0;
+		ck_io1 = 1;
 		ck_io8 = 1;
 		// ck_io38 = 0;
 		// ck_io39 = 0;
@@ -92,77 +92,52 @@ module tb_top();
 	// end
 
 	// Stimulus for the UART decoder
-	reg dec_CLK = 0;						// baud rate clock for decoder input
-	integer dec_counter = 0;				// counter for decoder
-	always #4350 dec_CLK = ~dec_CLK;		// 115.2kHz clock
-	
-	always@(posedge dec_CLK) begin
-		if(!nrst) dec_counter <= 0;
-		else dec_counter <= dec_counter + 1;
-	end
+	reg [7:0] enc_din = 0;
+	reg enc_en = 0;
+	reg [1:0] enc_parity = 0;
+	reg enc_stopsel = 0;
+	reg [23:0] enc_baud = 24'd433;
+	wire enc_tx;
+	integer enc_counter = 0;
 
-	// always@(posedge dec_CLK) begin
+	reg CLK50MHZ = 0;
+	always #10 CLK50MHZ = ~CLK50MHZ;
+
+	Encoder ENCODER(
+		.clk(CLK50MHZ),
+        .nrst(nrst),
+
+        .data_in(enc_din),
+        .en(enc_en),
+        .parity(enc_parity),
+        .stop_sel(enc_stopsel),
+        .baudcontrol(enc_baud),
+
+        .uart_enc(enc_tx),
+        .uart_rco()
+	);
+
+	always@(*) ck_io8 = enc_tx;
+
+	// always@(posedge CLK50MHZ) begin
 	// 	if(nrst /* & TOP.locked */) begin						// send only when nrst not pulled down
-	// 		// Send 0xe1dadefa (even parity, 1 stop bit)
-	// 		if(dec_counter==0) ck_io8 <= 0;					// START bit
+	// 		enc_counter <= enc_counter + 1;
 
-	// 		if(dec_counter==1) ck_io8 <= 0;			// 0xA
-	// 		if(dec_counter==2) ck_io8 <= 1;			// 0xA
-	// 		if(dec_counter==3) ck_io8 <= 0;			// 0xA
-	// 		if(dec_counter==4) ck_io8 <= 1;			// 0xA
-
-	// 		if(dec_counter==5) ck_io8 <= 1;			// 0xF
-	// 		if(dec_counter==6) ck_io8 <= 1;			// 0xF
-	// 		if(dec_counter==7) ck_io8 <= 1;			// 0xF
-	// 		if(dec_counter==8) ck_io8 <= 1;			// 0xF
-
-	// 		if(dec_counter==9) ck_io8 <= 0;			// Parity bit
-	// 		if(dec_counter==10) ck_io8 <= 1;		// Stop bit
-	// 		// ===========================================================
-	// 		if(dec_counter==11) ck_io8 <= 0;		// Start bit
-
-	// 		if(dec_counter==12) ck_io8 <= 0;		// 0xE
-	// 		if(dec_counter==13) ck_io8 <= 1;		// 0xE
-	// 		if(dec_counter==14) ck_io8 <= 1;		// 0xE
-	// 		if(dec_counter==15) ck_io8 <= 1;		// 0xE
-
-	// 		if(dec_counter==16) ck_io8 <= 1;		// 0xD
-	// 		if(dec_counter==17) ck_io8 <= 0;		// 0xD
-	// 		if(dec_counter==18) ck_io8 <= 1;		// 0xD
-	// 		if(dec_counter==19) ck_io8 <= 1;		// 0xD
-
-	// 		if(dec_counter==20) ck_io8 <= 0;		// Parity bit
-	// 		if(dec_counter==21) ck_io8 <= 1;		// Stop bit
-	// 		// ===========================================================
-	// 		if(dec_counter==22) ck_io8 <= 0;		// Start bit
-
-	// 		if(dec_counter==23) ck_io8 <= 0;		// 0xA
-	// 		if(dec_counter==24) ck_io8 <= 1;		// 0xA
-	// 		if(dec_counter==25) ck_io8 <= 0;		// 0xA
-	// 		if(dec_counter==26) ck_io8 <= 1;		// 0xA
-
-	// 		if(dec_counter==27) ck_io8 <= 1;		// 0xD
-	// 		if(dec_counter==28) ck_io8 <= 0;		// 0xD
-	// 		if(dec_counter==29) ck_io8 <= 1;		// 0xD
-	// 		if(dec_counter==30) ck_io8 <= 1;		// 0xD
-
-	// 		if(dec_counter==31) ck_io8 <= 1;		// Parity bit
-	// 		if(dec_counter==32) ck_io8 <= 1;		// Stop bit
-	// 		// ===========================================================
-	// 		if(dec_counter==33) ck_io8 <= 0;		// Start bit
-
-	// 		if(dec_counter==34) ck_io8 <= 1;		// 0x1
-	// 		if(dec_counter==35) ck_io8 <= 0;		// 0x1
-	// 		if(dec_counter==36) ck_io8 <= 0;		// 0x1
-	// 		if(dec_counter==37) ck_io8 <= 0;		// 0x1
-
-	// 		if(dec_counter==38) ck_io8 <= 0;		// 0xE
-	// 		if(dec_counter==39) ck_io8 <= 1;		// 0xE
-	// 		if(dec_counter==40) ck_io8 <= 1;		// 0xE
-	// 		if(dec_counter==41) ck_io8 <= 1;		// 0xE
-
-	// 		if(dec_counter==42) ck_io8 <= 0;		// Parity bit
-	// 		if(dec_counter==43) ck_io8 <= 1;		// Stop bit
+	// 		if(enc_counter == 1000) begin
+	// 			enc_din <= 8'h41;
+	// 			enc_en <= 1'h1;
+	// 			#20 enc_en <= 1'h0;
+	// 		end
+	// 		if(enc_counter == 1010) begin
+	// 			enc_din <= 8'h42;
+	// 			enc_en <= 1'h1;
+	// 			#20 enc_en <= 1'h0;
+	// 		end
+	// 		if(enc_counter == 1020) begin
+	// 			enc_din <= 8'h43;
+	// 			enc_en <= 1'h1;
+	// 			#20 enc_en <= 1'h0;
+	// 		end
 	// 	end
 	// end
 
@@ -175,7 +150,8 @@ module tb_top();
 
 	// for generating 115.2kHz clock w/ delayed start
 	initial begin
-		#2655 uart_clk = 1;
+		while(ck_io7 == 1) #5;
+		// #2655 uart_clk = 1;
 		forever begin
 			#4350 uart_clk = ~uart_clk;
 		end
@@ -224,6 +200,16 @@ module tb_top();
 		spi_shiftreg[0] <= ck_io2;
 	end
 
+	integer spi_counter = 0;
+	always@(posedge ck_io0) begin
+		if(!nrst) spi_counter <= 0;
+		else begin
+			if(spi_counter == 16) spi_counter <= 1;
+			else spi_counter <= spi_counter + 1;
+		end
+	end
+	always@(*) ck_io1 = ~spi_counter[0];
+
 	// For checking I2C outputs of top-level design
 	// NOTE: Data is sent MSB first. Every 9th bit is reserved for slave ACKs.
 	reg SCL = 1'b1;
@@ -238,9 +224,29 @@ module tb_top();
 	reg [31:0] i2c_shiftreg = 0;
 	integer i2c_counter = 0;
 
-	always@(posedge SCL) begin
+	// Detect start & stop bits
+	reg sda_reg = 0;
+	reg last_sda_reg = 0;
+	reg scl_reg = 0;
+	reg last_scl_reg = 0;
+	wire sda_posedge = sda_reg & ~last_sda_reg;
+	wire sda_negedge = ~sda_reg & last_sda_reg;
+	wire scl_posedge = scl_reg & ~last_scl_reg;
+	wire scl_negedge = ~scl_reg & last_scl_reg;
+	wire start_bit = sda_negedge & scl_reg;
+	wire stop_bit = sda_posedge & scl_reg;
+
+	always@(posedge CLK50MHZ) begin
+		sda_reg <= ck_io39;
+		scl_reg <= ck_io38;
+		last_sda_reg <= sda_reg;
+		last_scl_reg <= scl_reg;
+	end
+
+	always@(posedge SCL or posedge stop_bit) begin
 		if(!nrst) i2c_counter <= 0;
 		else if(i2c_counter == 9) i2c_counter <= 1;
+		else if(stop_bit) i2c_counter <= 0;
 		else i2c_counter <= i2c_counter + 1;
 	end
 
@@ -256,6 +262,6 @@ module tb_top();
 	end
 
 	// Drive inout ports of the module
-	assign ck_io39 = (TOP.i2c_sda_t && i2c_counter == 9)? 1'b0 : (TOP.i2c_sda_t)? 1'b1 : 1'bZ;
+	assign ck_io39 = (TOP.i2c_sda_t && i2c_counter == 9)? 1'b0 : (TOP.i2c_sda_t && i2c_counter == 8)? 0 : (TOP.i2c_sda_t)? 1'b1 : 1'bZ;
 	assign ck_io38 = (TOP.i2c_scl_t)? 1'b1 : 1'bZ;
 endmodule
