@@ -22,10 +22,6 @@ sw x11, 8(x12)	#from c.sw x11, 2(x12)
 nop
 nop
 nop
-nop
-nop
-nop
-nop
 
 # This program writes the fibbonacci sequence into the memory. (Regular)
 addi x22, x0, 380
