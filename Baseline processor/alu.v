@@ -61,7 +61,7 @@ module alu(
 	parameter alu_mulhu = 	4'd14;
 
 	assign z	=	op_a == op_b;
-	assign less	=	op_a < op_b;
+	assign less	=	signed_a < signed_b;
 
 	assign signed_res = signed_a >>> signed_b[4:0];
 
