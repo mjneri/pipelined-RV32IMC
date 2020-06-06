@@ -1,7 +1,7 @@
 `ifndef CONST_VH		// Guard prevents header file from being included more than once
 `define CONST_VH
 
-`define INT_SIG_WIDTH 4
+`define INT_SIG_WIDTH 6
 
 `define MEM_DEPTH 2048
 `define MEM_WIDTH 16
