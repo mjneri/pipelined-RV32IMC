@@ -53,6 +53,7 @@ module branchpredictor(
 								// which are treated differently than JAL, C.JAL, & C.J
 	input exe_z,				// Feedback from ALU
 	input exe_less,				// Feedback from ALU
+	input exe_signed_less,				// Feedback from ALU
 	input [5:0] exe_btype,		// determines what branch instruction was used
 								// exe_btype[5]: is_beq
 								// exe_btype[4]: is_bne
@@ -215,8 +216,8 @@ module branchpredictor(
 
 	assign feedback =   (is_beq && exe_z)? 1'b1 :
 						(is_bne && !exe_z)? 1'b1 : 
-						(is_blt && exe_less)? 1'b1 :
-						(is_bge && !exe_less)? 1'b1 :
+						(is_blt && exe_signed_less)? 1'b1 :
+						(is_bge && !exe_signed_less)? 1'b1 :
 						(is_bltu && exe_less)? 1'b1 :
 						(is_bgeu && !exe_less)? 1'b1 :
 						(is_beqz && exe_z)? 1'b1 :
