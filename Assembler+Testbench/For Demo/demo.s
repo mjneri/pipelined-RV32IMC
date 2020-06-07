@@ -48,6 +48,16 @@
 	.ascii "NEXT"		# 0x40
 	.ascii "\r\n"		# 0x44
 
+.data 0x100
+	.ascii "LCD\n"		# 0x100
+	.ascii "Init"		# 0x104
+	.ascii "iali"		# 0x108
+	.ascii "zed"		# 0x10c
+
+.data 0x120
+	.ascii "NEW "
+	.ascii "SONG"
+
 # Declaring "Global variables" (mostly just memory addresses)
 # #define BUFSIZE 64 (64 bytes/16 word addresses)
 # static char Rxbuffer[BUFSIZE]; (0x50 -> 0x8c)
@@ -87,6 +97,11 @@ i2c_setup:
 
 main:
 	c.jal lcd_init				# initialize LCD
+	addi a2, x0, 0x100			# "LCD\nInitialized" Address
+	c.jal lcd_print				# lcd_print(a2)
+	c.jal delay_1s
+	c.jal delay_1s
+	c.jal lcd_clear
 
 loop:
 	# Ask Arduino which button was pressed:
@@ -136,10 +151,19 @@ loop:
 		c.beqz a0, loop			# if prevRx == Rxbuffer, go back to loop. Else, print new string to LCD
 		
 		c.jal lcd_clear			# clear LCD
-		c.jal lcd_returnhome	# return cursor to 0x00
 		addi a2, x0, 0x50		# address of Rxbuffer
 		c.jal lcd_print			# call lcd_print(Rxbuffer)
 		c.j loop				# go back to start of loop
+
+		# addi a2, x0, 0xa0		# prevRx
+		# c.jal uart_write
+		# c.jal delay_1s
+		# c.jal delay_1s
+		# addi a2, x0, 0x50		# Rxbuffer
+		# c.jal uart_write
+		# c.jal delay_1s
+		# c.jal delay_1s
+		# c.j loop
 
 # ======================================================= #
 #	 					SUBROUTINES						  #
@@ -234,6 +258,8 @@ lcd_print:						# equivalent: void lcd_print(char *str)
 	c.lwsp a2, 0				# reload *str from stack
 	c.addi sp, 4
 
+	c.beqz a0, lcd_print_ret	# if strlen == 0, return to caller
+
 	c.li t0, 0					# loop index; int i = 0;
 	c.mv t1, a2					# move *str to t1
 	c.mv t2, a0					# move strlen to t2
@@ -276,6 +302,7 @@ lcd_print:						# equivalent: void lcd_print(char *str)
 		c.addi t1, 1			# increment *str
 		bltu t0, t2, lcd_print_loop	# if loop index < strlen, loop again
 
+	lcd_print_ret:
 	c.lwsp ra, 0				# load ra from stack
 	c.addi sp, 4
 	c.jr ra						# return
@@ -291,7 +318,7 @@ lcd_clear:						# equivalent: void lcd_clear(void)
 
 	addi a2, x0, 0x18			# clear low
 	c.jal lcd_send				# pulse E
-	c.jal delay_1s			# 1s delay
+	c.jal delay_20ms			# 20ms delay
 
 	# Load ra from stack
 	c.lwsp ra, 0
@@ -353,7 +380,6 @@ i2c_write: 						# equivalent: void i2c_write (int data, int byte_amt, int slave
 	# Check first if a transaction is still in progress
 	lw s2, 0x18(gp)				# load I2C output control
 	c.li t0, 1					# for comparing w/ BUSY field
-
 	i2c_wait1:
 	beq s2, t0, i2c_wait1		# if I2C is busy, wait here. ISR will update s2 once I2C is done executing
 
@@ -369,26 +395,19 @@ i2c_write: 						# equivalent: void i2c_write (int data, int byte_amt, int slave
 	c.addi t3, 5				# WRITE = 1, START = 1
 	sw t3, 0x18(x0)				# store to I2C Input control
 
-	c.addi sp, -4				# push stack
-	c.swsp ra, 0				# store return address to stack
-	c.jal nop_13				# 13 cycle NOP
-	c.lwsp ra, 0				# load ra
-	c.addi sp, 4				# pop stack
+	lw s2, 0x18(gp)				# load I2C output control
+	c.li t0, 1					# for comparing w/ BUSY field
+	i2c_wait2:
+	bne s2, t0, i2c_wait2		# wait until BUSY asserts. ISR will update s2 once I2C starts transmission
 
 	xori t3, t3, 5				# WRITE = 0, START = 0
 	sw t3, 0x18(x0)				# store to I2C Input control
 
-	c.addi sp, -4				# push stack
-	c.swsp ra, 0				# store ra to stack
-	c.jal nop_13
-	c.lwsp ra, 0				# get return address from stack
-	c.addi sp, 4				# pop stack
-
 	# Don't return until transaction is finished
 	lw s2, 0x18(gp)				# load I2C output control
 	c.li t0, 1					# for comparing w/ BUSY field
-	i2c_wait2:
-	beq s2, t0, i2c_wait2		# if I2C is busy, wait here. ISR will update s2 once I2C is done executing
+	i2c_wait3:
+	beq s2, t0, i2c_wait3		# if I2C is busy, wait here. ISR will update s2 once I2C is done executing
 
 	c.jr ra
 
@@ -403,6 +422,8 @@ uart_write: 					# equivalent: void uart_write(char *str); Args: a2 = char *str
 	c.jal strlen				# call strlen(str); a0 = strlen
 	c.lwsp a2, 0				# reload *str from stack
 	c.addi sp, 4
+
+	c.beqz a0, uart_write_ret	# if strlen == 0, return
 
 	c.li t2, 0					# loop index; int i = 0;
 	c.mv t1, a2					# move *str to t1
@@ -431,13 +452,8 @@ uart_write: 					# equivalent: void uart_write(char *str); Args: a2 = char *str
 		c.addi t1, 1			# increment *str
 		bltu t2, a0, uart_write_loop# if loop index < strlen, loop again
 
-	# Once all bytes have been stored to TXBUFFER, wait for transmission to finish
-	lhu s1, 0xc(gp)				# Check if transmit buffer is empty; get TXBF&TRMT from Output control
-	andi s1, s1, 0xc0			#; if TRMT is not asserted, program will loop here until the ISR updates s1
-	addi t3, x0, 0x80			# for checking w/ TRMT field
-	uart_trmtcheck:
-	bne s1, t3, uart_trmtcheck	# wait until TRMT is asserted
-
+	# Once all bytes have been stored to TXBUFFER, return
+	uart_write_ret:
 	c.lwsp ra, 0				# load ra from stack
 	c.addi sp, 4
 	c.jr ra						# return to calling function
@@ -481,8 +497,6 @@ uart_read:						# equivalent: void uart_read(void)
 	# have passed between bytes.
 	# NOTE: it's the ISR's job to store recvd data to s4
 	# If >50ms pass & no data is received, the subroutine will just return to caller
-	c.li s7, 0					# reset s7 to 0
-
 	# initialize Rxbuffer to \0; (memset(Rxbuffer, 0, sizeof(Rxbuffer));
 	c.li t0, 0					# loop index
 	addi t1, x0, 64				# loop limit
@@ -541,21 +555,15 @@ spi_write: 						# equivalent: void spi_write(char *data, int ss)
 	or t0, t0, a3				# insert new SS to Input control
 	ori t0, t0, 3				# set ON = 1, EN = 1
 	sw t0, 0x8(x0)				# store back to SPI Input Control
-		
-	c.li t1, 1					# for checking BUSY
-	spi_write_waitbusy:			# SPI output control is <polled> until BUSY is asserted, so we are certain that e_clk
-	lbu t0, 0x4(gp)				# has captured EN & the transaction has started.
-	bne t0, t1, spi_write_waitbusy
+	
+	lbu s3, 0x4(gp)				# load SPI Output Control
+	c.li t0, 1					# for checking BUSY
+	spi_write_waitbusy:			# wait until SPI has started the transaction. ISR will update s3
+	bne s3, t0, spi_write_waitbusy
 
 	lw t0, 0x8(x0)				# load SPI Input control
 	c.addi t0, -1				# set EN = 0
 	sw t0, 0x8(x0)				# store back to SPI Input Control
-
-	c.addi sp, -4				# push ra to stack
-	c.swsp ra, 0
-	c.jal nop_13
-	c.lwsp ra, 0				# reload ra from stack
-	c.addi sp, 4
 
 	c.jr ra						# jump back to calling function
 
@@ -586,10 +594,10 @@ spi_read: 						# equivalent: int spi_read(int ss)
 	ori t0, t0, 3				# set ON = 1, EN = 1
 	sw t0, 0x8(x0)				# store back to Input control
 
-	c.li t1, 1					# for checking BUSY
-	spi_read_waitbusy:			# SPI output control is polled until BUSY is asserted, so we are certain that e_clk
-	lbu t0, 0x4(gp)				# has captured EN & the transaction has started.
-	bne t0, t1, spi_read_waitbusy
+	lbu s3, 0x4(gp)				# load SPI Output Control
+	c.li t0, 1					# for checking BUSY
+	spi_read_waitbusy:			# wait until SPI has started the transaction. ISR will update s3
+	bne s3, t0, spi_read_waitbusy
 
 	lw t0, 0x8(x0)				# load SPI Input control
 	c.addi t0, -1				# set EN = 0
@@ -692,6 +700,17 @@ delay_100us:
 	
 	c.jr ra						# return to caller
 
+delay_1ms:
+	# Formula: (50MHz * delay)/2
+	lui t0, 0x061a8
+	srli t0, t0, 12
+
+	delay_1ms_loop:
+	c.addi t0, -1
+	bne t0, x0, delay_1ms_loop
+
+	c.jr ra
+
 delay_5ms:
 	# Formula: (50MHz * delay)/2
 	lui t0, 0x1e848
@@ -716,8 +735,9 @@ delay_20ms:
 
 delay_1s:
 	# Formula: (50MHz * delay)/2
-	lui t0, 0xbeb61
-	srli t0, t0, 8
+	lui t0, 0x17d78
+	srli t0, t0, 4
+	addi t0, t0, 0x40
 
 	delay_1s_loop:
 	c.addi t0, -1

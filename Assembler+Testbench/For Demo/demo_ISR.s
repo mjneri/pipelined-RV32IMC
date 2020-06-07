@@ -27,7 +27,6 @@
 #		s5 -> I2C Data Out
 #		s6 -> SPI Data Out
 #		s7 -> UART data has been received
-#		s11 -> WRDONE&RDDONE status of previous interrupt
 #		--
 #		a0-a1 -> return values
 #		a2-a7 -> subroutine arguments
@@ -37,7 +36,9 @@
 .text
 init:
 	# store temp registers & args in stack
-	addi sp, sp, -60			# formula: sp - (# of registers to save)*4
+	# similar to NOP 13, "wait" for at least 13 cycles before loading PROTOCOLMEM contents
+	# addi sp, sp, -60			# formula: sp - (# of registers to save)*4
+	c.addi sp, -28
 	c.swsp t0, 0
 	c.swsp t1, 1
 	c.swsp t2, 2
@@ -45,14 +46,12 @@ init:
 	c.swsp t4, 4
 	c.swsp t5, 5
 	c.swsp t6, 6
-	c.swsp a0, 7
-	c.swsp a1, 8
-	c.swsp a2, 9
-	c.swsp a3, 10
-	c.swsp a4, 11
-	c.swsp a5, 12
-	c.swsp a6, 13
-	c.swsp a7, 14
+	c.nop
+	c.nop
+	c.nop
+	c.nop
+	c.nop
+	c.nop
 
 isr:
 	# Load Data Out registers
@@ -65,6 +64,9 @@ isr:
 	lbu s3, 0x4(gp)				# SPI Output Control
 
 	# Turn off SPI controller
+	andi t0, s3, 1				# get BUSY field for SPI
+	bne t0, x0, __isr			# if SPI is still BUSY, don't turn off SPI controller
+
 	# This is done due to how e_clk in the SPI controller works.
 	# By turning off the controller, e_clk starts running at 25MHz again, allowing
 	# it to capture EN. If we leave ON = 1, e_clk will stay running at the prescale frequency,
@@ -73,21 +75,10 @@ isr:
 	xori t0, t0, 2				# set ON = 0
 	sw t0, 0x8(x0)				# store back to Input Control
 
-	# Check previous UART interrupt status to determine whether s7 should be asserted
-	c.li s7, 0					# reset s7
-	c.mv t2, s11				# copy s11 contents to t2
-	andi t2, t2, 0x100			# get RDDONE from s11
-	bne t2, x0, __isr			# if RDDONE was asserted from the previous interrupt, then current interrupt is due to WRDONE.
-								# Don't update s7
-
-	andi s7, s1, 0x100			# get RDDONE field from UART Output Control & store to s7
-
 	__isr:
-	# update s1 to contain updated TRMT & TXBF
+	# Update s7 status for uart_read() & update s1 for uart_write()
+	andi s7, s1, 0x100			# get RDDONE field from UART Output Control & store to s7
 	andi s1, s1, 0xc0			# get TRMT & TXBF fields from UART Output Control only; used by uart_write() for checking TXBUFFER status
-
-	lw s11, 0xC(gp)				# load Output control
-	andi s11, s11, 0x101		# get updated RDDONE & WRDONE
 
 eret:
 	# reload temp registers
@@ -98,17 +89,15 @@ eret:
 	c.lwsp t4, 4
 	c.lwsp t5, 5
 	c.lwsp t6, 6
-	c.lwsp a0, 7
-	c.lwsp a1, 8
-	c.lwsp a2, 9
-	c.lwsp a3, 10
-	c.lwsp a4, 11
-	c.lwsp a5, 12
-	c.lwsp a6, 13
-	c.lwsp a7, 14
-	addi sp, sp, 60
+	c.addi sp, 28
 
 	uret
+	c.nop
+	c.nop
+	c.nop
+	c.nop
+	c.nop
+	c.nop
 	c.nop
 	c.nop
 	c.nop
