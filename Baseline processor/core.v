@@ -153,6 +153,7 @@ module core(
 
 	wire exe_z;						// Output of ALU; used for evaluating Branches
 	wire exe_less;					// Output of ALU; used for evaluating Branches
+	wire exe_signed_less;					// Output of ALU; used for evaluating Branches
 	wire [2:0] exe_funct3;			// Used for generating exe_btype
 	wire [6:0] exe_opcode;			// Used for generating exe_btype
 	wire [5:0] exe_btype;			// Determines what branch instruction is in EXE stage
@@ -840,7 +841,8 @@ module core(
 		.res(exe_ALUout),
 		.mul_stall(mul_stall),
 		.z(exe_z),
-		.less(exe_less)
+		.less(exe_less),
+		.signed_less(exe_signed_less)
 	);
 
 	// NOTE: 
@@ -881,6 +883,7 @@ module core(
 		.exe_sel_opBR(exe_sel_opBR),
 		.exe_z(exe_z),
 		.exe_less(exe_less),
+		.exe_signed_less(exe_signed_less),
 		.exe_btype(exe_btype),
 		.exe_c_btype(exe_c_btype),
 		

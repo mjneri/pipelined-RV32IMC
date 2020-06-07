@@ -30,7 +30,8 @@ module alu(
 	output reg [31:0] res,
 	output mul_stall,
 	output z,
-	output less
+	output less,
+	output signed_less
 );
 
 
@@ -61,7 +62,8 @@ module alu(
 	parameter alu_mulhu = 	4'd14;
 
 	assign z	=	op_a == op_b;
-	assign less	=	signed_a < signed_b;
+	assign less =	op_a < op_b;
+	assign signed_less	=	signed_a < signed_b;
 
 	assign signed_res = signed_a >>> signed_b[4:0];
 
