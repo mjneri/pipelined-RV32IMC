@@ -6,8 +6,6 @@ module tb_spi();
 	reg turnon;
 	reg enable;
 	
-	reg mb;
-	
 	reg [23:0] prescale;
 	
 	reg [31:0] din;
@@ -34,7 +32,6 @@ module tb_spi();
                 .clk(clk),
                 .turnon(turnon),
                 .enable(enable),
-                .mb(mb),
                 .prescale(prescale),
                 .din(din),
                 .select(select),
@@ -89,7 +86,6 @@ module tb_spi();
 			clk = 0;
 			turnon = 0;
 			enable = 0;
-			mb = 0;
 			prescale = 0;
 			din = 0;
 			select = 0;
@@ -98,14 +94,14 @@ module tb_spi();
 			cpol = 0;
 			miso = 0;
 
-			#100 prescale = 24'd1301;
+			#100 prescale = 24'd124;
 			#100 cpol = 1;
 					cpha = 1;
 					order = 0;
-			#100 turnon = 1;
+			#100 enable = 1;
 			#100 din = 32'hade1b055;
 			#100 select = 2'h2;
-			#100 enable = 1;
+			#100 turnon = 1;
 
 
 			// #100 
