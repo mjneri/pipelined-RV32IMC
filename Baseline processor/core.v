@@ -571,28 +571,21 @@ module core(
 	assign if_pc4 = if_PC + (if_not_comp ? 12'd4 : 12'd2); // buff_stall ? if_PC : if_PC + 12'd4;
 
 	// PC Selection
-	// 3'b000 = PC+4
-	// 3'b001 = Prediction
-	// 3'b010 = undef
-	// 3'b011 = undef
-	// 3'b100 = exeCNI
-	// 3'b101 = exeCNI
-	// 3'b110 = exePBT
-	// 3'b111 = exePBT
+	// Check for exe_correction, then jumps in ID stage, then check if_prediction last
+	// This is so when a branch/jump in the EXE or ID stage has to flush earlier stages,
+	// branches/jumps in the IF stage that are predicted to take the branch target won't get
+	// executed since they're supposed to be flushed anyway.
 	always@(*) begin
 		if(ret_ISR)
 			if_pcnew = save_PC;
 		else begin
-			case({exe_correction, if_prediction})
-				3'b001: if_pcnew = {if_PBT, 1'h0};
-				3'b100: if_pcnew = {exe_CNI, 1'h0};
-				3'b101: if_pcnew = {exe_CNI, 1'h0};
-				3'b110: if_pcnew = {exe_PBT, 1'h0};
-				3'b111: if_pcnew = {exe_PBT, 1'h0};
+			case(exe_correction)
+				2'b10: if_pcnew = {exe_CNI, 1'h0};
+				2'b11: if_pcnew = {exe_PBT, 1'h0};
 				default: begin
 					case({id_jump_in_bht, id_sel_pc})
 						2'b01: if_pcnew = id_branchtarget;
-						default: if_pcnew = if_pc4;
+						default: if_pcnew = if_prediction? {if_PBT, 1'h0} : if_pc4;
 					endcase
 				end
 			endcase
