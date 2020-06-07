@@ -42,7 +42,7 @@ module tb_core();
 		#10 CLK = ~CLK;		// 50MHz clock
 
 	// Integers for checking results through the answer key
-	integer i, j, check, done, pass;
+	integer i, j, check, done, pass, consecutive_nops;
 	integer total_test_cases = 0;
 	integer print_metrics = 0;
 
@@ -129,16 +129,38 @@ module tb_core();
 	// NOTE: checking for last_inst should be done for at least 50 cycles
 	// if there are DIV operations running in the processor.
 	always@(posedge CLK) begin
-		if (INST == last_inst) begin
-			check = check + 1;
-		end
-		else begin
-			last_inst <= INST;
-			check = 0;
-		end
+	    if (!nrst) begin
+	        check = 0;
+	        consecutive_nops = 0;
+	        last_inst = 0;
+	    end
+	    else
+            if (!done)
+                if (INST == last_inst && (INST[15:0] == 16'h0001 || INST == 32'h00000013)) begin
+                    consecutive_nops = consecutive_nops + 1;
+                    check = check + 1;
+                end
+                else if (INST == last_inst) begin
+                    check = check + 1;
+                end
+                else begin
+                    last_inst <= INST;
+                    consecutive_nops = 0;
+                    check = 0;
+                end
 	end
+	// This controls the NOP counter
 	always@(posedge CLK) begin
-		if(check == 50) done = 1;
+	   if (!done)
+            if(!nrst)
+                nop_counter <= 0;
+            else if(!done)
+                if(INST[15:0] == 16'h0001 || INST == 32'h00000013)
+                    nop_counter <= nop_counter + 1;
+	end
+	// This controlls the done flag
+	always@(posedge CLK) begin
+		if(check == 50 || consecutive_nops == 10) done = 1;
 	end
 
 	// Tracking how many clock cycles it takes to execute the program
@@ -290,15 +312,6 @@ module tb_core();
 		else if(!done) 
 			if((CORE.exe_is_stype && |CORE.exe_dm_write && CORE.exe_ALUout[12:2] > max_data_addr) && (CORE.exe_ALUout[12:2] < 11'h400))
 				max_data_addr <= CORE.exe_ALUout[12:2];
-	end
-
-	// This controls the NOP counter
-	always@(posedge CLK) begin
-		if(!nrst)
-			nop_counter <= 0;
-		else if(!done)
-			if(INST[15:0] == 16'h0001 || INST == 32'h00000013)
-				nop_counter <= nop_counter + 1;
 	end
 
 	// For simulating int_sig

@@ -890,7 +890,7 @@ module core(
 		.exe_sel_opBR(exe_sel_opBR),
 		.exe_z(exe_z),
 		.exe_less(exe_less),
-		.exe_signed_less(exe_signed_less)
+		.exe_signed_less(exe_signed_less),
 		.exe_btype(exe_btype),
 		.exe_c_btype(exe_c_btype),
 		
