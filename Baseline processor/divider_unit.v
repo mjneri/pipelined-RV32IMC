@@ -91,6 +91,11 @@ module divider_unit(
 	wire [63:0] div_unsigned_out_tdata;
 	wire div_unsigned_out_tvalid;
 
+	// Special Cases
+	wire div_by_zero = (op_B == 32'b0);		// division by zero
+	wire div_signed_overflow = (op_A == 32'h0x8000000) && (op_B == 32'hFFFFFFFF);	// -2^31/-1 causes an overflow
+	wire div_normal_case = !(div_by_zero || div_signed_overflow);
+
 	// Assigning tvalid inputs
 	// assert tvalid for one divider module only (depending if the operation is signed/unsigned)	
 	// Note: the tvalid inputs are ANDed w/ div_state == WAIT because
@@ -201,12 +206,12 @@ module divider_unit(
 		if(!nrst)
 			DIVout <= 0;
 		else begin
-			if(div_state == DIVIDING && (div_unsigned_out_tvalid || div_signed_out_tvalid))
+			if (div_state == DIVIDING && (div_unsigned_out_tvalid || div_signed_out_tvalid))
 				case(exe_div_op)
-					DIV: DIVout <= div_signed_out_tdata[63:32];
-					REM: DIVout <= div_signed_out_tdata[31:0];
-					DIVU: DIVout <= div_unsigned_out_tdata[63:32];
-					REMU: DIVout <= div_unsigned_out_tdata[31:0];
+					DIV: DIVout <= div_normal_case ? div_signed_out_tdata[63:32] : 32'hFFFFFFFF;
+					REM: DIVout <= div_normal_case ? div_signed_out_tdata[31:0] : (div_by_zero ? op_A : 32'd0);
+					DIVU: DIVout <= div_by_zero ? div_unsigned_out_tdata[63:32] : 32'hFFFFFFFF;
+					REMU: DIVout <= div_by_zero ? div_unsigned_out_tdata[31:0] : op_A;
 				endcase
 		end
 	end
