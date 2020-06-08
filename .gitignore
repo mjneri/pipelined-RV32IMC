@@ -4,4 +4,5 @@ Vivado Files/tb_core.v
 dumpgen_script.py
 *.pyc
 */assembler.log
-*.mem
+.vscode/c_cpp_properties.json
+.vscode/arduino.json
