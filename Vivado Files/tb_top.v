@@ -119,27 +119,70 @@ module tb_top();
 
 	always@(*) ck_io8 = enc_tx;
 
-	// always@(posedge CLK50MHZ) begin
-	// 	if(nrst /* & TOP.locked */) begin						// send only when nrst not pulled down
-	// 		enc_counter <= enc_counter + 1;
+	// Task for encoder stimulus
+	task enc_stimulus();
+		input [7:0] din;
+		begin
+			enc_din = din;
+			#5 enc_en = 1'b1;
+			#20 enc_en = 1'b0;
+		end
+	endtask
 
-	// 		if(enc_counter == 1000) begin
-	// 			enc_din <= 8'h41;
-	// 			enc_en <= 1'h1;
-	// 			#20 enc_en <= 1'h0;
-	// 		end
-	// 		if(enc_counter == 1010) begin
-	// 			enc_din <= 8'h42;
-	// 			enc_en <= 1'h1;
-	// 			#20 enc_en <= 1'h0;
-	// 		end
-	// 		if(enc_counter == 1020) begin
-	// 			enc_din <= 8'h43;
-	// 			enc_en <= 1'h1;
-	// 			#20 enc_en <= 1'h0;
-	// 		end
-	// 	end
-	// end
+	always@(posedge CLK50MHZ) begin
+		if(nrst /* & TOP.locked */) begin						// send only when nrst not pulled down
+			enc_counter <= enc_counter + 1;
+			if(enc_counter == 3000) enc_stimulus("T");
+			if(enc_counter == 3010) enc_stimulus("h");
+			if(enc_counter == 3020) enc_stimulus("e");
+			if(enc_counter == 3030) enc_stimulus(" ");
+			if(enc_counter == 3040) enc_stimulus("D");
+			if(enc_counter == 3050) enc_stimulus("e");
+			if(enc_counter == 3060) enc_stimulus("l");
+			if(enc_counter == 3070) enc_stimulus("i");
+			if(enc_counter == 3080) enc_stimulus("\n");
+			if(enc_counter == 3090) enc_stimulus("5");
+			if(enc_counter == 3100) enc_stimulus(":");
+			if(enc_counter == 3110) enc_stimulus("3");
+			if(enc_counter == 3120) enc_stimulus("2");
+			if(enc_counter == 3130) enc_stimulus("p");
+			if(enc_counter == 3140) enc_stimulus("m");
+			if(enc_counter == 3150) enc_stimulus("\r");
+			if(enc_counter == 3250) enc_stimulus("\n");
+			
+			if(enc_counter == 223000) enc_stimulus("C");
+			if(enc_counter == 223010) enc_stimulus("h");
+			if(enc_counter == 223020) enc_stimulus("o");
+			if(enc_counter == 223030) enc_stimulus("n");
+			if(enc_counter == 223040) enc_stimulus("\n");
+			if(enc_counter == 223050) enc_stimulus("R");
+			if(enc_counter == 223060) enc_stimulus("o");
+			if(enc_counter == 223070) enc_stimulus("s");
+			if(enc_counter == 223080) enc_stimulus("e");
+			if(enc_counter == 223090) enc_stimulus("w");
+			if(enc_counter == 223100) enc_stimulus("o");
+			if(enc_counter == 223110) enc_stimulus("o");
+			if(enc_counter == 223120) enc_stimulus("d");
+			if(enc_counter == 223130) enc_stimulus("\r");
+			if(enc_counter == 223140) enc_stimulus("\n");
+
+			if(enc_counter == 423010) enc_stimulus("h");
+			if(enc_counter == 423000) enc_stimulus("C");
+			if(enc_counter == 423020) enc_stimulus("o");
+			if(enc_counter == 423030) enc_stimulus("n");
+			if(enc_counter == 423040) enc_stimulus("\n");
+			if(enc_counter == 423050) enc_stimulus("R");
+			if(enc_counter == 423060) enc_stimulus("o");
+			if(enc_counter == 423070) enc_stimulus("s");
+			if(enc_counter == 423080) enc_stimulus("e");
+			if(enc_counter == 423090) enc_stimulus("w");
+			if(enc_counter == 423100) enc_stimulus("o");
+			if(enc_counter == 423110) enc_stimulus("o");
+			if(enc_counter == 423120) enc_stimulus("d");
+			if(enc_counter == 423130) enc_stimulus("\r");
+			if(enc_counter == 423140) enc_stimulus("\n");
+		end
+	end
 
 	// For checking UART_TX output of top-level design
 	// settings: 115200bps, no parity, 1 stop bit

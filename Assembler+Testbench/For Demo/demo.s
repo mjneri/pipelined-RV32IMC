@@ -72,11 +72,9 @@ init:
 	c.li s0, 0					# s0 = 0 for compressed instructions
 
 uart_setup:
-	# Settings: 9600bps, no parity, 1 stop bit
-	addi t0, x0, 0x145
-	c.slli t0, 4
-	c.addi t0, 7				# t0 = 5207 -> baudcontrol for 9600bps
-	c.slli t0, 8				# shift to baudcontrol field
+	# Settings: 4800bps, no parity, 1 stop bit
+	lui t0, 0x028af
+	c.slli t0, 4				# shift to baudcontrol field
 	sw t0, 0x10(x0)				# store to Input Control
 
 spi_setup:
@@ -155,16 +153,6 @@ loop:
 		c.jal lcd_print			# call lcd_print(Rxbuffer)
 		c.j loop				# go back to start of loop
 
-		# addi a2, x0, 0xa0		# prevRx
-		# c.jal uart_write
-		# c.jal delay_1s
-		# c.jal delay_1s
-		# addi a2, x0, 0x50		# Rxbuffer
-		# c.jal uart_write
-		# c.jal delay_1s
-		# c.jal delay_1s
-		# c.j loop
-
 # ======================================================= #
 #	 					SUBROUTINES						  #
 # ======================================================= #
@@ -236,7 +224,7 @@ lcd_init: 						# equivalent: void lcd_init(void)
 	c.jal lcd_send				# pulse E
 	c.jal delay_100us			# 100us delay
 
-	addi a2, x0, 0xf8			# display on low
+	addi a2, x0, 0xc8			# display on low
 	c.jal lcd_send				# pulse E
 	c.jal delay_100us
 

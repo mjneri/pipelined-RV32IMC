@@ -302,9 +302,7 @@ set_output_delay -clock [get_clocks CLKIP_OUT] -min -add_delay 0.500 [get_ports 
 set_output_delay -clock [get_clocks CLKIP_OUT] -max -add_delay 2.000 [get_ports ck_io2]
 
 # Vivado Integrated Logic Analyzer
-
-
-
+# COMMENT OUT EVERYTHING BELOW IF NOT NEEDED
 
 create_debug_core u_ila_0 ila
 set_property ALL_PROBE_SAME_MU true [get_debug_cores u_ila_0]
