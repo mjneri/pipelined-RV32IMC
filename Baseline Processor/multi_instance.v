@@ -121,15 +121,13 @@ module multi_instance(
 		.CLKIP_OUT(CLKIP_OUT),.CLK_BUF(CLK_BUF),.nrst(nrst & locked),
 		.int_sig(int_sig),
         .con_write(con_write),.con_addr(con_addr),.con_in(con_in),
-        //.con_out({16'h0, con_out[15:0]})
-		.con_out({16'h0, con_out[15:0]})
+        .con_out({16'h0, con_out[15:0]})
 	);
 	core RISCVCORE2(
 		.CLKIP_OUT(CLKIP_OUT),.CLK_BUF(CLK_BUF),.nrst(nrst & locked),
 		.int_sig(int_sig),
         .con_write(con_write),.con_addr(con_addr),.con_in(con_in),
-        //.con_out({con_out[31:16], 16'h0})
-		.con_out({con_out[31:16], 16'h0})
+        .con_out({con_out[31:16], 16'h0})
 	);
 
 	// Protocol controllers
