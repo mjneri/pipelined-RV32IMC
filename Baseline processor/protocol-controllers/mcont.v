@@ -51,7 +51,7 @@ module mcont(
 	output 	wire 		i2c_slave_sda_o,
 
 	// Interrupt signals
-	output [`INT_SIG_WIDTH-1:0] int_sig
+	(* dont_touch = "yes" *) output [`INT_SIG_WIDTH-1:0] int_sig
 );
 	
 	wire		[31:0]	spi_rco_t;

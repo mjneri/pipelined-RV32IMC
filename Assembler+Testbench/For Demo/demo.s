@@ -72,14 +72,14 @@ init:
 	c.li s0, 0					# s0 = 0 for compressed instructions
 
 uart_setup:
-	# Settings: 4800bps, no parity, 1 stop bit
-	lui t0, 0x028af
-	c.slli t0, 4				# shift to baudcontrol field
+	# Settings: 9600bps, no parity, 1 stop bit
+	lui t0, 0x01457
+	srli t0, t0, 4				# shift to baudcontrol field
 	sw t0, 0x10(x0)				# store to Input Control
 
 spi_setup:
-	# Settings: 100kbps, cpha = 0, cpol = 0 (shift@negedge, sample@posedge), ord = 0 (send MSB first)
-	addi t0, x0, 124			# 100kbps prescale
+	# Settings: 400kbps, cpha = 0, cpol = 0 (shift@negedge, sample@posedge), ord = 0 (send MSB first)
+	c.li t0, 30					# 400kbps prescale
 	c.slli t0, 8				# shift to prescale field
 	sw t0, 0x8(x0)				# store to SPI Input Control
 
@@ -365,12 +365,6 @@ lcd_send:						# equivalent: void lcd_send(uint_8 data)
 
 i2c_write: 						# equivalent: void i2c_write (int data, int byte_amt, int slave_addr)
 	# args: a2 = data, a3 = byte amt, a4 = slave_addr
-	# Check first if a transaction is still in progress
-	lw s2, 0x18(gp)				# load I2C output control
-	c.li t0, 1					# for comparing w/ BUSY field
-	i2c_wait1:
-	beq s2, t0, i2c_wait1		# if I2C is busy, wait here. ISR will update s2 once I2C is done executing
-
 	# Setting I2C Input control
 	sw a2, 0x14(x0)				# store data in I2C Data In
 
@@ -385,8 +379,8 @@ i2c_write: 						# equivalent: void i2c_write (int data, int byte_amt, int slave
 
 	lw s2, 0x18(gp)				# load I2C output control
 	c.li t0, 1					# for comparing w/ BUSY field
-	i2c_wait2:
-	bne s2, t0, i2c_wait2		# wait until BUSY asserts. ISR will update s2 once I2C starts transmission
+	i2c_wait1:
+	bne s2, t0, i2c_wait1		# wait until BUSY asserts. ISR will update s2 once I2C starts transmission
 
 	xori t3, t3, 5				# WRITE = 0, START = 0
 	sw t3, 0x18(x0)				# store to I2C Input control
@@ -394,8 +388,8 @@ i2c_write: 						# equivalent: void i2c_write (int data, int byte_amt, int slave
 	# Don't return until transaction is finished
 	lw s2, 0x18(gp)				# load I2C output control
 	c.li t0, 1					# for comparing w/ BUSY field
-	i2c_wait3:
-	beq s2, t0, i2c_wait3		# if I2C is busy, wait here. ISR will update s2 once I2C is done executing
+	i2c_wait2:
+	beq s2, t0, i2c_wait2		# if I2C is busy, wait here. ISR will update s2 once I2C is done executing
 
 	c.jr ra
 
@@ -520,41 +514,6 @@ uart_read:						# equivalent: void uart_read(void)
 	c.addi sp, 4
 	c.jr ra						# return to calling function
 
-spi_write: 						# equivalent: void spi_write(char *data, int ss)
-	# args: a2 = data, a3 = ss
-	# NOTE: data is 2 bytes
-	# Register usage:
-	# s3 -> SPI Output control
-
-	# Check first if a transaction is still in progress
-	lbu s3, 0x4(gp)				# load SPI Output Control
-	c.li t0, 1					# for comparing w/ BUSY field
-
-	spi_write_wait:
-	beq s3, t0, spi_write_wait	# loop until SPI is not BUSY; ISR will update s3
-
-	# Set data & SS
-	sh a2, 0x4(x0)				# store data to SPI Data In
-
-	c.andi a3, 0x3				# make sure to take only bit1 & bit0
-	c.slli a3, 5				# shift slave select to SS field
-	lw t0, 0x8(x0)				# load SPI Input Control
-	andi t0, t0, -97			# set SS field to 0
-	or t0, t0, a3				# insert new SS to Input control
-	ori t0, t0, 3				# set ON = 1, EN = 1
-	sw t0, 0x8(x0)				# store back to SPI Input Control
-	
-	lbu s3, 0x4(gp)				# load SPI Output Control
-	c.li t0, 1					# for checking BUSY
-	spi_write_waitbusy:			# wait until SPI has started the transaction. ISR will update s3
-	bne s3, t0, spi_write_waitbusy
-
-	lw t0, 0x8(x0)				# load SPI Input control
-	c.addi t0, -1				# set EN = 0
-	sw t0, 0x8(x0)				# store back to SPI Input Control
-
-	c.jr ra						# jump back to calling function
-
 spi_read: 						# equivalent: int spi_read(int ss)
 	# args: a2 = ss
 	# return value: a0 = valid data
@@ -562,14 +521,6 @@ spi_read: 						# equivalent: int spi_read(int ss)
 	# s3 -> SPI Output Control
 	# s6 -> SPI Data Out
 	# NOTE: when only a read is performed in a transaction, "send" 0x00FF to the slave device
-
-	# check if a transaction is still in progress
-	lbu s3, 0x4(gp)				# load SPI Output Control
-	c.li t0, 1					# for comparing w/ BUSY field
-
-	spi_read_wait:
-	beq s3, t0, spi_read_wait	# loop until BUSY is not asserted; ISR will update s3
-
 	# set slave select & data
 	addi t0, x0, 0xff			# 0xff
 	sh t0, 0x4(x0)				# store 0x00FF to SPI Data In
@@ -598,10 +549,10 @@ spi_read: 						# equivalent: int spi_read(int ss)
 	c.addi sp, 4
 
 	# Wait until valid data is received
-	lbu s3, 0x4(gp)				# load SPI output control
-	c.li t0, 2					# for comparing w/ DONE field
+	lbu s3, 0x4(gp)				# load SPI Output Control
+	c.li t0, 1					# for comparing w/ BUSY field
 	spi_read_datawait:
-	bne s3, t0, spi_read_datawait	# wait until DONE is asserted; ISR will assert s3
+	beq s3, t0, spi_read_datawait	# loop until BUSY is not asserted; ISR will update s3
 
 	c.mv a0, s6					# load SPI Output Data as return value
 	c.jr ra						# jump back to calling function
