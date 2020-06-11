@@ -1,7 +1,7 @@
 -- Copyright 1986-2019 Xilinx, Inc. All Rights Reserved.
 -- --------------------------------------------------------------------------------
 -- Tool Version: Vivado v.2019.2 (win64) Build 2708876 Wed Nov  6 21:40:23 MST 2019
--- Date        : Sun Jun  7 16:27:24 2020
+-- Date        : Wed Jun 10 22:36:41 2020
 -- Host        : Kouzui running 64-bit major release  (build 9200)
 -- Command     : write_vhdl -force -mode funcsim {C:/Users/MJ/Documents/UP Diliman/5th Year/2nd Sem/CoE
 --               198/pipelined-RV32IMC/Vivado Files/ipsrcs/clk_wiz_0/clk_wiz_0_sim_netlist.vhdl}
