@@ -74,31 +74,31 @@ init:
 	c.li s0, 0					# s0 = 0 for compressed instructions
 
 uart_setup:
-	# Settings: 115200bps, no parity, 1 stop bit
-	addi t0, x0, 433			# 115200bps
+	# Settings: 1.8432Mbps, no parity, 1 stop bit
+	c.li t0, 26					# 1.8432Mbps
 	c.slli t0, 8
 	sw t0, 0x10(x0)				# store to Input Control
 
 spi_setup:
-	# Settings: 6.25MHz, cpha = 0, cpol = 0 (shift@negedge, sample@posedge), ord = 0 (send MSB first)
-	# addi t0, x0, 1				# 100kbps prescale
-	# c.slli t0, 8				# shift to prescale field
-	# sw t0, 0x8(x0)				# store to SPI Input Control
+	# Settings: 12.5MHz, cpha = 0, cpol = 0 (shift@negedge, sample@posedge), ord = 0 (send MSB first)
+	c.li t0, 0					# 12.5MHz prescale
+	c.slli t0, 8				# shift to prescale field
+	sw t0, 0x8(x0)				# store to SPI Input Control
 
 i2c_setup:
-	# Settings: 400kbps
-	# addi t0, x0, 30				# 100kbps prescale
-	# c.slli t0, 16				# shift to prescale field
-	# c.addi t0, 9				# SETPRESCALE = 1, START = 1
-	# sw t0, 0x18(x0)				# store to I2C Input Control
-	# c.jal nop_13
-	# xori t0, t0, 9				# SETPRESCALE = 0, START = 0
-	# sw t0, 0x18(x0)				# store back to input control
+	# Settings: 1MHz
+	addi t0, x0, 11				# 1MHz prescale
+	c.slli t0, 16				# shift to prescale field
+	c.addi t0, 9				# SETPRESCALE = 1, START = 1
+	sw t0, 0x18(x0)				# store to I2C Input Control
+	c.jal nop_13
+	xori t0, t0, 9				# SETPRESCALE = 0, START = 0
+	sw t0, 0x18(x0)				# store back to input control
 
 main:
-	# addi a2, x0, 0x100			# "LCD\nInitialized" Address
-	# c.jal lcd_print				# lcd_print(a2)
-	# c.jal delay_10us
+	addi a2, x0, 0x100			# "LCD\nInitialized" Address
+	c.jal lcd_print				# lcd_print(a2)
+	c.jal delay
 
 loop:
 	# Ask Arduino which button was pressed:
@@ -109,8 +109,8 @@ loop:
 	# 0x13 -> PREV
 	# --
 	# 0x00FF -> sent to Arduino, indicating that we want to read from it
-	# c.li a2, 0					# select Slave 0
-	# c.jal spi_read				# call spi_read(ss); a0 contains return value
+	c.li a2, 0					# select Slave 0
+	c.jal spi_read				# call spi_read(ss); a0 contains return value
 
 	c.li t0, 0x11				# check for PLAY/PAUSE
 	c.li t1, 0x12				# check for NEXT
@@ -147,11 +147,11 @@ loop:
 		c.jal strcmp			# call strcmp(prevRx, Rxbuffer)
 		c.beqz a0, loop			# if prevRx == Rxbuffer, go back to loop. Else, print new string to LCD
 		
-		# c.jal lcd_clear			# clear LCD
+		c.jal lcd_clear			# clear LCD
 		addi a2, x0, 0x50		# address of Rxbuffer
 		# addi a2, x0, 0x120		# address of "NEW SONG"
-		# c.jal lcd_print			# call lcd_print(Rxbuffer)
-		c.jal uart_write		# call uart_write(a2); to confirm that processor doesnt freeze at uart_read()
+		c.jal lcd_print			# call lcd_print(Rxbuffer)
+		# c.jal uart_write		# call uart_write(a2); to confirm that processor doesnt freeze at uart_read()
 		# c.jal delay_1s
 		# c.jal lcd_clear
 		c.j loop				# go back to start of loop
@@ -172,64 +172,64 @@ lcd_init: 						# equivalent: void lcd_init(void)
 	c.addi sp, -4
 	c.swsp ra, 0
 
-	c.jal delay_20ms			# 20ms delay
+	c.jal delay					# 20ms delay
 
 	addi a2, x0, 0x38			# function set 1
 	c.jal lcd_send				# pulse E
-	c.jal delay_5ms				# 5ms delay
+	c.jal delay					# 5ms delay
 
 	addi a2, x0, 0x38			# function set 2
 	c.jal lcd_send				# pulse E
-	c.jal delay_100us			# 100us delay
+	c.jal delay					# 100us delay
 
 	addi a2, x0, 0x38			# function set 3
 	c.jal lcd_send				# pulse E
-	c.jal delay_100us			# 100us delay
+	c.jal delay					# 100us delay
 
 	addi a2, x0, 0x28			# function set 4
 	c.jal lcd_send				# pulse E
-	c.jal delay_100us			# 100us delay
+	c.jal delay					# 100us delay
 
 	# Send commands
 	addi a2, x0, 0x28			# function set high
 	c.jal lcd_send				# pulse E
-	c.jal delay_100us			# 100us delay
+	c.jal delay					# 100us delay
 
 	addi a2, x0, 0x88			# function set low
 	c.jal lcd_send				# pulse E
-	c.jal delay_100us			# 100us delay
+	c.jal delay					# 100us delay
 
 	addi a2, x0, 0x08			# display_off high
 	c.jal lcd_send				# pulse E
-	c.jal delay_100us			# 100us delay
+	c.jal delay					# 100us delay
 
 	addi a2, x0, 0x88			# display off low
 	c.jal lcd_send				# pulse E
-	c.jal delay_100us			# 100us delay
+	c.jal delay					# 100us delay
 
 	addi a2, x0, 0x08			# clear high
 	c.jal lcd_send				# pulse E
-	c.jal delay_100us			# 100us delay
+	c.jal delay					# 100us delay
 
 	addi a2, x0, 0x18			# clear low
 	c.jal lcd_send				# pulse E
-	c.jal delay_20ms			# 20ms delay
+	c.jal delay					# 20ms delay
 
 	addi a2, x0, 0x08			# entry mode set high
 	c.jal lcd_send				# pulse E
-	c.jal delay_100us			# 100us delay
+	c.jal delay					# 100us delay
 
 	addi a2, x0, 0x68			# entry mode set low
 	c.jal lcd_send				# pulse E
-	c.jal delay_100us			# 100us delay
+	c.jal delay					# 100us delay
 
 	addi a2, x0, 0x08			# display on high
 	c.jal lcd_send				# pulse E
-	c.jal delay_100us			# 100us delay
+	c.jal delay					# 100us delay
 
 	addi a2, x0, 0xf8			# display on low
 	c.jal lcd_send				# pulse E
-	c.jal delay_100us
+	c.jal delay		
 
 	# Reload ra from stack
 	c.lwsp ra, 0
@@ -248,6 +248,8 @@ lcd_print:						# equivalent: void lcd_print(char *str)
 	c.jal strlen				# strlen(a2); a0 = strlen
 	c.lwsp a2, 0				# reload *str from stack
 	c.addi sp, 4
+
+	c.beqz a0, lcd_print_ret	# if strlen == 0, return to caller
 
 	c.li t0, 0					# loop index; int i = 0;
 	c.mv t1, a2					# move *str to t1
@@ -291,6 +293,7 @@ lcd_print:						# equivalent: void lcd_print(char *str)
 		c.addi t1, 1			# increment *str
 		bltu t0, t2, lcd_print_loop	# if loop index < strlen, loop again
 
+	lcd_print_ret:
 	c.lwsp ra, 0				# load ra from stack
 	c.addi sp, 4
 	c.jr ra						# return
@@ -302,11 +305,11 @@ lcd_clear:						# equivalent: void lcd_clear(void)
 
 	addi a2, x0, 0x08			# clear high
 	c.jal lcd_send				# pulse E
-	c.jal delay_100us			# 100us delay
+	c.jal delay					# 100us delay
 
 	addi a2, x0, 0x18			# clear low
 	c.jal lcd_send				# pulse E
-	c.jal delay_20ms			# 20ms delay
+	c.jal delay					# 20ms delay
 
 	# Load ra from stack
 	c.lwsp ra, 0
@@ -320,11 +323,11 @@ lcd_returnhome:					# equivalent: void lcd_returnhome(void)
 
 	addi a2, x0, 0x08			# return home high
 	c.jal lcd_send				# pulse E
-	c.jal delay_100us			# 100us delay
+	c.jal delay					# 100us delay
 
 	addi a2, x0, 0x28			# return home low
 	c.jal lcd_send				# pulse E
-	c.jal delay_100us			# 100us delay
+	c.jal delay					# 100us delay
 
 	# Load ra from stack
 	c.lwsp ra, 0
@@ -346,7 +349,7 @@ lcd_send:						# equivalent: void lcd_send(uint_8 data)
 	c.swsp ra, 2				# store return address to stack
 
 	c.jal i2c_write				# call i2c_write()
-	c.jal delay_100us			# call delay_100us()
+	c.jal delay					# call delay_100us()
 
 	# Set args to be sent to i2c_write()
 	c.lwsp a2, 0				# get preserved data back from stack
@@ -357,7 +360,7 @@ lcd_send:						# equivalent: void lcd_send(uint_8 data)
 	c.li a3, 1					# send 1 byte only
 	
 	c.jal i2c_write				# call i2c_write()
-	c.jal delay_100us			# call delay_100us()
+	c.jal delay					# call delay_100us()
 
 	c.lwsp ra, 0				# get return address from the stack
 	c.addi sp, 4				# pop stack
@@ -397,15 +400,6 @@ i2c_write: 						# equivalent: void i2c_write (int data, int byte_amt, int slave
 	i2c_wait3:
 	beq s2, t0, i2c_wait3		# if I2C is busy, wait here. ISR will update s2 once I2C is done executing
 
-	# delay for 1ms before returning to prevent i2c_master from freezing
-	# not sure why it does, but based on demo.asm from the Single cycle RV32IC group (Micro 198 AY18-19),
-	# delays are added before returning
-	c.addi sp, -4
-	c.swsp ra, 0
-	c.jal delay_10us
-	c.lwsp ra, 0
-	c.addi sp, 4
-
 	c.jr ra
 
 uart_write: 					# equivalent: void uart_write(char *str); Args: a2 = char *str
@@ -419,6 +413,8 @@ uart_write: 					# equivalent: void uart_write(char *str); Args: a2 = char *str
 	c.jal strlen				# call strlen(str); a0 = strlen
 	c.lwsp a2, 0				# reload *str from stack
 	c.addi sp, 4
+
+	c.beqz a0, uart_write_ret	# if strlen == 0, return
 
 	c.li t2, 0					# loop index; int i = 0;
 	c.mv t1, a2					# move *str to t1
@@ -447,13 +443,8 @@ uart_write: 					# equivalent: void uart_write(char *str); Args: a2 = char *str
 		c.addi t1, 1			# increment *str
 		bltu t2, a0, uart_write_loop# if loop index < strlen, loop again
 
-	# Once all bytes have been stored to TXBUFFER, wait for transmission to finish
-	lhu s1, 0xc(gp)				# Check if transmit buffer is empty; get TXBF&TRMT from Output control
-	andi s1, s1, 0xc0			#; if TRMT is not asserted, program will loop here until the ISR updates s1
-	addi t3, x0, 0x80			# for checking w/ TRMT field
-	uart_trmtcheck:
-	bne s1, t3, uart_trmtcheck	# wait until TRMT is asserted
-
+	# Once all bytes have been stored to TXBUFFER, return
+	uart_write_ret:
 	c.lwsp ra, 0				# load ra from stack
 	c.addi sp, 4
 	c.jr ra						# return to calling function
@@ -507,7 +498,7 @@ uart_read:						# equivalent: void uart_read(void)
 
 	c.li t0, 0					# Rxbuffer[t0]; equiv: int i = 0;
 	addi t1, x0, 64				# 64 byte limit
-	addi t2, x0, 0x683			# ~100us delay; Formula: (50MHz*100us)/(3 instructions in loop)
+	addi t2, x0, 167			# ~10us delay; Formula: (50MHz*10us)/(3 instructions in loop)
 	uart_read_rxbuffer:
 		beq s7, x0, __rxbuffer	# check if data has been received; if s7==0, no data recvd yet;
 		# Store recvd data to Rxbuffer
@@ -519,7 +510,7 @@ uart_read:						# equivalent: void uart_read(void)
 		bgeu t0, t1, uart_read_ret
 
 		# Reinitialize delay counter to restart the 'timer'
-		addi t2, x0, 0x683
+		addi t2, x0, 167
 
 		__rxbuffer:
 		c.addi t2, -1			# decrement; if constant > 0, keep looping
@@ -601,17 +592,11 @@ spi_read: 						# equivalent: int spi_read(int ss)
 	c.addi t0, -1				# set EN = 0
 	sw t0, 0x8(x0)				# store back to SPI Input Control
 
-	c.addi sp, -4				# push ra to stack
-	c.swsp ra, 0
-	c.jal nop_13
-	c.lwsp ra, 0				# reload ra from stack
-	c.addi sp, 4
-
 	# Wait until valid data is received
 	lbu s3, 0x4(gp)				# load SPI output control
-	c.li t0, 2					# for comparing w/ DONE field
+	c.li t0, 1					# for comparing w/ BUSY field
 	spi_read_datawait:
-	bne s3, t0, spi_read_datawait	# wait until DONE is asserted; ISR will assert s3
+	beq s3, t0, spi_read_datawait	# wait until BUSY is deasserted; ISR will update s3
 
 	c.mv a0, s6					# load SPI Output Data as return value
 	c.jr ra						# jump back to calling function
@@ -687,54 +672,14 @@ char_codelcd: 					# equivalent: unsigned int char_codelcd(char c)
 
 
 # -- Delay subroutines --
-delay_10us:						# not present in main demo.s
-	addi t0, x0, 250
-	delay_10us_loop:
+delay:						# not present in main demo.s
+	# 1us delay
+	c.li t0, 25
+	delay_loop:
 	c.addi t0, -1
-	bne t0, x0, delay_10us_loop
+	bne t0, x0, delay_loop
 
 	c.jr ra
-
-delay_100us:
-	# Formula: (50MHz * delay)/2
-	addi t0, x0, 250
-
-	delay_100us_loop:
-	c.addi t0, -1				# decrement
-	bne t0, x0, delay_100us_loop# if constant is not yet 0, keep looping
-	
-	c.jr ra						# return to caller
-
-delay_5ms:
-	# Formula: (50MHz * delay)/2
-	addi t0, x0, 250
-
-	delay_5ms_loop:
-	c.addi t0, -1				# decrement
-	bne t0, x0, delay_5ms_loop	# if constant is not yet 0, keep looping
-	
-	c.jr ra						# return to caller
-
-delay_20ms:
-	# Formula: (50MHz * delay)/2
-	addi t0, x0, 250
-
-	delay_20ms_loop:
-	c.addi t0, -1				# decrement
-	bne t0, x0, delay_20ms_loop	# if constant is not yet 0, keep looping
-	
-	c.jr ra						# return to caller
-
-delay_1s:
-	# Formula: (50MHz * delay)/2
-	addi t0, x0, 250
-
-	delay_1s_loop:
-	c.addi t0, -1
-	bne t0, x0, delay_1s_loop
-
-	c.jr ra
-
 
 # NOP 13
 nop_13:

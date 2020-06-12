@@ -64,15 +64,15 @@ lbu s2, 0x18(gp)			# I2C Output Control
 lbu s3, 0x4(gp)				# SPI Output Control
 
 # Turn off SPI controller
-andi t0, s3, 1				# get BUSY field for SPI
-bne t0, x0, __isr			# if SPI is still BUSY, don't turn off SPI controller
+addi t0, x0, 1	#from c.li t0, 1					# compare BUSY field for SPI
+beq s3, t0, __isr			# if SPI is still BUSY, don't turn off SPI controller
 
 # This is done due to how e_clk in the SPI controller works.
 # By turning off the controller, e_clk starts running at 25MHz again, allowing
 # it to capture EN. If we leave ON = 1, e_clk will stay running at the prescale frequency,
 # which lessens the chance of e_clk capturing EN.
 lw t0, 0x8(x0)				# load SPI Input Control
-xori t0, t0, 2				# set ON = 0
+andi t0, t0, -3				# set ON = 0
 sw t0, 0x8(x0)				# store back to Input Control
 
 __isr:
