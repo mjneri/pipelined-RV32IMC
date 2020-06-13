@@ -52,9 +52,9 @@ module alu(
 	assign signed_res = signed_a >>> signed_b[4:0];
 
 	// Instantiating Multiplier IPs
-	wire mulhsu_clken = (ALU_op == ALU_MULHSU)? 1'b1 : 1'b0;
-	wire mulh_clken = (ALU_op == ALU_MULH)? 1'b1 : 1'b0;
-	wire mulhu_clken = (ALU_op == ALU_MULHU || ALU_op == ALU_MUL)? 1'b1 : 1'b0;
+	wire mulhsu_clken = (ALU_op == `ALU_MULHSU)? 1'b1 : 1'b0;
+	wire mulh_clken = (ALU_op == `ALU_MULH)? 1'b1 : 1'b0;
+	wire mulhu_clken = (ALU_op == `ALU_MULHU || ALU_op == `ALU_MUL)? 1'b1 : 1'b0;
 	mult_gen_hsu MULHSU(
 		.CLK(CLK),
 		.CE(mulhsu_clken),
@@ -95,21 +95,21 @@ module alu(
 
 	always@(*) begin
 		case(ALU_op)
-			ALU_ADD: res = op_a + op_b;
-			ALU_SUB: res = op_a - op_b;
-			ALU_AND: res = op_a & op_b;
-			ALU_OR: res = op_a | op_b;
-			ALU_XOR: res = op_a ^ op_b;
-			ALU_SLT: res = signed_a < signed_b;
-			ALU_SLTU: res = op_a < op_b;
-			ALU_SLL: res = op_a << op_b[4:0];
-			ALU_SRL: res = op_a >> op_b[4:0];
-			ALU_SRA: res = signed_a >>> signed_b[4:0];
+			`ALU_ADD: res = op_a + op_b;
+			`ALU_SUB: res = op_a - op_b;
+			`ALU_AND: res = op_a & op_b;
+			`ALU_OR: res = op_a | op_b;
+			`ALU_XOR: res = op_a ^ op_b;
+			`ALU_SLT: res = signed_a < signed_b;
+			`ALU_SLTU: res = op_a < op_b;
+			`ALU_SLL: res = op_a << op_b[4:0];
+			`ALU_SRL: res = op_a >> op_b[4:0];
+			`ALU_SRA: res = signed_a >>> signed_b[4:0];
 
-			ALU_MUL: res = mulhu_res[31:0];
-			ALU_MULHU: res = mulhu_res[63:32];
-			ALU_MULH: res = mulh_res[63:32];
-			ALU_MULHSU: res = mulhsu_res[63:32];
+			`ALU_MUL: res = mulhu_res[31:0];
+			`ALU_MULHU: res = mulhu_res[63:32];
+			`ALU_MULH: res = mulh_res[63:32];
+			`ALU_MULHSU: res = mulhsu_res[63:32];
 
 			default: res = 32'h0;
 		endcase
