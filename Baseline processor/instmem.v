@@ -5,7 +5,7 @@
 //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 //
 //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
-// Module Name: compressed_decoder.v
+// Module Name: instmem.v
 // Description: This module implements the 8kB Instruction memory used by the RISC-V core.
 //				4kB each are allocated for the main instmem & ISR ROMs. Both ROMs are
 //				halfword addressable for compressed instructions support.

@@ -16,6 +16,7 @@
 
 
 `timescale 1ns / 1ps
+`include "constants.vh"
 
 module pipereg_if_id(
 	input clk,
@@ -25,16 +26,16 @@ module pipereg_if_id(
 	input stall,
 
 	// PC + 4
-	input [11:0] if_pc4,
-	output reg [11:0] id_pc4,
+	input [`PC_ADDR_BITS-1:0] if_pc4,
+	output reg [`PC_ADDR_BITS-1:0] id_pc4,
 
 	// Instruction from INSTMEM
-	input[31:0] if_inst,
-	output reg [31:0] id_inst,
+	input[`WORD_WIDTH-1:0] if_inst,
+	output reg [`WORD_WIDTH-1:0] id_inst,
 
 	// PC for debugging
-	input [11:0] if_PC,
-	output reg [11:0] id_PC
+	input [`PC_ADDR_BITS-1:0] if_PC,
+	output reg [`PC_ADDR_BITS-1:0] id_PC
 );
 	
 	initial begin

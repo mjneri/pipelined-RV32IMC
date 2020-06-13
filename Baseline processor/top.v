@@ -63,7 +63,7 @@ module top(
 	wire [31:0] con_in;		// Input data to datamem from protocol controllers
 	wire [31:0] con_out;	// Output data of datamem based on con_addr
 
-	// Wires for the protocol controllers (based on top_tb.v from prev198)
+	// Wires for the protocol controllers (based on top_tb.v from Single-cycle RV32IC)
 	// I2C
 	wire i2c_scl_i;					// SCL from slave device
 	wire i2c_sda_i;					// SDA from slave device
@@ -82,7 +82,7 @@ module top(
 
 	// SPI
 	wire sck;		assign ck_io0 = sck;
-	wire miso = ck_io1;
+	wire miso;		assign miso = ck_io1;
 	wire mosi;		assign ck_io2 = mosi;
 	wire ss0;		assign ck_io3 = ss0;
 	wire ss1;		assign ck_io4 = ss1;
@@ -91,11 +91,11 @@ module top(
 
 	// UART/Decoder + Encoder
 	wire uart_enc;	assign ck_io7 = uart_enc;
-	wire uart_dec = ck_io8;
+	wire uart_dec;	assign uart_dec = ck_io8;
 
 /*=== INSTANTIATING MODULES ===*/
 	// Generate using LogiCORE Clocking Wizard from Vivado IP Catalog
-	// PLL, Minimize Output Jitter, 50MHz output
+	// MMCM, Minimize Power, Drive No Buffer, 50MHz output
 	clk_wiz_0 CLKIP(
 		.clk_in1(CLK100MHZ),
 		.clk_out1(CLKIP_OUT),
@@ -192,7 +192,7 @@ module top(
 	// 	.db_btn(db_btn)
 	// );
 
-	// For Vivado ILA Capture control
+	// For Vivado ILA Capture control; Remove if not needed
 	(* dont_touch = "yes" *) reg [31:0] ila_ctr = 0;
 	always@(posedge CLK_BUF) begin
 		if(nrst & locked) ila_ctr <= ila_ctr + 1;

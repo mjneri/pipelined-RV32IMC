@@ -16,6 +16,7 @@
 
 
 `timescale 1ns / 1ps
+`include "constants.vh"
 
 module pipereg_exe_mem(
 	input clk,
@@ -24,29 +25,29 @@ module pipereg_exe_mem(
 	input flush,
 	input stall,
 
-	input [11:0] exe_pc4,
-	output reg [11:0] mem_pc4,
+	input [`PC_ADDR_BITS-1:0] exe_pc4,
+	output reg [`PC_ADDR_BITS-1:0] mem_pc4,
 
-	input [31:0] exe_inst,
-	output reg [31:0] mem_inst,
+	input [`WORD_WIDTH-1:0] exe_inst,
+	output reg [`WORD_WIDTH-1:0] mem_inst,
 
-	input [31:0] exe_ALUout,
-	output reg [31:0] mem_ALUout,
+	input [`WORD_WIDTH-1:0] exe_ALUout,
+	output reg [`WORD_WIDTH-1:0] mem_ALUout,
 
-	input [31:0] exe_DIVout,
-	output reg [31:0] mem_DIVout,
+	input [`WORD_WIDTH-1:0] exe_DIVout,
+	output reg [`WORD_WIDTH-1:0] mem_DIVout,
 
-	input [31:0] exe_storedata,
-	output reg [31:0] mem_storedata,
+	input [`WORD_WIDTH-1:0] exe_storedata,
+	output reg [`WORD_WIDTH-1:0] mem_storedata,
 
-	input [31:0] exe_imm,
-	output reg [31:0] mem_imm,
+	input [`WORD_WIDTH-1:0] exe_imm,
+	output reg [`WORD_WIDTH-1:0] mem_imm,
 
 	input [4:0] exe_rd,
 	output reg [4:0] mem_rd,
 
-	input [11:0] exe_PC,
-	output reg [11:0] mem_PC,
+	input [`PC_ADDR_BITS-1:0] exe_PC,
+	output reg [`PC_ADDR_BITS-1:0] mem_PC,
 
 	// Control signals
 	input [3:0] exe_dm_write,

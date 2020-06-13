@@ -25,9 +25,10 @@ module interrupt_controller(
 	input nrst,
 	input stall,					// Input from sf_controller
 
-	input [11:0] if_pcnew,			// Input to PC (if_pcnew)
-	input [11:0] if_PC,				// current PC address
-	input [6:0] exe_opcode,			// Used to catch URET Instruction
+	input [`PC_ADDR_BITS-1:0] if_pcnew,			// Input to PC (if_pcnew)
+	input [`PC_ADDR_BITS-1:0] if_PC,			// current PC address
+	input [6:0] exe_opcode,						// Used to catch URET Instruction
+
 	// Interrupt signal source
 	input [`INT_SIG_WIDTH-1:0] int_sig,
 
@@ -44,7 +45,7 @@ module interrupt_controller(
 	output reg ret_ISR,				// selects save_PC as input to PC; return from ISR
 
 	output reg ISR_running,			// Determines if the ISR is running. Asserted until pipeline switches back from ISR to main program.
-	output reg [11:0] save_PC		// saved PC address
+	output reg [`PC_ADDR_BITS-1:0] save_PC		// saved PC address
 );
 
     // Declare wires & regs
@@ -56,7 +57,7 @@ module interrupt_controller(
 	wire save_PC_en;				// Asserted for 1 cycle during the ISR start sequence & whenever a branch/jump instruction takes the branch target; Won't assert during ISR end sequence
 
 	// Assert if the ISR start/end sequence has started or if URET is detected.
-	// NOTE: start/end sequence refers to the period when the pipeline has to "stall" -> before the ISR executes & after the ISR is finished executing.
+	// NOTE: start/end sequence refers to the period when the pipeline has to stall -> before the ISR executes & after the ISR is finished executing.
 	assign ISR_stall = (ISR_stall_counter != 0) || (exe_opcode == 7'h73);
 
 	// ISR_PC_flush asserts for the following conditions:
@@ -86,7 +87,7 @@ module interrupt_controller(
 		sel_ISR <= 0;
 		ret_ISR <= 0;
         interrupt_captured <= 0;
-		save_PC <= 12'd0;
+		save_PC <= 0;
 		ISR_running <= 0;
 		ISR_stall_counter <= 0;
 		
@@ -96,7 +97,7 @@ module interrupt_controller(
 
     // This controls save_PC
     always@(posedge clk) begin
-        if(!nrst) save_PC <= 12'd0;
+        if(!nrst) save_PC <= 0;
         else if(save_PC_en) save_PC <= if_pcnew;
     end
 	

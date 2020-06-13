@@ -16,6 +16,7 @@
 
 
 `timescale 1ns / 1ps
+`include "constants.vh"
 
 module pipereg_mem_wb(
 	input clk,
@@ -24,29 +25,29 @@ module pipereg_mem_wb(
 	input flush,
 	input stall,
 
-	input [11:0] mem_pc4,
-	output reg [11:0] wb_pc4,
+	input [`PC_ADDR_BITS-1:0] mem_pc4,
+	output reg [`PC_ADDR_BITS-1:0] wb_pc4,
 
-	input [31:0] mem_inst,
-	output reg [31:0] wb_inst,
+	input [`WORD_WIDTH-1:0] mem_inst,
+	output reg [`WORD_WIDTH-1:0] wb_inst,
 
-	input [31:0] mem_ALUout,
-	output reg [31:0] wb_ALUout,
+	input [`WORD_WIDTH-1:0] mem_ALUout,
+	output reg [`WORD_WIDTH-1:0] wb_ALUout,
 
-	input [31:0] mem_DIVout,
-	output reg [31:0] wb_DIVout,
+	input [`WORD_WIDTH-1:0] mem_DIVout,
+	output reg [`WORD_WIDTH-1:0] wb_DIVout,
 
-	input [31:0] mem_loaddata,
-	output reg [31:0] wb_loaddata,
+	input [`WORD_WIDTH-1:0] mem_loaddata,
+	output reg [`WORD_WIDTH-1:0] wb_loaddata,
 
-	input [31:0] mem_imm,
-	output reg [31:0] wb_imm,
+	input [`WORD_WIDTH-1:0] mem_imm,
+	output reg [`WORD_WIDTH-1:0] wb_imm,
 
 	input [4:0] mem_rd,
 	output reg [4:0] wb_rd,
 
-	input [11:0] mem_PC,
-	output reg [11:0] wb_PC,
+	input [`PC_ADDR_BITS-1:0] mem_PC,
+	output reg [`PC_ADDR_BITS-1:0] wb_PC,
 
 	// Control signals go here
 	input mem_wr_en,

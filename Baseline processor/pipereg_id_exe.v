@@ -16,6 +16,7 @@
 
 
 `timescale 1ns / 1ps
+`include "constants.vh"
 
 module pipereg_id_exe(
 	input clk,
@@ -25,40 +26,40 @@ module pipereg_id_exe(
 	input stall,
 
 	// PC +4
-	input [11:0] id_pc4,
-	output reg [11:0] exe_pc4,
+	input [`PC_ADDR_BITS-1:0] id_pc4,
+	output reg [`PC_ADDR_BITS-1:0] exe_pc4,
 
 	// Forwarded opA
-	input [31:0] id_fwdopA,
-	output reg [31:0] exe_fwdopA,
+	input [`WORD_WIDTH-1:0] id_fwdopA,
+	output reg [`WORD_WIDTH-1:0] exe_fwdopA,
 
 	// Forwarded opB
-	input [31:0] id_fwdopB,
-	output reg [31:0] exe_fwdopB,
+	input [`WORD_WIDTH-1:0] id_fwdopB,
+	output reg [`WORD_WIDTH-1:0] exe_fwdopB,
 
 	// 32bit instruction
-	input [31:0] id_inst,
-	output reg [31:0] exe_inst,
+	input [`WORD_WIDTH-1:0] id_inst,
+	output reg [`WORD_WIDTH-1:0] exe_inst,
 
 	// Computed branch target
-	input [31:0] id_branchtarget,
-	output reg [31:0] exe_branchtarget,
+	input [`WORD_WIDTH-1:0] id_branchtarget,
+	output reg [`WORD_WIDTH-1:0] exe_branchtarget,
 
 	// Forwarded STOREBLOCK input
-	input [31:0] id_fwdstore,
-	output reg [31:0] exe_fwdstore,
+	input [`WORD_WIDTH-1:0] id_fwdstore,
+	output reg [`WORD_WIDTH-1:0] exe_fwdstore,
 
 	// 32-bit Immediate
-	input [31:0] id_imm,
-	output reg [31:0] exe_imm,
+	input [`WORD_WIDTH-1:0] id_imm,
+	output reg [`WORD_WIDTH-1:0] exe_imm,
 
 	// Destination register
 	input [4:0] id_rd,
 	output reg [4:0] exe_rd,
 
 	// PC of current instruction for debugging
-	input [11:0] id_PC,
-	output reg [11:0] exe_PC,
+	input [`PC_ADDR_BITS-1:0] id_PC,
+	output reg [`PC_ADDR_BITS-1:0] exe_PC,
 
 	// Control signals
 	input [3:0] id_ALU_op,
