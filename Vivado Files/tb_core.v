@@ -52,9 +52,9 @@ module tb_core();
 	integer if_clk_counter, id_clk_counter, exe_clk_counter, mem_clk_counter, wb_clk_counter, rf_clk_counter;
 
 	// Counters for checking BHT accuracy for each entry
-	reg [31:0] bht_correct [0:63];
-	reg [31:0] bht_accesses [0:63];
-	reg [31:0] bht_overwrites [0:15];
+	reg [31:0] bht_correct [0:`BHT_ENTRY-1];
+	reg [31:0] bht_accesses [0:`BHT_ENTRY-1];
+	reg [31:0] bht_overwrites [0:(`BHT_ENTRY/4)-1];
 	integer total_bht_correct, total_bht_accesses, total_bht_overwrites;
 
 	// Counter for NOPs (base & compressed versions)
@@ -234,8 +234,8 @@ module tb_core();
 	// Accesses: id_is_jump = 1 or id_is_btype = 1
 	// Correct access: CORE.BHT.feedback = 1
 	// Overwrites: if a fifo_counter value overflows
-	wire [3:0] id_set = CORE.BHT.id_set;
-	wire [3:0] exe_set = CORE.BHT.exe_set;
+	wire [`BHT_SET_BITS-1:0] id_set = CORE.BHT.id_set;
+	wire [`BHT_SET_BITS-1:0] exe_set = CORE.BHT.exe_set;
 	wire [1:0] exe_setoffset = CORE.BHT.exe_setoffset;
 
 	always@(posedge CLK)
@@ -248,7 +248,7 @@ module tb_core();
 	// This controls bht_accesses & bht_correct for branches & jumps.
 	always@(posedge CLK) begin
 		if(!nrst) begin
-			for(i = 0; i < 64; i=i+1) begin
+			for(i = 0; i < `BHT_ENTRY; i=i+1) begin
 				bht_correct[i] <= 0;
 				bht_accesses[i] <= 0;
 			end
@@ -288,7 +288,7 @@ module tb_core();
 		if(!done)
 			if((|CORE.exe_btype || |CORE.exe_c_btype) && CORE.BHT.is_pred_correct)
 				bht_correct[{exe_set, exe_setoffset}] <= bht_correct[{exe_set, exe_setoffset}] + 1;
-			else if(CORE.exe_sel_opBR && (CORE.exe_branchtarget == CORE.BHT.exe_loadentry[12:2]))
+			else if(CORE.exe_sel_opBR && (CORE.exe_branchtarget == CORE.BHT.exe_loadentry[`BHT_PC_ADDR_BITS+1:2]))
 				bht_correct[{exe_set, exe_setoffset}] <= bht_correct[{exe_set, exe_setoffset}] + 1;
 	end
 
@@ -296,7 +296,7 @@ module tb_core();
 	// Please check branchpredictor.v code to understand when a counter overflows
 	always@(posedge CLK) begin
 		if(!nrst)
-			for(i=0; i<16; i=i+1)
+			for(i=0; i<(`BHT_ENTRY/4); i=i+1)
 				bht_overwrites[i] <= 0;
 		else if(!done) begin
 			if((CORE.id_is_btype || CORE.id_is_jump) && (CORE.BHT.id_iseqto == 4'h0)) begin
@@ -400,12 +400,12 @@ module tb_core();
 		$display("=================\n");
 		
 		// Computing BHT metrics
-		for(j = 0; j < 64; j = j + 1) begin
+		for(j = 0; j < `BHT_ENTRY; j = j + 1) begin
 			total_bht_correct = total_bht_correct + bht_correct[j];
 			total_bht_accesses = total_bht_accesses + bht_accesses[j];
 		end
 
-		for(j = 0; j < 16; j = j+1) begin
+		for(j = 0; j < (`BHT_ENTRY/4); j = j+1) begin
 			if(bht_overwrites[j] > 3) total_bht_overwrites = total_bht_overwrites + (bht_overwrites[j] - 3);
 		end
 
@@ -414,7 +414,7 @@ module tb_core();
 		$display("Accuracy: %f%%.", 100*($itor(total_bht_correct)/$itor(total_bht_accesses)));
 		$display("Overwrites done: %0d.", total_bht_overwrites);
 		/* $display("---| Per-set Metrics |---");
-		for(i = 0; i < 16; i = i + 1) begin
+		for(i = 0; i < (`BHT_ENTRY/4); i = i + 1) begin
 			if(bht_overwrites[i] > 3) $display("Set: %0d\tOverwrites: %0d", i, bht_overwrites[i] - 3);
 			else $display("Set: %0d\tOverwrites: 0", i);
 			bht_entry_display();

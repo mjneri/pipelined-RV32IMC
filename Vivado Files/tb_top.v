@@ -96,7 +96,7 @@ module tb_top();
 	reg enc_en = 0;
 	reg [1:0] enc_parity = 0;
 	reg enc_stopsel = 0;
-	reg [23:0] enc_baud = 24'd433;
+	reg [23:0] enc_baud = 24'd26;
 	wire enc_tx;
 	integer enc_counter = 0;
 
@@ -129,107 +129,89 @@ module tb_top();
 		end
 	endtask
 
+	task enc_strinput();
+		input [16*8:0] string;
+		begin
+			enc_stimulus(string[127:120]);
+			#200 enc_stimulus(string[119:112]);
+			#200 enc_stimulus(string[111:104]);
+			#200 enc_stimulus(string[103:96]);
+			#200 enc_stimulus(string[95:88]);
+			#200 enc_stimulus(string[87:80]);
+			#200 enc_stimulus(string[79:72]);
+			#200 enc_stimulus(string[71:64]);
+			#200 enc_stimulus(string[63:56]);
+			#200 enc_stimulus(string[55:48]);
+			#200 enc_stimulus(string[47:40]);
+			#200 enc_stimulus(string[39:32]);
+			#200 enc_stimulus(string[31:24]);
+			#200 enc_stimulus(string[23:16]);
+			#200 enc_stimulus(string[15:8]);
+			#200 enc_stimulus(string[7:0]);
+		end
+	endtask
+
 	always@(posedge CLK50MHZ) begin
-		if(nrst /* & TOP.locked */) begin						// send only when nrst not pulled down
+		if(nrst /* & TOP.locked */) begin
+			// Up to 16 bytes only -> max data that TXBUFFER can store
 			enc_counter <= enc_counter + 1;
-			if(enc_counter == 3000) enc_stimulus("T");
-			if(enc_counter == 3010) enc_stimulus("h");
-			if(enc_counter == 3020) enc_stimulus("e");
-			if(enc_counter == 3030) enc_stimulus(" ");
-			if(enc_counter == 3040) enc_stimulus("D");
-			if(enc_counter == 3050) enc_stimulus("e");
-			if(enc_counter == 3060) enc_stimulus("l");
-			if(enc_counter == 3070) enc_stimulus("i");
-			if(enc_counter == 3080) enc_stimulus("\n");
-			if(enc_counter == 3090) enc_stimulus("5");
-			if(enc_counter == 3100) enc_stimulus(":");
-			if(enc_counter == 3110) enc_stimulus("3");
-			if(enc_counter == 3120) enc_stimulus("2");
-			if(enc_counter == 3130) enc_stimulus("p");
-			if(enc_counter == 3140) enc_stimulus("m");
-			if(enc_counter == 3150) enc_stimulus("\r");
-			if(enc_counter == 3250) enc_stimulus("\n");
-			
-			if(enc_counter == 223000) enc_stimulus("C");
-			if(enc_counter == 223010) enc_stimulus("h");
-			if(enc_counter == 223020) enc_stimulus("o");
-			if(enc_counter == 223030) enc_stimulus("n");
-			if(enc_counter == 223040) enc_stimulus("\n");
-			if(enc_counter == 223050) enc_stimulus("R");
-			if(enc_counter == 223060) enc_stimulus("o");
-			if(enc_counter == 223070) enc_stimulus("s");
-			if(enc_counter == 223080) enc_stimulus("e");
-			if(enc_counter == 223090) enc_stimulus("w");
-			if(enc_counter == 223100) enc_stimulus("o");
-			if(enc_counter == 223110) enc_stimulus("o");
-			if(enc_counter == 223120) enc_stimulus("d");
-			if(enc_counter == 223130) enc_stimulus("\r");
-			if(enc_counter == 223140) enc_stimulus("\n");
-
-			if(enc_counter == 423010) enc_stimulus("h");
-			if(enc_counter == 423000) enc_stimulus("C");
-			if(enc_counter == 423020) enc_stimulus("o");
-			if(enc_counter == 423030) enc_stimulus("n");
-			if(enc_counter == 423040) enc_stimulus("\n");
-			if(enc_counter == 423050) enc_stimulus("R");
-			if(enc_counter == 423060) enc_stimulus("o");
-			if(enc_counter == 423070) enc_stimulus("s");
-			if(enc_counter == 423080) enc_stimulus("e");
-			if(enc_counter == 423090) enc_stimulus("w");
-			if(enc_counter == 423100) enc_stimulus("o");
-			if(enc_counter == 423110) enc_stimulus("o");
-			if(enc_counter == 423120) enc_stimulus("d");
-			if(enc_counter == 423130) enc_stimulus("\r");
-			if(enc_counter == 423140) enc_stimulus("\n");
+			if(enc_counter == 130000) enc_strinput("The Deli\n5:32pm\r\n");
+			if(enc_counter == 240000) enc_strinput("Chon\nRosewood\r\n\0");
+			if(enc_counter == 350000) enc_strinput("hCon\nRosewood\r\n\0");
+			if(enc_counter == 460000) enc_strinput("Vraell\nFall\r\n\0\0\0");
+			if(enc_counter == 570000) enc_strinput("Coldplay\nSparks\n");
+			if(enc_counter == 680000) enc_strinput("Polyphia\nGOAT\r\n\0");
+			if(enc_counter == 790000) enc_strinput("NITO\nHomesick\r\n\0");
+			if(enc_counter == 800000) enc_strinput("NITO\nHomesick\r\n\0");
 		end
 	end
 
-	// For checking UART_TX output of top-level design
-	// settings: 115200bps, no parity, 1 stop bit
-	reg [7:0] uart_shiftreg = 0;
-	reg [7:0] uart_recvd = 0;
-	integer uart_counter = 0;
-	reg uart_clk = 0;
+	// // For checking UART_TX output of top-level design
+	// // settings: 115200bps, no parity, 1 stop bit
+	// reg [7:0] uart_shiftreg = 0;
+	// reg [7:0] uart_recvd = 0;
+	// integer uart_counter = 0;
+	// reg uart_clk = 0;
 
-	// for generating 115.2kHz clock w/ delayed start
-	initial begin
-		while(ck_io7 == 1) #5;
-		// #2655 uart_clk = 1;
-		forever begin
-			#4350 uart_clk = ~uart_clk;
-		end
-	end
+	// // for generating 115.2kHz clock w/ delayed start
+	// initial begin
+	// 	while(ck_io7 == 1) #5;
+	// 	// #2655 uart_clk = 1;
+	// 	forever begin
+	// 		#4350 uart_clk = ~uart_clk;
+	// 	end
+	// end
 
-	// Just manually change uart_counter 'threshold' depending on expected
-	// transmission length.
-	// SETTINGS: 1 stop bit, even parity -> 11 bits per transaction (start, 8bit data, parity, stop)
-	always@(posedge uart_clk) begin
-		if(!nrst) uart_counter <= 0;
-		else if(uart_counter == 11) uart_counter <= 1;
-		else uart_counter <= uart_counter + 1;
-	end
+	// // Just manually change uart_counter 'threshold' depending on expected
+	// // transmission length.
+	// // SETTINGS: 1 stop bit, even parity -> 11 bits per transaction (start, 8bit data, parity, stop)
+	// always@(posedge uart_clk) begin
+	// 	if(!nrst) uart_counter <= 0;
+	// 	else if(uart_counter == 11) uart_counter <= 1;
+	// 	else uart_counter <= uart_counter + 1;
+	// end
 
-	always@(posedge uart_clk) begin
-		if(nrst) begin
-			if(uart_counter == 11) uart_shiftreg <= 0;
-			else begin
-				uart_shiftreg[0] <= uart_shiftreg[1];
-				uart_shiftreg[1] <= uart_shiftreg[2];
-				uart_shiftreg[2] <= uart_shiftreg[3];
-				uart_shiftreg[3] <= uart_shiftreg[4];
-				uart_shiftreg[4] <= uart_shiftreg[5];
-				uart_shiftreg[5] <= uart_shiftreg[6];
-				uart_shiftreg[6] <= uart_shiftreg[7];
-				uart_shiftreg[7] <= ck_io7;
-			end
-		end
-	end
+	// always@(posedge uart_clk) begin
+	// 	if(nrst) begin
+	// 		if(uart_counter == 11) uart_shiftreg <= 0;
+	// 		else begin
+	// 			uart_shiftreg[0] <= uart_shiftreg[1];
+	// 			uart_shiftreg[1] <= uart_shiftreg[2];
+	// 			uart_shiftreg[2] <= uart_shiftreg[3];
+	// 			uart_shiftreg[3] <= uart_shiftreg[4];
+	// 			uart_shiftreg[4] <= uart_shiftreg[5];
+	// 			uart_shiftreg[5] <= uart_shiftreg[6];
+	// 			uart_shiftreg[6] <= uart_shiftreg[7];
+	// 			uart_shiftreg[7] <= ck_io7;
+	// 		end
+	// 	end
+	// end
 
-	always@(posedge uart_clk) begin
-		if(nrst) begin
-			if(uart_counter == 9) uart_recvd <= uart_shiftreg;
-		end
-	end
+	// always@(posedge uart_clk) begin
+	// 	if(nrst) begin
+	// 		if(uart_counter == 9) uart_recvd <= uart_shiftreg;
+	// 	end
+	// end
 
 	// For checking MOSI output of top-level design
 	// NOTE: just manually change sampling edge (if posedge or negedge)
@@ -251,7 +233,13 @@ module tb_top();
 			else spi_counter <= spi_counter + 1;
 		end
 	end
-	always@(*) ck_io1 = ~spi_counter[0];
+
+	// SPI Stimulus
+	reg [15:0] spi_miso_shiftreg = 16'h0009;
+	always@(negedge ck_io0) begin
+		spi_miso_shiftreg <= spi_miso_shiftreg << 1;
+	end
+	always@(*) ck_io1 = spi_miso_shiftreg[15];
 
 	// For checking I2C outputs of top-level design
 	// NOTE: Data is sent MSB first. Every 9th bit is reserved for slave ACKs.
@@ -305,6 +293,6 @@ module tb_top();
 	end
 
 	// Drive inout ports of the module
-	assign ck_io39 = (TOP.i2c_sda_t && i2c_counter == 9)? 1'b0 : (TOP.i2c_sda_t && i2c_counter == 8)? 0 : (TOP.i2c_sda_t)? 1'b1 : 1'bZ;
+	assign ck_io39 = (TOP.i2c_sda_t && i2c_counter == 9)? 1'b0 : (TOP.i2c_sda_t)? 1'b1 : 1'bZ;
 	assign ck_io38 = (TOP.i2c_scl_t)? 1'b1 : 1'bZ;
 endmodule
