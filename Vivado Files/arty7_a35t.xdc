@@ -251,7 +251,6 @@ set_property -dict {PACKAGE_PIN A8 IOSTANDARD LVCMOS33} [get_ports nrst]
 create_generated_clock -name CLKIP_OUT -source [get_ports CLK100MHZ] -divide_by 2 -add -master_clock CLK100MHZ [get_pins CLKIP/inst/mmcm_adv_inst/CLKOUT0]
 create_generated_clock -name PROTOCOL_CON/SPI1/e_clk -source [get_pins CLKIP/inst/mmcm_adv_inst/CLKOUT0] -divide_by 4 -add -master_clock CLKIP_OUT [get_pins PROTOCOL_CON/SPI1/e_clk_reg/Q]
 
-
 create_clock -period 80.000 -name VIRTUAL_PROTOCOL_CON/SPI1/e_clk -waveform {0.000 40.000}
 set_input_delay -clock [get_clocks PROTOCOL_CON/SPI1/e_clk] -clock_fall -min -add_delay 1.000 [get_ports ck_io1]
 set_input_delay -clock [get_clocks PROTOCOL_CON/SPI1/e_clk] -clock_fall -max -add_delay 2.000 [get_ports ck_io1]
@@ -295,20 +294,19 @@ set_output_delay -clock [get_clocks PROTOCOL_CON/SPI1/e_clk] -min -add_delay 0.5
 set_output_delay -clock [get_clocks PROTOCOL_CON/SPI1/e_clk] -max -add_delay 2.000 [get_ports ck_io6]
 set_output_delay -clock [get_clocks CLKIP_OUT] -min -add_delay 0.500 [get_ports ck_io7]
 set_output_delay -clock [get_clocks CLKIP_OUT] -max -add_delay 2.000 [get_ports ck_io7]
-
-
-
 set_output_delay -clock [get_clocks CLKIP_OUT] -min -add_delay 0.500 [get_ports ck_io2]
 set_output_delay -clock [get_clocks CLKIP_OUT] -max -add_delay 2.000 [get_ports ck_io2]
 
 # Vivado Integrated Logic Analyzer
 # COMMENT OUT EVERYTHING BELOW IF NOT NEEDED
 
+
+
 create_debug_core u_ila_0 ila
 set_property ALL_PROBE_SAME_MU true [get_debug_cores u_ila_0]
 set_property ALL_PROBE_SAME_MU_CNT 4 [get_debug_cores u_ila_0]
 set_property C_ADV_TRIGGER true [get_debug_cores u_ila_0]
-set_property C_DATA_DEPTH 32768 [get_debug_cores u_ila_0]
+set_property C_DATA_DEPTH 8192 [get_debug_cores u_ila_0]
 set_property C_EN_STRG_QUAL true [get_debug_cores u_ila_0]
 set_property C_INPUT_PIPE_STAGES 0 [get_debug_cores u_ila_0]
 set_property C_TRIGIN_EN false [get_debug_cores u_ila_0]
