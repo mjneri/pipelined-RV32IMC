@@ -160,7 +160,7 @@ module tb_core();
 	end
 	// This controlls the done flag
 	always@(posedge CLK) begin
-		if(check == 50 || consecutive_nops == 10) done = 1;
+		if(check == 49 || consecutive_nops == 9) done = 1;
 	end
 
 	// Tracking how many clock cycles it takes to execute the program
