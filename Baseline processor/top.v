@@ -74,10 +74,10 @@ module top(
 	wire i2c_slave_sda_o;			// ????????????????
 
 	// Tristate buffers for I2C
-	assign i2c_scl_i = i2c_scl_t? ck_io38 : 1'bZ;
+	assign i2c_scl_i = ck_io38;
 	assign ck_io38 = i2c_scl_t? 1'bZ : i2c_scl_o;
 
-	assign i2c_sda_i = (i2c_sda_t & i2c_slave_sda_o)? ck_io39 : 1'bZ;
+	assign i2c_sda_i = ck_io39;
 	assign ck_io39 = (i2c_sda_t & i2c_slave_sda_o)? 1'bZ : i2c_sda_o;
 
 	// SPI

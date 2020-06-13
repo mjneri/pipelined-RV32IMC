@@ -41,11 +41,38 @@
 
 `define PC_ADDR_BITS 12
 
+// BHT CONSTANTS
 `define BHT_PC_ADDR_BITS `PC_ADDR_BITS-1
 `define BHT_ENTRY 64		// Only use values in powers of 2
 
-`define BHT_SET_BITS ceilLog2(`BHT_ENTRY/4)
+`define BHT_SET_BITS `ceilLog2(`BHT_ENTRY/4)
 `define BHT_TAG_BITS `BHT_PC_ADDR_BITS - `BHT_SET_BITS
 `define BHT_ENTRY_BITS 4 + `BHT_TAG_BITS + `BHT_PC_ADDR_BITS    // 4 = 2bits saturating counter + 1bit ISR_running + 1bit valid
+
+// CONTROLLER CONSTANTS
+`define OPC_LUI 7'h37
+`define OPC_AUIPC 7'h17
+`define OPC_JAL 7'h6f
+`define OPC_JALR 7'h67
+`define OPC_BTYPE 7'h63
+`define OPC_ITYPE 7'h13
+`define OPC_STYPE 7'h23
+`define OPC_RTYPE 7'h33
+`define OPC_LOAD 7'h03
+
+`define ALU_ADD 4'd1
+`define ALU_SUB 4'd2
+`define ALU_AND 4'd3
+`define ALU_OR  4'd4
+`define ALU_XOR 4'd5
+`define ALU_SLT 4'd6
+`define ALU_SLTU 4'd7
+`define ALU_SLL 4'd8
+`define ALU_SRL 4'd9
+`define ALU_SRA 4'd10
+`define ALU_MUL 4'd11
+`define ALU_MULH 4'd12
+`define ALU_MULHSU 4'd13
+`define ALU_MULHU 4'd14
 
 `endif	// CONST_VH

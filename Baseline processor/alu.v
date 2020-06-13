@@ -17,6 +17,7 @@
 
 
 `timescale 1ns / 1ps
+`include "constants.vh"
 
 module alu(
 	input CLK,
@@ -44,23 +45,6 @@ module alu(
     assign signed_a = op_a;
     assign signed_b = op_b;
          
-	// ALU_op
-    parameter alu_add 	= 	4'd1;
-	parameter alu_sub 	= 	4'd2;
-	parameter alu_and 	= 	4'd3;
-	parameter alu_or 	= 	4'd4;
-	parameter alu_xor 	= 	4'd5;
-	parameter alu_slt 	= 	4'd6;
-	parameter alu_sltu 	= 	4'd7;
-	parameter alu_sll	= 	4'd8;
-	parameter alu_srl 	= 	4'd9;
-	parameter alu_sra 	= 	4'd10;
-
-	parameter alu_mul 	= 	4'd11;
-	parameter alu_mulh 	= 	4'd12;
-	parameter alu_mulhsu =	4'd13;
-	parameter alu_mulhu = 	4'd14;
-
 	assign z	=	op_a == op_b;
 	assign less =	op_a < op_b;
 	assign signed_less	=	signed_a < signed_b;
@@ -68,9 +52,9 @@ module alu(
 	assign signed_res = signed_a >>> signed_b[4:0];
 
 	// Instantiating Multiplier IPs
-	wire mulhsu_clken = (ALU_op == alu_mulhsu)? 1'b1 : 1'b0;
-	wire mulh_clken = (ALU_op == alu_mulh)? 1'b1 : 1'b0;
-	wire mulhu_clken = (ALU_op == alu_mulhu || ALU_op == alu_mul)? 1'b1 : 1'b0;
+	wire mulhsu_clken = (ALU_op == ALU_MULHSU)? 1'b1 : 1'b0;
+	wire mulh_clken = (ALU_op == ALU_MULH)? 1'b1 : 1'b0;
+	wire mulhu_clken = (ALU_op == ALU_MULHU || ALU_op == ALU_MUL)? 1'b1 : 1'b0;
 	mult_gen_hsu MULHSU(
 		.CLK(CLK),
 		.CE(mulhsu_clken),
@@ -111,21 +95,21 @@ module alu(
 
 	always@(*) begin
 		case(ALU_op)
-			alu_add: res = op_a + op_b;
-			alu_sub: res = op_a - op_b;
-			alu_and: res = op_a & op_b;
-			alu_or: res = op_a | op_b;
-			alu_xor: res = op_a ^ op_b;
-			alu_slt: res = signed_a < signed_b;
-			alu_sltu: res = op_a < op_b;
-			alu_sll: res = op_a << op_b[4:0];
-			alu_srl: res = op_a >> op_b[4:0];
-			alu_sra: res = signed_a >>> signed_b[4:0];
+			ALU_ADD: res = op_a + op_b;
+			ALU_SUB: res = op_a - op_b;
+			ALU_AND: res = op_a & op_b;
+			ALU_OR: res = op_a | op_b;
+			ALU_XOR: res = op_a ^ op_b;
+			ALU_SLT: res = signed_a < signed_b;
+			ALU_SLTU: res = op_a < op_b;
+			ALU_SLL: res = op_a << op_b[4:0];
+			ALU_SRL: res = op_a >> op_b[4:0];
+			ALU_SRA: res = signed_a >>> signed_b[4:0];
 
-			alu_mul: res = mulhu_res[31:0];
-			alu_mulhu: res = mulhu_res[63:32];
-			alu_mulh: res = mulh_res[63:32];
-			alu_mulhsu: res = mulhsu_res[63:32];
+			ALU_MUL: res = mulhu_res[31:0];
+			ALU_MULHU: res = mulhu_res[63:32];
+			ALU_MULH: res = mulh_res[63:32];
+			ALU_MULHSU: res = mulhsu_res[63:32];
 
 			default: res = 32'h0;
 		endcase

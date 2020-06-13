@@ -34,27 +34,6 @@ module core(
 	input [10:0] con_addr,		// Word-aligned data address
 	input [31:0] con_in,
 	output [31:0] con_out		// Ouput of DATAMEM connected to Protocol controllers
-
-	// Debug signals for post-synthesis simulations
-	// output [11:0] if_PC,
-	// output [11:0] id_PC,
-	// output [11:0] exe_PC,
-	// output [11:0] mem_PC,
-	// output [11:0] wb_PC,
-	// output [31:0] if_inst,
-	// output if_stall,
-	// output ISR_PC_flush,
-	// output ISR_pipe_flush,
-	// output ISR_running,
-	// output [11:0] save_PC,
-	// output jump_flush,
-	// output branch_flush,
-	// output exe_is_stype,
-	// output [3:0] exe_dm_write,
-	// output [31:0] exe_ALUout,
-	// output [2:0] wb_sel_data,
-	// output [31:0] wb_wr_data
-
 );
 	
 /******************************** DECLARING WIRES *******************************/
@@ -863,7 +842,7 @@ module core(
 		.DIVout(exe_DIVout)
 	);
 
-	branchpredictor BHT(
+	branchpredictor BRANCHPREDICTOR(
 		.CLK(CLK_BUF),
 		.nrst(nrst),
 

@@ -139,10 +139,10 @@ module branchpredictor(
 
 	// Wire declarations for ID stage accesses
 	wire [`BHT_ENTRY_BITS-1:0] id_entry [0:3];
-	wire [3:0] id_valid;
-	wire [3:0] id_iseqto;
 	wire [`BHT_SET_BITS-1:0] id_set = id_PC[`BHT_SET_BITS-1:0];
 	wire [`BHT_TAG_BITS-1:0] id_tag = id_PC[`BHT_PC_ADDR_BITS-1:`BHT_SET_BITS];
+	wire [3:0] id_valid;
+	wire [3:0] id_iseqto;
 
 	// Checking each entry within the set to see if the input is already in the table
 	assign id_entry[0] = history_table[{id_set, 2'b00}];
@@ -248,7 +248,7 @@ module branchpredictor(
 	// computed branch target. If not, we update the table & flush the next 2 cycles.
 	// For exe_CNI: check if branch instruction is compressed to determine if next instruction is at next halfword
 	assign exe_PBT = (exe_sel_opBR)? exe_branchtarget : exe_loadentry[`BHT_PC_ADDR_BITS+1:2];
-	assign exe_CNI = {exe_loadentry[`BHT_ENTRY_BITS-3:`BHT_ENTRY_BITS-`BHT_TAG_BITS-2], exe_set} + ((|exe_c_btype)? {(`BHT_ENTRY_BITS-1){1'b0}, 1'b1} : {(`BHT_ENTRY_BITS-2){1'b0}, 2'd2});
+	assign exe_CNI = {exe_loadentry[`BHT_ENTRY_BITS-3:`BHT_ENTRY_BITS-`BHT_TAG_BITS-2], exe_set} + ((|exe_c_btype)? 2'd1 : 2'd2);
 	
 	// is_pred_correct: determines if the prediction is correct
 	// Check if prediction is correct & output appropriate correction
