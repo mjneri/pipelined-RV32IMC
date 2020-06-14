@@ -22,7 +22,6 @@
 `include "constants.vh"
 
 module instmem(
-	input clk,
 	input sel_ISR,
 
 	input [11:0] addr,

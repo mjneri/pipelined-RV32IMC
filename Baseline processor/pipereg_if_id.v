@@ -23,7 +23,6 @@ module pipereg_if_id(
 	input nrst,
 
 	input flush,
-	input stall,
 
 	// PC + 4
 	input [`PC_ADDR_BITS-1:0] if_pc4,
@@ -52,7 +51,7 @@ module pipereg_if_id(
 
 			id_PC <= 0;
 		end
-		else if(!stall) begin
+		else begin
 			id_pc4 <= if_pc4;
 			id_inst <= if_inst;
 			

@@ -23,7 +23,6 @@ module pipereg_id_exe(
 	input nrst,
 
 	input flush,
-	input stall,
 
 	// PC +4
 	input [`PC_ADDR_BITS-1:0] id_pc4,
@@ -37,9 +36,13 @@ module pipereg_id_exe(
 	input [`WORD_WIDTH-1:0] id_fwdopB,
 	output reg [`WORD_WIDTH-1:0] exe_fwdopB,
 
-	// 32bit instruction
-	input [`WORD_WIDTH-1:0] id_inst,
-	output reg [`WORD_WIDTH-1:0] exe_inst,
+	// Opcode
+	input [6:0] id_opcode,
+	output reg [6:0] exe_opcode,
+
+	// Funct3
+	input [2:0] id_funct3,
+	output reg [2:0] exe_funct3,
 
 	// Computed branch target
 	input [`WORD_WIDTH-1:0] id_branchtarget,
@@ -118,7 +121,8 @@ module pipereg_id_exe(
 		exe_pc4 <= 0;
 		exe_fwdopA <= 0;
 		exe_fwdopB <= 0;
-		exe_inst <= 0;
+		exe_opcode <= 0;
+		exe_funct3 <= 0;
 		exe_branchtarget <= 0;
 		exe_fwdstore <= 0;
 		exe_imm <= 0;
@@ -150,7 +154,8 @@ module pipereg_id_exe(
 			exe_pc4 <= 0;
 			exe_fwdopA <= 0;
 			exe_fwdopB <= 0;
-			exe_inst <= 0;
+			exe_opcode <= 0;
+			exe_funct3 <= 0;
 			exe_branchtarget <= 0;
 			exe_fwdstore <= 0;
 			exe_imm <= 0;
@@ -178,38 +183,37 @@ module pipereg_id_exe(
 			exe_rs1 <= 5'd0;
 			exe_rs2 <= 5'd0;
 		end else begin
-			if(!stall) begin
-				exe_pc4 <= id_pc4;
-				exe_fwdopA <= id_fwdopA;
-				exe_fwdopB <= id_fwdopB;
-				exe_inst <= id_inst;
-				exe_branchtarget <= id_branchtarget;
-				exe_fwdstore <= id_fwdstore;
-				exe_imm <= id_imm;
-				exe_rd <= id_rd;
-				exe_PC <= id_PC;
+			exe_pc4 <= id_pc4;
+			exe_fwdopA <= id_fwdopA;
+			exe_fwdopB <= id_fwdopB;
+			exe_opcode <= id_opcode;
+			exe_funct3 <= id_funct3;
+			exe_branchtarget <= id_branchtarget;
+			exe_fwdstore <= id_fwdstore;
+			exe_imm <= id_imm;
+			exe_rd <= id_rd;
+			exe_PC <= id_PC;
 
-				// Control signals
-				exe_ALU_op <= id_ALU_op;
+			// Control signals
+			exe_ALU_op <= id_ALU_op;
 
-				exe_c_btype <= id_c_btype;
-				exe_sel_opBR <= id_sel_opBR;
+			exe_c_btype <= id_c_btype;
+			exe_sel_opBR <= id_sel_opBR;
 
-				exe_div_valid <= id_div_valid;
-				exe_div_op <= id_div_op;
-				// exe_sel_opA <= id_sel_opA;
-				// exe_sel_opB <= id_sel_opB;
-				exe_is_stype <= id_is_stype;
-				exe_wr_en <= id_wr_en;
-				exe_dm_select <= id_dm_select;
-				exe_sel_data <= id_sel_data;
-				exe_store_select <= id_store_select;
-				exe_comp_use_A <= id_comp_use_A;
-				exe_comp_use_B <= id_comp_use_B;
-				exe_is_comp <= id_is_comp;
-				exe_rs1 <= id_rs1;
-				exe_rs2 <= id_rs2;
-			end
+			exe_div_valid <= id_div_valid;
+			exe_div_op <= id_div_op;
+			// exe_sel_opA <= id_sel_opA;
+			// exe_sel_opB <= id_sel_opB;
+			exe_is_stype <= id_is_stype;
+			exe_wr_en <= id_wr_en;
+			exe_dm_select <= id_dm_select;
+			exe_sel_data <= id_sel_data;
+			exe_store_select <= id_store_select;
+			exe_comp_use_A <= id_comp_use_A;
+			exe_comp_use_B <= id_comp_use_B;
+			exe_is_comp <= id_is_comp;
+			exe_rs1 <= id_rs1;
+			exe_rs2 <= id_rs2;
 		end
 	end
 

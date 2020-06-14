@@ -40,8 +40,6 @@ module regfile(
 			regfile[i]	<=	32'd0;
 	end
 	
-	//wire rf_clk = wr_en & !clk;
-	
 	// Write regfile
 	always@(posedge clk)
 		if(!nrst)

@@ -24,7 +24,6 @@ module pc(
 	input nrst,
 
 	input flush,
-	input stall,
 	
 	input [`PC_ADDR_BITS-1:0] addr_in,
 	
@@ -37,6 +36,6 @@ module pc(
 	always@(posedge clk)
 		if(!nrst || flush)
 			inst_addr <= 0;
-		else if(!stall)
+		else
 			inst_addr <= addr_in;
 endmodule

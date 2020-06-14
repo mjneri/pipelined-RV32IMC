@@ -299,7 +299,7 @@ module branchpredictor(
 			for(i = 0; i < `BHT_ENTRY; i=i+1) begin
 				history_table[i] <= {`BHT_ENTRY_BITS{1'b0}};
 			end
-		end else begin
+		end else if(!stall) begin
 			// ID Stage writes
 			if( (id_is_btype || id_is_jump) && (id_iseqto == 4'h0) ) begin
 				// Write to table if Branch or Jump AND the input is not in the table yet

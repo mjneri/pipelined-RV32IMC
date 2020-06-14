@@ -69,9 +69,6 @@ module sf_controller(
     // Stalls/Enables
 	output if_stall,			// controls PC + instmem stall
 	output id_stall,			// controls IF/ID pipeline register stall
-	output exe_stall,			// controls ID/EXE pipeline register stall
-	output mem_stall,			// controls EXE/MEM pipeline register and datamem stall
-	output wb_stall,			// controls MEM/WB pipeline register stall
 
 	// Flushes/Resets (flushes act as active-high resets)
 	output if_flush,			// controls PC flush
@@ -248,9 +245,7 @@ module sf_controller(
     // Stalls/Enables
     assign if_stall = ((load_hazard  && ~mem_prev_flush) || jalr_hazard || div_running || mul_stall);
     assign id_stall = ((load_hazard  && ~mem_prev_flush) || jalr_hazard || div_running || mul_stall);
-    assign exe_stall = ((load_hazard  && ~mem_prev_flush) || div_running || mul_stall);					
-    assign mem_stall = 1'b0;
-    assign wb_stall = 1'b0;
+    wire exe_stall = ((load_hazard  && ~mem_prev_flush) || div_running || mul_stall);					
 
     // Flushes/Resets
     assign if_flush = ISR_PC_flush;

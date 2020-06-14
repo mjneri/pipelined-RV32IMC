@@ -23,13 +23,9 @@ module pipereg_mem_wb(
 	input nrst,
 
 	input flush,
-	input stall,
 
 	input [`PC_ADDR_BITS-1:0] mem_pc4,
 	output reg [`PC_ADDR_BITS-1:0] wb_pc4,
-
-	input [`WORD_WIDTH-1:0] mem_inst,
-	output reg [`WORD_WIDTH-1:0] wb_inst,
 
 	input [`WORD_WIDTH-1:0] mem_ALUout,
 	output reg [`WORD_WIDTH-1:0] wb_ALUout,
@@ -46,9 +42,6 @@ module pipereg_mem_wb(
 	input [4:0] mem_rd,
 	output reg [4:0] wb_rd,
 
-	input [`PC_ADDR_BITS-1:0] mem_PC,
-	output reg [`PC_ADDR_BITS-1:0] wb_PC,
-
 	// Control signals go here
 	input mem_wr_en,
 	output reg wb_wr_en,
@@ -59,14 +52,11 @@ module pipereg_mem_wb(
 
 	initial begin
 		wb_pc4 <= 0;
-		wb_inst <= 0;
 		wb_ALUout <= 0;
 		wb_DIVout <= 0;
 		wb_loaddata <= 0;
 		wb_imm <= 0;
 		wb_rd <= 0;
-
-		wb_PC <= 0;
 
 		// Control signals
 		wb_wr_en <= 0;
@@ -76,29 +66,23 @@ module pipereg_mem_wb(
 	always@(posedge clk) begin
 		if(!nrst || flush) begin
 			wb_pc4 <= 0;
-			wb_inst <= 0;
 			wb_ALUout <= 0;
 			wb_DIVout <= 0;
 			wb_loaddata <= 0;
 			wb_imm <= 0;
 			wb_rd <= 0;
 
-			wb_PC <= 0;
-
 			// Control signals
 			wb_wr_en <= 0;
 			wb_sel_data <= 0;
 
-		end else if(!stall) begin
+		end else begin
 			wb_pc4 <= mem_pc4;
-			wb_inst <= mem_inst;
 			wb_ALUout <= mem_ALUout;
 			wb_DIVout <= mem_DIVout;
 			wb_loaddata <= mem_loaddata;
 			wb_imm <= mem_imm;
 			wb_rd <= mem_rd;
-
-			wb_PC <= mem_PC;
 
 			// Control signals
 			wb_wr_en <= mem_wr_en;
