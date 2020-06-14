@@ -1,36 +1,46 @@
+//-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+// pipereg_exe_mem.v -- EXE/MEM Pipeline register module
+//-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+// Author: Microlab 198 Pipelined RISC-V Group (2SAY1920)
+//-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+//
+//-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+// Module Name: pipereg_exe_mem.v
+// Description:
+//
+// Revisions:
+// Revision 0.01 - File Created
+// Additional Comments:
+// 
+//-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+
+
 `timescale 1ns / 1ps
+`include "constants.vh"
 
 module pipereg_exe_mem(
 	input clk,
 	input nrst,
-	input en,
 	
 	input flush,
-	input stall,
 
-	input [11:0] exe_pc4,
-	output reg [11:0] mem_pc4,
+	input [`PC_ADDR_BITS-1:0] exe_pc4,
+	output reg [`PC_ADDR_BITS-1:0] mem_pc4,
 
-	input [31:0] exe_inst,
-	output reg [31:0] mem_inst,
+	input [`WORD_WIDTH-1:0] exe_ALUout,
+	output reg [`WORD_WIDTH-1:0] mem_ALUout,
 
-	input [31:0] exe_ALUout,
-	output reg [31:0] mem_ALUout,
+	input [`WORD_WIDTH-1:0] exe_DIVout,
+	output reg [`WORD_WIDTH-1:0] mem_DIVout,
 
-	input [31:0] exe_DIVout,
-	output reg [31:0] mem_DIVout,
+	input [`WORD_WIDTH-1:0] exe_storedata,
+	output reg [`WORD_WIDTH-1:0] mem_storedata,
 
-	input [31:0] exe_storedata,
-	output reg [31:0] mem_storedata,
-
-	input [31:0] exe_imm,
-	output reg [31:0] mem_imm,
+	input [`WORD_WIDTH-1:0] exe_imm,
+	output reg [`WORD_WIDTH-1:0] mem_imm,
 
 	input [4:0] exe_rd,
 	output reg [4:0] mem_rd,
-
-	input [11:0] exe_PC,
-	output reg [11:0] mem_PC,
 
 	// Control signals
 	input [3:0] exe_dm_write,
@@ -47,15 +57,12 @@ module pipereg_exe_mem(
 );
 	
 	initial begin
-		mem_pc4 <= 0;
-		mem_inst <= 0;			
+		mem_pc4 <= 0;	
 		mem_ALUout <= 0;
 		mem_DIVout <= 0;
 		mem_storedata <= 0;
 		mem_imm <= 0;
 		mem_rd <= 0;
-
-		mem_PC <= 0;
 
 		// Control signals
 		mem_dm_write <= 0;
@@ -66,15 +73,12 @@ module pipereg_exe_mem(
 	
 	always@(posedge clk) begin
 		if(!nrst || flush) begin
-			mem_pc4 <= 0;
-			mem_inst <= 0;			
+			mem_pc4 <= 0;	
 			mem_ALUout <= 0;
 			mem_DIVout <= 0;
 			mem_storedata <= 0;
 			mem_imm <= 0;
 			mem_rd <= 0;
-
-			mem_PC <= 0;
 
 			// Control signals
 			mem_dm_write <= 0;
@@ -82,16 +86,13 @@ module pipereg_exe_mem(
 			mem_dm_select <= 0;
 			mem_sel_data <= 0;
 		end
-		else if(en && !stall) begin
+		else begin
 			mem_pc4 <= exe_pc4;
-			mem_inst <= exe_inst;
 			mem_ALUout <= exe_ALUout;
 			mem_DIVout <= exe_DIVout;
 			mem_storedata <= exe_storedata;
 			mem_imm <= exe_imm;
 			mem_rd <= exe_rd;
-			
-			mem_PC <= exe_PC;
 
 			// Control signals
 			mem_dm_write <= exe_dm_write;

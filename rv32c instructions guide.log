@@ -1,0 +1,128 @@
+COMPRESSED INSTRUCTIONS USAGE GUIDE
+
+COMPRESSED							BASE EQUIVALENT					NOTES
+=========================			==========================		========================
+C.LW rd', uimm[6:2](rs1')			LW rd', uimm[6:2](rs1')			uimm range: [0, 31]*4; offsets are word-aligned
+C.SW rs2', uimm[6:2](rs1')			SW rs2', uimm[6:2](rs1')		uimm range: [0, 31]*4; offsets are word-aligned
+C.LWSP rd, uimm[7:2]				LW rd, uimm[7:2](x2)			uimm range: [0, 63]*4; offsets are word-aligned
+C.SWSP rs2, uimm[7:2]				SW rs2, uimm[7:2](x2)			uimm range: [0, 63]*4; offsets are word-aligned
+
+C.JAL target						JAL x1, target					range: [-2048, 2046], multiples of 2
+C.J	target							JAL x0, target					range: [-2048, 2046], multiples of 2
+C.BEQZ rs1', target					BEQ rs1', x0, target			range: [-256, +254], in multiples of 2
+C.BNEZ rs1', target					BNE rs1', x0, target			range: [-256, +254], in multiples of 2
+C.JR rs1							JALR x0, 0(rs1)					range: depending on contents of rs1
+C.JALR rs1							JALR x1, 0(rs1)					range: depending on contents of rs1
+
+C.LI rd, imm[5:0]					ADDI rd, x0, imm[5:0]			imm range: [-32, 31]
+C.LUI rd, nzimm[17:12]				LUI rd, nzimm[17:12]			nzimm is sign extended non-zero imm
+C.ADDI4SPN rd', nzuimm[9:2]			ADDI rd', x2, nzuimm[9:2]		nzuimm range: [0, 255]*4
+C.ADDI16SP nzimm[9:4]				ADDI x2, x2, nzimm[9:4]			nzimm range: [-32, 31]*16
+
+C.ADDI rs1, nzimm[5:0]				ADDI rs1, rs1, nzimm[5:0]		nzimm range: [-32, 31]
+C.SLLI rs1, nzuimm[5:0]				SLLI rs1, rs1, nzuimm[5:0]		nzuimm range: [0, 63]
+C.SRLI rd', nzuimm[5:0]				SRLI rd', rd', nzuimm[5:0]		nzuimm range: [0, 63]
+C.SRAI rd', nzuimm[5:0]				SRAI rd', rd', nzuimm[5:0]		nzuimm range: [0, 63]
+C.ANDI rd', imm[5:0]				ANDI rd', rd', imm[5:0]			imm range: [-32, 31]
+
+C.MV rd, rs2						ADD rd, x0, rs2
+C.ADD rs1, rs2						ADD rs1, rs1, rs2
+C.AND rs1', rs2'					AND rs1', rs1', rs2'
+C.OR rs1' rs2'						OR rs1', rs1', rs2'
+C.XOR rs1', rs2'					XOR rs1', rs1', rs2'
+C.SUB rs1', rs2'					SUB rs1', rs1', rs2'
+
+C.NOP								NOP
+
+REGISTER ALIASES:								DATAMEM MEMORY MAPPING		BYTE-ADDR	WORD-ADDR
+ # aliases										======================		=========	=========
+ "zero": x0				
+ "ra"  : x1				"a6"  : x16				SPI Data In					0x004		0x001
+ "sp"  : x2				"a7"  : x17				SPI Input Control 1			0x008		0x002
+ "gp"  : x3				"s2"  : x18				UART Data In				0x00c		0x003
+ "tp"  : x4				"s3"  : x19				UART Input Control 1		0x010		0x004
+ "t0"  : x5				"s4"  : x20				I2C Data In					0x014		0x005
+ "t1"  : x6				"s5"  : x21				I2C Input Control 1			0x018		0x006
+ "t2"  : x7				"s6"  : x22
+ "s0"  : x8				"s7"  : x23				SPI Output Control 1		0x1004		0x401
+ "fp"  : x8				"s8"  : x24				SPI Output Data				0x1008		0x402
+ "s1"  : x9				"s9"  : x25				UART Output Control 1		0x100c		0x403
+ "a0"  : x10			"s10" : x26				UART Data Out				0x1010		0x404
+ "a1"  : x11			"s11" : x27				I2C Data Out				0x1014		0x405
+ "a2"  : x12			"t3"  : x28				I2C Output Control 1		0x1018		0x406
+ "a3"  : x13			"t4"  : x29
+ "a4"  : x14			"t5"  : x30
+ "a5"  : x15			"t6"  : x31
+
+ASSEMBLY GUIDE:									SAVER
+x0 -> hardwired zero							-----
+ra -> return address							caller
+sp -> stack pointer								callee
+gp-> global pointer								-----
+tp -> thread pointer/temporary register			-----
+t0-t2 -> temporaries							caller
+s0/fp -> saved register/frame pointer			callee
+s1 -> saved register							callee
+a0-a1 -> args/return values						caller
+a2-a7 -> function arguments						caller
+s2-s11 -> saved registers						callee
+t3-t6 -> temporaries							caller
+
+BASE INSTRUCTIONS USAGE GUIDE
+
+INSTRUCTIONS				NOTES
+============				=====
+LUI rd, imm[31:12]
+AUIPC rd, imm[31:12]		adds imm to pc address of the auipc inst
+
+JAL rd, target				stores addr of inst after jal to rd
+JALR rd, imm[11:0](rs)		stores addr of isnt after jalr to rd
+
+BEQ rs1, rs2, target
+BNE rs1, rs2, target
+BLT rs1, rs2, target
+BGE rs1, rs2, target
+BLTU rs1, rs2, target
+BGEU rs1, rs2, target
+
+LB rd, imm[11:0](rs)		loaded data is sign extended; loaded data is stored in LSByte
+LBU rd, imm[11:0](rs)		loaded data is not sign extended; loaded data is stored in LSByte
+LH rd, imm[11:0](rs)		loaded data is sign ext.; half-word aligned addresses only; loaded data is stored in LSHalfword
+LHU rd, imm[11:0](rs)		loaded data is not sign ext.; half-word aligned addresses only; loaded data is stored in LSHalfword
+LW rd, imm[11:0](rs)		word-aligned address only
+
+SB rs1, imm[11:0](rs2)		only LSByte is stored to datamem
+SH rs1, imm[11:0](rs2)		only LSHalfword is stored to datamem
+SW rs1, imm[11:0](rs2)
+
+ADDI rd, rs, imm[11:0]
+SLTI rd, rs, imm[11:0]
+SLTIU rd, rs, imm[11:0]
+XORI rd, rs, imm[11:0]
+ORI rd, rs, imm[11:0]
+ANDI rd, rs, imm[11:0]
+
+SLLI rd, rs, shamt[4:0]
+SRLI rd, rs, shamt[4:0]
+SRAI rd, rs, shamt[4:0]
+
+ADD rd, rs1, rs2
+SUB rd, rs1, rs2
+SLL rd, rs1, rs2
+SLT rd, rs1, rs2
+SLTU rd, rs1, rs2
+XOR rd, rs1, rs2
+SRL rd, rs1, rs2
+SRA rd, rs1, rs2
+OR rd, rs1, rs2
+AND rd, rs1, rs2
+
+MUL rd, rs1, rs2
+MULH rd, rs1, rs2
+MULHSU rd, rs1, rs2
+MULHU rd, rs1, rs2
+
+DIV rd, rs1, rs2
+REM rd, rs1, rs2
+DIVU rd, rs1, rs2
+REMU rd, rs1, rs2

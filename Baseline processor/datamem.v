@@ -1,157 +1,109 @@
+//-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+// datamem.v -- Data memory module
+//-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+// Author: Microlab 198 Pipelined RISC-V Group (2SAY1920)
+//-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+//
+//-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+// Module Name: datamem.v
+// Description: This module contains the Block Memory Generator IP Modules needed
+//				to implement a ~4kB memory for the RISCV processor.
+//				Block Memory Generator IP settings for both modules:
+//					- Native Interface, True DUAL PORT RAM
+//					- Byte write enabled (8bits per byte)
+//					- common clock &  generate address unchecked
+//					- minimum area algorithm
+//					PORT settings (both port a & b)
+//						- 32bit write & read width, 1024 write & read depth
+//						- Read First operating mode, Always Enabled
+//						- checkboxes left unchecked
+//					
+//
+// Revisions:
+// Revision 0.01 - File Created
+// Additional Comments:
+// 
+//-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+
+
 `timescale 1ns / 1ps
 
 module datamem(
-	input clk,
+	input core_clk,				// Gated clock signal
+	input con_clk,				// un-gated clock signal
 	input nrst,
 
-	// Inputs from within the core
+	// Inputs from the RISCV core
 	input [3:0] dm_write,
 	input [10:0] exe_data_addr,
 	input [10:0] mem_data_addr,
 	input [31:0] data_in,
 
 	// Ports for FPGA I/O
-	input [3:0] BTN,
-	input [2:0] SW,
-	output [3:0] LED,
+	// input [3:0] BTN,
+	// input [2:0] SW,
+	// output [3:0] LED,
 
 	// Inputs from protocol controllers
 	// NOTE: protocol controllers cannot read from FPGAIO
 	input [3:0] con_write,		// Similar to dm_write
-	input [9:0] con_addr,		// datamem address from protocol controller
+	input [10:0] con_addr,		// datamem address from protocol controller
 	input [31:0] con_in,		// data input from protocol controller
 
-	output reg [31:0] data_out,	// data output to the RISC-V core
+	output [31:0] data_out,		// data output to the RISC-V core
 	output [31:0] con_out		// data output to protocol controller
 );
 	
+	// Block memory outputs
+	wire [31:0] coremem_douta, coremem_doutb;
+	wire [31:0] protocolmem_douta, protocolmem_doutb;
+
+	// Determine which blockmem output to select
+	// If x_sel = 1, select PROTOCOLMEM output, else select COREMEM output
+	wire core_sel = mem_data_addr[10];
+	wire protocol_sel = con_addr[10];
+
 	// Datamem that uses BLOCKMEM from Vivado IP Catalog
 	// Blockmem generated as TRUE DUAL PORT RAM
 	// Synchronous read
 	// Addresses 0x000 - 0x3FF (Word-aligned addresses)
-	wire [31:0] blk_mem_douta;
-	blk_mem_gen_datamem BLOCKMEM(
-		.clka(clk),
+	blk_mem_gen_datamem COREMEM(
+		.clka(core_clk),
 		.wea(dm_write),
 		.addra(exe_data_addr[9:0]),
 		.dina(data_in),
-		.douta(blk_mem_douta),
+		.douta(coremem_douta),
 
-		.clkb(clk),
-		.web(con_write),
-		.addrb(con_addr),
-		.dinb(con_in),
-		.doutb(con_out)
+		.clkb(con_clk),
+		.web(4'b0),
+		.addrb(con_addr[9:0]),
+		.dinb(32'b0),
+		.doutb(coremem_doutb)
 	);
-	
-	// Memory mapping FPGA I/O to registers. (Directly mapped to registers)
-	// Word-aligned Addresses:
-	// 0x400 -> BUTTONS (FPGAIO[0])	\\ Input from BUTTONS
-	// 0x401 -> SWITCHES (FPGAIO[1])\\ Input from SWITCHES
-	// 0x402 -> LEDs (FPGAIO[2])	\\ Input from RISC-VCore
-	reg [31:0] FPGAIO [0:2];
-	integer i;
-	initial begin
-		for(i = 0; i < 3; i=i+1)
-			FPGAIO[i] <= 0;
+
+	// Addresses 0x400 - 0x40F	(Word-aligned addresses)
+	blk_mem_gen_protocol PROTOCOLMEM(
+		.clka(core_clk),
+		.wea(4'b0),
+		.addra(exe_data_addr[3:0]),
+		.dina(32'b0),
+		.douta(protocolmem_douta),
+
+		.clkb(con_clk),
+		.web(con_write),
+		.addrb(con_addr[3:0]),
+		.dinb(con_in),
+		.doutb(protocolmem_doutb)
+	);
+
+	// Assigning data_out for the Core
+	assign data_out = core_sel? protocolmem_douta : coremem_douta;
+
+	// Assigning con_out
+	reg protocol_sel_reg;
+	always@(posedge con_clk) begin
+		if(!nrst) protocol_sel_reg <= 0;
+		else protocol_sel_reg <= protocol_sel;
 	end
-
-	// Writes to FPGAIO[1:0] (BTN, SW)
-	always@(posedge clk) begin
-		if(!nrst) begin
-			FPGAIO[1] <= 32'h0;
-			FPGAIO[0] <= 32'h0;
-		end else begin
-			FPGAIO[1] <= {29'h0, SW};
-			FPGAIO[0] <= {28'h0, BTN};
-		end
-	end
-
-	// Reads & Writes to FPGAIO[2] (LEDs)
-	assign LED = FPGAIO[2][3:0];
-	always@(posedge clk) begin
-		if(!nrst)
-			FPGAIO[2] <= 0;
-		else begin
-			if(exe_data_addr == 11'h402) begin
-				case(dm_write)
-					// SW
-					4'b1111: FPGAIO[2] <= data_in;
-
-					// SH
-					4'b0011: FPGAIO[2] <= (FPGAIO[2] & 32'hffff0000) | (data_in & 32'h0000ffff);
-					4'b1100: FPGAIO[2] <= (FPGAIO[2] & 32'h0000ffff) | (data_in & 32'hffff0000);
-
-					// SB
-					4'b0001: FPGAIO[2] <= (FPGAIO[2] & 32'hffffff00) | (data_in & 32'h000000ff);
-					4'b0010: FPGAIO[2] <= (FPGAIO[2] & 32'hffff00ff) | (data_in & 32'h0000ff00);
-					4'b0100: FPGAIO[2] <= (FPGAIO[2] & 32'hff00ffff) | (data_in & 32'h00ff0000);
-					4'b1000: FPGAIO[2] <= (FPGAIO[2] & 32'h00ffffff) | (data_in & 32'hff000000);
-				endcase
-			end
-		end
-	end
-
-	// Assigning data_out
-	always@(*) begin
-		case(mem_data_addr)
-			11'h400: data_out = FPGAIO[0];
-			11'h401: data_out = FPGAIO[1];
-			11'h402: data_out = FPGAIO[2];
-			default: data_out = blk_mem_douta;
-		endcase
-	end
-
-	// For this part:
-	// Datamem that was coded s.t. Vivado generates RTL_RAM for the memory
-	// Asynchronous read
-	/*
-	reg [31:0] memory [0:511];		// Addresses 0x000 to 0x1FF
-	reg [31:0] con_mem [0:511];		// Addresses 0x200 to 0x3FF
-
-	initial begin
-		$readmemh("datamem.mem", memory);
-	end
-
-	// read
-	// Core read
-	assign data_out = (data_addr[9] == 1'h1)? con_mem[data_addr] : memory[data_addr];
-
-	// Protocol controller read
-	assign con_out = (con_addr[9] == 1'h1)? con_mem[con_addr] : memory[con_addr];
-
-	// write
-	always@(posedge clk) begin
-		case(dm_write)
-			// SW
-			4'b1111: memory[data_addr] <= data_in;
-
-			// SH
-			4'b0011: memory[data_addr] <= (memory[data_addr] & 32'hffff0000) | (data_in & 32'h0000ffff);
-			4'b1100: memory[data_addr] <= (memory[data_addr] & 32'h0000ffff) | (data_in & 32'hffff0000);
-
-			// SB
-			4'b0001: memory[data_addr] <= (memory[data_addr] & 32'hffffff00) | (data_in & 32'h000000ff);
-			4'b0010: memory[data_addr] <= (memory[data_addr] & 32'hffff00ff) | (data_in & 32'h0000ff00);
-			4'b0100: memory[data_addr] <= (memory[data_addr] & 32'hff00ffff) | (data_in & 32'h00ff0000);
-			4'b1000: memory[data_addr] <= (memory[data_addr] & 32'h00ffffff) | (data_in & 32'hff000000);
-		endcase
-	end
-
-	always@(posedge clk) begin
-		case(con_write)
-			// SW
-			4'b1111: con_mem[con_addr] <= con_in;
-
-			// SH
-			4'b0011: con_mem[con_addr] <= (con_mem[con_addr] & 32'hffff0000) | (con_in & 32'h0000ffff);
-			4'b1100: con_mem[con_addr] <= (con_mem[con_addr] & 32'h0000ffff) | (con_in & 32'hffff0000);
-
-			// SB
-			4'b0001: con_mem[con_addr] <= (con_mem[con_addr] & 32'hffffff00) | (con_in & 32'h000000ff);
-			4'b0010: con_mem[con_addr] <= (con_mem[con_addr] & 32'hffff00ff) | (con_in & 32'h0000ff00);
-			4'b0100: con_mem[con_addr] <= (con_mem[con_addr] & 32'hff00ffff) | (con_in & 32'h00ff0000);
-			4'b1000: con_mem[con_addr] <= (con_mem[con_addr] & 32'h00ffffff) | (con_in & 32'hff000000);
-		endcase
-	end*/
+	assign con_out = protocol_sel_reg? protocolmem_doutb : coremem_doutb;
 endmodule

@@ -1,48 +1,68 @@
+//-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+// pipereg_id_exe.v -- ID/EXE Pipeline register module
+//-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+// Author: Microlab 198 Pipelined RISC-V Group (2SAY1920)
+//-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+//
+//-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+// Module Name: pipereg_id_exe.v
+// Description:
+//
+// Revisions:
+// Revision 0.01 - File Created
+// Additional Comments:
+// 
+//-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+
+
 `timescale 1ns / 1ps
+`include "constants.vh"
 
 module pipereg_id_exe(
 	input clk,
 	input nrst,
-	input en,
 
 	input flush,
-	input stall,
 
 	// PC +4
-	input [11:0] id_pc4,
-	output reg [11:0] exe_pc4,
+	input [`PC_ADDR_BITS-1:0] id_pc4,
+	output reg [`PC_ADDR_BITS-1:0] exe_pc4,
 
 	// Forwarded opA
-	input [31:0] id_fwdopA,
-	output reg [31:0] exe_fwdopA,
+	input [`WORD_WIDTH-1:0] id_fwdopA,
+	output reg [`WORD_WIDTH-1:0] exe_fwdopA,
 
 	// Forwarded opB
-	input [31:0] id_fwdopB,
-	output reg [31:0] exe_fwdopB,
+	input [`WORD_WIDTH-1:0] id_fwdopB,
+	output reg [`WORD_WIDTH-1:0] exe_fwdopB,
 
-	// 32bit instruction
-	input [31:0] id_inst,
-	output reg [31:0] exe_inst,
+	// Opcode
+	input [6:0] id_opcode,
+	output reg [6:0] exe_opcode,
+
+	// Funct3
+	input [2:0] id_funct3,
+	output reg [2:0] exe_funct3,
 
 	// Computed branch target
-	input [31:0] id_branchtarget,
-	output reg [31:0] exe_branchtarget,
+	input [`WORD_WIDTH-1:0] id_branchtarget,
+	output reg [`WORD_WIDTH-1:0] exe_branchtarget,
 
 	// Forwarded STOREBLOCK input
-	input [31:0] id_fwdstore,
-	output reg [31:0] exe_fwdstore,
+	input [`WORD_WIDTH-1:0] id_fwdstore,
+	output reg [`WORD_WIDTH-1:0] exe_fwdstore,
 
 	// 32-bit Immediate
-	input [31:0] id_imm,
-	output reg [31:0] exe_imm,
+	input [`WORD_WIDTH-1:0] id_imm,
+	output reg [`WORD_WIDTH-1:0] exe_imm,
 
 	// Destination register
 	input [4:0] id_rd,
 	output reg [4:0] exe_rd,
 
 	// PC of current instruction for debugging
-	input [11:0] id_PC,
-	output reg [11:0] exe_PC,
+	input [`PC_ADDR_BITS-1:0] id_PC,
+	output reg [`PC_ADDR_BITS-1:0] exe_PC,
 
 	// Control signals
 	input [3:0] id_ALU_op,
@@ -101,7 +121,8 @@ module pipereg_id_exe(
 		exe_pc4 <= 0;
 		exe_fwdopA <= 0;
 		exe_fwdopB <= 0;
-		exe_inst <= 0;
+		exe_opcode <= 0;
+		exe_funct3 <= 0;
 		exe_branchtarget <= 0;
 		exe_fwdstore <= 0;
 		exe_imm <= 0;
@@ -133,7 +154,8 @@ module pipereg_id_exe(
 			exe_pc4 <= 0;
 			exe_fwdopA <= 0;
 			exe_fwdopB <= 0;
-			exe_inst <= 0;
+			exe_opcode <= 0;
+			exe_funct3 <= 0;
 			exe_branchtarget <= 0;
 			exe_fwdstore <= 0;
 			exe_imm <= 0;
@@ -161,38 +183,37 @@ module pipereg_id_exe(
 			exe_rs1 <= 5'd0;
 			exe_rs2 <= 5'd0;
 		end else begin
-			if(en && !stall) begin
-				exe_pc4 <= id_pc4;
-				exe_fwdopA <= id_fwdopA;
-				exe_fwdopB <= id_fwdopB;
-				exe_inst <= id_inst;
-				exe_branchtarget <= id_branchtarget;
-				exe_fwdstore <= id_fwdstore;
-				exe_imm <= id_imm;
-				exe_rd <= id_rd;
-				exe_PC <= id_PC;
+			exe_pc4 <= id_pc4;
+			exe_fwdopA <= id_fwdopA;
+			exe_fwdopB <= id_fwdopB;
+			exe_opcode <= id_opcode;
+			exe_funct3 <= id_funct3;
+			exe_branchtarget <= id_branchtarget;
+			exe_fwdstore <= id_fwdstore;
+			exe_imm <= id_imm;
+			exe_rd <= id_rd;
+			exe_PC <= id_PC;
 
-				// Control signals
-				exe_ALU_op <= id_ALU_op;
+			// Control signals
+			exe_ALU_op <= id_ALU_op;
 
-				exe_c_btype <= id_c_btype;
-				exe_sel_opBR <= id_sel_opBR;
+			exe_c_btype <= id_c_btype;
+			exe_sel_opBR <= id_sel_opBR;
 
-				exe_div_valid <= id_div_valid;
-				exe_div_op <= id_div_op;
-				// exe_sel_opA <= id_sel_opA;
-				// exe_sel_opB <= id_sel_opB;
-				exe_is_stype <= id_is_stype;
-				exe_wr_en <= id_wr_en;
-				exe_dm_select <= id_dm_select;
-				exe_sel_data <= id_sel_data;
-				exe_store_select <= id_store_select;
-				exe_comp_use_A <= id_comp_use_A;
-				exe_comp_use_B <= id_comp_use_B;
-				exe_is_comp <= id_is_comp;
-				exe_rs1 <= id_rs1;
-				exe_rs2 <= id_rs2;
-			end
+			exe_div_valid <= id_div_valid;
+			exe_div_op <= id_div_op;
+			// exe_sel_opA <= id_sel_opA;
+			// exe_sel_opB <= id_sel_opB;
+			exe_is_stype <= id_is_stype;
+			exe_wr_en <= id_wr_en;
+			exe_dm_select <= id_dm_select;
+			exe_sel_data <= id_sel_data;
+			exe_store_select <= id_store_select;
+			exe_comp_use_A <= id_comp_use_A;
+			exe_comp_use_B <= id_comp_use_B;
+			exe_is_comp <= id_is_comp;
+			exe_rs1 <= id_rs1;
+			exe_rs2 <= id_rs2;
 		end
 	end
 

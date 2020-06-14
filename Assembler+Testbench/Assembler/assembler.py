@@ -303,7 +303,7 @@ def process_inst(inst, labels, inst_address):
 def assemble(instructions, labels, instmem):
     out_buffer = ''
     try:
-        logs = open("assembler.log", "w")
+        logs = open(filename.split('.')[0]+'.log', "w")
     except:
         print("Failed to create file")
 
@@ -489,7 +489,7 @@ def assemble(instructions, labels, instmem):
 '''
 def convert_file(line_list):
     # Create base instructions file
-    basename = args.input_file.split('.')[0] + '_base.asm'
+    basename = args.input_file.split('.')[0] + '_base.s'
     try:
         base_file = open(basename, "w")
     except:
@@ -553,12 +553,12 @@ convert_file(line_list)
 save_file = args.output_file
 try:
     instmem = open(save_file, "w")
-    instmem.write("memory_initialization_radix=16;\nmemory_initialization_vector=\n")
+    # instmem.write("memory_initialization_radix=16;\nmemory_initialization_vector=\n")
 except:
     print("Failed to create file")
 # Convert to machine code
 assemble(instructions, labels, instmem)
-instmem.write(";")
+# instmem.write(";")
 instmem.close()
 print('Saved to ' + save_file)
 

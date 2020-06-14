@@ -10,11 +10,12 @@
 //			The divider modules are generated through Vivado's IP Catalog
 //			using the Divider Generator IP module. Both dividers use Radix2
 //			since it naturally generates integer remainders (which is needed for REM[U]).
-//			Both modules are generated with 32-bit Divisor & dividend widths,
-//			detect divide-by-zero enabled, Clocks per division set to 8, Flow control
-//			set to Blocking, ACLKEN and ARESETN enabled. One divider is generated
+//			Both modules are generated with 32-bit Divisor & dividend widths, remainder type set to Remainder,
+//			detect divide-by-zero disabled, Clocks per division set to 8, Flow control
+//			set to Blocking, optimize goal set to Performance, ACLKEN and ARESETN enabled. One divider is generated
 //	 		signed, while the other is unsigned.
 //			The pipeline will stall until the operation is completed.
+//			Latency is around 40-45 cycles.
 // Revision:
 // Revision 0.01 - File Created
 // Additional Comments:
@@ -30,8 +31,10 @@ module divider_unit(
 	input [31:0] opA,
 	input [31:0] opB,
 
-	input div_valid,
-	input [1:0] div_op,
+	input id_div_valid,
+	input id_div_op_0,
+	input exe_div_valid,
+	input [1:0] exe_div_op,
 
 	output reg div_running,
 	output reg [31:0] DIVout
@@ -43,7 +46,7 @@ module divider_unit(
 	parameter REMU = 2'd3;
 
 	// For determining the status of the operation, a finite state machine (FSM)
-	// will be implemented. Here is a description of what occurs during each state:
+	// is implemented. Here is a description of what occurs during each state:
 	//
 	// RESET		-- Do nothing. This state is entered one cycle after DONE or after a user reset.
 	//					Next state is WAIT.
@@ -88,19 +91,26 @@ module divider_unit(
 	wire [63:0] div_unsigned_out_tdata;
 	wire div_unsigned_out_tvalid;
 
+	// Special Cases
+	wire div_by_zero = (opB == 32'b0);		// division by zero
+	wire div_signed_overflow = (opA == 32'h0x8000000) && (opB == 32'hFFFFFFFF);	// -2^31/-1 causes an overflow
+	wire div_normal_case = !(div_by_zero || div_signed_overflow);
+
 	// Assigning tvalid inputs
 	// assert tvalid for one divider module only (depending if the operation is signed/unsigned)	
 	// Note: the tvalid inputs are ANDed w/ div_state == WAIT because
 	// we want them to be asserted for only one clock cycle during WAIT.
-	// (We want them to be asserted by the next cycle (starting at state DIVIDING))
-	assign div_signed_input_tvalid = div_valid & (div_op == DIV || div_op == REM) & (div_state == WAIT) & !load_hazard;
-	assign div_unsigned_input_tvalid = div_valid & (div_op == DIVU || div_op == REMU) & (div_state == WAIT) & !load_hazard;
+	// (put another way, we want them to be asserted by the next cycle (starting at state DIVIDING))
+	assign div_signed_input_tvalid = exe_div_valid & ~exe_div_op[0] & (div_state == WAIT) & ~load_hazard;
+	assign div_unsigned_input_tvalid = exe_div_valid & exe_div_op[0] & (div_state == WAIT) & ~load_hazard;
 
 	// Instantiating Divider generator modules
 	// NOTE: aresetn should be active for at least 2 cycles.
+	wire divrem_clken = (~id_div_op_0 & id_div_valid) | (~exe_div_op[0] & exe_div_valid);
+	wire divuremu_clken = (id_div_op_0 & id_div_valid) | (exe_div_op[0] & exe_div_valid);
 	div_gen_signed DIVREM(
 		.aclk(CLK),
-		.aclken(1'b1),
+		.aclken(divrem_clken),
 		.aresetn(nrst),
 		
 		.s_axis_dividend_tdata(opA),
@@ -117,7 +127,7 @@ module divider_unit(
 
 	div_gen_unsigned DIVUREMU(
 		.aclk(CLK),
-		.aclken(1'b1),
+		.aclken(divuremu_clken),
 		.aresetn(nrst),
 		
 		.s_axis_dividend_tdata(opA),
@@ -154,7 +164,7 @@ module divider_unit(
 		case(div_state)
 			RESET: div_nstate = WAIT;
 			WAIT: begin
-				if(div_valid && !load_hazard)
+				if(exe_div_valid && !load_hazard)
 					div_nstate = DIVIDING;
 				else
 					div_nstate = WAIT;
@@ -180,7 +190,7 @@ module divider_unit(
 	always@(*) begin
 		case(div_state)
 			RESET: div_running = 0;
-			WAIT: div_running = (div_valid && !load_hazard)? 1'b1 : 1'b0;
+			WAIT: div_running = (exe_div_valid && !load_hazard)? 1'b1 : 1'b0;
 			DIVIDING: div_running = 1'b1;
 			DONE: div_running = 1'b0;
 		endcase
@@ -196,12 +206,12 @@ module divider_unit(
 		if(!nrst)
 			DIVout <= 0;
 		else begin
-			if(div_state == DIVIDING && (div_unsigned_out_tvalid || div_signed_out_tvalid))
-				case(div_op)
-					DIV: DIVout <= div_signed_out_tdata[63:32];
-					REM: DIVout <= div_signed_out_tdata[31:0];
-					DIVU: DIVout <= div_unsigned_out_tdata[63:32];
-					REMU: DIVout <= div_unsigned_out_tdata[31:0];
+			if (div_state == DIVIDING && (div_unsigned_out_tvalid || div_signed_out_tvalid))
+				case(exe_div_op)
+					DIV: DIVout <= div_normal_case ? div_signed_out_tdata[63:32] : 32'hFFFFFFFF;
+					REM: DIVout <= div_normal_case ? div_signed_out_tdata[31:0] : (div_by_zero ? opA : 32'd0);
+					DIVU: DIVout <= !div_by_zero ? div_unsigned_out_tdata[63:32] : 32'hFFFFFFFF;
+					REMU: DIVout <= !div_by_zero ? div_unsigned_out_tdata[31:0] : opA;
 				endcase
 		end
 	end

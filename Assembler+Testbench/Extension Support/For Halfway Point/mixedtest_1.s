@@ -3,23 +3,23 @@
 
 
 
-# .data 0x0
-#         .word 0x10       # 0
-#         .word 0x19
-#         .word 0x17
-#         .word 0x71
-#         .word 0x6b
-#         .word 0x1a4     # 20
-#         .word 0xc5
-#         .word 0xc350
-#         .word 0xe0cc08
-#         .word 0xa455    # 36
-#         .word 0x1a5
-#         .word 0xeffec750 # 44
+.data 0x0
+        .word 0x10       # 0
+        .word 0x19
+        .word 0x17
+        .word 0x71
+        .word 0x6b
+        .word 0x1a4     # 20
+        .word 0xc5
+        .word 0xc350
+        .word 0xe0cc08
+        .word 0xa455    # 36
+        .word 0x1a5
+        .word 0xeffec750 # 44
 
 
 
-# .text
+.text
         addi x1, x0, 0
         addi x2, x0, 0
         addi x3, x0, 0
@@ -134,7 +134,7 @@
 
         addi x14, x0, 36
         c.lw x8, 0(x14)
-        c.sw x8, 36(x12)
+        c.sw x8, 28(x12)
 
         # c.lwsp
         c.lwsp x8, 4
@@ -148,19 +148,19 @@
         addi x13, x0, 0
         # c.lui
         c.lui x9, 0xe
-        c.sw x9, 68(x13)
+        c.sw x9, 20(x13)
 
-        c.lui x10, 0x3a
-        c.sw x10, 69(x13)
+        c.lui x10, 0x1a
+        c.sw x10, 24(x13)
 
         # c.li
         c.li x11, 0xa
-        c.sw x11, 70(x13)
+        c.sw x11, 28(x13)
        
         slt x14, x11, x10
        
         c.li x12, 0x1d
-        c.sw x12, 71(x13)
+        c.sw x12, 30(x13)
 
         # STORES (included in the tests above ^)
         # sw
@@ -812,8 +812,9 @@
         final:
         # c.jalr 
         c.jalr x16
+        c.nop
         sw x1, 840(x29) 
-
+        sw x0, 840(x29) 
         sw x30, 844(x29)
 
         addi x2, x0, 0
@@ -838,25 +839,6 @@
         c.nop
         nop
 
-
-         lui x21, 0xade1b
-        addi x21, x21, 0x055
-        addi x22, x0, 0x3ff
-        slli x22, x22, 2
-        sw x21, 0(x22)
-        sw x0, 0(x22)
-
-        lui x21, 0xade1b
-        addi x21, x21, 0x055
-        addi x22, x0, 0x3ff
-        slli x22, x22, 2
-        sw x21, 0(x22)
-        sw x0, 0(x22)
-
         # infinite loop
         inf:
         jal x0, inf
-
-
-
-       

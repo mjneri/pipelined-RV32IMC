@@ -23,12 +23,12 @@ finally:
 filename = args.input_file.split('.')[0]
 
 # Generating Command strings
-rars_path = ""
-text_command = 'python3 "../Assembler+Testbench/Assembler/assembler.py" ' + args.input_file + ' ' + filename + '.coe ' + '-comp_buffer True'
-data_command = 'java -jar ' + rars_path + 'rars1_4.jar a mc CompactDataAtZero dump .data HexText \"' + filename + '_data.mem\" \"' + filename+'_base.asm'+'"'
-ans_command = 'java -jar ' + rars_path + 'rars1_4.jar 1000 mc CompactDataAtZero dump .data HexText \"' + 'answerkey.mem\"  \"' + filename+'_base.asm' + '"'
+rars_path = "../Assembler+Testbench/Assembler/"
+text_command = 'python3 "../Assembler+Testbench/Assembler/assembler.py" ' + args.input_file + ' ' + filename + '.mem ' + '-comp_buffer True'
+data_command = 'java -jar ' + rars_path + 'rars1_4.jar a mc CompactDataAtZero dump .data HexText \"' + filename + '_data.mem\" \"' + filename+'_base.s'+'"'
+ans_command = 'java -jar ' + rars_path + 'rars1_4.jar 1000 mc CompactDataAtZero dump .data HexText \"' + 'answerkey.mem\"  \"' + filename+'_base.s' + '"'
 
-print('\u001b[44m----------------------------------------------------------------------------------------------------\u001b[0m')
+print('\u001b[42m----------------------------------------------------------------------------------------------------\u001b[0m')
 # print('cmd /c "java -jar C:\\Users\\MJ\\Documents\\RARS\\rars1_4.jar a d mc CompactDataAtZero dump .text HexText \"'+filename+' text.dmp\" '+args.file+'"')
 print("Generating text dump...")
 print(text_command + '\n')
@@ -40,7 +40,7 @@ os.system(data_command)
 print('\u001b[44m----------------------------------------------------------------------------------------------------\u001b[0m')
 print("Generating answer key...")
 os.system(ans_command)
-print('\u001b[44m----------------------------------------------------------------------------------------------------\u001b[0m')
+print('\u001b[41m----------------------------------------------------------------------------------------------------\u001b[0m')
 #print("Generating halfword instructions...")
 #os.system('cmd /c "py "C:\\Users\\Emman\\Documents\\halfword_gen.py" \"' +filename+' text.dmp\""')
 # print('py "C:\\Users\\MJ\\Documents\\UP Diliman\\5th Year\\2nd Sem\\CoE 198\\pipelined-RV32IMC\\Assembler+Testbench\\Assembler\\halfword_gen.py" \"'+filename+' text.dmp\" '+args.file+'')

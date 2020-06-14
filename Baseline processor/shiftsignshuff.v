@@ -1,16 +1,27 @@
+//-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+// shiftsignshuff.v -- Immediate generator module
+//-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+// Author: Microlab 198 Pipelined RISC-V Group (2SAY1920)
+//-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+//
+//-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+// Module Name: shiftsignshuff.v
+// Description: For RISC-V, immediates are always sign-extended.
+// 				Encoding types:
+// 					R: no immediates; used for arithmetic instructions
+// 					I: 12bit immediate, not shifted, used for addi, slli, srli, srai, etc.
+// 					S: 12bit immediate, not shifted, used for sw, sh, sb
+// 					U: 20bit immediate, shifted left 12 bits, padded with 0's, used for AUIPC and LUI
+// 					B: 12bit immediate, shifted left 1 bit, jumbled, used for branch instructions
+// 					J: 20bit immediate, shifted left 1 bit, jumbled, used for JAL only
+//
+// Revisions:
+// Revision 0.01 - File Created
+// Additional Comments:
+// 
+//-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
+
 `timescale 1ns / 1ps
-
-/*
-For RISC-V, immediates are always sign-extended.
-
-Encoding types:
-	R: no immediates; used for arithmetic instructions
-	I: 12bit immediate, not shifted, used for addi, slli, srli, srai, etc.
-	S: 12bit immediate, not shifted, used for sw, sh, sb
-	U: 20bit immediate, shifted left 12 bits, padded with 0's, used for AUIPC and LUI
-	B: 12bit immediate, shifted left 1 bit, jumbled, used for branch instructions
-	J: 20bit immediate, shifted left 1 bit, jumbled, used for JAL only
-*/
 
 module shiftsignshuff(
 	// Control signal
@@ -45,7 +56,6 @@ module shiftsignshuff(
 	assign Btype_imm = { {19{inst[24]}}, inst[24], inst[0], inst[23:18], inst[4:1], 1'h0 };
 	assign Jtype_imm = { {11{inst[24]}}, inst[24], inst[12:5], inst[13], inst[23:14], 1'h0 };
 
-	// Try coding output as assign = w? x:y; later
 	always@(*) begin
 		case(imm_select)
 			STYPE: imm = Stype_imm;

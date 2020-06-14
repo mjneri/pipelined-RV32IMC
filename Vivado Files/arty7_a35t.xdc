@@ -7,31 +7,26 @@
 # Clock signal
 
 set_property -dict {PACKAGE_PIN E3 IOSTANDARD LVCMOS33} [get_ports CLK100MHZ]
-#create_clock -period 10.000 -name sys_clk -waveform {0.000 5.000} -add [get_ports CLK100MHZ]
-
-set_input_delay -clock [get_clocks -of_objects [get_pins CLKIP/inst/plle2_adv_inst/CLKOUT0] -filter {IS_GENERATED && MASTER_CLOCK == CLK100MHZ}] -add_delay 2.000 [get_ports nrst]
-set_output_delay -clock [get_clocks -of_objects [get_pins CLKIP/inst/plle2_adv_inst/CLKOUT0] -filter {IS_GENERATED && MASTER_CLOCK == CLK100MHZ}] -add_delay 2.000 [get_ports -filter { NAME =~  "*" && DIRECTION == "OUT" }]
-
-create_clock -period 20.000 -name VIRTUAL_clk_out1_clk_wiz_0_1 -waveform {0.000 10.000}
-set_input_delay -clock [get_clocks VIRTUAL_clk_out1_clk_wiz_0_1] -min -add_delay 2.000 [get_ports nrst]
-set_input_delay -clock [get_clocks VIRTUAL_clk_out1_clk_wiz_0_1] -max -add_delay 4.000 [get_ports nrst]
-set_output_delay -clock [get_clocks VIRTUAL_clk_out1_clk_wiz_0_1] -min -add_delay 2.000 [get_ports UART_TX]
-set_output_delay -clock [get_clocks VIRTUAL_clk_out1_clk_wiz_0_1] -max -add_delay 2.000 [get_ports UART_TX]
-#set_clock_groups -physically_exclusive -group [get_clocks -include_generated_clocks CLK100MHZ] -group [get_clocks -include_generated_clocks sys_clk]
-#set_clock_groups -physically_exclusive -group [get_clocks -include_generated_clocks clkfbout_clk_wiz_0] -group [get_clocks -include_generated_clocks clkfbout_clk_wiz_0_1]
-#set_clock_groups -physically_exclusive -group [get_clocks -include_generated_clocks clk_out1_clk_wiz_0] -group [get_clocks -include_generated_clocks clk_out1_clk_wiz_0_1]
 
 ##ChipKit Digital I/O Low
 
-#set_property -dict { PACKAGE_PIN V15   IOSTANDARD LVCMOS33 } [get_ports { ck_io[0] }]; #IO_L16P_T2_CSI_B_14 Sch=ck_io[0]
-#set_property -dict { PACKAGE_PIN U16   IOSTANDARD LVCMOS33 } [get_ports { ck_io[1] }]; #IO_L18P_T2_A12_D28_14 Sch=ck_io[1]
-#set_property -dict { PACKAGE_PIN P14   IOSTANDARD LVCMOS33 } [get_ports { ck_io[2] }]; #IO_L8N_T1_D12_14 Sch=ck_io[2]
-#set_property -dict { PACKAGE_PIN T11   IOSTANDARD LVCMOS33 } [get_ports { ck_io[3] }]; #IO_L19P_T3_A10_D26_14 Sch=ck_io[3]
-#set_property -dict { PACKAGE_PIN R12   IOSTANDARD LVCMOS33 } [get_ports { ck_io[4] }]; #IO_L5P_T0_D06_14 Sch=ck_io[4]
-#set_property -dict { PACKAGE_PIN T14   IOSTANDARD LVCMOS33 } [get_ports { ck_io[5] }]; #IO_L14P_T2_SRCC_14 Sch=ck_io[5]
-#set_property -dict { PACKAGE_PIN T15   IOSTANDARD LVCMOS33 } [get_ports { ck_io[6] }]; #IO_L14N_T2_SRCC_14 Sch=ck_io[6]
-#set_property -dict { PACKAGE_PIN T16   IOSTANDARD LVCMOS33 } [get_ports { ck_io[7] }]; #IO_L15N_T2_DQS_DOUT_CSO_B_14 Sch=ck_io[7]
-#set_property -dict { PACKAGE_PIN N15   IOSTANDARD LVCMOS33 } [get_ports { ck_io[8] }]; #IO_L11P_T1_SRCC_14 Sch=ck_io[8]
+set_property -dict {PACKAGE_PIN V15 IOSTANDARD LVCMOS33} [get_ports ck_io0]
+set_property -dict {PACKAGE_PIN U16 IOSTANDARD LVCMOS33} [get_ports ck_io1]
+set_property -dict {PACKAGE_PIN P14 IOSTANDARD LVCMOS33} [get_ports ck_io2]
+set_property -dict {PACKAGE_PIN T11 IOSTANDARD LVCMOS33} [get_ports ck_io3]
+set_property -dict {PACKAGE_PIN R12 IOSTANDARD LVCMOS33} [get_ports ck_io4]
+set_property -dict {PACKAGE_PIN T14 IOSTANDARD LVCMOS33} [get_ports ck_io5]
+set_property -dict {PACKAGE_PIN T15 IOSTANDARD LVCMOS33} [get_ports ck_io6]
+set_property -dict {PACKAGE_PIN T16 IOSTANDARD LVCMOS33} [get_ports ck_io7]
+set_property -dict {PACKAGE_PIN N15 IOSTANDARD LVCMOS33} [get_ports ck_io8]
+set_property -dict {PACKAGE_PIN T18 IOSTANDARD LVCMOS33} [get_ports ck_io38]
+set_property -dict {PACKAGE_PIN R18 IOSTANDARD LVCMOS33} [get_ports ck_io39]
+
+# USB-UART Interface (can be used instead of ckio7 & ckio8)
+
+# set_property -dict {PACKAGE_PIN D10 IOSTANDARD LVCMOS33} [get_ports ck_io7]
+# set_property -dict {PACKAGE_PIN  A9 IOSTANDARD LVCMOS33} [get_ports ck_io8]; #IO_L14N_T2_SRCC_16 Sch=uart_txd_in
+
 #set_property -dict { PACKAGE_PIN M16   IOSTANDARD LVCMOS33 } [get_ports { ck_io[9] }]; #IO_L10P_T1_D14_14 Sch=ck_io[9]
 #set_property -dict { PACKAGE_PIN V17   IOSTANDARD LVCMOS33 } [get_ports { ck_io[10] }]; #IO_L18N_T2_A11_D27_14 Sch=ck_io[10]
 #set_property -dict { PACKAGE_PIN U18   IOSTANDARD LVCMOS33 } [get_ports { ck_io[11] }]; #IO_L17N_T2_A13_D29_14 Sch=ck_io[11]
@@ -52,17 +47,15 @@ set_output_delay -clock [get_clocks VIRTUAL_clk_out1_clk_wiz_0_1] -max -add_dela
 #set_property -dict { PACKAGE_PIN N16   IOSTANDARD LVCMOS33 } [get_ports { ck_io[35] }]; #IO_L11N_T1_SRCC_14 Sch=ck_io[35]
 #set_property -dict { PACKAGE_PIN N14   IOSTANDARD LVCMOS33 } [get_ports { ck_io[36] }]; #IO_L8P_T1_D11_14 Sch=ck_io[36]
 #set_property -dict { PACKAGE_PIN U17   IOSTANDARD LVCMOS33 } [get_ports { ck_io[37] }]; #IO_L17P_T2_A14_D30_14 Sch=ck_io[37]
-#set_property -dict { PACKAGE_PIN T18   IOSTANDARD LVCMOS33 } [get_ports { ck_io[38] }]; #IO_L7N_T1_D10_14 Sch=ck_io[38]
-#set_property -dict { PACKAGE_PIN R18   IOSTANDARD LVCMOS33 } [get_ports { ck_io[39] }]; #IO_L7P_T1_D09_14 Sch=ck_io[39]
 #set_property -dict { PACKAGE_PIN P18   IOSTANDARD LVCMOS33 } [get_ports { ck_io[40] }]; #IO_L9N_T1_DQS_D13_14 Sch=ck_io[40]
 #set_property -dict { PACKAGE_PIN N17   IOSTANDARD LVCMOS33 } [get_ports { ck_io[41] }]; #IO_L9P_T1_DQS_14 Sch=ck_io[41]
 
 #Switches
 
 set_property -dict {PACKAGE_PIN A8 IOSTANDARD LVCMOS33} [get_ports nrst]
-set_property -dict { PACKAGE_PIN C11   IOSTANDARD LVCMOS33 } [get_ports { SW[0] }]; #IO_L13P_T2_MRCC_16 Sch=sw[1]
-set_property -dict { PACKAGE_PIN C10   IOSTANDARD LVCMOS33 } [get_ports { SW[1] }]; #IO_L13N_T2_MRCC_16 Sch=sw[2]
-set_property -dict { PACKAGE_PIN A10   IOSTANDARD LVCMOS33 } [get_ports { SW[2] }]; #IO_L14P_T2_SRCC_16 Sch=sw[3]
+# set_property -dict {PACKAGE_PIN C11 IOSTANDARD LVCMOS33} [get_ports {SW[0]}]
+# set_property -dict {PACKAGE_PIN C10 IOSTANDARD LVCMOS33} [get_ports {SW[1]}]
+# set_property -dict {PACKAGE_PIN A10 IOSTANDARD LVCMOS33} [get_ports {SW[2]}]
 
 
 # LEDs
@@ -80,18 +73,18 @@ set_property -dict { PACKAGE_PIN A10   IOSTANDARD LVCMOS33 } [get_ports { SW[2] 
 #set_property -dict { PACKAGE_PIN H6    IOSTANDARD LVCMOS33 } [get_ports { RGB3_Green }]; #IO_L24P_T3_35 Sch=led3_g
 #set_property -dict { PACKAGE_PIN K1    IOSTANDARD LVCMOS33 } [get_ports { RGB3_Red }]; #IO_L23N_T3_35 Sch=led3_r
 
-set_property -dict { PACKAGE_PIN H5    IOSTANDARD LVCMOS33 } [get_ports { LED[0] }]; #IO_L24N_T3_35 Sch=led[4]
-set_property -dict { PACKAGE_PIN J5    IOSTANDARD LVCMOS33 } [get_ports { LED[1] }]; #IO_25_35 Sch=led[5]
-set_property -dict { PACKAGE_PIN T9    IOSTANDARD LVCMOS33 } [get_ports { LED[2] }]; #IO_L24P_T3_A01_D17_14 Sch=led[6]
-set_property -dict { PACKAGE_PIN T10   IOSTANDARD LVCMOS33 } [get_ports { LED[3] }]; #IO_L24N_T3_A00_D16_14 Sch=led[7]
+# set_property -dict {PACKAGE_PIN H5 IOSTANDARD LVCMOS33} [get_ports {LED[0]}]
+# set_property -dict {PACKAGE_PIN J5 IOSTANDARD LVCMOS33} [get_ports {LED[1]}]
+# set_property -dict {PACKAGE_PIN T9 IOSTANDARD LVCMOS33} [get_ports {LED[2]}]
+# set_property -dict {PACKAGE_PIN T10 IOSTANDARD LVCMOS33} [get_ports {LED[3]}]
 
 
 #Buttons
 
-set_property -dict { PACKAGE_PIN D9    IOSTANDARD LVCMOS33 } [get_ports { BTN[0] }]; #IO_L6N_T0_VREF_16 Sch=btn[0]
-set_property -dict { PACKAGE_PIN C9    IOSTANDARD LVCMOS33 } [get_ports { BTN[1] }]; #IO_L11P_T1_SRCC_16 Sch=btn[1]
-set_property -dict { PACKAGE_PIN B9    IOSTANDARD LVCMOS33 } [get_ports { BTN[2] }]; #IO_L11N_T1_SRCC_16 Sch=btn[2]
-set_property -dict { PACKAGE_PIN B8    IOSTANDARD LVCMOS33 } [get_ports { BTN[3] }]; #IO_L12P_T1_MRCC_16 Sch=btn[3]
+# set_property -dict {PACKAGE_PIN D9 IOSTANDARD LVCMOS33} [get_ports {BTN[0]}]
+# set_property -dict {PACKAGE_PIN C9 IOSTANDARD LVCMOS33} [get_ports {BTN[1]}]
+# set_property -dict {PACKAGE_PIN B9 IOSTANDARD LVCMOS33} [get_ports {BTN[2]}]
+# set_property -dict {PACKAGE_PIN B8 IOSTANDARD LVCMOS33} [get_ports {BTN[3]}]
 
 
 ##Pmod Headers
@@ -143,12 +136,6 @@ set_property -dict { PACKAGE_PIN B8    IOSTANDARD LVCMOS33 } [get_ports { BTN[3]
 #set_property -dict { PACKAGE_PIN D2    IOSTANDARD LVCMOS33 } [get_ports { jd[8] }]; #IO_L14N_T2_SRCC_35 Sch=jd[8]
 #set_property -dict { PACKAGE_PIN H2    IOSTANDARD LVCMOS33 } [get_ports { jd[9] }]; #IO_L15P_T2_DQS_35 Sch=jd[9]
 #set_property -dict { PACKAGE_PIN G2    IOSTANDARD LVCMOS33 } [get_ports { jd[10] }]; #IO_L15N_T2_DQS_35 Sch=jd[10]
-
-
-#USB-UART Interface
-
-set_property -dict {PACKAGE_PIN D10 IOSTANDARD LVCMOS33} [get_ports UART_TX]; #IO_L19N_T3_VREF_16 Sch=uart_rxd_out
-#set_property -dict { PACKAGE_PIN A9    IOSTANDARD LVCMOS33 } [get_ports { UART_TXD }]; #IO_L14N_T2_SRCC_16 Sch=uart_txd_in
 
 
 ##ChipKit Signals
@@ -255,3 +242,133 @@ set_property -dict {PACKAGE_PIN D10 IOSTANDARD LVCMOS33} [get_ports UART_TX]; #I
 #set_property -dict { PACKAGE_PIN F13   IOSTANDARD LVCMOS33 } [get_ports { sns5v_p[0] }]; #IO_L5P_T0_AD9P_15 Sch=sns5v_p[0]
 #set_property -dict { PACKAGE_PIN C12   IOSTANDARD LVCMOS33 } [get_ports { vsns5v[0] }]; #IO_L3P_T0_DQS_AD1P_15 Sch=vsns5v[0]
 #set_property -dict { PACKAGE_PIN B16   IOSTANDARD LVCMOS33 } [get_ports { vsnsvu }]; #IO_L7P_T1_AD2P_15 Sch=vsnsvu
+
+# Timing constraints
+
+# create_clock -period 80.000 -name VIRTUAL_PROTOCOL_CON/SPI1/e_clk -waveform {0.000 40.000}
+# create_clock -period 20.000 -name VIRTUAL_CLKIP_OUT -waveform {0.000 10.000}
+
+create_generated_clock -name CLKIP_OUT -source [get_ports CLK100MHZ] -divide_by 2 -add -master_clock CLK100MHZ [get_pins CLKIP/inst/mmcm_adv_inst/CLKOUT0]
+create_generated_clock -name PROTOCOL_CON/SPI1/e_clk -source [get_pins CLKIP/inst/mmcm_adv_inst/CLKOUT0] -divide_by 4 -add -master_clock CLKIP_OUT [get_pins PROTOCOL_CON/SPI1/e_clk_reg/Q]
+
+create_clock -period 80.000 -name VIRTUAL_PROTOCOL_CON/SPI1/e_clk -waveform {0.000 40.000}
+set_input_delay -clock [get_clocks PROTOCOL_CON/SPI1/e_clk] -clock_fall -min -add_delay 1.000 [get_ports ck_io1]
+set_input_delay -clock [get_clocks PROTOCOL_CON/SPI1/e_clk] -clock_fall -max -add_delay 2.000 [get_ports ck_io1]
+set_input_delay -clock [get_clocks PROTOCOL_CON/SPI1/e_clk] -min -add_delay 1.000 [get_ports ck_io1]
+set_input_delay -clock [get_clocks PROTOCOL_CON/SPI1/e_clk] -max -add_delay 2.000 [get_ports ck_io1]
+set_input_delay -clock [get_clocks CLKIP_OUT] -min -add_delay 1.000 [get_ports ck_io38]
+set_input_delay -clock [get_clocks CLKIP_OUT] -max -add_delay 2.000 [get_ports ck_io38]
+set_input_delay -clock [get_clocks CLKIP_OUT] -min -add_delay 1.000 [get_ports ck_io39]
+set_input_delay -clock [get_clocks CLKIP_OUT] -max -add_delay 2.000 [get_ports ck_io39]
+set_input_delay -clock [get_clocks CLKIP_OUT] -min -add_delay 1.000 [get_ports ck_io8]
+set_input_delay -clock [get_clocks CLKIP_OUT] -max -add_delay 2.000 [get_ports ck_io8]
+set_input_delay -clock [get_clocks CLKIP_OUT] -min -add_delay 1.000 [get_ports nrst]
+set_input_delay -clock [get_clocks CLKIP_OUT] -max -add_delay 2.000 [get_ports nrst]
+set_output_delay -clock [get_clocks PROTOCOL_CON/SPI1/e_clk] -clock_fall -min -add_delay 0.500 [get_ports ck_io0]
+set_output_delay -clock [get_clocks PROTOCOL_CON/SPI1/e_clk] -clock_fall -max -add_delay 2.000 [get_ports ck_io0]
+set_output_delay -clock [get_clocks PROTOCOL_CON/SPI1/e_clk] -min -add_delay 0.500 [get_ports ck_io0]
+set_output_delay -clock [get_clocks PROTOCOL_CON/SPI1/e_clk] -max -add_delay 2.000 [get_ports ck_io0]
+set_output_delay -clock [get_clocks PROTOCOL_CON/SPI1/e_clk] -clock_fall -min -add_delay 0.500 [get_ports ck_io2]
+set_output_delay -clock [get_clocks PROTOCOL_CON/SPI1/e_clk] -clock_fall -max -add_delay 2.000 [get_ports ck_io2]
+set_output_delay -clock [get_clocks PROTOCOL_CON/SPI1/e_clk] -min -add_delay 0.500 [get_ports ck_io2]
+set_output_delay -clock [get_clocks PROTOCOL_CON/SPI1/e_clk] -max -add_delay 2.000 [get_ports ck_io2]
+set_output_delay -clock [get_clocks PROTOCOL_CON/SPI1/e_clk] -clock_fall -min -add_delay 0.500 [get_ports ck_io3]
+set_output_delay -clock [get_clocks PROTOCOL_CON/SPI1/e_clk] -clock_fall -max -add_delay 2.000 [get_ports ck_io3]
+set_output_delay -clock [get_clocks PROTOCOL_CON/SPI1/e_clk] -min -add_delay 0.500 [get_ports ck_io3]
+set_output_delay -clock [get_clocks PROTOCOL_CON/SPI1/e_clk] -max -add_delay 2.000 [get_ports ck_io3]
+set_output_delay -clock [get_clocks CLKIP_OUT] -min -add_delay 0.500 [get_ports ck_io38]
+set_output_delay -clock [get_clocks CLKIP_OUT] -max -add_delay 2.000 [get_ports ck_io38]
+set_output_delay -clock [get_clocks CLKIP_OUT] -min -add_delay 0.500 [get_ports ck_io39]
+set_output_delay -clock [get_clocks CLKIP_OUT] -max -add_delay 2.000 [get_ports ck_io39]
+set_output_delay -clock [get_clocks PROTOCOL_CON/SPI1/e_clk] -clock_fall -min -add_delay 0.500 [get_ports ck_io4]
+set_output_delay -clock [get_clocks PROTOCOL_CON/SPI1/e_clk] -clock_fall -max -add_delay 2.000 [get_ports ck_io4]
+set_output_delay -clock [get_clocks PROTOCOL_CON/SPI1/e_clk] -min -add_delay 0.500 [get_ports ck_io4]
+set_output_delay -clock [get_clocks PROTOCOL_CON/SPI1/e_clk] -max -add_delay 2.000 [get_ports ck_io4]
+set_output_delay -clock [get_clocks PROTOCOL_CON/SPI1/e_clk] -clock_fall -min -add_delay 0.500 [get_ports ck_io5]
+set_output_delay -clock [get_clocks PROTOCOL_CON/SPI1/e_clk] -clock_fall -max -add_delay 2.000 [get_ports ck_io5]
+set_output_delay -clock [get_clocks PROTOCOL_CON/SPI1/e_clk] -min -add_delay 0.500 [get_ports ck_io5]
+set_output_delay -clock [get_clocks PROTOCOL_CON/SPI1/e_clk] -max -add_delay 2.000 [get_ports ck_io5]
+set_output_delay -clock [get_clocks PROTOCOL_CON/SPI1/e_clk] -clock_fall -min -add_delay 0.500 [get_ports ck_io6]
+set_output_delay -clock [get_clocks PROTOCOL_CON/SPI1/e_clk] -clock_fall -max -add_delay 2.000 [get_ports ck_io6]
+set_output_delay -clock [get_clocks PROTOCOL_CON/SPI1/e_clk] -min -add_delay 0.500 [get_ports ck_io6]
+set_output_delay -clock [get_clocks PROTOCOL_CON/SPI1/e_clk] -max -add_delay 2.000 [get_ports ck_io6]
+set_output_delay -clock [get_clocks CLKIP_OUT] -min -add_delay 0.500 [get_ports ck_io7]
+set_output_delay -clock [get_clocks CLKIP_OUT] -max -add_delay 2.000 [get_ports ck_io7]
+set_output_delay -clock [get_clocks CLKIP_OUT] -min -add_delay 0.500 [get_ports ck_io2]
+set_output_delay -clock [get_clocks CLKIP_OUT] -max -add_delay 2.000 [get_ports ck_io2]
+
+# Vivado Integrated Logic Analyzer
+# COMMENT OUT EVERYTHING BELOW IF NOT NEEDED
+
+
+
+# create_debug_core u_ila_0 ila
+# set_property ALL_PROBE_SAME_MU true [get_debug_cores u_ila_0]
+# set_property ALL_PROBE_SAME_MU_CNT 4 [get_debug_cores u_ila_0]
+# set_property C_ADV_TRIGGER true [get_debug_cores u_ila_0]
+# set_property C_DATA_DEPTH 8192 [get_debug_cores u_ila_0]
+# set_property C_EN_STRG_QUAL true [get_debug_cores u_ila_0]
+# set_property C_INPUT_PIPE_STAGES 0 [get_debug_cores u_ila_0]
+# set_property C_TRIGIN_EN false [get_debug_cores u_ila_0]
+# set_property C_TRIGOUT_EN false [get_debug_cores u_ila_0]
+# set_property port_width 1 [get_debug_ports u_ila_0/clk]
+# connect_debug_port u_ila_0/clk [get_nets [list CLK_BUF]]
+# set_property PROBE_TYPE DATA_AND_TRIGGER [get_debug_ports u_ila_0/probe0]
+# set_property port_width 32 [get_debug_ports u_ila_0/probe0]
+# connect_debug_port u_ila_0/probe0 [get_nets [list {ila_ctr[0]} {ila_ctr[1]} {ila_ctr[2]} {ila_ctr[3]} {ila_ctr[4]} {ila_ctr[5]} {ila_ctr[6]} {ila_ctr[7]} {ila_ctr[8]} {ila_ctr[9]} {ila_ctr[10]} {ila_ctr[11]} {ila_ctr[12]} {ila_ctr[13]} {ila_ctr[14]} {ila_ctr[15]} {ila_ctr[16]} {ila_ctr[17]} {ila_ctr[18]} {ila_ctr[19]} {ila_ctr[20]} {ila_ctr[21]} {ila_ctr[22]} {ila_ctr[23]} {ila_ctr[24]} {ila_ctr[25]} {ila_ctr[26]} {ila_ctr[27]} {ila_ctr[28]} {ila_ctr[29]} {ila_ctr[30]} {ila_ctr[31]}]]
+# create_debug_port u_ila_0 probe
+# set_property PROBE_TYPE DATA_AND_TRIGGER [get_debug_ports u_ila_0/probe1]
+# set_property port_width 1 [get_debug_ports u_ila_0/probe1]
+# connect_debug_port u_ila_0/probe1 [get_nets [list ck_io0_OBUF]]
+# create_debug_port u_ila_0 probe
+# set_property PROBE_TYPE DATA_AND_TRIGGER [get_debug_ports u_ila_0/probe2]
+# set_property port_width 1 [get_debug_ports u_ila_0/probe2]
+# connect_debug_port u_ila_0/probe2 [get_nets [list ck_io1_IBUF]]
+# create_debug_port u_ila_0 probe
+# set_property PROBE_TYPE DATA_AND_TRIGGER [get_debug_ports u_ila_0/probe3]
+# set_property port_width 1 [get_debug_ports u_ila_0/probe3]
+# connect_debug_port u_ila_0/probe3 [get_nets [list ck_io2_OBUF]]
+# create_debug_port u_ila_0 probe
+# set_property PROBE_TYPE DATA_AND_TRIGGER [get_debug_ports u_ila_0/probe4]
+# set_property port_width 1 [get_debug_ports u_ila_0/probe4]
+# connect_debug_port u_ila_0/probe4 [get_nets [list ck_io3_OBUF]]
+# create_debug_port u_ila_0 probe
+# set_property PROBE_TYPE DATA_AND_TRIGGER [get_debug_ports u_ila_0/probe5]
+# set_property port_width 1 [get_debug_ports u_ila_0/probe5]
+# connect_debug_port u_ila_0/probe5 [get_nets [list ck_io4_OBUF]]
+# create_debug_port u_ila_0 probe
+# set_property PROBE_TYPE DATA_AND_TRIGGER [get_debug_ports u_ila_0/probe6]
+# set_property port_width 1 [get_debug_ports u_ila_0/probe6]
+# connect_debug_port u_ila_0/probe6 [get_nets [list ck_io5_OBUF]]
+# create_debug_port u_ila_0 probe
+# set_property PROBE_TYPE DATA_AND_TRIGGER [get_debug_ports u_ila_0/probe7]
+# set_property port_width 1 [get_debug_ports u_ila_0/probe7]
+# connect_debug_port u_ila_0/probe7 [get_nets [list ck_io6_OBUF]]
+# create_debug_port u_ila_0 probe
+# set_property PROBE_TYPE DATA_AND_TRIGGER [get_debug_ports u_ila_0/probe8]
+# set_property port_width 1 [get_debug_ports u_ila_0/probe8]
+# connect_debug_port u_ila_0/probe8 [get_nets [list ck_io7_OBUF]]
+# create_debug_port u_ila_0 probe
+# set_property PROBE_TYPE DATA_AND_TRIGGER [get_debug_ports u_ila_0/probe9]
+# set_property port_width 1 [get_debug_ports u_ila_0/probe9]
+# connect_debug_port u_ila_0/probe9 [get_nets [list ck_io8_IBUF]]
+# create_debug_port u_ila_0 probe
+# set_property PROBE_TYPE DATA_AND_TRIGGER [get_debug_ports u_ila_0/probe10]
+# set_property port_width 1 [get_debug_ports u_ila_0/probe10]
+# connect_debug_port u_ila_0/probe10 [get_nets [list ck_io38_IBUF]]
+# create_debug_port u_ila_0 probe
+# set_property PROBE_TYPE DATA_AND_TRIGGER [get_debug_ports u_ila_0/probe11]
+# set_property port_width 1 [get_debug_ports u_ila_0/probe11]
+# connect_debug_port u_ila_0/probe11 [get_nets [list ck_io38_OBUF]]
+# create_debug_port u_ila_0 probe
+# set_property PROBE_TYPE DATA_AND_TRIGGER [get_debug_ports u_ila_0/probe12]
+# set_property port_width 1 [get_debug_ports u_ila_0/probe12]
+# connect_debug_port u_ila_0/probe12 [get_nets [list ck_io39_IBUF]]
+# create_debug_port u_ila_0 probe
+# set_property PROBE_TYPE DATA_AND_TRIGGER [get_debug_ports u_ila_0/probe13]
+# set_property port_width 1 [get_debug_ports u_ila_0/probe13]
+# connect_debug_port u_ila_0/probe13 [get_nets [list ck_io39_OBUF]]
+# set_property C_CLK_INPUT_FREQ_HZ 300000000 [get_debug_cores dbg_hub]
+# set_property C_ENABLE_CLK_DIVIDER false [get_debug_cores dbg_hub]
+# set_property C_USER_SCAN_CHAIN 1 [get_debug_cores dbg_hub]
+# connect_debug_port dbg_hub/clk [get_nets CLK_BUF]

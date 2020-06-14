@@ -1,10 +1,8 @@
-*.vcd
-*.bat
-*.gtkw
-*.pyc
-*.pyc
 Assembler+Testbench/Assembler/__pycache__/*
-Baseline processor/debug place/*
+Assembler+Testbench/Assembler/.DS_Store
 Vivado Files/tb_core.v
 dumpgen_script.py
 *.pyc
+*/assembler.log
+.vscode/c_cpp_properties.json
+.vscode/arduino.json

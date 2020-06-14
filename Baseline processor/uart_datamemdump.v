@@ -52,6 +52,7 @@ module uart_datamemdump(
 	// RESET			-- Do nothing. This state is entered after configuration or a user reset. Also, 
 	//						we set con_addr to the address that UARTDUMP is mapped to in the RISC-V Core.
 	//						Next state is WAIT_SEND.
+	//
 	// WAIT_SEND		-- Do nothing. Wait for the corresponding data to be set in
 	//						whatever address that UARTDUMP is mapped to in the RISC-V 
 	//						Core, indicating that the program is finished running and
@@ -59,16 +60,20 @@ module uart_datamemdump(
 	//						USB-UART Bridge. If the data we're looking for is present in
 	//						the mapped address, then we stop incrementing clock_counter and set con_addr
 	//						to address 0. Next state is LD_TESTPROGNAME.
+	//
 	// LD_TESTPROGNAME	-- The program name running in the RISC-V core is loaded into the
 	//						sendStr variable and the strIndex variable is set to zero. The
 	//						string length is stored in the strLength variable. Next state is
 	//						SEND_CHAR.
+	//
 	// SEND_CHAR		-- UARTSend is asserted for a single clock cycle, signaling the character
 	//						at sendStr(strIndex) to be registered by the UART_TX module at the
 	//						next cycle. strIndex is also incremented (behaves as if it were post 
 	//						incremented after reading the sendStr data). Next state is RDY_LOW.
+	//
 	// RDY_LOW			-- Do nothing. Wait for the UARTReady signal to go low, indicating a send
 	//						operation has begun. Next state is WAIT_RDY.
+	//
 	// WAIT_RDY			-- Do nothing. Wait for the UARTReady signal to go high, indicating a send
 	//						operation has finished. If UARTReady is high and strIndex != strLength,
 	//						next state is SEND_CHAR (indicating that the string is not done sending
@@ -83,28 +88,38 @@ module uart_datamemdump(
 	//						If strLast == LD_RESULT, next state is LD_CLOCKCYCLES.
 	//						If strLast == LD_CLOCKCYCLES, next state is LD_ENDLINE.
 	//						If strLast == LD_ENDLINE, next state is DONE.
+	//
 	// LD_LINE1			-- Line 1 is loaded into the sendStr variable and the strIndex variable is set to
 	//						zero. The string length is stored in the strLength variable. Next state is SEND_CHAR.
+	//
 	// LD_LINE2			-- Line 2 is loaded into the sendStr variable and the strIndex variable is set to
 	//						zero. The string length is stored in the strLength variable. Next state is SEND_CHAR.
+	//
 	// LD_LINE3			-- Line 3 is loaded into the sendStr variable and the strIndex variable is set to
 	//						zero. The string length is stored in the strLength variable. Next state is SEND_CHAR.
+	//
 	// CHECK_ANSKEY		-- con_data(the data from the RISC-V core that corresponds to con_addr) is compared with
 	//						the answer key to determine if the test case was passed. The variable test_pass is
 	//						incremented accordingly. Next state is LD_ANSWER.
+	//
 	// LD_ANSWER		-- The string corresponding to the answers from the RISC-V core and the answer key is loaded
 	//						into the sendStr variable and the strIndex variable is set to zero. The string length is
 	//						stored in the strLength variable. Next state is SEND_CHAR
+	//
 	// CHECK_RESULT		-- test_pass is compared with the amount of test cases done (usually corresponds to the size of
 	//						the RISC-V core's data memory). Next state is LD_RESULT.
+	//
 	// LD_RESULT		-- The string corresponding to test_pass is loaded into the sendStr variable
 	//						and the strIndex variable is set to zero. The string length is stored in the strLength variable.
 	//						Next state is SEND_CHAR.
+	//
 	// LD_CLOCKCYCLES	-- The string corresponding to clock_counter is loaded into the sendStr variable
 	//						and the strIndex variable is set to zero. The string length is stored in the strLength variable.
 	//						Next state is SEND_CHAR.
+	//
 	// LD_ENDLINE		-- The last line is is loaded into the sendStr variable and the strIndex variable is set to zero. 
 	//						The string length is stored in the strLength variable. Next state is SEND_CHAR.
+	//
 	// DONE 			-- Do nothing. This is the last state of the state machine and it will stay in this state until
 	//						a user reset is performed again.
 	// UARTDUMP format:
