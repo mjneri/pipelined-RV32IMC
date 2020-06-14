@@ -104,14 +104,9 @@ module tb_core();
 		rf_clk_counter = 0;
 
 		#100 nrst = 1;
-		// #5000 int_sig = 0;
-		// #2000 int_sig = 0;
 	end
-
-	// NOTE: THIS SECTION SHOULD BE USED ONCE EXE_INST, MEM_INST, & WB_INST ARE REMOVED
-	// FROM THE CORE.
-	/*
-	reg [31:0] exe_inst, mem_inst, wb_inst;
+	
+	reg [`WORD_WIDTH-1:0] exe_inst, mem_inst, wb_inst;
 	always@(posedge CLK) begin
 		if(!nrst) begin
 			exe_inst <= 0;
@@ -123,7 +118,7 @@ module tb_core();
 			wb_inst <= mem_inst;
 		end
 	end
-	*/
+	
 
 	// Checking for 10 NOPs/looping jumps in a row
 	// NOTE: checking for last_inst should be done for at least 50 cycles
