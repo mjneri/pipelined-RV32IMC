@@ -160,7 +160,7 @@ module tb_core();
 	end
 	// This controlls the done flag
 	always@(posedge CLK) begin
-		if(check == 49 || consecutive_nops == 9) done = 1;
+		if(check == 49 || consecutive_nops == 8) done = 1;
 	end
 
 	// Tracking how many clock cycles it takes to execute the program
@@ -232,11 +232,11 @@ module tb_core();
 
 	// Tracking BHT Accuracy
 	// Accesses: id_is_jump = 1 or id_is_btype = 1
-	// Correct access: CORE.BHT.feedback = 1
+	// Correct access: CORE.BRANCHPREDICTOR.feedback = 1
 	// Overwrites: if a fifo_counter value overflows
-	wire [`BHT_SET_BITS-1:0] id_set = CORE.BHT.id_set;
-	wire [`BHT_SET_BITS-1:0] exe_set = CORE.BHT.exe_set;
-	wire [1:0] exe_setoffset = CORE.BHT.exe_setoffset;
+	wire [`BHT_SET_BITS-1:0] id_set = CORE.BRANCHPREDICTOR.id_set;
+	wire [`BHT_SET_BITS-1:0] exe_set = CORE.BRANCHPREDICTOR.exe_set;
+	wire [1:0] exe_setoffset = CORE.BRANCHPREDICTOR.exe_setoffset;
 
 	always@(posedge CLK)
 		if(!nrst) begin
@@ -255,29 +255,29 @@ module tb_core();
 		end 
 		else if(!done) begin
 			if(CORE.id_is_btype) begin
-				case(CORE.BHT.id_iseqto)
+				case(CORE.BRANCHPREDICTOR.id_iseqto)
 					4'b1000: bht_accesses[{id_set, 2'b11}] <= bht_accesses[{id_set, 2'b11}] + 1;
 					4'b0100: bht_accesses[{id_set, 2'b10}] <= bht_accesses[{id_set, 2'b10}] + 1;
 					4'b0010: bht_accesses[{id_set, 2'b01}] <= bht_accesses[{id_set, 2'b01}] + 1;
 					4'b0001: bht_accesses[{id_set, 2'b00}] <= bht_accesses[{id_set, 2'b00}] + 1;
-					4'b0000: bht_accesses[{id_set, CORE.BHT.fifo_counter[id_set]}] <= bht_accesses[{id_set, CORE.BHT.fifo_counter[id_set]}] + 1;
+					4'b0000: bht_accesses[{id_set, CORE.BRANCHPREDICTOR.fifo_counter[id_set]}] <= bht_accesses[{id_set, CORE.BRANCHPREDICTOR.fifo_counter[id_set]}] + 1;
 				endcase
 			end
 			else if(CORE.id_is_jump) begin
-				case(CORE.BHT.id_iseqto)
+				case(CORE.BRANCHPREDICTOR.id_iseqto)
 					4'b1000: bht_accesses[{id_set, 2'b11}] <= bht_accesses[{id_set, 2'b11}] + 1;
 					4'b0100: bht_accesses[{id_set, 2'b10}] <= bht_accesses[{id_set, 2'b10}] + 1;
 					4'b0010: bht_accesses[{id_set, 2'b01}] <= bht_accesses[{id_set, 2'b01}] + 1;
 					4'b0001: bht_accesses[{id_set, 2'b00}] <= bht_accesses[{id_set, 2'b00}] + 1;
-					4'b0000: bht_accesses[{id_set, CORE.BHT.fifo_counter[id_set]}] <= bht_accesses[{id_set, CORE.BHT.fifo_counter[id_set]}] + 1;
+					4'b0000: bht_accesses[{id_set, CORE.BRANCHPREDICTOR.fifo_counter[id_set]}] <= bht_accesses[{id_set, CORE.BRANCHPREDICTOR.fifo_counter[id_set]}] + 1;
 				endcase
 				if(CORE.id_jump_in_bht && !CORE.id_sel_opBR)
-					case(CORE.BHT.id_iseqto)
+					case(CORE.BRANCHPREDICTOR.id_iseqto)
 						4'b1000: bht_correct[{id_set, 2'b11}] <= bht_correct[{id_set, 2'b11}] + 1;
 						4'b0100: bht_correct[{id_set, 2'b10}] <= bht_correct[{id_set, 2'b10}] + 1;
 						4'b0010: bht_correct[{id_set, 2'b01}] <= bht_correct[{id_set, 2'b01}] + 1;
 						4'b0001: bht_correct[{id_set, 2'b00}] <= bht_correct[{id_set, 2'b00}] + 1;
-						4'b0000: bht_correct[{id_set, CORE.BHT.fifo_counter[id_set]}] <= bht_correct[{id_set, CORE.BHT.fifo_counter[id_set]}] + 1;
+						4'b0000: bht_correct[{id_set, CORE.BRANCHPREDICTOR.fifo_counter[id_set]}] <= bht_correct[{id_set, CORE.BRANCHPREDICTOR.fifo_counter[id_set]}] + 1;
 					endcase
 			end
 		end
@@ -286,9 +286,9 @@ module tb_core();
 	// This controls bht_correct for branch instructions
 	always@(posedge CLK) begin
 		if(!done)
-			if((|CORE.exe_btype || |CORE.exe_c_btype) && CORE.BHT.is_pred_correct)
+			if((|CORE.exe_btype || |CORE.exe_c_btype) && CORE.BRANCHPREDICTOR.is_pred_correct)
 				bht_correct[{exe_set, exe_setoffset}] <= bht_correct[{exe_set, exe_setoffset}] + 1;
-			else if(CORE.exe_sel_opBR && (CORE.exe_branchtarget == CORE.BHT.exe_loadentry[`BHT_PC_ADDR_BITS+1:2]))
+			else if(CORE.exe_sel_opBR && (CORE.exe_branchtarget == CORE.BRANCHPREDICTOR.exe_loadentry[`BHT_PC_ADDR_BITS+1:2]))
 				bht_correct[{exe_set, exe_setoffset}] <= bht_correct[{exe_set, exe_setoffset}] + 1;
 	end
 
@@ -299,7 +299,7 @@ module tb_core();
 			for(i=0; i<(`BHT_ENTRY/4); i=i+1)
 				bht_overwrites[i] <= 0;
 		else if(!done) begin
-			if((CORE.id_is_btype || CORE.id_is_jump) && (CORE.BHT.id_iseqto == 4'h0)) begin
+			if((CORE.id_is_btype || CORE.id_is_jump) && (CORE.BRANCHPREDICTOR.id_iseqto == 4'h0)) begin
 				bht_overwrites[id_set] <= bht_overwrites[id_set] + 1;
 			end
 		end
@@ -410,6 +410,7 @@ module tb_core();
 		end
 
 		$display("---| BHT Performance Metrics |---");
+		$display("BHT Entries: %0d.", `BHT_ENTRY);
 		$display("Precision: %0d passed/%0d accesses.", total_bht_correct, total_bht_accesses);
 		$display("Accuracy: %f%%.", 100*($itor(total_bht_correct)/$itor(total_bht_accesses)));
 		$display("Overwrites done: %0d.", total_bht_overwrites);

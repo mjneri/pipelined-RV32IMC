@@ -824,7 +824,6 @@ module core(
 		.signed_less(exe_signed_less)
 	);
 
-	// NOTE: 
 	divider_unit DIVIDER(
 		.CLK(CLK_BUF),
 		.nrst(nrst),
@@ -843,12 +842,12 @@ module core(
 	);
 
 	branchpredictor BRANCHPREDICTOR(
-		.CLK(CLK_BUF),
+		.CLK(id_clk),
 		.nrst(nrst),
 
 		.ISR_running(ISR_running),
 
-		.stall(id_stall),
+		.stall(id_stall),		// used for the flushing logic, not really for writing to the BHT
 
 		.if_PC(if_PC[11:1]),
 

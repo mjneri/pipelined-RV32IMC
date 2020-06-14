@@ -101,7 +101,7 @@ module branchpredictor(
 	wire [`BHT_ENTRY_BITS-1:0] if_entry [0:3];
 	reg  [`BHT_ENTRY_BITS-1:0] if_loadentry;
 	wire [`BHT_SET_BITS-1:0] if_set = if_PC[`BHT_SET_BITS-1:0];
-	wire [`BHT_TAG_BITS-1:0] if_tag = if_PC[`BHT_PC_ADDR_BITS-1:`BHT_SET_BITS];
+	wire [`BHT_TAG_BITS-1:0] if_tag = if_PC[`BHT_PC_TAG_FIELD];
 	wire [3:0] if_valid;
 	wire [3:0] if_iseqto;
 
@@ -116,10 +116,10 @@ module branchpredictor(
 	assign if_valid[2] = if_entry[2][`BHT_ENTRY_BITS-1];
 	assign if_valid[3] = if_entry[3][`BHT_ENTRY_BITS-1];
 
-	assign if_iseqto[0] = (if_entry[0][`BHT_ENTRY_BITS-2:`BHT_ENTRY_BITS-`BHT_TAG_BITS-2] == {ISR_running, if_tag}) && if_valid[0];
-	assign if_iseqto[1] = (if_entry[1][`BHT_ENTRY_BITS-2:`BHT_ENTRY_BITS-`BHT_TAG_BITS-2] == {ISR_running, if_tag}) && if_valid[1];
-	assign if_iseqto[2] = (if_entry[2][`BHT_ENTRY_BITS-2:`BHT_ENTRY_BITS-`BHT_TAG_BITS-2] == {ISR_running, if_tag}) && if_valid[2];
-	assign if_iseqto[3] = (if_entry[3][`BHT_ENTRY_BITS-2:`BHT_ENTRY_BITS-`BHT_TAG_BITS-2] == {ISR_running, if_tag}) && if_valid[3];
+	assign if_iseqto[0] = (if_entry[0][`BHT_TAG_FIELD] == {ISR_running, if_tag}) && if_valid[0];
+	assign if_iseqto[1] = (if_entry[1][`BHT_TAG_FIELD] == {ISR_running, if_tag}) && if_valid[1];
+	assign if_iseqto[2] = (if_entry[2][`BHT_TAG_FIELD] == {ISR_running, if_tag}) && if_valid[2];
+	assign if_iseqto[3] = (if_entry[3][`BHT_TAG_FIELD] == {ISR_running, if_tag}) && if_valid[3];
 
 	always@(*) begin
 		case(if_iseqto)
@@ -140,7 +140,7 @@ module branchpredictor(
 	// Wire declarations for ID stage accesses
 	wire [`BHT_ENTRY_BITS-1:0] id_entry [0:3];
 	wire [`BHT_SET_BITS-1:0] id_set = id_PC[`BHT_SET_BITS-1:0];
-	wire [`BHT_TAG_BITS-1:0] id_tag = id_PC[`BHT_PC_ADDR_BITS-1:`BHT_SET_BITS];
+	wire [`BHT_TAG_BITS-1:0] id_tag = id_PC[`BHT_PC_TAG_FIELD];
 	wire [3:0] id_valid;
 	wire [3:0] id_iseqto;
 
@@ -155,10 +155,10 @@ module branchpredictor(
 	assign id_valid[2] = id_entry[2][`BHT_ENTRY_BITS-1];
 	assign id_valid[3] = id_entry[3][`BHT_ENTRY_BITS-1];
 
-	assign id_iseqto[0] = (id_entry[0][`BHT_ENTRY_BITS-2:`BHT_ENTRY_BITS-`BHT_TAG_BITS-2] == {ISR_running, id_tag}) && id_valid[0];
-	assign id_iseqto[1] = (id_entry[1][`BHT_ENTRY_BITS-2:`BHT_ENTRY_BITS-`BHT_TAG_BITS-2] == {ISR_running, id_tag}) && id_valid[1];
-	assign id_iseqto[2] = (id_entry[2][`BHT_ENTRY_BITS-2:`BHT_ENTRY_BITS-`BHT_TAG_BITS-2] == {ISR_running, id_tag}) && id_valid[2];
-	assign id_iseqto[3] = (id_entry[3][`BHT_ENTRY_BITS-2:`BHT_ENTRY_BITS-`BHT_TAG_BITS-2] == {ISR_running, id_tag}) && id_valid[3];// if id_iseq = 0, then input is not in table yet
+	assign id_iseqto[0] = (id_entry[0][`BHT_TAG_FIELD] == {ISR_running, id_tag}) && id_valid[0];
+	assign id_iseqto[1] = (id_entry[1][`BHT_TAG_FIELD] == {ISR_running, id_tag}) && id_valid[1];
+	assign id_iseqto[2] = (id_entry[2][`BHT_TAG_FIELD] == {ISR_running, id_tag}) && id_valid[2];
+	assign id_iseqto[3] = (id_entry[3][`BHT_TAG_FIELD] == {ISR_running, id_tag}) && id_valid[3];// if id_iseq = 0, then input is not in table yet
 
 	// Saturating counter default states. Branches: WNT | Jumps: ST
 	wire [1:0] sat_counter;
@@ -201,7 +201,7 @@ module branchpredictor(
 	wire [`BHT_ENTRY_BITS-1:0] exe_entry [0:3];
 	reg  [`BHT_ENTRY_BITS-1:0] exe_loadentry;
 	wire [`BHT_SET_BITS-1:0] exe_set = exe_PC[`BHT_SET_BITS-1:0];
-	wire [`BHT_TAG_BITS-1:0] exe_tag = exe_PC[`BHT_PC_ADDR_BITS-1:`BHT_SET_BITS];
+	wire [`BHT_TAG_BITS-1:0] exe_tag = exe_PC[`BHT_PC_TAG_FIELD];
 	reg [1:0] exe_setoffset;
 	wire [3:0] exe_valid;
 	wire [3:0] exe_iseqto;
@@ -216,10 +216,10 @@ module branchpredictor(
 	assign exe_valid[2] = exe_entry[2][`BHT_ENTRY_BITS-1];
 	assign exe_valid[3] = exe_entry[3][`BHT_ENTRY_BITS-1];
 
-	assign exe_iseqto[0] = (exe_entry[0][`BHT_ENTRY_BITS-2:`BHT_ENTRY_BITS-`BHT_TAG_BITS-2] == {ISR_running, exe_tag}) && exe_valid[0];
-	assign exe_iseqto[1] = (exe_entry[1][`BHT_ENTRY_BITS-2:`BHT_ENTRY_BITS-`BHT_TAG_BITS-2] == {ISR_running, exe_tag}) && exe_valid[1];
-	assign exe_iseqto[2] = (exe_entry[2][`BHT_ENTRY_BITS-2:`BHT_ENTRY_BITS-`BHT_TAG_BITS-2] == {ISR_running, exe_tag}) && exe_valid[2];
-	assign exe_iseqto[3] = (exe_entry[3][`BHT_ENTRY_BITS-2:`BHT_ENTRY_BITS-`BHT_TAG_BITS-2] == {ISR_running, exe_tag}) && exe_valid[3];
+	assign exe_iseqto[0] = (exe_entry[0][`BHT_TAG_FIELD] == {ISR_running, exe_tag}) && exe_valid[0];
+	assign exe_iseqto[1] = (exe_entry[1][`BHT_TAG_FIELD] == {ISR_running, exe_tag}) && exe_valid[1];
+	assign exe_iseqto[2] = (exe_entry[2][`BHT_TAG_FIELD] == {ISR_running, exe_tag}) && exe_valid[2];
+	assign exe_iseqto[3] = (exe_entry[3][`BHT_TAG_FIELD] == {ISR_running, exe_tag}) && exe_valid[3];
 
 	always@(*) begin
 		case(exe_iseqto)
@@ -248,7 +248,7 @@ module branchpredictor(
 	// computed branch target. If not, we update the table & flush the next 2 cycles.
 	// For exe_CNI: check if branch instruction is compressed to determine if next instruction is at next halfword
 	assign exe_PBT = (exe_sel_opBR)? exe_branchtarget : exe_loadentry[`BHT_PC_ADDR_BITS+1:2];
-	assign exe_CNI = {exe_loadentry[`BHT_ENTRY_BITS-3:`BHT_ENTRY_BITS-`BHT_TAG_BITS-2], exe_set} + ((|exe_c_btype)? 2'd1 : 2'd2);
+	assign exe_CNI = {exe_loadentry[`BHT_CNI_TAG_FIELD], exe_set} + ((|exe_c_btype)? 2'd1 : 2'd2);
 	
 	// is_pred_correct: determines if the prediction is correct
 	// Check if prediction is correct & output appropriate correction
@@ -299,7 +299,7 @@ module branchpredictor(
 			for(i = 0; i < `BHT_ENTRY; i=i+1) begin
 				history_table[i] <= {`BHT_ENTRY_BITS{1'b0}};
 			end
-		end else if(!stall) begin
+		end else begin
 			// ID Stage writes
 			if( (id_is_btype || id_is_jump) && (id_iseqto == 4'h0) ) begin
 				// Write to table if Branch or Jump AND the input is not in the table yet
@@ -312,7 +312,7 @@ module branchpredictor(
 			// EXE Stage writes
 			// Update branch target for register-based jumps (jalr, c.jr, c.jalr)
 			else if(exe_sel_opBR && (exe_branchtarget != exe_loadentry[`BHT_PC_ADDR_BITS+1:2]))
-				history_table[{exe_set, exe_setoffset}] <= {exe_loadentry[`BHT_ENTRY_BITS-1:`BHT_ENTRY_BITS-`BHT_TAG_BITS-2], exe_branchtarget, exe_loadentry[1:0]};
+				history_table[{exe_set, exe_setoffset}] <= {exe_loadentry[`BHT_TAG_FIELD], exe_branchtarget, exe_loadentry[1:0]};
 			
 			// Update saturating counter for branch instructions
 			else if(|exe_btype || |exe_c_btype) begin

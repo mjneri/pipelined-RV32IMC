@@ -49,6 +49,19 @@
 `define BHT_TAG_BITS `BHT_PC_ADDR_BITS - `BHT_SET_BITS
 `define BHT_ENTRY_BITS 4 + `BHT_TAG_BITS + `BHT_PC_ADDR_BITS    // 4 = 2bits saturating counter + 1bit ISR_running + 1bit valid
 
+// For the following parameters, some values will have to be changed manually
+`define BHT_TAG_FIELD `BHT_ENTRY_BITS-2:13      // NOTE: please manually change the LSB when changing PC_ADDR_BITS
+                                                // since Verilog does not allow the use of more than 1 parameter
+                                                // in defining a vector. The LSB should be equivalent to:
+                                                // `BHT_ENTRY_BITS-`BHT_TAG_BITS-2
+
+`define BHT_PC_TAG_FIELD `BHT_PC_ADDR_BITS-1:4  // Same with this, please change LSB when
+                                                // changing BHT size. LSB is equivalent to:
+                                                // `BHT_SET_BITS
+
+`define BHT_CNI_TAG_FIELD `BHT_ENTRY_BITS-3:13  // Please change LSB when changing PC_ADDR_BITS
+                                                // LSB = `BHT_ENTRY_BITS-`BHT_TAG_BITS-2
+
 // CONTROLLER CONSTANTS
 `define OPC_LUI 7'h37
 `define OPC_AUIPC 7'h17
