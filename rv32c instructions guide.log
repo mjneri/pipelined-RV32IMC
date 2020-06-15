@@ -1,11 +1,11 @@
 COMPRESSED INSTRUCTIONS USAGE GUIDE
 
-COMPRESSED							BASE EQUIVALENT					NOTES
-=========================			==========================		========================
-C.LW rd', uimm[6:2](rs1')			LW rd', uimm[6:2](rs1')			uimm range: [0, 31]*4; offsets are word-aligned
-C.SW rs2', uimm[6:2](rs1')			SW rs2', uimm[6:2](rs1')		uimm range: [0, 31]*4; offsets are word-aligned
-C.LWSP rd, uimm[7:2]				LW rd, uimm[7:2](x2)			uimm range: [0, 63]*4; offsets are word-aligned
-C.SWSP rs2, uimm[7:2]				SW rs2, uimm[7:2](x2)			uimm range: [0, 63]*4; offsets are word-aligned
+COMPRESSED							BASE EQUIVALENT					NOTES														EXAMPLE					EQUIVALENT
+=========================			==========================		========================									=======					==========
+C.LW rd', uimm[6:2](rs1')			LW rd', uimm[6:2](rs1')			uimm range: [0, 31]*4; offsets are word-aligned				c.lw a0, 4(s0)			lw a0, 16(s0)
+C.SW rs2', uimm[6:2](rs1')			SW rs2', uimm[6:2](rs1')		uimm range: [0, 31]*4; offsets are word-aligned				c.sw a5, 1(s1)			sw a5, 4(s1)
+C.LWSP rd, uimm[7:2]				LW rd, uimm[7:2](x2)			uimm range: [0, 63]*4; offsets are word-aligned				c.lwsp t0, 4			lw t0, 16(sp)
+C.SWSP rs2, uimm[7:2]				SW rs2, uimm[7:2](x2)			uimm range: [0, 63]*4; offsets are word-aligned				c.swsp t3, 8			sw t3, 32(sp)
 
 C.JAL target						JAL x1, target					range: [-2048, 2046], multiples of 2
 C.J	target							JAL x0, target					range: [-2048, 2046], multiples of 2
@@ -16,8 +16,8 @@ C.JALR rs1							JALR x1, 0(rs1)					range: depending on contents of rs1
 
 C.LI rd, imm[5:0]					ADDI rd, x0, imm[5:0]			imm range: [-32, 31]
 C.LUI rd, nzimm[17:12]				LUI rd, nzimm[17:12]			nzimm is sign extended non-zero imm
-C.ADDI4SPN rd', nzuimm[9:2]			ADDI rd', x2, nzuimm[9:2]		nzuimm range: [0, 255]*4
-C.ADDI16SP nzimm[9:4]				ADDI x2, x2, nzimm[9:4]			nzimm range: [-32, 31]*16
+C.ADDI4SPN rd', nzuimm[9:2]			ADDI rd', x2, nzuimm[9:2]		nzuimm range: [0, 255]*4									c.addi4spn a3, 10		addi a3, sp, 40
+C.ADDI16SP nzimm[9:4]				ADDI x2, x2, nzimm[9:4]			nzimm range: [-32, 31]*16									c.addi16sp 2			addi sp, sp, 32
 
 C.ADDI rs1, nzimm[5:0]				ADDI rs1, rs1, nzimm[5:0]		nzimm range: [-32, 31]
 C.SLLI rs1, nzuimm[5:0]				SLLI rs1, rs1, nzuimm[5:0]		nzuimm range: [0, 63]
