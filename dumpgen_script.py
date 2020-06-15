@@ -23,7 +23,7 @@ finally:
 filename = args.file.split('.')[0]
 
 # Generating Command strings
-assembler_folder_path = "C:\\Users\\MJ\\Documents\\UP Diliman\\5th Year\\2nd Sem\\CoE 198\\pipelined-RV32IMC\\assembler"
+assembler_folder_path = "..\\pipelined-RV32IMC\\assembler"
 text_command = 'py "'+ assembler_folder_path + 'assembler.py" ' + args.file + ' ' + filename + '_text.dmp ' + '-comp_buffer True'
 data_command = 'java -jar "' + assembler_folder_path + 'rars1_4.jar" a mc CompactDataAtZero dump .data HexText \"' + filename + '_data.dmp\" \"' + filename+'_base.s'+'"'
 ans_command = 'java -jar "' + assembler_folder_path + 'rars1_4.jar" 50000 mc CompactDataAtZero dump .data HexText \"' + filename + '_answerkey.mem\"  \"' + filename+'_base.s' + '"'
@@ -42,10 +42,5 @@ print('\u001b[44m---------------------------------------------------------------
 print("Generating answer key...")
 os.system(ans_command)
 
-# print("Generating halfword instructions...")
-# os.system('cmd /c "py "C:\\Users\\MJ\\Documents\\UP Diliman\\5th Year\\2nd Sem\\CoE 198\\pipelined-RV32IMC\\Assembler+Testbench\\Assembler\\halfword_gen.py" \"' +
-#           filename+' text.dmp\""')
-# print('py "C:\\Users\\MJ\\Documents\\UP Diliman\\5th Year\\2nd Sem\\CoE 198\\pipelined-RV32IMC\\Assembler+Testbench\\Assembler\\halfword_gen.py" \"' +
-#       filename+' text.dmp\" '+args.file+'')
 print("Files have been generated.")
 rvfile.close()
