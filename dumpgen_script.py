@@ -1,5 +1,5 @@
 # Python script for generating Text & Data dump files using RARS and
-# generating halfword instructions using halfword_gen.py
+# generating halfword instructions using assembler.py
 # when executing, terminal should be at the directory of the Assembly code.
 import sys
 import os
@@ -23,7 +23,7 @@ finally:
 filename = args.file.split('.')[0]
 
 # Generating Command strings
-assembler_folder_path = "C:\\Users\\MJ\\Documents\\UP Diliman\\5th Year\\2nd Sem\\CoE 198\\pipelined-RV32IMC\\Assembler+Testbench\\Assembler\\"
+assembler_folder_path = "C:\\Users\\MJ\\Documents\\UP Diliman\\5th Year\\2nd Sem\\CoE 198\\pipelined-RV32IMC\\assembler"
 text_command = 'py "'+ assembler_folder_path + 'assembler.py" ' + args.file + ' ' + filename + '_text.dmp ' + '-comp_buffer True'
 data_command = 'java -jar "' + assembler_folder_path + 'rars1_4.jar" a mc CompactDataAtZero dump .data HexText \"' + filename + '_data.dmp\" \"' + filename+'_base.s'+'"'
 ans_command = 'java -jar "' + assembler_folder_path + 'rars1_4.jar" 50000 mc CompactDataAtZero dump .data HexText \"' + filename + '_answerkey.mem\"  \"' + filename+'_base.s' + '"'
