@@ -1,0 +1,390 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wave_config>
+   <wave_state>
+   </wave_state>
+   <db_ref_list>
+      <db_ref path="tb_top_behav.wdb" id="1">
+         <top_modules>
+            <top_module name="glbl" />
+            <top_module name="tb_top" />
+         </top_modules>
+      </db_ref>
+   </db_ref_list>
+   <zoom_setting>
+      <ZoomStartTime time="0fs"></ZoomStartTime>
+      <ZoomEndTime time="1103385516fs"></ZoomEndTime>
+      <Cursor1Time time="149054999fs"></Cursor1Time>
+   </zoom_setting>
+   <column_width_setting>
+      <NameColumnWidth column_width="175"></NameColumnWidth>
+      <ValueColumnWidth column_width="64"></ValueColumnWidth>
+   </column_width_setting>
+   <WVObjectSize size="13" />
+   <wvobject fp_name="/tb_top/TOP/PROTOCOL_CON/I2C1/memory_data" type="array">
+      <obj_property name="ElementShortName">memory_data[31:0]</obj_property>
+      <obj_property name="ObjectShortName">memory_data[31:0]</obj_property>
+      <obj_property name="Radix">HEXRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_top/TOP/PROTOCOL_CON/I2C1/memory_control" type="array">
+      <obj_property name="ElementShortName">memory_control[31:0]</obj_property>
+      <obj_property name="ObjectShortName">memory_control[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_top/TOP/PROTOCOL_CON/i2c_rco" type="array">
+      <obj_property name="ElementShortName">i2c_rco[31:0]</obj_property>
+      <obj_property name="ObjectShortName">i2c_rco[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_top/TOP/PROTOCOL_CON/i2c_rco[1]" type="logic">
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="ElementShortName">[1]</obj_property>
+      <obj_property name="ObjectShortName">[1]</obj_property>
+      <obj_property name="label">done</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_top/TOP/PROTOCOL_CON/i2c_rco[0]" type="logic">
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="ElementShortName">[0]</obj_property>
+      <obj_property name="ObjectShortName">[0]</obj_property>
+      <obj_property name="label">busy</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_top/TOP/PROTOCOL_CON/I2C1/I2C_CTRLR/nack" type="logic">
+      <obj_property name="ElementShortName">nack</obj_property>
+      <obj_property name="ObjectShortName">nack</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_top/TOP/PROTOCOL_CON/i2c_dat" type="array">
+      <obj_property name="ElementShortName">i2c_dat[31:0]</obj_property>
+      <obj_property name="ObjectShortName">i2c_dat[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_top/TOP/PROTOCOL_CON/I2C1/i2c_scl_o" type="logic">
+      <obj_property name="ElementShortName">i2c_scl_o</obj_property>
+      <obj_property name="ObjectShortName">i2c_scl_o</obj_property>
+      <obj_property name="CustomSignalColor">#00FFFF</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_top/TOP/PROTOCOL_CON/I2C1/i2c_sda_o" type="logic">
+      <obj_property name="ElementShortName">i2c_sda_o</obj_property>
+      <obj_property name="ObjectShortName">i2c_sda_o</obj_property>
+      <obj_property name="CustomSignalColor">#00FFFF</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_top/TOP/PROTOCOL_CON/I2C1/i_dat" type="array">
+      <obj_property name="ElementShortName">i_dat[31:0]</obj_property>
+      <obj_property name="ObjectShortName">i_dat[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="group394" type="group">
+      <obj_property name="label">MAINCTRL SIgnals</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="isExpanded"></obj_property>
+      <wvobject fp_name="/tb_top/TOP/PROTOCOL_CON/I2C1/I2C_CTRLR/buffer_data" type="array">
+         <obj_property name="ElementShortName">buffer_data[31:0]</obj_property>
+         <obj_property name="ObjectShortName">buffer_data[31:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/TOP/PROTOCOL_CON/I2C1/I2C_CTRLR/i2c_data_length" type="array">
+         <obj_property name="ElementShortName">i2c_data_length[3:0]</obj_property>
+         <obj_property name="ObjectShortName">i2c_data_length[3:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/TOP/PROTOCOL_CON/I2C1/I2C_CTRLR/i2c_data_length_counter" type="array">
+         <obj_property name="ElementShortName">i2c_data_length_counter[3:0]</obj_property>
+         <obj_property name="ObjectShortName">i2c_data_length_counter[3:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/TOP/PROTOCOL_CON/I2C1/I2C_CTRLR/i2c_data_sent_counter" type="array">
+         <obj_property name="ElementShortName">i2c_data_sent_counter[3:0]</obj_property>
+         <obj_property name="ObjectShortName">i2c_data_sent_counter[3:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/TOP/PROTOCOL_CON/I2C1/I2C_CTRLR/i2c_prescale" type="array">
+         <obj_property name="ElementShortName">i2c_prescale[15:0]</obj_property>
+         <obj_property name="ObjectShortName">i2c_prescale[15:0]</obj_property>
+         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/TOP/PROTOCOL_CON/I2C1/I2C_CTRLR/i2c_addr" type="array">
+         <obj_property name="ElementShortName">i2c_addr[6:0]</obj_property>
+         <obj_property name="ObjectShortName">i2c_addr[6:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/TOP/PROTOCOL_CON/I2C1/I2C_CTRLR/wbm_adr_o" type="array">
+         <obj_property name="ElementShortName">wbm_adr_o[2:0]</obj_property>
+         <obj_property name="ObjectShortName">wbm_adr_o[2:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/TOP/PROTOCOL_CON/I2C1/I2C_CTRLR/wbm_dat_o" type="array">
+         <obj_property name="ElementShortName">wbm_dat_o[7:0]</obj_property>
+         <obj_property name="ObjectShortName">wbm_dat_o[7:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/TOP/PROTOCOL_CON/I2C1/I2C_CTRLR/i2c_state" type="array">
+         <obj_property name="ElementShortName">i2c_state[56:1]</obj_property>
+         <obj_property name="ObjectShortName">i2c_state[56:1]</obj_property>
+         <obj_property name="Radix">ASCIIRADIX</obj_property>
+         <obj_property name="CustomSignalColor">#FF0080</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/TOP/PROTOCOL_CON/I2C1/I2C_CTRLR/i2c_substate_count" type="array">
+         <obj_property name="ElementShortName">i2c_substate_count[32:1]</obj_property>
+         <obj_property name="ObjectShortName">i2c_substate_count[32:1]</obj_property>
+         <obj_property name="Radix">ASCIIRADIX</obj_property>
+         <obj_property name="CustomSignalColor">#FF0080</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/TOP/PROTOCOL_CON/I2C1/I2C_CTRLR/wbm_dat_i" type="array">
+         <obj_property name="ElementShortName">wbm_dat_i[7:0]</obj_property>
+         <obj_property name="ObjectShortName">wbm_dat_i[7:0]</obj_property>
+         <obj_property name="isExpanded"></obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/TOP/PROTOCOL_CON/I2C1/I2C_CTRLR/wbm_we_o" type="logic">
+         <obj_property name="ElementShortName">wbm_we_o</obj_property>
+         <obj_property name="ObjectShortName">wbm_we_o</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/TOP/PROTOCOL_CON/I2C1/I2C_CTRLR/wbm_stb_o" type="logic">
+         <obj_property name="ElementShortName">wbm_stb_o</obj_property>
+         <obj_property name="ObjectShortName">wbm_stb_o</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/TOP/PROTOCOL_CON/I2C1/I2C_CTRLR/wbm_ack_i" type="logic">
+         <obj_property name="ElementShortName">wbm_ack_i</obj_property>
+         <obj_property name="ObjectShortName">wbm_ack_i</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/TOP/PROTOCOL_CON/I2C1/I2C_CTRLR/wbm_cyc_o" type="logic">
+         <obj_property name="ElementShortName">wbm_cyc_o</obj_property>
+         <obj_property name="ObjectShortName">wbm_cyc_o</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group257" type="group">
+      <obj_property name="label">wbs8 signals</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject fp_name="/tb_top/TOP/PROTOCOL_CON/I2C1/i2c_master_wbs_8_inst/wbs_dat_o" type="array">
+         <obj_property name="ElementShortName">wbs_dat_o[7:0]</obj_property>
+         <obj_property name="ObjectShortName">wbs_dat_o[7:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/TOP/PROTOCOL_CON/I2C1/i2c_master_wbs_8_inst/wbs_dat_o_reg" type="array">
+         <obj_property name="ElementShortName">wbs_dat_o_reg[7:0]</obj_property>
+         <obj_property name="ObjectShortName">wbs_dat_o_reg[7:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/TOP/PROTOCOL_CON/I2C1/i2c_master_wbs_8_inst/wbs_dat_o_next" type="array">
+         <obj_property name="ElementShortName">wbs_dat_o_next[7:0]</obj_property>
+         <obj_property name="ObjectShortName">wbs_dat_o_next[7:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/TOP/PROTOCOL_CON/I2C1/i2c_master_wbs_8_inst/cmd_stop_int" type="logic">
+         <obj_property name="ElementShortName">cmd_stop_int</obj_property>
+         <obj_property name="ObjectShortName">cmd_stop_int</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/TOP/PROTOCOL_CON/I2C1/i2c_master_wbs_8_inst/missed_ack_reg" type="logic">
+         <obj_property name="ElementShortName">missed_ack_reg</obj_property>
+         <obj_property name="ObjectShortName">missed_ack_reg</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/TOP/PROTOCOL_CON/I2C1/i2c_master_wbs_8_inst/missed_ack_next" type="logic">
+         <obj_property name="ElementShortName">missed_ack_next</obj_property>
+         <obj_property name="ObjectShortName">missed_ack_next</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/TOP/PROTOCOL_CON/I2C1/i2c_master_wbs_8_inst/missed_ack_int" type="logic">
+         <obj_property name="ElementShortName">missed_ack_int</obj_property>
+         <obj_property name="ObjectShortName">missed_ack_int</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/TOP/PROTOCOL_CON/I2C1/i2c_master_wbs_8_inst/busy_int" type="logic">
+         <obj_property name="ElementShortName">busy_int</obj_property>
+         <obj_property name="ObjectShortName">busy_int</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/TOP/PROTOCOL_CON/I2C1/i2c_master_wbs_8_inst/wbs_adr_i" type="array">
+         <obj_property name="ElementShortName">wbs_adr_i[2:0]</obj_property>
+         <obj_property name="ObjectShortName">wbs_adr_i[2:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/TOP/PROTOCOL_CON/I2C1/i2c_master_wbs_8_inst/wbs_stb_i" type="logic">
+         <obj_property name="ElementShortName">wbs_stb_i</obj_property>
+         <obj_property name="ObjectShortName">wbs_stb_i</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/TOP/PROTOCOL_CON/I2C1/i2c_master_wbs_8_inst/wbs_cyc_i" type="logic">
+         <obj_property name="ElementShortName">wbs_cyc_i</obj_property>
+         <obj_property name="ObjectShortName">wbs_cyc_i</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/TOP/PROTOCOL_CON/I2C1/i2c_master_wbs_8_inst/wbs_ack_o" type="logic">
+         <obj_property name="ElementShortName">wbs_ack_o</obj_property>
+         <obj_property name="ObjectShortName">wbs_ack_o</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/TOP/PROTOCOL_CON/I2C1/i2c_master_wbs_8_inst/wbs_ack_o_reg" type="logic">
+         <obj_property name="ElementShortName">wbs_ack_o_reg</obj_property>
+         <obj_property name="ObjectShortName">wbs_ack_o_reg</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/TOP/PROTOCOL_CON/I2C1/i2c_master_wbs_8_inst/wbs_ack_o_next" type="logic">
+         <obj_property name="ElementShortName">wbs_ack_o_next</obj_property>
+         <obj_property name="ObjectShortName">wbs_ack_o_next</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group263" type="group">
+      <obj_property name="label">master signals</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="isExpanded"></obj_property>
+      <wvobject fp_name="/tb_top/TOP/PROTOCOL_CON/I2C1/i2c_master_wbs_8_inst/i2c_master_inst/cmd_start" type="logic">
+         <obj_property name="ElementShortName">cmd_start</obj_property>
+         <obj_property name="ObjectShortName">cmd_start</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/TOP/PROTOCOL_CON/I2C1/i2c_master_wbs_8_inst/i2c_master_inst/cmd_read" type="logic">
+         <obj_property name="ElementShortName">cmd_read</obj_property>
+         <obj_property name="ObjectShortName">cmd_read</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/TOP/PROTOCOL_CON/I2C1/i2c_master_wbs_8_inst/i2c_master_inst/cmd_write" type="logic">
+         <obj_property name="ElementShortName">cmd_write</obj_property>
+         <obj_property name="ObjectShortName">cmd_write</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/TOP/PROTOCOL_CON/I2C1/i2c_master_wbs_8_inst/i2c_master_inst/cmd_write_multiple" type="logic">
+         <obj_property name="ElementShortName">cmd_write_multiple</obj_property>
+         <obj_property name="ObjectShortName">cmd_write_multiple</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/TOP/PROTOCOL_CON/I2C1/i2c_master_wbs_8_inst/i2c_master_inst/cmd_stop" type="logic">
+         <obj_property name="ElementShortName">cmd_stop</obj_property>
+         <obj_property name="ObjectShortName">cmd_stop</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/TOP/PROTOCOL_CON/I2C1/i2c_master_wbs_8_inst/i2c_master_inst/mode_stop_reg" type="logic">
+         <obj_property name="ElementShortName">mode_stop_reg</obj_property>
+         <obj_property name="ObjectShortName">mode_stop_reg</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/TOP/PROTOCOL_CON/I2C1/i2c_master_wbs_8_inst/i2c_master_inst/mode_stop_next" type="logic">
+         <obj_property name="ElementShortName">mode_stop_next</obj_property>
+         <obj_property name="ObjectShortName">mode_stop_next</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/TOP/PROTOCOL_CON/I2C1/i2c_master_wbs_8_inst/i2c_master_inst/cmd_valid" type="logic">
+         <obj_property name="ElementShortName">cmd_valid</obj_property>
+         <obj_property name="ObjectShortName">cmd_valid</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/TOP/PROTOCOL_CON/I2C1/i2c_master_wbs_8_inst/i2c_master_inst/busy" type="logic">
+         <obj_property name="ElementShortName">busy</obj_property>
+         <obj_property name="ObjectShortName">busy</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/TOP/PROTOCOL_CON/I2C1/i2c_master_wbs_8_inst/i2c_master_inst/busy_reg" type="logic">
+         <obj_property name="ElementShortName">busy_reg</obj_property>
+         <obj_property name="ObjectShortName">busy_reg</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/TOP/PROTOCOL_CON/I2C1/i2c_master_wbs_8_inst/i2c_master_inst/state_reg" type="array">
+         <obj_property name="ElementShortName">state_reg[4:0]</obj_property>
+         <obj_property name="ObjectShortName">state_reg[4:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/TOP/PROTOCOL_CON/I2C1/i2c_master_wbs_8_inst/i2c_master_inst/state_next" type="array">
+         <obj_property name="ElementShortName">state_next[4:0]</obj_property>
+         <obj_property name="ObjectShortName">state_next[4:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/TOP/PROTOCOL_CON/I2C1/i2c_master_wbs_8_inst/i2c_master_inst/bus_control" type="logic">
+         <obj_property name="ElementShortName">bus_control</obj_property>
+         <obj_property name="ObjectShortName">bus_control</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/TOP/PROTOCOL_CON/I2C1/i2c_master_wbs_8_inst/i2c_master_inst/bus_active" type="logic">
+         <obj_property name="ElementShortName">bus_active</obj_property>
+         <obj_property name="ObjectShortName">bus_active</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/TOP/PROTOCOL_CON/I2C1/i2c_master_wbs_8_inst/i2c_master_inst/bus_active_reg" type="logic">
+         <obj_property name="ElementShortName">bus_active_reg</obj_property>
+         <obj_property name="ObjectShortName">bus_active_reg</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/TOP/PROTOCOL_CON/I2C1/i2c_master_wbs_8_inst/i2c_master_inst/bus_control_reg" type="logic">
+         <obj_property name="ElementShortName">bus_control_reg</obj_property>
+         <obj_property name="ObjectShortName">bus_control_reg</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/TOP/PROTOCOL_CON/I2C1/i2c_master_wbs_8_inst/i2c_master_inst/bus_control_next" type="logic">
+         <obj_property name="ElementShortName">bus_control_next</obj_property>
+         <obj_property name="ObjectShortName">bus_control_next</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/TOP/PROTOCOL_CON/I2C1/i2c_master_wbs_8_inst/i2c_master_inst/start_bit" type="logic">
+         <obj_property name="ElementShortName">start_bit</obj_property>
+         <obj_property name="ObjectShortName">start_bit</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/TOP/PROTOCOL_CON/I2C1/i2c_master_wbs_8_inst/i2c_master_inst/stop_bit" type="logic">
+         <obj_property name="ElementShortName">stop_bit</obj_property>
+         <obj_property name="ObjectShortName">stop_bit</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/TOP/PROTOCOL_CON/I2C1/i2c_master_wbs_8_inst/i2c_master_inst/phy_start_bit" type="logic">
+         <obj_property name="ElementShortName">phy_start_bit</obj_property>
+         <obj_property name="ObjectShortName">phy_start_bit</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/TOP/PROTOCOL_CON/I2C1/i2c_master_wbs_8_inst/i2c_master_inst/phy_stop_bit" type="logic">
+         <obj_property name="ElementShortName">phy_stop_bit</obj_property>
+         <obj_property name="ObjectShortName">phy_stop_bit</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/TOP/PROTOCOL_CON/I2C1/i2c_master_wbs_8_inst/i2c_master_inst/phy_write_bit" type="logic">
+         <obj_property name="ElementShortName">phy_write_bit</obj_property>
+         <obj_property name="ObjectShortName">phy_write_bit</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/TOP/PROTOCOL_CON/I2C1/i2c_master_wbs_8_inst/i2c_master_inst/phy_read_bit" type="logic">
+         <obj_property name="ElementShortName">phy_read_bit</obj_property>
+         <obj_property name="ObjectShortName">phy_read_bit</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/TOP/PROTOCOL_CON/I2C1/i2c_master_wbs_8_inst/i2c_master_inst/phy_release_bus" type="logic">
+         <obj_property name="ElementShortName">phy_release_bus</obj_property>
+         <obj_property name="ObjectShortName">phy_release_bus</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/TOP/PROTOCOL_CON/I2C1/i2c_master_wbs_8_inst/i2c_master_inst/phy_state_reg" type="array">
+         <obj_property name="ElementShortName">phy_state_reg[4:0]</obj_property>
+         <obj_property name="ObjectShortName">phy_state_reg[4:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/TOP/PROTOCOL_CON/I2C1/i2c_master_wbs_8_inst/i2c_master_inst/phy_state_next" type="array">
+         <obj_property name="ElementShortName">phy_state_next[4:0]</obj_property>
+         <obj_property name="ObjectShortName">phy_state_next[4:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/TOP/PROTOCOL_CON/I2C1/i2c_master_wbs_8_inst/i2c_master_inst/phy_rx_data_reg" type="logic">
+         <obj_property name="ElementShortName">phy_rx_data_reg</obj_property>
+         <obj_property name="ObjectShortName">phy_rx_data_reg</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/TOP/PROTOCOL_CON/I2C1/i2c_master_wbs_8_inst/i2c_master_inst/phy_rx_data_next" type="logic">
+         <obj_property name="ElementShortName">phy_rx_data_next</obj_property>
+         <obj_property name="ObjectShortName">phy_rx_data_next</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/TOP/PROTOCOL_CON/I2C1/i2c_master_wbs_8_inst/i2c_master_inst/missed_ack" type="logic">
+         <obj_property name="ElementShortName">missed_ack</obj_property>
+         <obj_property name="ObjectShortName">missed_ack</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/TOP/PROTOCOL_CON/I2C1/i2c_master_wbs_8_inst/i2c_master_inst/missed_ack_reg" type="logic">
+         <obj_property name="ElementShortName">missed_ack_reg</obj_property>
+         <obj_property name="ObjectShortName">missed_ack_reg</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/TOP/PROTOCOL_CON/I2C1/i2c_master_wbs_8_inst/i2c_master_inst/missed_ack_next" type="logic">
+         <obj_property name="ElementShortName">missed_ack_next</obj_property>
+         <obj_property name="ObjectShortName">missed_ack_next</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/TOP/PROTOCOL_CON/I2C1/i2c_master_wbs_8_inst/i2c_master_inst/sda_i" type="logic">
+         <obj_property name="ElementShortName">sda_i</obj_property>
+         <obj_property name="ObjectShortName">sda_i</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/TOP/PROTOCOL_CON/I2C1/i2c_master_wbs_8_inst/i2c_master_inst/sda_i_reg" type="logic">
+         <obj_property name="ElementShortName">sda_i_reg</obj_property>
+         <obj_property name="ObjectShortName">sda_i_reg</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/TOP/PROTOCOL_CON/I2C1/i2c_master_wbs_8_inst/i2c_master_inst/last_sda_i_reg" type="logic">
+         <obj_property name="ElementShortName">last_sda_i_reg</obj_property>
+         <obj_property name="ObjectShortName">last_sda_i_reg</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/TOP/PROTOCOL_CON/I2C1/i2c_master_wbs_8_inst/i2c_master_inst/sda_posedge" type="logic">
+         <obj_property name="ElementShortName">sda_posedge</obj_property>
+         <obj_property name="ObjectShortName">sda_posedge</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/TOP/PROTOCOL_CON/I2C1/i2c_master_wbs_8_inst/i2c_master_inst/sda_negedge" type="logic">
+         <obj_property name="ElementShortName">sda_negedge</obj_property>
+         <obj_property name="ObjectShortName">sda_negedge</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/TOP/PROTOCOL_CON/I2C1/i2c_master_wbs_8_inst/i2c_master_inst/scl_i_reg" type="logic">
+         <obj_property name="ElementShortName">scl_i_reg</obj_property>
+         <obj_property name="ObjectShortName">scl_i_reg</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/TOP/PROTOCOL_CON/I2C1/i2c_scl_o" type="logic">
+         <obj_property name="ElementShortName">i2c_scl_o</obj_property>
+         <obj_property name="ObjectShortName">i2c_scl_o</obj_property>
+         <obj_property name="CustomSignalColor">#00FFFF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/TOP/PROTOCOL_CON/I2C1/i2c_sda_o" type="logic">
+         <obj_property name="ElementShortName">i2c_sda_o</obj_property>
+         <obj_property name="ObjectShortName">i2c_sda_o</obj_property>
+         <obj_property name="CustomSignalColor">#00FFFF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/TOP/i2c_scl_i" type="logic">
+         <obj_property name="ElementShortName">i2c_scl_i</obj_property>
+         <obj_property name="ObjectShortName">i2c_scl_i</obj_property>
+         <obj_property name="CustomSignalColor">#FFFF00</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/TOP/i2c_sda_i" type="logic">
+         <obj_property name="ElementShortName">i2c_sda_i</obj_property>
+         <obj_property name="ObjectShortName">i2c_sda_i</obj_property>
+         <obj_property name="CustomSignalColor">#FFFF00</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/TOP/i2c_scl_t" type="logic">
+         <obj_property name="ElementShortName">i2c_scl_t</obj_property>
+         <obj_property name="ObjectShortName">i2c_scl_t</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/TOP/i2c_sda_t" type="logic">
+         <obj_property name="ElementShortName">i2c_sda_t</obj_property>
+         <obj_property name="ObjectShortName">i2c_sda_t</obj_property>
+      </wvobject>
+   </wvobject>
+</wave_config>

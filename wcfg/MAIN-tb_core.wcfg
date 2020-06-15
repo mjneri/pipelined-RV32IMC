@@ -1,0 +1,1836 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wave_config>
+   <wave_state>
+   </wave_state>
+   <db_ref_list>
+      <db_ref path="tb_core_behav.wdb" id="1">
+         <top_modules>
+            <top_module name="glbl" />
+            <top_module name="tb_core" />
+         </top_modules>
+      </db_ref>
+   </db_ref_list>
+   <zoom_setting>
+      <ZoomStartTime time="7653560fs"></ZoomStartTime>
+      <ZoomEndTime time="50669288fs"></ZoomEndTime>
+      <Cursor1Time time="43500000fs"></Cursor1Time>
+   </zoom_setting>
+   <column_width_setting>
+      <NameColumnWidth column_width="152"></NameColumnWidth>
+      <ValueColumnWidth column_width="60"></ValueColumnWidth>
+   </column_width_setting>
+   <WVObjectSize size="22" />
+   <wvobject fp_name="/tb_core/CLK" type="logic">
+      <obj_property name="ElementShortName">CLK</obj_property>
+      <obj_property name="ObjectShortName">CLK</obj_property>
+      <obj_property name="CustomSignalColor">#808080</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_core/nrst" type="logic">
+      <obj_property name="ElementShortName">nrst</obj_property>
+      <obj_property name="ObjectShortName">nrst</obj_property>
+      <obj_property name="CustomSignalColor">#808080</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+   </wvobject>
+   <wvobject fp_name="group352" type="group">
+      <obj_property name="label">Performance Metrics</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject fp_name="/tb_core/INST" type="array">
+         <obj_property name="ElementShortName">INST[31:0]</obj_property>
+         <obj_property name="ObjectShortName">INST[31:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/last_inst" type="array">
+         <obj_property name="ElementShortName">last_inst[31:0]</obj_property>
+         <obj_property name="ObjectShortName">last_inst[31:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/check" type="array">
+         <obj_property name="ElementShortName">check[31:0]</obj_property>
+         <obj_property name="ObjectShortName">check[31:0]</obj_property>
+         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/consecutive_nops" type="array">
+         <obj_property name="ElementShortName">consecutive_nops[31:0]</obj_property>
+         <obj_property name="ObjectShortName">consecutive_nops[31:0]</obj_property>
+         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/done" type="array">
+         <obj_property name="ElementShortName">done[31:0]</obj_property>
+         <obj_property name="ObjectShortName">done[31:0]</obj_property>
+         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/max_data_addr" type="array">
+         <obj_property name="ElementShortName">max_data_addr[31:0]</obj_property>
+         <obj_property name="ObjectShortName">max_data_addr[31:0]</obj_property>
+         <obj_property name="Radix">HEXRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/clock_counter" type="array">
+         <obj_property name="ElementShortName">clock_counter[31:0]</obj_property>
+         <obj_property name="ObjectShortName">clock_counter[31:0]</obj_property>
+         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+         <obj_property name="CustomSignalColor">#FFFFFF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/stall_counter" type="array">
+         <obj_property name="ElementShortName">stall_counter[31:0]</obj_property>
+         <obj_property name="ObjectShortName">stall_counter[31:0]</obj_property>
+         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/cumulative_stall_counter" type="array">
+         <obj_property name="ElementShortName">cumulative_stall_counter[31:0]</obj_property>
+         <obj_property name="ObjectShortName">cumulative_stall_counter[31:0]</obj_property>
+         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/cumulative_flush_counter" type="array">
+         <obj_property name="ElementShortName">cumulative_flush_counter[31:0]</obj_property>
+         <obj_property name="ObjectShortName">cumulative_flush_counter[31:0]</obj_property>
+         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/bht_correct" type="array">
+         <obj_property name="ElementShortName">bht_correct[0:63][31:0]</obj_property>
+         <obj_property name="ObjectShortName">bht_correct[0:63][31:0]</obj_property>
+         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+         <obj_property name="CustomSignalColor">#FFFF00</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/bht_accesses" type="array">
+         <obj_property name="ElementShortName">bht_accesses[0:63][31:0]</obj_property>
+         <obj_property name="ObjectShortName">bht_accesses[0:63][31:0]</obj_property>
+         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+         <obj_property name="CustomSignalColor">#FFFF00</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/bht_overwrites" type="array">
+         <obj_property name="ElementShortName">bht_overwrites[0:15][31:0]</obj_property>
+         <obj_property name="ObjectShortName">bht_overwrites[0:15][31:0]</obj_property>
+         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+         <obj_property name="CustomSignalColor">#FFFF00</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/total_bht_correct" type="array">
+         <obj_property name="ElementShortName">total_bht_correct[31:0]</obj_property>
+         <obj_property name="ObjectShortName">total_bht_correct[31:0]</obj_property>
+         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+         <obj_property name="CustomSignalColor">#FF00FF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/total_bht_accesses" type="array">
+         <obj_property name="ElementShortName">total_bht_accesses[31:0]</obj_property>
+         <obj_property name="ObjectShortName">total_bht_accesses[31:0]</obj_property>
+         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+         <obj_property name="CustomSignalColor">#FF00FF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/total_bht_overwrites" type="array">
+         <obj_property name="ElementShortName">total_bht_overwrites[31:0]</obj_property>
+         <obj_property name="ObjectShortName">total_bht_overwrites[31:0]</obj_property>
+         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+         <obj_property name="CustomSignalColor">#FF00FF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group789" type="group">
+      <obj_property name="label">CON_DATAMEM</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject fp_name="/tb_core/CORE/DATAMEM/con_clk" type="logic">
+         <obj_property name="ElementShortName">con_clk</obj_property>
+         <obj_property name="ObjectShortName">con_clk</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/con_addr" type="array">
+         <obj_property name="ElementShortName">con_addr[10:0]</obj_property>
+         <obj_property name="ObjectShortName">con_addr[10:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/con_out" type="array">
+         <obj_property name="ElementShortName">con_out[31:0]</obj_property>
+         <obj_property name="ObjectShortName">con_out[31:0]</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="/tb_core/CORE/if_pcnew" type="array">
+      <obj_property name="ElementShortName">if_pcnew[11:0]</obj_property>
+      <obj_property name="ObjectShortName">if_pcnew[11:0]</obj_property>
+      <obj_property name="CustomSignalColor">#FFFF00</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_core/CORE/INT_CON/save_PC" type="array">
+      <obj_property name="ElementShortName">save_PC[11:0]</obj_property>
+      <obj_property name="ObjectShortName">save_PC[11:0]</obj_property>
+      <obj_property name="CustomSignalColor">#FF0000</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+   </wvobject>
+   <wvobject fp_name="group19" type="group">
+      <obj_property name="label">PC Signals</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="isExpanded"></obj_property>
+      <wvobject fp_name="/tb_core/CORE/if_PC" type="array">
+         <obj_property name="ElementShortName">if_PC[11:0]</obj_property>
+         <obj_property name="ObjectShortName">if_PC[11:0]</obj_property>
+         <obj_property name="CustomSignalColor">#008080</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/id_PC" type="array">
+         <obj_property name="ElementShortName">id_PC[11:0]</obj_property>
+         <obj_property name="ObjectShortName">id_PC[11:0]</obj_property>
+         <obj_property name="CustomSignalColor">#008080</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/exe_PC" type="array">
+         <obj_property name="ElementShortName">exe_PC[11:0]</obj_property>
+         <obj_property name="ObjectShortName">exe_PC[11:0]</obj_property>
+         <obj_property name="CustomSignalColor">#008080</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/mem_PC" type="array">
+         <obj_property name="ElementShortName">mem_PC[31:0]</obj_property>
+         <obj_property name="ObjectShortName">mem_PC[31:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/wb_PC" type="array">
+         <obj_property name="ElementShortName">wb_PC[31:0]</obj_property>
+         <obj_property name="ObjectShortName">wb_PC[31:0]</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group25" type="group">
+      <obj_property name="label">Instructions</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="isExpanded"></obj_property>
+      <wvobject fp_name="/tb_core/CORE/if_inst" type="array">
+         <obj_property name="ElementShortName">if_inst[31:0]</obj_property>
+         <obj_property name="ObjectShortName">if_inst[31:0]</obj_property>
+         <obj_property name="CustomSignalColor">#0000FF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/id_inst" type="array">
+         <obj_property name="ElementShortName">id_inst[31:0]</obj_property>
+         <obj_property name="ObjectShortName">id_inst[31:0]</obj_property>
+         <obj_property name="CustomSignalColor">#0000FF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/exe_inst" type="array">
+         <obj_property name="ElementShortName">exe_inst[31:0]</obj_property>
+         <obj_property name="ObjectShortName">exe_inst[31:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/mem_inst" type="array">
+         <obj_property name="ElementShortName">mem_inst[31:0]</obj_property>
+         <obj_property name="ObjectShortName">mem_inst[31:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/wb_inst" type="array">
+         <obj_property name="ElementShortName">wb_inst[31:0]</obj_property>
+         <obj_property name="ObjectShortName">wb_inst[31:0]</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group31" type="group">
+      <obj_property name="label">INTCON</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject fp_name="/tb_core/CORE/INT_CON/int_sig" type="array">
+         <obj_property name="ElementShortName">int_sig[5:0]</obj_property>
+         <obj_property name="ObjectShortName">int_sig[5:0]</obj_property>
+         <obj_property name="CustomSignalColor">#00FFFF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+         <obj_property name="isExpanded"></obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/INT_CON/ISR_en" type="array">
+         <obj_property name="ElementShortName">ISR_en[5:0]</obj_property>
+         <obj_property name="ObjectShortName">ISR_en[5:0]</obj_property>
+         <obj_property name="CustomSignalColor">#FFD700</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+         <obj_property name="isExpanded"></obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/INT_CON/interrupt_captured" type="logic">
+         <obj_property name="ElementShortName">interrupt_captured</obj_property>
+         <obj_property name="ObjectShortName">interrupt_captured</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/INT_CON/sel_ISR" type="logic">
+         <obj_property name="ElementShortName">sel_ISR</obj_property>
+         <obj_property name="ObjectShortName">sel_ISR</obj_property>
+         <obj_property name="CustomSignalColor">#F0E68C</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/INT_CON/ret_ISR" type="logic">
+         <obj_property name="ElementShortName">ret_ISR</obj_property>
+         <obj_property name="ObjectShortName">ret_ISR</obj_property>
+         <obj_property name="CustomSignalColor">#F0E68C</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/INT_CON/ISR_running" type="logic">
+         <obj_property name="ElementShortName">ISR_running</obj_property>
+         <obj_property name="ObjectShortName">ISR_running</obj_property>
+         <obj_property name="CustomSignalColor">#00FF7F</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/INT_CON/ISR_stall_counter" type="array">
+         <obj_property name="ElementShortName">ISR_stall_counter[2:0]</obj_property>
+         <obj_property name="ObjectShortName">ISR_stall_counter[2:0]</obj_property>
+         <obj_property name="CustomSignalColor">#FF0000</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/INT_CON/save_PC_en" type="logic">
+         <obj_property name="ElementShortName">save_PC_en</obj_property>
+         <obj_property name="ObjectShortName">save_PC_en</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/INT_CON/stall" type="logic">
+         <obj_property name="ElementShortName">stall</obj_property>
+         <obj_property name="ObjectShortName">stall</obj_property>
+         <obj_property name="CustomSignalColor">#0000FF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/INT_CON/ISR_PC_flush" type="logic">
+         <obj_property name="ElementShortName">ISR_PC_flush</obj_property>
+         <obj_property name="ObjectShortName">ISR_PC_flush</obj_property>
+         <obj_property name="CustomSignalColor">#FFFF00</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/INT_CON/ISR_pipe_flush" type="logic">
+         <obj_property name="ElementShortName">ISR_pipe_flush</obj_property>
+         <obj_property name="ObjectShortName">ISR_pipe_flush</obj_property>
+         <obj_property name="CustomSignalColor">#FFFF00</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/INT_CON/ISR_stall" type="logic">
+         <obj_property name="ElementShortName">ISR_stall</obj_property>
+         <obj_property name="ObjectShortName">ISR_stall</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group416" type="group">
+      <obj_property name="label">CLOCK GATING</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject fp_name="/tb_core/CORE/SF_CONTROLLER/if_clk_en" type="logic">
+         <obj_property name="ElementShortName">if_clk_en</obj_property>
+         <obj_property name="ObjectShortName">if_clk_en</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/SF_CONTROLLER/id_clk_en" type="logic">
+         <obj_property name="ElementShortName">id_clk_en</obj_property>
+         <obj_property name="ObjectShortName">id_clk_en</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/SF_CONTROLLER/exe_clk_en" type="logic">
+         <obj_property name="ElementShortName">exe_clk_en</obj_property>
+         <obj_property name="ObjectShortName">exe_clk_en</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/SF_CONTROLLER/mem_clk_en" type="logic">
+         <obj_property name="ElementShortName">mem_clk_en</obj_property>
+         <obj_property name="ObjectShortName">mem_clk_en</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/SF_CONTROLLER/wb_clk_en" type="logic">
+         <obj_property name="ElementShortName">wb_clk_en</obj_property>
+         <obj_property name="ObjectShortName">wb_clk_en</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/SF_CONTROLLER/rf_clk_en" type="logic">
+         <obj_property name="ElementShortName">rf_clk_en</obj_property>
+         <obj_property name="ObjectShortName">rf_clk_en</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/if_clk" type="logic">
+         <obj_property name="ElementShortName">if_clk</obj_property>
+         <obj_property name="ObjectShortName">if_clk</obj_property>
+         <obj_property name="CustomSignalColor">#008080</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/id_clk" type="logic">
+         <obj_property name="ElementShortName">id_clk</obj_property>
+         <obj_property name="ObjectShortName">id_clk</obj_property>
+         <obj_property name="CustomSignalColor">#008080</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/exe_clk" type="logic">
+         <obj_property name="ElementShortName">exe_clk</obj_property>
+         <obj_property name="ObjectShortName">exe_clk</obj_property>
+         <obj_property name="CustomSignalColor">#008080</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/mem_clk" type="logic">
+         <obj_property name="ElementShortName">mem_clk</obj_property>
+         <obj_property name="ObjectShortName">mem_clk</obj_property>
+         <obj_property name="CustomSignalColor">#008080</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/wb_clk" type="logic">
+         <obj_property name="ElementShortName">wb_clk</obj_property>
+         <obj_property name="ObjectShortName">wb_clk</obj_property>
+         <obj_property name="CustomSignalColor">#008080</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/rf_clk" type="logic">
+         <obj_property name="ElementShortName">rf_clk</obj_property>
+         <obj_property name="ObjectShortName">rf_clk</obj_property>
+         <obj_property name="CustomSignalColor">#008080</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group47" type="group">
+      <obj_property name="label">SF_CONTROLLER</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject fp_name="/tb_core/CORE/SF_CONTROLLER/ISR_PC_flush" type="logic">
+         <obj_property name="ElementShortName">ISR_PC_flush</obj_property>
+         <obj_property name="ObjectShortName">ISR_PC_flush</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/SF_CONTROLLER/ISR_pipe_flush" type="logic">
+         <obj_property name="ElementShortName">ISR_pipe_flush</obj_property>
+         <obj_property name="ObjectShortName">ISR_pipe_flush</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/SF_CONTROLLER/jump_flush" type="logic">
+         <obj_property name="ElementShortName">jump_flush</obj_property>
+         <obj_property name="ObjectShortName">jump_flush</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/SF_CONTROLLER/branch_flush" type="logic">
+         <obj_property name="ElementShortName">branch_flush</obj_property>
+         <obj_property name="ObjectShortName">branch_flush</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/SF_CONTROLLER/mul_stall" type="logic">
+         <obj_property name="ElementShortName">mul_stall</obj_property>
+         <obj_property name="ObjectShortName">mul_stall</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/SF_CONTROLLER/div_running" type="logic">
+         <obj_property name="ElementShortName">div_running</obj_property>
+         <obj_property name="ObjectShortName">div_running</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/SF_CONTROLLER/jalr_hazard" type="logic">
+         <obj_property name="ElementShortName">jalr_hazard</obj_property>
+         <obj_property name="ObjectShortName">jalr_hazard</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/SF_CONTROLLER/load_hazard" type="logic">
+         <obj_property name="ElementShortName">load_hazard</obj_property>
+         <obj_property name="ObjectShortName">load_hazard</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/SF_CONTROLLER/loop_jump" type="logic">
+         <obj_property name="ElementShortName">loop_jump</obj_property>
+         <obj_property name="ObjectShortName">loop_jump</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/SF_CONTROLLER/is_jump" type="logic">
+         <obj_property name="ElementShortName">is_jump</obj_property>
+         <obj_property name="ObjectShortName">is_jump</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/SF_CONTROLLER/id_sel_opBR" type="logic">
+         <obj_property name="ElementShortName">id_sel_opBR</obj_property>
+         <obj_property name="ObjectShortName">id_sel_opBR</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/SF_CONTROLLER/if_stall" type="logic">
+         <obj_property name="ElementShortName">if_stall</obj_property>
+         <obj_property name="ObjectShortName">if_stall</obj_property>
+         <obj_property name="CustomSignalColor">#FFFF00</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/SF_CONTROLLER/id_stall" type="logic">
+         <obj_property name="ElementShortName">id_stall</obj_property>
+         <obj_property name="ObjectShortName">id_stall</obj_property>
+         <obj_property name="CustomSignalColor">#FFFF00</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/SF_CONTROLLER/exe_stall" type="logic">
+         <obj_property name="ElementShortName">exe_stall</obj_property>
+         <obj_property name="ObjectShortName">exe_stall</obj_property>
+         <obj_property name="CustomSignalColor">#FFFF00</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/SF_CONTROLLER/if_flush" type="logic">
+         <obj_property name="ElementShortName">if_flush</obj_property>
+         <obj_property name="ObjectShortName">if_flush</obj_property>
+         <obj_property name="CustomSignalColor">#FF0000</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/SF_CONTROLLER/id_flush" type="logic">
+         <obj_property name="ElementShortName">id_flush</obj_property>
+         <obj_property name="ObjectShortName">id_flush</obj_property>
+         <obj_property name="CustomSignalColor">#FF0000</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/SF_CONTROLLER/exe_flush" type="logic">
+         <obj_property name="ElementShortName">exe_flush</obj_property>
+         <obj_property name="ObjectShortName">exe_flush</obj_property>
+         <obj_property name="CustomSignalColor">#FF0000</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/SF_CONTROLLER/mem_flush" type="logic">
+         <obj_property name="ElementShortName">mem_flush</obj_property>
+         <obj_property name="ObjectShortName">mem_flush</obj_property>
+         <obj_property name="CustomSignalColor">#FF0000</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/SF_CONTROLLER/wb_flush" type="logic">
+         <obj_property name="ElementShortName">wb_flush</obj_property>
+         <obj_property name="ObjectShortName">wb_flush</obj_property>
+         <obj_property name="CustomSignalColor">#FF0000</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/SF_CONTROLLER/id_prev_flush" type="logic">
+         <obj_property name="ElementShortName">id_prev_flush</obj_property>
+         <obj_property name="ObjectShortName">id_prev_flush</obj_property>
+         <obj_property name="CustomSignalColor">#00FFFF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/SF_CONTROLLER/exe_prev_flush" type="logic">
+         <obj_property name="ElementShortName">exe_prev_flush</obj_property>
+         <obj_property name="ObjectShortName">exe_prev_flush</obj_property>
+         <obj_property name="CustomSignalColor">#00FFFF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/SF_CONTROLLER/mem_prev_flush" type="logic">
+         <obj_property name="ElementShortName">mem_prev_flush</obj_property>
+         <obj_property name="ObjectShortName">mem_prev_flush</obj_property>
+         <obj_property name="CustomSignalColor">#00FFFF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/SF_CONTROLLER/wb_prev_flush" type="logic">
+         <obj_property name="ElementShortName">wb_prev_flush</obj_property>
+         <obj_property name="ObjectShortName">wb_prev_flush</obj_property>
+         <obj_property name="CustomSignalColor">#00FFFF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group336" type="group">
+      <obj_property name="label">CORE CONTROL SIGNALS</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject fp_name="/tb_core/CORE/id_ALU_op" type="array">
+         <obj_property name="ElementShortName">id_ALU_op[3:0]</obj_property>
+         <obj_property name="ObjectShortName">id_ALU_op[3:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/id_div_valid" type="logic">
+         <obj_property name="ElementShortName">id_div_valid</obj_property>
+         <obj_property name="ObjectShortName">id_div_valid</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/id_div_op" type="array">
+         <obj_property name="ElementShortName">id_div_op[1:0]</obj_property>
+         <obj_property name="ObjectShortName">id_div_op[1:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/id_sel_opA" type="logic">
+         <obj_property name="ElementShortName">id_sel_opA</obj_property>
+         <obj_property name="ObjectShortName">id_sel_opA</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/id_sel_opB" type="logic">
+         <obj_property name="ElementShortName">id_sel_opB</obj_property>
+         <obj_property name="ObjectShortName">id_sel_opB</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/id_is_stype" type="logic">
+         <obj_property name="ElementShortName">id_is_stype</obj_property>
+         <obj_property name="ObjectShortName">id_is_stype</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/id_is_jump" type="logic">
+         <obj_property name="ElementShortName">id_is_jump</obj_property>
+         <obj_property name="ObjectShortName">id_is_jump</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/id_is_btype" type="logic">
+         <obj_property name="ElementShortName">id_is_btype</obj_property>
+         <obj_property name="ObjectShortName">id_is_btype</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/id_wr_en" type="logic">
+         <obj_property name="ElementShortName">id_wr_en</obj_property>
+         <obj_property name="ObjectShortName">id_wr_en</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/id_dm_select" type="array">
+         <obj_property name="ElementShortName">id_dm_select[2:0]</obj_property>
+         <obj_property name="ObjectShortName">id_dm_select[2:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/id_imm_select" type="array">
+         <obj_property name="ElementShortName">id_imm_select[2:0]</obj_property>
+         <obj_property name="ObjectShortName">id_imm_select[2:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/id_sel_pc" type="logic">
+         <obj_property name="ElementShortName">id_sel_pc</obj_property>
+         <obj_property name="ObjectShortName">id_sel_pc</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/id_sel_data" type="array">
+         <obj_property name="ElementShortName">id_sel_data[2:0]</obj_property>
+         <obj_property name="ObjectShortName">id_sel_data[2:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/id_store_select" type="array">
+         <obj_property name="ElementShortName">id_store_select[1:0]</obj_property>
+         <obj_property name="ObjectShortName">id_store_select[1:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/id_sel_opBR" type="logic">
+         <obj_property name="ElementShortName">id_sel_opBR</obj_property>
+         <obj_property name="ObjectShortName">id_sel_opBR</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group293" type="group">
+      <obj_property name="label">C_DECODER</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject fp_name="/tb_core/CORE/C_DECODER/inst" type="array">
+         <obj_property name="ElementShortName">inst[15:0]</obj_property>
+         <obj_property name="ObjectShortName">inst[15:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/C_DECODER/is_compressed" type="logic">
+         <obj_property name="ElementShortName">is_compressed</obj_property>
+         <obj_property name="ObjectShortName">is_compressed</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/C_DECODER/dm_select" type="array">
+         <obj_property name="ElementShortName">dm_select[2:0]</obj_property>
+         <obj_property name="ObjectShortName">dm_select[2:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/C_DECODER/imm_select" type="array">
+         <obj_property name="ElementShortName">imm_select[2:0]</obj_property>
+         <obj_property name="ObjectShortName">imm_select[2:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/C_DECODER/sel_data" type="array">
+         <obj_property name="ElementShortName">sel_data[2:0]</obj_property>
+         <obj_property name="ObjectShortName">sel_data[2:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/C_DECODER/store_select" type="array">
+         <obj_property name="ElementShortName">store_select[1:0]</obj_property>
+         <obj_property name="ObjectShortName">store_select[1:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/C_DECODER/alu_op" type="array">
+         <obj_property name="ElementShortName">alu_op[3:0]</obj_property>
+         <obj_property name="ObjectShortName">alu_op[3:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/C_DECODER/sel_opA" type="logic">
+         <obj_property name="ElementShortName">sel_opA</obj_property>
+         <obj_property name="ObjectShortName">sel_opA</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/C_DECODER/sel_opB" type="logic">
+         <obj_property name="ElementShortName">sel_opB</obj_property>
+         <obj_property name="ObjectShortName">sel_opB</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/C_DECODER/sel_opBR" type="logic">
+         <obj_property name="ElementShortName">sel_opBR</obj_property>
+         <obj_property name="ObjectShortName">sel_opBR</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/C_DECODER/sel_pc" type="logic">
+         <obj_property name="ElementShortName">sel_pc</obj_property>
+         <obj_property name="ObjectShortName">sel_pc</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/C_DECODER/is_stype" type="logic">
+         <obj_property name="ElementShortName">is_stype</obj_property>
+         <obj_property name="ObjectShortName">is_stype</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/C_DECODER/wr_en" type="logic">
+         <obj_property name="ElementShortName">wr_en</obj_property>
+         <obj_property name="ObjectShortName">wr_en</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/C_DECODER/btype" type="array">
+         <obj_property name="ElementShortName">btype[1:0]</obj_property>
+         <obj_property name="ObjectShortName">btype[1:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/C_DECODER/use_A" type="logic">
+         <obj_property name="ElementShortName">use_A</obj_property>
+         <obj_property name="ObjectShortName">use_A</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/C_DECODER/use_B" type="logic">
+         <obj_property name="ElementShortName">use_B</obj_property>
+         <obj_property name="ObjectShortName">use_B</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/C_DECODER/is_jump" type="logic">
+         <obj_property name="ElementShortName">is_jump</obj_property>
+         <obj_property name="ObjectShortName">is_jump</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/C_DECODER/is_btype" type="logic">
+         <obj_property name="ElementShortName">is_btype</obj_property>
+         <obj_property name="ObjectShortName">is_btype</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/C_DECODER/rs1" type="array">
+         <obj_property name="ElementShortName">rs1[4:0]</obj_property>
+         <obj_property name="ObjectShortName">rs1[4:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/C_DECODER/rs2" type="array">
+         <obj_property name="ElementShortName">rs2[4:0]</obj_property>
+         <obj_property name="ObjectShortName">rs2[4:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/C_DECODER/rd" type="array">
+         <obj_property name="ElementShortName">rd[4:0]</obj_property>
+         <obj_property name="ObjectShortName">rd[4:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/C_DECODER/imm" type="array">
+         <obj_property name="ElementShortName">imm[31:0]</obj_property>
+         <obj_property name="ObjectShortName">imm[31:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/C_DECODER/jt" type="array">
+         <obj_property name="ElementShortName">jt[31:0]</obj_property>
+         <obj_property name="ObjectShortName">jt[31:0]</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group64" type="group">
+      <obj_property name="label">CONTROLLER1</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject fp_name="/tb_core/CORE/CONTROL/opcode" type="array">
+         <obj_property name="ElementShortName">opcode[6:0]</obj_property>
+         <obj_property name="ObjectShortName">opcode[6:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/CONTROL/funct3" type="array">
+         <obj_property name="ElementShortName">funct3[2:0]</obj_property>
+         <obj_property name="ObjectShortName">funct3[2:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/CONTROL/funct7" type="array">
+         <obj_property name="ElementShortName">funct7[6:0]</obj_property>
+         <obj_property name="ObjectShortName">funct7[6:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/CONTROL/ALU_op" type="array">
+         <obj_property name="ElementShortName">ALU_op[3:0]</obj_property>
+         <obj_property name="ObjectShortName">ALU_op[3:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/CONTROL/div_valid" type="logic">
+         <obj_property name="ElementShortName">div_valid</obj_property>
+         <obj_property name="ObjectShortName">div_valid</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/CONTROL/div_op" type="array">
+         <obj_property name="ElementShortName">div_op[1:0]</obj_property>
+         <obj_property name="ObjectShortName">div_op[1:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/CONTROL/sel_opA" type="logic">
+         <obj_property name="ElementShortName">sel_opA</obj_property>
+         <obj_property name="ObjectShortName">sel_opA</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/CONTROL/sel_opB" type="logic">
+         <obj_property name="ElementShortName">sel_opB</obj_property>
+         <obj_property name="ObjectShortName">sel_opB</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/CONTROL/is_stype" type="logic">
+         <obj_property name="ElementShortName">is_stype</obj_property>
+         <obj_property name="ObjectShortName">is_stype</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/CONTROL/is_jump" type="logic">
+         <obj_property name="ElementShortName">is_jump</obj_property>
+         <obj_property name="ObjectShortName">is_jump</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/CONTROL/is_btype" type="logic">
+         <obj_property name="ElementShortName">is_btype</obj_property>
+         <obj_property name="ObjectShortName">is_btype</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/CONTROL/wr_en" type="logic">
+         <obj_property name="ElementShortName">wr_en</obj_property>
+         <obj_property name="ObjectShortName">wr_en</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/CONTROL/dm_select" type="array">
+         <obj_property name="ElementShortName">dm_select[2:0]</obj_property>
+         <obj_property name="ObjectShortName">dm_select[2:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/CONTROL/imm_select" type="array">
+         <obj_property name="ElementShortName">imm_select[2:0]</obj_property>
+         <obj_property name="ObjectShortName">imm_select[2:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/CONTROL/sel_pc" type="logic">
+         <obj_property name="ElementShortName">sel_pc</obj_property>
+         <obj_property name="ObjectShortName">sel_pc</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/CONTROL/sel_data" type="array">
+         <obj_property name="ElementShortName">sel_data[2:0]</obj_property>
+         <obj_property name="ObjectShortName">sel_data[2:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/CONTROL/store_select" type="array">
+         <obj_property name="ElementShortName">store_select[1:0]</obj_property>
+         <obj_property name="ObjectShortName">store_select[1:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/CONTROL/sel_opBR" type="logic">
+         <obj_property name="ElementShortName">sel_opBR</obj_property>
+         <obj_property name="ObjectShortName">sel_opBR</obj_property>
+      </wvobject>
+      <wvobject type="divider" fp_name="divider317">
+         <obj_property name="label">Signals in Core</obj_property>
+         <obj_property name="DisplayName">label</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/id_base_dm_select" type="array">
+         <obj_property name="ElementShortName">id_base_dm_select[2:0]</obj_property>
+         <obj_property name="ObjectShortName">id_base_dm_select[2:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/id_base_imm_select" type="array">
+         <obj_property name="ElementShortName">id_base_imm_select[2:0]</obj_property>
+         <obj_property name="ObjectShortName">id_base_imm_select[2:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/id_base_sel_data" type="array">
+         <obj_property name="ElementShortName">id_base_sel_data[2:0]</obj_property>
+         <obj_property name="ObjectShortName">id_base_sel_data[2:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/id_base_store_select" type="array">
+         <obj_property name="ElementShortName">id_base_store_select[1:0]</obj_property>
+         <obj_property name="ObjectShortName">id_base_store_select[1:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/id_base_ALU_op" type="array">
+         <obj_property name="ElementShortName">id_base_ALU_op[3:0]</obj_property>
+         <obj_property name="ObjectShortName">id_base_ALU_op[3:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/id_base_sel_opA" type="logic">
+         <obj_property name="ElementShortName">id_base_sel_opA</obj_property>
+         <obj_property name="ObjectShortName">id_base_sel_opA</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/id_base_sel_opB" type="logic">
+         <obj_property name="ElementShortName">id_base_sel_opB</obj_property>
+         <obj_property name="ObjectShortName">id_base_sel_opB</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/id_base_is_stype" type="logic">
+         <obj_property name="ElementShortName">id_base_is_stype</obj_property>
+         <obj_property name="ObjectShortName">id_base_is_stype</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/id_base_wr_en" type="logic">
+         <obj_property name="ElementShortName">id_base_wr_en</obj_property>
+         <obj_property name="ObjectShortName">id_base_wr_en</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/id_base_rsA" type="array">
+         <obj_property name="ElementShortName">id_base_rsA[4:0]</obj_property>
+         <obj_property name="ObjectShortName">id_base_rsA[4:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/id_base_rsB" type="array">
+         <obj_property name="ElementShortName">id_base_rsB[4:0]</obj_property>
+         <obj_property name="ObjectShortName">id_base_rsB[4:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/id_base_rd" type="array">
+         <obj_property name="ElementShortName">id_base_rd[4:0]</obj_property>
+         <obj_property name="ObjectShortName">id_base_rd[4:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/id_base_imm" type="array">
+         <obj_property name="ElementShortName">id_base_imm[31:0]</obj_property>
+         <obj_property name="ObjectShortName">id_base_imm[31:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/id_base_is_jump" type="logic">
+         <obj_property name="ElementShortName">id_base_is_jump</obj_property>
+         <obj_property name="ObjectShortName">id_base_is_jump</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/id_base_is_btype" type="logic">
+         <obj_property name="ElementShortName">id_base_is_btype</obj_property>
+         <obj_property name="ObjectShortName">id_base_is_btype</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/id_base_sel_pc" type="logic">
+         <obj_property name="ElementShortName">id_base_sel_pc</obj_property>
+         <obj_property name="ObjectShortName">id_base_sel_pc</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/id_base_sel_opBR" type="logic">
+         <obj_property name="ElementShortName">id_base_sel_opBR</obj_property>
+         <obj_property name="ObjectShortName">id_base_sel_opBR</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group83" type="group">
+      <obj_property name="label">REGFILE</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject fp_name="/tb_core/CORE/RF/wr_en" type="logic">
+         <obj_property name="ElementShortName">wr_en</obj_property>
+         <obj_property name="ObjectShortName">wr_en</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/RF/wr_data" type="array">
+         <obj_property name="ElementShortName">wr_data[31:0]</obj_property>
+         <obj_property name="ObjectShortName">wr_data[31:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/RF/src1_addr" type="array">
+         <obj_property name="ElementShortName">src1_addr[4:0]</obj_property>
+         <obj_property name="ObjectShortName">src1_addr[4:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/RF/src2_addr" type="array">
+         <obj_property name="ElementShortName">src2_addr[4:0]</obj_property>
+         <obj_property name="ObjectShortName">src2_addr[4:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/RF/dest_addr" type="array">
+         <obj_property name="ElementShortName">dest_addr[4:0]</obj_property>
+         <obj_property name="ObjectShortName">dest_addr[4:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/RF/src1_out" type="array">
+         <obj_property name="ElementShortName">src1_out[31:0]</obj_property>
+         <obj_property name="ObjectShortName">src1_out[31:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/RF/src2_out" type="array">
+         <obj_property name="ElementShortName">src2_out[31:0]</obj_property>
+         <obj_property name="ObjectShortName">src2_out[31:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/RF/regfile" type="array">
+         <obj_property name="ElementShortName">regfile[0:31][31:0]</obj_property>
+         <obj_property name="ObjectShortName">regfile[0:31][31:0]</obj_property>
+         <obj_property name="isExpanded"></obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group92" type="group">
+      <obj_property name="label">FWD</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject fp_name="/tb_core/CORE/SF_CONTROLLER/FWD/fw_exe_to_id_A" type="logic">
+         <obj_property name="ElementShortName">fw_exe_to_id_A</obj_property>
+         <obj_property name="ObjectShortName">fw_exe_to_id_A</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/SF_CONTROLLER/FWD/fw_exe_to_id_B" type="logic">
+         <obj_property name="ElementShortName">fw_exe_to_id_B</obj_property>
+         <obj_property name="ObjectShortName">fw_exe_to_id_B</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/SF_CONTROLLER/FWD/fw_mem_to_id_A" type="logic">
+         <obj_property name="ElementShortName">fw_mem_to_id_A</obj_property>
+         <obj_property name="ObjectShortName">fw_mem_to_id_A</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/SF_CONTROLLER/FWD/fw_mem_to_id_B" type="logic">
+         <obj_property name="ElementShortName">fw_mem_to_id_B</obj_property>
+         <obj_property name="ObjectShortName">fw_mem_to_id_B</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/SF_CONTROLLER/FWD/fw_wb_to_id_A" type="logic">
+         <obj_property name="ElementShortName">fw_wb_to_id_A</obj_property>
+         <obj_property name="ObjectShortName">fw_wb_to_id_A</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/SF_CONTROLLER/FWD/fw_wb_to_id_B" type="logic">
+         <obj_property name="ElementShortName">fw_wb_to_id_B</obj_property>
+         <obj_property name="ObjectShortName">fw_wb_to_id_B</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/SF_CONTROLLER/FWD/fw_wb_to_exe_A" type="logic">
+         <obj_property name="ElementShortName">fw_wb_to_exe_A</obj_property>
+         <obj_property name="ObjectShortName">fw_wb_to_exe_A</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/SF_CONTROLLER/FWD/fw_wb_to_exe_B" type="logic">
+         <obj_property name="ElementShortName">fw_wb_to_exe_B</obj_property>
+         <obj_property name="ObjectShortName">fw_wb_to_exe_B</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/SF_CONTROLLER/FWD/hzd_exe_to_id_A" type="logic">
+         <obj_property name="ElementShortName">hzd_exe_to_id_A</obj_property>
+         <obj_property name="ObjectShortName">hzd_exe_to_id_A</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/SF_CONTROLLER/FWD/hzd_mem_to_exe_A" type="logic">
+         <obj_property name="ElementShortName">hzd_mem_to_exe_A</obj_property>
+         <obj_property name="ObjectShortName">hzd_mem_to_exe_A</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/SF_CONTROLLER/FWD/hzd_mem_to_exe_B" type="logic">
+         <obj_property name="ElementShortName">hzd_mem_to_exe_B</obj_property>
+         <obj_property name="ObjectShortName">hzd_mem_to_exe_B</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group104" type="group">
+      <obj_property name="label">ALU</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject fp_name="/tb_core/CORE/ALU/op_a" type="array">
+         <obj_property name="ElementShortName">op_a[31:0]</obj_property>
+         <obj_property name="ObjectShortName">op_a[31:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/ALU/op_b" type="array">
+         <obj_property name="ElementShortName">op_b[31:0]</obj_property>
+         <obj_property name="ObjectShortName">op_b[31:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/ALU/ALU_op" type="array">
+         <obj_property name="ElementShortName">ALU_op[3:0]</obj_property>
+         <obj_property name="ObjectShortName">ALU_op[3:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/ALU/res" type="array">
+         <obj_property name="ElementShortName">res[31:0]</obj_property>
+         <obj_property name="ObjectShortName">res[31:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/ALU/z" type="logic">
+         <obj_property name="ElementShortName">z</obj_property>
+         <obj_property name="ObjectShortName">z</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/ALU/less" type="logic">
+         <obj_property name="ElementShortName">less</obj_property>
+         <obj_property name="ObjectShortName">less</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group615" type="group">
+      <obj_property name="label">DIVIDER</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject fp_name="/tb_core/CORE/DIVIDER/load_hazard" type="logic">
+         <obj_property name="ElementShortName">load_hazard</obj_property>
+         <obj_property name="ObjectShortName">load_hazard</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/DIVIDER/opA" type="array">
+         <obj_property name="ElementShortName">opA[31:0]</obj_property>
+         <obj_property name="ObjectShortName">opA[31:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/DIVIDER/opB" type="array">
+         <obj_property name="ElementShortName">opB[31:0]</obj_property>
+         <obj_property name="ObjectShortName">opB[31:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/DIVIDER/div_running" type="logic">
+         <obj_property name="ElementShortName">div_running</obj_property>
+         <obj_property name="ObjectShortName">div_running</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/DIVIDER/divrem_clken" type="logic">
+         <obj_property name="ElementShortName">divrem_clken</obj_property>
+         <obj_property name="ObjectShortName">divrem_clken</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/DIVIDER/divuremu_clken" type="logic">
+         <obj_property name="ElementShortName">divuremu_clken</obj_property>
+         <obj_property name="ObjectShortName">divuremu_clken</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/DIVIDER/DIVout" type="array">
+         <obj_property name="ElementShortName">DIVout[31:0]</obj_property>
+         <obj_property name="ObjectShortName">DIVout[31:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/DIVIDER/div_state" type="array">
+         <obj_property name="ElementShortName">div_state[1:0]</obj_property>
+         <obj_property name="ObjectShortName">div_state[1:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/DIVIDER/div_nstate" type="array">
+         <obj_property name="ElementShortName">div_nstate[1:0]</obj_property>
+         <obj_property name="ObjectShortName">div_nstate[1:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/DIVIDER/div_signed_input_tvalid" type="logic">
+         <obj_property name="DisplayName">label</obj_property>
+         <obj_property name="ElementShortName">div_signed_input_tvalid</obj_property>
+         <obj_property name="ObjectShortName">div_signed_input_tvalid</obj_property>
+         <obj_property name="label">SIN VALID</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/DIVIDER/div_signed_dividend_tready" type="logic">
+         <obj_property name="DisplayName">label</obj_property>
+         <obj_property name="ElementShortName">div_signed_dividend_tready</obj_property>
+         <obj_property name="ObjectShortName">div_signed_dividend_tready</obj_property>
+         <obj_property name="label">SIN DENDRDY</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/DIVIDER/div_signed_divisor_tready" type="logic">
+         <obj_property name="DisplayName">label</obj_property>
+         <obj_property name="ElementShortName">div_signed_divisor_tready</obj_property>
+         <obj_property name="ObjectShortName">div_signed_divisor_tready</obj_property>
+         <obj_property name="label">SIN DSORRDY</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/DIVIDER/div_signed_out_tdata" type="array">
+         <obj_property name="DisplayName">label</obj_property>
+         <obj_property name="ElementShortName">div_signed_out_tdata[63:0]</obj_property>
+         <obj_property name="ObjectShortName">div_signed_out_tdata[63:0]</obj_property>
+         <obj_property name="label">SIN OUTDATA</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/DIVIDER/div_signed_out_tvalid" type="logic">
+         <obj_property name="DisplayName">label</obj_property>
+         <obj_property name="ElementShortName">div_signed_out_tvalid</obj_property>
+         <obj_property name="ObjectShortName">div_signed_out_tvalid</obj_property>
+         <obj_property name="label">SIN OUTVALID</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/DIVIDER/div_unsigned_input_tvalid" type="logic">
+         <obj_property name="DisplayName">label</obj_property>
+         <obj_property name="ElementShortName">div_unsigned_input_tvalid</obj_property>
+         <obj_property name="ObjectShortName">div_unsigned_input_tvalid</obj_property>
+         <obj_property name="label">UIN VALID</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/DIVIDER/div_unsigned_dividend_tready" type="logic">
+         <obj_property name="DisplayName">label</obj_property>
+         <obj_property name="ElementShortName">div_unsigned_dividend_tready</obj_property>
+         <obj_property name="ObjectShortName">div_unsigned_dividend_tready</obj_property>
+         <obj_property name="label">UIN DENDRDY</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/DIVIDER/div_unsigned_divisor_tready" type="logic">
+         <obj_property name="DisplayName">label</obj_property>
+         <obj_property name="ElementShortName">div_unsigned_divisor_tready</obj_property>
+         <obj_property name="ObjectShortName">div_unsigned_divisor_tready</obj_property>
+         <obj_property name="label">UIN DSORRDY</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/DIVIDER/div_unsigned_out_tdata" type="array">
+         <obj_property name="DisplayName">label</obj_property>
+         <obj_property name="ElementShortName">div_unsigned_out_tdata[63:0]</obj_property>
+         <obj_property name="ObjectShortName">div_unsigned_out_tdata[63:0]</obj_property>
+         <obj_property name="label">UIN OUTDATA</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/DIVIDER/div_unsigned_out_tvalid" type="logic">
+         <obj_property name="DisplayName">label</obj_property>
+         <obj_property name="ElementShortName">div_unsigned_out_tvalid</obj_property>
+         <obj_property name="ObjectShortName">div_unsigned_out_tvalid</obj_property>
+         <obj_property name="label">UIN OUTVALID</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group111" type="group">
+      <obj_property name="label">BHT</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="isExpanded"></obj_property>
+      <wvobject fp_name="/tb_core/CORE/BRANCHPREDICTOR/CLK" type="logic">
+         <obj_property name="ElementShortName">CLK</obj_property>
+         <obj_property name="ObjectShortName">CLK</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/BRANCHPREDICTOR/nrst" type="logic">
+         <obj_property name="ElementShortName">nrst</obj_property>
+         <obj_property name="ObjectShortName">nrst</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/BRANCHPREDICTOR/ISR_running" type="logic">
+         <obj_property name="ElementShortName">ISR_running</obj_property>
+         <obj_property name="ObjectShortName">ISR_running</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/BRANCHPREDICTOR/stall" type="logic">
+         <obj_property name="ElementShortName">stall</obj_property>
+         <obj_property name="ObjectShortName">stall</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/BRANCHPREDICTOR/id_branchtarget" type="array">
+         <obj_property name="ElementShortName">id_branchtarget[10:0]</obj_property>
+         <obj_property name="ObjectShortName">id_branchtarget[10:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/BRANCHPREDICTOR/id_is_jump" type="logic">
+         <obj_property name="ElementShortName">id_is_jump</obj_property>
+         <obj_property name="ObjectShortName">id_is_jump</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/BRANCHPREDICTOR/id_is_btype" type="logic">
+         <obj_property name="ElementShortName">id_is_btype</obj_property>
+         <obj_property name="ObjectShortName">id_is_btype</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/BRANCHPREDICTOR/exe_PC" type="array">
+         <obj_property name="ElementShortName">exe_PC[10:0]</obj_property>
+         <obj_property name="ObjectShortName">exe_PC[10:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/BRANCHPREDICTOR/exe_branchtarget" type="array">
+         <obj_property name="ElementShortName">exe_branchtarget[10:0]</obj_property>
+         <obj_property name="ObjectShortName">exe_branchtarget[10:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/BRANCHPREDICTOR/exe_sel_opBR" type="logic">
+         <obj_property name="ElementShortName">exe_sel_opBR</obj_property>
+         <obj_property name="ObjectShortName">exe_sel_opBR</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/BRANCHPREDICTOR/exe_z" type="logic">
+         <obj_property name="ElementShortName">exe_z</obj_property>
+         <obj_property name="ObjectShortName">exe_z</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/BRANCHPREDICTOR/exe_less" type="logic">
+         <obj_property name="ElementShortName">exe_less</obj_property>
+         <obj_property name="ObjectShortName">exe_less</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/BRANCHPREDICTOR/exe_signed_less" type="logic">
+         <obj_property name="ElementShortName">exe_signed_less</obj_property>
+         <obj_property name="ObjectShortName">exe_signed_less</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/BRANCHPREDICTOR/if_prediction" type="logic">
+         <obj_property name="ElementShortName">if_prediction</obj_property>
+         <obj_property name="ObjectShortName">if_prediction</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/BRANCHPREDICTOR/exe_correction" type="array">
+         <obj_property name="ElementShortName">exe_correction[1:0]</obj_property>
+         <obj_property name="ObjectShortName">exe_correction[1:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/BRANCHPREDICTOR/jump_flush" type="logic">
+         <obj_property name="ElementShortName">jump_flush</obj_property>
+         <obj_property name="ObjectShortName">jump_flush</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/BRANCHPREDICTOR/branch_flush" type="logic">
+         <obj_property name="ElementShortName">branch_flush</obj_property>
+         <obj_property name="ObjectShortName">branch_flush</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/BRANCHPREDICTOR/id_jump_in_bht" type="logic">
+         <obj_property name="ElementShortName">id_jump_in_bht</obj_property>
+         <obj_property name="ObjectShortName">id_jump_in_bht</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/BRANCHPREDICTOR/if_PBT" type="array">
+         <obj_property name="ElementShortName">if_PBT[10:0]</obj_property>
+         <obj_property name="ObjectShortName">if_PBT[10:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/BRANCHPREDICTOR/exe_PBT" type="array">
+         <obj_property name="ElementShortName">exe_PBT[10:0]</obj_property>
+         <obj_property name="ObjectShortName">exe_PBT[10:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/BRANCHPREDICTOR/exe_CNI" type="array">
+         <obj_property name="ElementShortName">exe_CNI[10:0]</obj_property>
+         <obj_property name="ObjectShortName">exe_CNI[10:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="group635" type="group">
+         <obj_property name="label">BHT + FIFO Counter</obj_property>
+         <obj_property name="DisplayName">label</obj_property>
+         <wvobject fp_name="/tb_core/CORE/BRANCHPREDICTOR/history_table" type="array">
+            <obj_property name="ElementShortName">history_table[0:63][21:0]</obj_property>
+            <obj_property name="ObjectShortName">history_table[0:63][21:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_core/CORE/BRANCHPREDICTOR/fifo_counter" type="array">
+            <obj_property name="ElementShortName">fifo_counter[0:15][1:0]</obj_property>
+            <obj_property name="ObjectShortName">fifo_counter[0:15][1:0]</obj_property>
+         </wvobject>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/BRANCHPREDICTOR/sat_counter" type="array">
+         <obj_property name="ElementShortName">sat_counter[1:0]</obj_property>
+         <obj_property name="ObjectShortName">sat_counter[1:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="group634" type="group">
+         <obj_property name="label">Predictions</obj_property>
+         <obj_property name="DisplayName">label</obj_property>
+         <wvobject fp_name="/tb_core/CORE/BRANCHPREDICTOR/is_beq" type="logic">
+            <obj_property name="ElementShortName">is_beq</obj_property>
+            <obj_property name="ObjectShortName">is_beq</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_core/CORE/BRANCHPREDICTOR/is_bne" type="logic">
+            <obj_property name="ElementShortName">is_bne</obj_property>
+            <obj_property name="ObjectShortName">is_bne</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_core/CORE/BRANCHPREDICTOR/is_blt" type="logic">
+            <obj_property name="ElementShortName">is_blt</obj_property>
+            <obj_property name="ObjectShortName">is_blt</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_core/CORE/BRANCHPREDICTOR/is_bge" type="logic">
+            <obj_property name="ElementShortName">is_bge</obj_property>
+            <obj_property name="ObjectShortName">is_bge</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_core/CORE/BRANCHPREDICTOR/is_bltu" type="logic">
+            <obj_property name="ElementShortName">is_bltu</obj_property>
+            <obj_property name="ObjectShortName">is_bltu</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_core/CORE/BRANCHPREDICTOR/is_bgeu" type="logic">
+            <obj_property name="ElementShortName">is_bgeu</obj_property>
+            <obj_property name="ObjectShortName">is_bgeu</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_core/CORE/BRANCHPREDICTOR/is_beqz" type="logic">
+            <obj_property name="ElementShortName">is_beqz</obj_property>
+            <obj_property name="ObjectShortName">is_beqz</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_core/CORE/BRANCHPREDICTOR/is_bnez" type="logic">
+            <obj_property name="ElementShortName">is_bnez</obj_property>
+            <obj_property name="ObjectShortName">is_bnez</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_core/CORE/BRANCHPREDICTOR/feedback" type="logic">
+            <obj_property name="ElementShortName">feedback</obj_property>
+            <obj_property name="ObjectShortName">feedback</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_core/CORE/BRANCHPREDICTOR/is_pred_correct" type="logic">
+            <obj_property name="ElementShortName">is_pred_correct</obj_property>
+            <obj_property name="ObjectShortName">is_pred_correct</obj_property>
+         </wvobject>
+      </wvobject>
+      <wvobject fp_name="group633" type="group">
+         <obj_property name="label">Loaded entries</obj_property>
+         <obj_property name="DisplayName">label</obj_property>
+         <obj_property name="isExpanded"></obj_property>
+         <wvobject fp_name="/tb_core/CORE/BRANCHPREDICTOR/if_set" type="array">
+            <obj_property name="ElementShortName">if_set[3:0]</obj_property>
+            <obj_property name="ObjectShortName">if_set[3:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_core/CORE/BRANCHPREDICTOR/id_set" type="array">
+            <obj_property name="ElementShortName">id_set[3:0]</obj_property>
+            <obj_property name="ObjectShortName">id_set[3:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_core/CORE/BRANCHPREDICTOR/exe_set" type="array">
+            <obj_property name="ElementShortName">exe_set[3:0]</obj_property>
+            <obj_property name="ObjectShortName">exe_set[3:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_core/CORE/BRANCHPREDICTOR/if_tag" type="array">
+            <obj_property name="ElementShortName">if_tag[6:0]</obj_property>
+            <obj_property name="ObjectShortName">if_tag[6:0]</obj_property>
+            <obj_property name="CustomSignalColor">#FF0000</obj_property>
+            <obj_property name="UseCustomSignalColor">true</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_core/CORE/BRANCHPREDICTOR/id_tag" type="array">
+            <obj_property name="ElementShortName">id_tag[6:0]</obj_property>
+            <obj_property name="ObjectShortName">id_tag[6:0]</obj_property>
+            <obj_property name="CustomSignalColor">#FF0000</obj_property>
+            <obj_property name="UseCustomSignalColor">true</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_core/CORE/BRANCHPREDICTOR/exe_tag" type="array">
+            <obj_property name="ElementShortName">exe_tag[6:0]</obj_property>
+            <obj_property name="ObjectShortName">exe_tag[6:0]</obj_property>
+            <obj_property name="CustomSignalColor">#FF0000</obj_property>
+            <obj_property name="UseCustomSignalColor">true</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_core/CORE/BRANCHPREDICTOR/exe_setoffset" type="array">
+            <obj_property name="ElementShortName">exe_setoffset[1:0]</obj_property>
+            <obj_property name="ObjectShortName">exe_setoffset[1:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_core/CORE/BRANCHPREDICTOR/if_iseqto" type="array">
+            <obj_property name="ElementShortName">if_iseqto[3:0]</obj_property>
+            <obj_property name="ObjectShortName">if_iseqto[3:0]</obj_property>
+            <obj_property name="CustomSignalColor">#0000FF</obj_property>
+            <obj_property name="UseCustomSignalColor">true</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_core/CORE/BRANCHPREDICTOR/id_iseqto" type="array">
+            <obj_property name="ElementShortName">id_iseqto[3:0]</obj_property>
+            <obj_property name="ObjectShortName">id_iseqto[3:0]</obj_property>
+            <obj_property name="CustomSignalColor">#0000FF</obj_property>
+            <obj_property name="UseCustomSignalColor">true</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_core/CORE/BRANCHPREDICTOR/exe_iseqto" type="array">
+            <obj_property name="ElementShortName">exe_iseqto[3:0]</obj_property>
+            <obj_property name="ObjectShortName">exe_iseqto[3:0]</obj_property>
+            <obj_property name="CustomSignalColor">#0000FF</obj_property>
+            <obj_property name="UseCustomSignalColor">true</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_core/CORE/BRANCHPREDICTOR/if_loadentry" type="array">
+            <obj_property name="ElementShortName">if_loadentry[21:0]</obj_property>
+            <obj_property name="ObjectShortName">if_loadentry[21:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_core/CORE/BRANCHPREDICTOR/exe_loadentry" type="array">
+            <obj_property name="ElementShortName">exe_loadentry[21:0]</obj_property>
+            <obj_property name="ObjectShortName">exe_loadentry[21:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_core/CORE/BRANCHPREDICTOR/if_entry" type="array">
+            <obj_property name="ElementShortName">if_entry[0:3][21:0]</obj_property>
+            <obj_property name="ObjectShortName">if_entry[0:3][21:0]</obj_property>
+            <obj_property name="CustomSignalColor">#0000FF</obj_property>
+            <obj_property name="UseCustomSignalColor">true</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_core/CORE/BRANCHPREDICTOR/id_entry" type="array">
+            <obj_property name="ElementShortName">id_entry[0:3][21:0]</obj_property>
+            <obj_property name="ObjectShortName">id_entry[0:3][21:0]</obj_property>
+            <obj_property name="CustomSignalColor">#0000FF</obj_property>
+            <obj_property name="UseCustomSignalColor">true</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_core/CORE/BRANCHPREDICTOR/exe_entry" type="array">
+            <obj_property name="ElementShortName">exe_entry[0:3][21:0]</obj_property>
+            <obj_property name="ObjectShortName">exe_entry[0:3][21:0]</obj_property>
+            <obj_property name="CustomSignalColor">#0000FF</obj_property>
+            <obj_property name="UseCustomSignalColor">true</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_core/CORE/BRANCHPREDICTOR/if_valid" type="array">
+            <obj_property name="ElementShortName">if_valid[3:0]</obj_property>
+            <obj_property name="ObjectShortName">if_valid[3:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_core/CORE/BRANCHPREDICTOR/id_valid" type="array">
+            <obj_property name="ElementShortName">id_valid[3:0]</obj_property>
+            <obj_property name="ObjectShortName">id_valid[3:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_core/CORE/BRANCHPREDICTOR/exe_valid" type="array">
+            <obj_property name="ElementShortName">exe_valid[3:0]</obj_property>
+            <obj_property name="ObjectShortName">exe_valid[3:0]</obj_property>
+         </wvobject>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group131" type="group">
+      <obj_property name="label">DATAMEM + LOADBLOCK</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject fp_name="/tb_core/CORE/DATAMEM/dm_write" type="array">
+         <obj_property name="ElementShortName">dm_write[3:0]</obj_property>
+         <obj_property name="ObjectShortName">dm_write[3:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/DATAMEM/data_in" type="array">
+         <obj_property name="ElementShortName">data_in[31:0]</obj_property>
+         <obj_property name="ObjectShortName">data_in[31:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/DATAMEM/data_out" type="array">
+         <obj_property name="ElementShortName">data_out[31:0]</obj_property>
+         <obj_property name="ObjectShortName">data_out[31:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/LOADBLOCK/byte_offset" type="array">
+         <obj_property name="ElementShortName">byte_offset[1:0]</obj_property>
+         <obj_property name="ObjectShortName">byte_offset[1:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/LOADBLOCK/dm_select" type="array">
+         <obj_property name="ElementShortName">dm_select[2:0]</obj_property>
+         <obj_property name="ObjectShortName">dm_select[2:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_core/CORE/LOADBLOCK/loaddata" type="array">
+         <obj_property name="ElementShortName">loaddata[31:0]</obj_property>
+         <obj_property name="ObjectShortName">loaddata[31:0]</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group141" type="group">
+      <obj_property name="label">Pipeline Outputs</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject fp_name="group147" type="group">
+         <obj_property name="label">IF/ID</obj_property>
+         <obj_property name="DisplayName">label</obj_property>
+         <wvobject fp_name="/tb_core/CORE/IF_ID/flush" type="logic">
+            <obj_property name="ElementShortName">flush</obj_property>
+            <obj_property name="ObjectShortName">flush</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_core/CORE/IF_ID/id_pc4" type="array">
+            <obj_property name="ElementShortName">id_pc4[11:0]</obj_property>
+            <obj_property name="ObjectShortName">id_pc4[11:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_core/CORE/IF_ID/id_inst" type="array">
+            <obj_property name="ElementShortName">id_inst[31:0]</obj_property>
+            <obj_property name="ObjectShortName">id_inst[31:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_core/CORE/IF_ID/id_PC" type="array">
+            <obj_property name="ElementShortName">id_PC[11:0]</obj_property>
+            <obj_property name="ObjectShortName">id_PC[11:0]</obj_property>
+         </wvobject>
+      </wvobject>
+      <wvobject fp_name="group166" type="group">
+         <obj_property name="label">ID/EXE</obj_property>
+         <obj_property name="DisplayName">label</obj_property>
+         <obj_property name="isExpanded"></obj_property>
+         <wvobject fp_name="/tb_core/CORE/ID_EXE/flush" type="logic">
+            <obj_property name="ElementShortName">flush</obj_property>
+            <obj_property name="ObjectShortName">flush</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_core/CORE/ID_EXE/exe_pc4" type="array">
+            <obj_property name="ElementShortName">exe_pc4[11:0]</obj_property>
+            <obj_property name="ObjectShortName">exe_pc4[11:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_core/CORE/ID_EXE/exe_fwdopA" type="array">
+            <obj_property name="ElementShortName">exe_fwdopA[31:0]</obj_property>
+            <obj_property name="ObjectShortName">exe_fwdopA[31:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_core/CORE/ID_EXE/exe_fwdopB" type="array">
+            <obj_property name="ElementShortName">exe_fwdopB[31:0]</obj_property>
+            <obj_property name="ObjectShortName">exe_fwdopB[31:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_core/CORE/ID_EXE/exe_fwdstore" type="array">
+            <obj_property name="ElementShortName">exe_fwdstore[31:0]</obj_property>
+            <obj_property name="ObjectShortName">exe_fwdstore[31:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_core/CORE/ID_EXE/exe_imm" type="array">
+            <obj_property name="ElementShortName">exe_imm[31:0]</obj_property>
+            <obj_property name="ObjectShortName">exe_imm[31:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_core/CORE/ID_EXE/exe_rd" type="array">
+            <obj_property name="ElementShortName">exe_rd[4:0]</obj_property>
+            <obj_property name="ObjectShortName">exe_rd[4:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_core/CORE/ID_EXE/exe_PC" type="array">
+            <obj_property name="ElementShortName">exe_PC[11:0]</obj_property>
+            <obj_property name="ObjectShortName">exe_PC[11:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_core/CORE/ID_EXE/exe_ALU_op" type="array">
+            <obj_property name="ElementShortName">exe_ALU_op[3:0]</obj_property>
+            <obj_property name="ObjectShortName">exe_ALU_op[3:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_core/CORE/ID_EXE/exe_div_valid" type="logic">
+            <obj_property name="ElementShortName">exe_div_valid</obj_property>
+            <obj_property name="ObjectShortName">exe_div_valid</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_core/CORE/ID_EXE/exe_div_op" type="array">
+            <obj_property name="ElementShortName">exe_div_op[1:0]</obj_property>
+            <obj_property name="ObjectShortName">exe_div_op[1:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_core/CORE/ID_EXE/exe_is_stype" type="logic">
+            <obj_property name="ElementShortName">exe_is_stype</obj_property>
+            <obj_property name="ObjectShortName">exe_is_stype</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_core/CORE/ID_EXE/exe_wr_en" type="logic">
+            <obj_property name="ElementShortName">exe_wr_en</obj_property>
+            <obj_property name="ObjectShortName">exe_wr_en</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_core/CORE/ID_EXE/exe_dm_select" type="array">
+            <obj_property name="ElementShortName">exe_dm_select[2:0]</obj_property>
+            <obj_property name="ObjectShortName">exe_dm_select[2:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_core/CORE/ID_EXE/exe_sel_data" type="array">
+            <obj_property name="ElementShortName">exe_sel_data[2:0]</obj_property>
+            <obj_property name="ObjectShortName">exe_sel_data[2:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_core/CORE/ID_EXE/exe_store_select" type="array">
+            <obj_property name="ElementShortName">exe_store_select[1:0]</obj_property>
+            <obj_property name="ObjectShortName">exe_store_select[1:0]</obj_property>
+         </wvobject>
+      </wvobject>
+      <wvobject fp_name="group181" type="group">
+         <obj_property name="label">EXE/MEM</obj_property>
+         <obj_property name="DisplayName">label</obj_property>
+         <wvobject fp_name="/tb_core/CORE/EXE_MEM/flush" type="logic">
+            <obj_property name="ElementShortName">flush</obj_property>
+            <obj_property name="ObjectShortName">flush</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_core/CORE/EXE_MEM/mem_pc4" type="array">
+            <obj_property name="ElementShortName">mem_pc4[11:0]</obj_property>
+            <obj_property name="ObjectShortName">mem_pc4[11:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_core/CORE/EXE_MEM/mem_ALUout" type="array">
+            <obj_property name="ElementShortName">mem_ALUout[31:0]</obj_property>
+            <obj_property name="ObjectShortName">mem_ALUout[31:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_core/CORE/EXE_MEM/mem_DIVout" type="array">
+            <obj_property name="ElementShortName">mem_DIVout[31:0]</obj_property>
+            <obj_property name="ObjectShortName">mem_DIVout[31:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_core/CORE/EXE_MEM/mem_storedata" type="array">
+            <obj_property name="ElementShortName">mem_storedata[31:0]</obj_property>
+            <obj_property name="ObjectShortName">mem_storedata[31:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_core/CORE/EXE_MEM/mem_imm" type="array">
+            <obj_property name="ElementShortName">mem_imm[31:0]</obj_property>
+            <obj_property name="ObjectShortName">mem_imm[31:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_core/CORE/EXE_MEM/mem_rd" type="array">
+            <obj_property name="ElementShortName">mem_rd[4:0]</obj_property>
+            <obj_property name="ObjectShortName">mem_rd[4:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_core/CORE/EXE_MEM/mem_dm_write" type="array">
+            <obj_property name="ElementShortName">mem_dm_write[3:0]</obj_property>
+            <obj_property name="ObjectShortName">mem_dm_write[3:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_core/CORE/EXE_MEM/mem_wr_en" type="logic">
+            <obj_property name="ElementShortName">mem_wr_en</obj_property>
+            <obj_property name="ObjectShortName">mem_wr_en</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_core/CORE/EXE_MEM/mem_dm_select" type="array">
+            <obj_property name="ElementShortName">mem_dm_select[2:0]</obj_property>
+            <obj_property name="ObjectShortName">mem_dm_select[2:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_core/CORE/EXE_MEM/mem_sel_data" type="array">
+            <obj_property name="ElementShortName">mem_sel_data[2:0]</obj_property>
+            <obj_property name="ObjectShortName">mem_sel_data[2:0]</obj_property>
+         </wvobject>
+      </wvobject>
+      <wvobject fp_name="group194" type="group">
+         <obj_property name="label">MEM/WB</obj_property>
+         <obj_property name="DisplayName">label</obj_property>
+         <wvobject fp_name="/tb_core/CORE/MEM_WB/flush" type="logic">
+            <obj_property name="ElementShortName">flush</obj_property>
+            <obj_property name="ObjectShortName">flush</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_core/CORE/MEM_WB/wb_pc4" type="array">
+            <obj_property name="ElementShortName">wb_pc4[11:0]</obj_property>
+            <obj_property name="ObjectShortName">wb_pc4[11:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_core/CORE/MEM_WB/wb_ALUout" type="array">
+            <obj_property name="ElementShortName">wb_ALUout[31:0]</obj_property>
+            <obj_property name="ObjectShortName">wb_ALUout[31:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_core/CORE/MEM_WB/wb_DIVout" type="array">
+            <obj_property name="ElementShortName">wb_DIVout[31:0]</obj_property>
+            <obj_property name="ObjectShortName">wb_DIVout[31:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_core/CORE/MEM_WB/wb_loaddata" type="array">
+            <obj_property name="ElementShortName">wb_loaddata[31:0]</obj_property>
+            <obj_property name="ObjectShortName">wb_loaddata[31:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_core/CORE/MEM_WB/wb_imm" type="array">
+            <obj_property name="ElementShortName">wb_imm[31:0]</obj_property>
+            <obj_property name="ObjectShortName">wb_imm[31:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_core/CORE/MEM_WB/wb_rd" type="array">
+            <obj_property name="ElementShortName">wb_rd[4:0]</obj_property>
+            <obj_property name="ObjectShortName">wb_rd[4:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_core/CORE/MEM_WB/wb_wr_en" type="logic">
+            <obj_property name="ElementShortName">wb_wr_en</obj_property>
+            <obj_property name="ObjectShortName">wb_wr_en</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_core/CORE/MEM_WB/wb_sel_data" type="array">
+            <obj_property name="ElementShortName">wb_sel_data[2:0]</obj_property>
+            <obj_property name="ObjectShortName">wb_sel_data[2:0]</obj_property>
+         </wvobject>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group195" type="group">
+      <obj_property name="label">Datapath Signals</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject fp_name="group204" type="group">
+         <obj_property name="label">IF Stage</obj_property>
+         <obj_property name="DisplayName">label</obj_property>
+         <wvobject fp_name="/tb_core/CORE/if_pcnew" type="array">
+            <obj_property name="ElementShortName">if_pcnew[11:0]</obj_property>
+            <obj_property name="ObjectShortName">if_pcnew[11:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_core/CORE/if_PC" type="array">
+            <obj_property name="ElementShortName">if_PC[11:0]</obj_property>
+            <obj_property name="ObjectShortName">if_PC[11:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_core/CORE/if_inst" type="array">
+            <obj_property name="ElementShortName">if_inst[31:0]</obj_property>
+            <obj_property name="ObjectShortName">if_inst[31:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_core/CORE/if_prediction" type="logic">
+            <obj_property name="ElementShortName">if_prediction</obj_property>
+            <obj_property name="ObjectShortName">if_prediction</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_core/CORE/if_PBT" type="array">
+            <obj_property name="ElementShortName">if_PBT[10:0]</obj_property>
+            <obj_property name="ObjectShortName">if_PBT[10:0]</obj_property>
+         </wvobject>
+      </wvobject>
+      <wvobject fp_name="group247" type="group">
+         <obj_property name="label">ID Stage</obj_property>
+         <obj_property name="DisplayName">label</obj_property>
+         <wvobject fp_name="/tb_core/CORE/id_PC" type="array">
+            <obj_property name="ElementShortName">id_PC[11:0]</obj_property>
+            <obj_property name="ObjectShortName">id_PC[11:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_core/CORE/id_inst" type="array">
+            <obj_property name="ElementShortName">id_inst[31:0]</obj_property>
+            <obj_property name="ObjectShortName">id_inst[31:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_core/CORE/id_branchtarget" type="array">
+            <obj_property name="ElementShortName">id_branchtarget[31:0]</obj_property>
+            <obj_property name="ObjectShortName">id_branchtarget[31:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_core/CORE/id_brOP" type="array">
+            <obj_property name="ElementShortName">id_brOP[31:0]</obj_property>
+            <obj_property name="ObjectShortName">id_brOP[31:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_core/CORE/id_jump_in_bht" type="logic">
+            <obj_property name="ElementShortName">id_jump_in_bht</obj_property>
+            <obj_property name="ObjectShortName">id_jump_in_bht</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_core/CORE/id_rsA" type="array">
+            <obj_property name="ElementShortName">id_rsA[4:0]</obj_property>
+            <obj_property name="ObjectShortName">id_rsA[4:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_core/CORE/id_rsB" type="array">
+            <obj_property name="ElementShortName">id_rsB[4:0]</obj_property>
+            <obj_property name="ObjectShortName">id_rsB[4:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_core/CORE/id_rd" type="array">
+            <obj_property name="ElementShortName">id_rd[4:0]</obj_property>
+            <obj_property name="ObjectShortName">id_rd[4:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="group333" type="group">
+            <obj_property name="label">Control signals</obj_property>
+            <obj_property name="DisplayName">label</obj_property>
+            <obj_property name="isExpanded"></obj_property>
+            <wvobject fp_name="/tb_core/CORE/id_ALU_op" type="array">
+               <obj_property name="ElementShortName">id_ALU_op[3:0]</obj_property>
+               <obj_property name="ObjectShortName">id_ALU_op[3:0]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/tb_core/CORE/id_div_valid" type="logic">
+               <obj_property name="ElementShortName">id_div_valid</obj_property>
+               <obj_property name="ObjectShortName">id_div_valid</obj_property>
+            </wvobject>
+            <wvobject fp_name="/tb_core/CORE/id_div_op" type="array">
+               <obj_property name="ElementShortName">id_div_op[1:0]</obj_property>
+               <obj_property name="ObjectShortName">id_div_op[1:0]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/tb_core/CORE/id_sel_opA" type="logic">
+               <obj_property name="ElementShortName">id_sel_opA</obj_property>
+               <obj_property name="ObjectShortName">id_sel_opA</obj_property>
+            </wvobject>
+            <wvobject fp_name="/tb_core/CORE/id_sel_opB" type="logic">
+               <obj_property name="ElementShortName">id_sel_opB</obj_property>
+               <obj_property name="ObjectShortName">id_sel_opB</obj_property>
+            </wvobject>
+            <wvobject fp_name="/tb_core/CORE/id_is_jump" type="logic">
+               <obj_property name="ElementShortName">id_is_jump</obj_property>
+               <obj_property name="ObjectShortName">id_is_jump</obj_property>
+            </wvobject>
+            <wvobject fp_name="/tb_core/CORE/id_is_btype" type="logic">
+               <obj_property name="ElementShortName">id_is_btype</obj_property>
+               <obj_property name="ObjectShortName">id_is_btype</obj_property>
+            </wvobject>
+            <wvobject fp_name="/tb_core/CORE/id_is_stype" type="logic">
+               <obj_property name="ElementShortName">id_is_stype</obj_property>
+               <obj_property name="ObjectShortName">id_is_stype</obj_property>
+            </wvobject>
+            <wvobject fp_name="/tb_core/CORE/id_wr_en" type="logic">
+               <obj_property name="ElementShortName">id_wr_en</obj_property>
+               <obj_property name="ObjectShortName">id_wr_en</obj_property>
+            </wvobject>
+            <wvobject fp_name="/tb_core/CORE/id_dm_select" type="array">
+               <obj_property name="ElementShortName">id_dm_select[2:0]</obj_property>
+               <obj_property name="ObjectShortName">id_dm_select[2:0]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/tb_core/CORE/id_imm_select" type="array">
+               <obj_property name="ElementShortName">id_imm_select[2:0]</obj_property>
+               <obj_property name="ObjectShortName">id_imm_select[2:0]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/tb_core/CORE/id_sel_pc" type="logic">
+               <obj_property name="ElementShortName">id_sel_pc</obj_property>
+               <obj_property name="ObjectShortName">id_sel_pc</obj_property>
+            </wvobject>
+            <wvobject fp_name="/tb_core/CORE/id_sel_data" type="array">
+               <obj_property name="ElementShortName">id_sel_data[2:0]</obj_property>
+               <obj_property name="ObjectShortName">id_sel_data[2:0]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/tb_core/CORE/id_store_select" type="array">
+               <obj_property name="ElementShortName">id_store_select[1:0]</obj_property>
+               <obj_property name="ObjectShortName">id_store_select[1:0]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/tb_core/CORE/id_sel_opBR" type="logic">
+               <obj_property name="ElementShortName">id_sel_opBR</obj_property>
+               <obj_property name="ObjectShortName">id_sel_opBR</obj_property>
+            </wvobject>
+         </wvobject>
+         <wvobject fp_name="/tb_core/CORE/id_rfoutA" type="array">
+            <obj_property name="ElementShortName">id_rfoutA[31:0]</obj_property>
+            <obj_property name="ObjectShortName">id_rfoutA[31:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_core/CORE/id_rfoutB" type="array">
+            <obj_property name="ElementShortName">id_rfoutB[31:0]</obj_property>
+            <obj_property name="ObjectShortName">id_rfoutB[31:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_core/CORE/id_imm" type="array">
+            <obj_property name="ElementShortName">id_imm[31:0]</obj_property>
+            <obj_property name="ObjectShortName">id_imm[31:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_core/CORE/id_fwdopA" type="array">
+            <obj_property name="ElementShortName">id_fwdopA[31:0]</obj_property>
+            <obj_property name="ObjectShortName">id_fwdopA[31:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_core/CORE/id_fwdopB" type="array">
+            <obj_property name="ElementShortName">id_fwdopB[31:0]</obj_property>
+            <obj_property name="ObjectShortName">id_fwdopB[31:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_core/CORE/id_fwdstore" type="array">
+            <obj_property name="ElementShortName">id_fwdstore[31:0]</obj_property>
+            <obj_property name="ObjectShortName">id_fwdstore[31:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="group334" type="group">
+            <obj_property name="label">Forwarding</obj_property>
+            <obj_property name="DisplayName">label</obj_property>
+            <wvobject fp_name="/tb_core/CORE/fw_exe_to_id_A" type="logic">
+               <obj_property name="ElementShortName">fw_exe_to_id_A</obj_property>
+               <obj_property name="ObjectShortName">fw_exe_to_id_A</obj_property>
+            </wvobject>
+            <wvobject fp_name="/tb_core/CORE/fw_exe_to_id_B" type="logic">
+               <obj_property name="ElementShortName">fw_exe_to_id_B</obj_property>
+               <obj_property name="ObjectShortName">fw_exe_to_id_B</obj_property>
+            </wvobject>
+            <wvobject fp_name="/tb_core/CORE/fw_mem_to_id_A" type="logic">
+               <obj_property name="ElementShortName">fw_mem_to_id_A</obj_property>
+               <obj_property name="ObjectShortName">fw_mem_to_id_A</obj_property>
+            </wvobject>
+            <wvobject fp_name="/tb_core/CORE/fw_mem_to_id_B" type="logic">
+               <obj_property name="ElementShortName">fw_mem_to_id_B</obj_property>
+               <obj_property name="ObjectShortName">fw_mem_to_id_B</obj_property>
+            </wvobject>
+            <wvobject fp_name="/tb_core/CORE/fw_wb_to_id_A" type="logic">
+               <obj_property name="ElementShortName">fw_wb_to_id_A</obj_property>
+               <obj_property name="ObjectShortName">fw_wb_to_id_A</obj_property>
+            </wvobject>
+            <wvobject fp_name="/tb_core/CORE/fw_wb_to_id_B" type="logic">
+               <obj_property name="ElementShortName">fw_wb_to_id_B</obj_property>
+               <obj_property name="ObjectShortName">fw_wb_to_id_B</obj_property>
+            </wvobject>
+         </wvobject>
+      </wvobject>
+      <wvobject fp_name="group291" type="group">
+         <obj_property name="label">EXE Stage</obj_property>
+         <obj_property name="DisplayName">label</obj_property>
+         <wvobject fp_name="/tb_core/CORE/exe_PC" type="array">
+            <obj_property name="ElementShortName">exe_PC[11:0]</obj_property>
+            <obj_property name="ObjectShortName">exe_PC[11:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="group336" type="group">
+            <obj_property name="label">Operands</obj_property>
+            <obj_property name="DisplayName">label</obj_property>
+            <obj_property name="isExpanded"></obj_property>
+            <wvobject fp_name="/tb_core/CORE/exe_fwdopA" type="array">
+               <obj_property name="ElementShortName">exe_fwdopA[31:0]</obj_property>
+               <obj_property name="ObjectShortName">exe_fwdopA[31:0]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/tb_core/CORE/exe_fwdopB" type="array">
+               <obj_property name="ElementShortName">exe_fwdopB[31:0]</obj_property>
+               <obj_property name="ObjectShortName">exe_fwdopB[31:0]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/tb_core/CORE/exe_fwdstore" type="array">
+               <obj_property name="ElementShortName">exe_fwdstore[31:0]</obj_property>
+               <obj_property name="ObjectShortName">exe_fwdstore[31:0]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/tb_core/CORE/opA" type="array">
+               <obj_property name="ElementShortName">opA[31:0]</obj_property>
+               <obj_property name="ObjectShortName">opA[31:0]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/tb_core/CORE/opB" type="array">
+               <obj_property name="ElementShortName">opB[31:0]</obj_property>
+               <obj_property name="ObjectShortName">opB[31:0]</obj_property>
+            </wvobject>
+         </wvobject>
+         <wvobject fp_name="/tb_core/CORE/exe_imm" type="array">
+            <obj_property name="ElementShortName">exe_imm[31:0]</obj_property>
+            <obj_property name="ObjectShortName">exe_imm[31:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_core/CORE/exe_rd" type="array">
+            <obj_property name="ElementShortName">exe_rd[4:0]</obj_property>
+            <obj_property name="ObjectShortName">exe_rd[4:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_core/CORE/exe_rstore" type="array">
+            <obj_property name="ElementShortName">exe_rstore[31:0]</obj_property>
+            <obj_property name="ObjectShortName">exe_rstore[31:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_core/CORE/exe_is_stype" type="logic">
+            <obj_property name="ElementShortName">exe_is_stype</obj_property>
+            <obj_property name="ObjectShortName">exe_is_stype</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_core/CORE/exe_ALUout" type="array">
+            <obj_property name="ElementShortName">exe_ALUout[31:0]</obj_property>
+            <obj_property name="ObjectShortName">exe_ALUout[31:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_core/CORE/exe_DIVout" type="array">
+            <obj_property name="ElementShortName">exe_DIVout[31:0]</obj_property>
+            <obj_property name="ObjectShortName">exe_DIVout[31:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_core/CORE/exe_storedata" type="array">
+            <obj_property name="ElementShortName">exe_storedata[31:0]</obj_property>
+            <obj_property name="ObjectShortName">exe_storedata[31:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="group337" type="group">
+            <obj_property name="label">BHT</obj_property>
+            <obj_property name="DisplayName">label</obj_property>
+            <wvobject fp_name="/tb_core/CORE/exe_correction" type="array">
+               <obj_property name="ElementShortName">exe_correction[1:0]</obj_property>
+               <obj_property name="ObjectShortName">exe_correction[1:0]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/tb_core/CORE/exe_PBT" type="array">
+               <obj_property name="ElementShortName">exe_PBT[10:0]</obj_property>
+               <obj_property name="ObjectShortName">exe_PBT[10:0]</obj_property>
+            </wvobject>
+            <wvobject fp_name="/tb_core/CORE/exe_CNI" type="array">
+               <obj_property name="ElementShortName">exe_CNI[10:0]</obj_property>
+               <obj_property name="ObjectShortName">exe_CNI[10:0]</obj_property>
+            </wvobject>
+         </wvobject>
+         <wvobject fp_name="group335" type="group">
+            <obj_property name="label">Forwarding</obj_property>
+            <obj_property name="DisplayName">label</obj_property>
+            <wvobject fp_name="/tb_core/CORE/fw_exe_to_id_A" type="logic">
+               <obj_property name="ElementShortName">fw_exe_to_id_A</obj_property>
+               <obj_property name="ObjectShortName">fw_exe_to_id_A</obj_property>
+            </wvobject>
+            <wvobject fp_name="/tb_core/CORE/fw_exe_to_id_B" type="logic">
+               <obj_property name="ElementShortName">fw_exe_to_id_B</obj_property>
+               <obj_property name="ObjectShortName">fw_exe_to_id_B</obj_property>
+            </wvobject>
+            <wvobject fp_name="/tb_core/CORE/fw_wb_to_exe_A" type="logic">
+               <obj_property name="ElementShortName">fw_wb_to_exe_A</obj_property>
+               <obj_property name="ObjectShortName">fw_wb_to_exe_A</obj_property>
+            </wvobject>
+            <wvobject fp_name="/tb_core/CORE/fw_wb_to_exe_B" type="logic">
+               <obj_property name="ElementShortName">fw_wb_to_exe_B</obj_property>
+               <obj_property name="ObjectShortName">fw_wb_to_exe_B</obj_property>
+            </wvobject>
+         </wvobject>
+      </wvobject>
+      <wvobject fp_name="group312" type="group">
+         <obj_property name="label">MEM Stage</obj_property>
+         <obj_property name="DisplayName">label</obj_property>
+         <wvobject fp_name="/tb_core/CORE/mem_ALUout" type="array">
+            <obj_property name="ElementShortName">mem_ALUout[31:0]</obj_property>
+            <obj_property name="ObjectShortName">mem_ALUout[31:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_core/CORE/mem_DIVout" type="array">
+            <obj_property name="ElementShortName">mem_DIVout[31:0]</obj_property>
+            <obj_property name="ObjectShortName">mem_DIVout[31:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_core/CORE/mem_storedata" type="array">
+            <obj_property name="ElementShortName">mem_storedata[31:0]</obj_property>
+            <obj_property name="ObjectShortName">mem_storedata[31:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_core/CORE/mem_imm" type="array">
+            <obj_property name="ElementShortName">mem_imm[31:0]</obj_property>
+            <obj_property name="ObjectShortName">mem_imm[31:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_core/CORE/mem_rd" type="array">
+            <obj_property name="ElementShortName">mem_rd[4:0]</obj_property>
+            <obj_property name="ObjectShortName">mem_rd[4:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_core/CORE/mem_dm_write" type="array">
+            <obj_property name="ElementShortName">mem_dm_write[3:0]</obj_property>
+            <obj_property name="ObjectShortName">mem_dm_write[3:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_core/CORE/mem_wr_en" type="logic">
+            <obj_property name="ElementShortName">mem_wr_en</obj_property>
+            <obj_property name="ObjectShortName">mem_wr_en</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_core/CORE/mem_dm_select" type="array">
+            <obj_property name="ElementShortName">mem_dm_select[2:0]</obj_property>
+            <obj_property name="ObjectShortName">mem_dm_select[2:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_core/CORE/mem_sel_data" type="array">
+            <obj_property name="ElementShortName">mem_sel_data[2:0]</obj_property>
+            <obj_property name="ObjectShortName">mem_sel_data[2:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_core/CORE/mem_DATAMEMout" type="array">
+            <obj_property name="ElementShortName">mem_DATAMEMout[31:0]</obj_property>
+            <obj_property name="ObjectShortName">mem_DATAMEMout[31:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_core/CORE/mem_loaddata" type="array">
+            <obj_property name="ElementShortName">mem_loaddata[31:0]</obj_property>
+            <obj_property name="ObjectShortName">mem_loaddata[31:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_core/CORE/fw_mem_to_id_A" type="logic">
+            <obj_property name="ElementShortName">fw_mem_to_id_A</obj_property>
+            <obj_property name="ObjectShortName">fw_mem_to_id_A</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_core/CORE/fw_mem_to_id_B" type="logic">
+            <obj_property name="ElementShortName">fw_mem_to_id_B</obj_property>
+            <obj_property name="ObjectShortName">fw_mem_to_id_B</obj_property>
+         </wvobject>
+      </wvobject>
+      <wvobject fp_name="group330" type="group">
+         <obj_property name="label">WB Stage</obj_property>
+         <obj_property name="DisplayName">label</obj_property>
+         <obj_property name="isExpanded"></obj_property>
+         <wvobject fp_name="/tb_core/CORE/wb_ALUout" type="array">
+            <obj_property name="ElementShortName">wb_ALUout[31:0]</obj_property>
+            <obj_property name="ObjectShortName">wb_ALUout[31:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_core/CORE/wb_DIVout" type="array">
+            <obj_property name="ElementShortName">wb_DIVout[31:0]</obj_property>
+            <obj_property name="ObjectShortName">wb_DIVout[31:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_core/CORE/wb_loaddata" type="array">
+            <obj_property name="ElementShortName">wb_loaddata[31:0]</obj_property>
+            <obj_property name="ObjectShortName">wb_loaddata[31:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_core/CORE/wb_imm" type="array">
+            <obj_property name="ElementShortName">wb_imm[31:0]</obj_property>
+            <obj_property name="ObjectShortName">wb_imm[31:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_core/CORE/wb_rd" type="array">
+            <obj_property name="ElementShortName">wb_rd[4:0]</obj_property>
+            <obj_property name="ObjectShortName">wb_rd[4:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_core/CORE/wb_wr_en" type="logic">
+            <obj_property name="ElementShortName">wb_wr_en</obj_property>
+            <obj_property name="ObjectShortName">wb_wr_en</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_core/CORE/wb_sel_data" type="array">
+            <obj_property name="ElementShortName">wb_sel_data[2:0]</obj_property>
+            <obj_property name="ObjectShortName">wb_sel_data[2:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_core/CORE/wb_wr_data" type="array">
+            <obj_property name="ElementShortName">wb_wr_data[31:0]</obj_property>
+            <obj_property name="ObjectShortName">wb_wr_data[31:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_core/CORE/fw_wb_to_id_A" type="logic">
+            <obj_property name="ElementShortName">fw_wb_to_id_A</obj_property>
+            <obj_property name="ObjectShortName">fw_wb_to_id_A</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_core/CORE/fw_wb_to_id_B" type="logic">
+            <obj_property name="ElementShortName">fw_wb_to_id_B</obj_property>
+            <obj_property name="ObjectShortName">fw_wb_to_id_B</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_core/CORE/fw_wb_to_exe_A" type="logic">
+            <obj_property name="ElementShortName">fw_wb_to_exe_A</obj_property>
+            <obj_property name="ObjectShortName">fw_wb_to_exe_A</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_core/CORE/fw_wb_to_exe_B" type="logic">
+            <obj_property name="ElementShortName">fw_wb_to_exe_B</obj_property>
+            <obj_property name="ObjectShortName">fw_wb_to_exe_B</obj_property>
+         </wvobject>
+      </wvobject>
+   </wvobject>
+</wave_config>

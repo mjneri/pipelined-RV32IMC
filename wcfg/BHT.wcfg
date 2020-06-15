@@ -1,0 +1,720 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wave_config>
+   <wave_state>
+   </wave_state>
+   <db_ref_list>
+      <db_ref path="tb_branchpredictor_behav.wdb" id="1">
+         <top_modules>
+            <top_module name="glbl" />
+            <top_module name="tb_branchpredictor" />
+         </top_modules>
+      </db_ref>
+   </db_ref_list>
+   <zoom_setting>
+      <ZoomStartTime time="155000fs"></ZoomStartTime>
+      <ZoomEndTime time="965001fs"></ZoomEndTime>
+      <Cursor1Time time="418829fs"></Cursor1Time>
+   </zoom_setting>
+   <column_width_setting>
+      <NameColumnWidth column_width="146"></NameColumnWidth>
+      <ValueColumnWidth column_width="78"></ValueColumnWidth>
+   </column_width_setting>
+   <WVObjectSize size="45" />
+   <wvobject fp_name="/tb_branchpredictor/UUT/CLK" type="logic">
+      <obj_property name="ElementShortName">CLK</obj_property>
+      <obj_property name="ObjectShortName">CLK</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_branchpredictor/UUT/nrst" type="logic">
+      <obj_property name="ElementShortName">nrst</obj_property>
+      <obj_property name="ObjectShortName">nrst</obj_property>
+   </wvobject>
+   <wvobject type="divider" fp_name="divider321">
+      <obj_property name="label">Inputs</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="BkColor">#FFFF00</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_branchpredictor/UUT/if_PC" type="array">
+      <obj_property name="ElementShortName">if_PC[9:0]</obj_property>
+      <obj_property name="ObjectShortName">if_PC[9:0]</obj_property>
+      <obj_property name="CustomSignalColor">#FFFF00</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_branchpredictor/UUT/id_PC" type="array">
+      <obj_property name="ElementShortName">id_PC[9:0]</obj_property>
+      <obj_property name="ObjectShortName">id_PC[9:0]</obj_property>
+      <obj_property name="CustomSignalColor">#FFFF00</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_branchpredictor/UUT/id_branchtarget" type="array">
+      <obj_property name="ElementShortName">id_branchtarget[9:0]</obj_property>
+      <obj_property name="ObjectShortName">id_branchtarget[9:0]</obj_property>
+      <obj_property name="CustomSignalColor">#FFFF00</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_branchpredictor/UUT/id_is_jump" type="logic">
+      <obj_property name="ElementShortName">id_is_jump</obj_property>
+      <obj_property name="ObjectShortName">id_is_jump</obj_property>
+      <obj_property name="CustomSignalColor">#800080</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_branchpredictor/UUT/id_is_btype" type="logic">
+      <obj_property name="ElementShortName">id_is_btype</obj_property>
+      <obj_property name="ObjectShortName">id_is_btype</obj_property>
+      <obj_property name="CustomSignalColor">#800080</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_branchpredictor/UUT/exe_btype" type="array">
+      <obj_property name="ElementShortName">exe_btype[5:0]</obj_property>
+      <obj_property name="ObjectShortName">exe_btype[5:0]</obj_property>
+      <obj_property name="CustomSignalColor">#800080</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_branchpredictor/UUT/exe_PC" type="array">
+      <obj_property name="ElementShortName">exe_PC[9:0]</obj_property>
+      <obj_property name="ObjectShortName">exe_PC[9:0]</obj_property>
+      <obj_property name="CustomSignalColor">#FFFF00</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_branchpredictor/UUT/exe_z" type="logic">
+      <obj_property name="ElementShortName">exe_z</obj_property>
+      <obj_property name="ObjectShortName">exe_z</obj_property>
+      <obj_property name="CustomSignalColor">#FFFF00</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_branchpredictor/UUT/exe_less" type="logic">
+      <obj_property name="ElementShortName">exe_less</obj_property>
+      <obj_property name="ObjectShortName">exe_less</obj_property>
+      <obj_property name="CustomSignalColor">#FFFF00</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+   </wvobject>
+   <wvobject type="divider" fp_name="divider70">
+      <obj_property name="label">Outputs</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="BkColor">#D2691E</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_branchpredictor/UUT/if_prediction" type="logic">
+      <obj_property name="ElementShortName">if_prediction</obj_property>
+      <obj_property name="ObjectShortName">if_prediction</obj_property>
+      <obj_property name="CustomSignalColor">#FF0080</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_branchpredictor/UUT/exe_correction" type="array">
+      <obj_property name="ElementShortName">exe_correction[1:0]</obj_property>
+      <obj_property name="ObjectShortName">exe_correction[1:0]</obj_property>
+      <obj_property name="CustomSignalColor">#FF0080</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+      <obj_property name="Radix">BINARYRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_branchpredictor/UUT/flush" type="logic">
+      <obj_property name="ElementShortName">flush</obj_property>
+      <obj_property name="ObjectShortName">flush</obj_property>
+      <obj_property name="CustomSignalColor">#FF0080</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_branchpredictor/UUT/if_PBT" type="array">
+      <obj_property name="ElementShortName">if_PBT[9:0]</obj_property>
+      <obj_property name="ObjectShortName">if_PBT[9:0]</obj_property>
+      <obj_property name="CustomSignalColor">#D2691E</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_branchpredictor/UUT/exe_PBT" type="array">
+      <obj_property name="ElementShortName">exe_PBT[9:0]</obj_property>
+      <obj_property name="ObjectShortName">exe_PBT[9:0]</obj_property>
+      <obj_property name="CustomSignalColor">#D2691E</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_branchpredictor/UUT/exe_CNI" type="array">
+      <obj_property name="ElementShortName">exe_CNI[9:0]</obj_property>
+      <obj_property name="ObjectShortName">exe_CNI[9:0]</obj_property>
+      <obj_property name="CustomSignalColor">#D2691E</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+   </wvobject>
+   <wvobject type="divider" fp_name="divider322">
+      <obj_property name="label">Table + FIFO Counter</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="BkColor">#00FFFF</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_branchpredictor/UUT/fifo_counter[12]" type="array">
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="ElementShortName">[12][1:0]</obj_property>
+      <obj_property name="ObjectShortName">[12][1:0]</obj_property>
+      <obj_property name="label">fifo_counter 12</obj_property>
+   </wvobject>
+   <wvobject fp_name="group221" type="group">
+      <obj_property name="label">Set 12</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="isExpanded"></obj_property>
+      <wvobject fp_name="/tb_branchpredictor/UUT/history_table[48]" type="array">
+         <obj_property name="ElementShortName">[48][18:0]</obj_property>
+         <obj_property name="ObjectShortName">[48][18:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_branchpredictor/UUT/history_table[49]" type="array">
+         <obj_property name="ElementShortName">[49][18:0]</obj_property>
+         <obj_property name="ObjectShortName">[49][18:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_branchpredictor/UUT/history_table[50]" type="array">
+         <obj_property name="ElementShortName">[50][18:0]</obj_property>
+         <obj_property name="ObjectShortName">[50][18:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_branchpredictor/UUT/history_table[51]" type="array">
+         <obj_property name="ElementShortName">[51][18:0]</obj_property>
+         <obj_property name="ObjectShortName">[51][18:0]</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group242" type="group">
+      <obj_property name="label">Other Sets</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject fp_name="group236" type="group">
+         <obj_property name="label">Set 15</obj_property>
+         <obj_property name="DisplayName">label</obj_property>
+         <wvobject fp_name="/tb_branchpredictor/UUT/history_table[60]" type="array">
+            <obj_property name="ElementShortName">[60][18:0]</obj_property>
+            <obj_property name="ObjectShortName">[60][18:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_branchpredictor/UUT/history_table[61]" type="array">
+            <obj_property name="ElementShortName">[61][18:0]</obj_property>
+            <obj_property name="ObjectShortName">[61][18:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_branchpredictor/UUT/history_table[62]" type="array">
+            <obj_property name="ElementShortName">[62][18:0]</obj_property>
+            <obj_property name="ObjectShortName">[62][18:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_branchpredictor/UUT/history_table[63]" type="array">
+            <obj_property name="ElementShortName">[63][18:0]</obj_property>
+            <obj_property name="ObjectShortName">[63][18:0]</obj_property>
+         </wvobject>
+      </wvobject>
+      <wvobject fp_name="group231" type="group">
+         <obj_property name="label">Set 14</obj_property>
+         <obj_property name="DisplayName">label</obj_property>
+         <wvobject fp_name="/tb_branchpredictor/UUT/history_table[56]" type="array">
+            <obj_property name="ElementShortName">[56][18:0]</obj_property>
+            <obj_property name="ObjectShortName">[56][18:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_branchpredictor/UUT/history_table[57]" type="array">
+            <obj_property name="ElementShortName">[57][18:0]</obj_property>
+            <obj_property name="ObjectShortName">[57][18:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_branchpredictor/UUT/history_table[58]" type="array">
+            <obj_property name="ElementShortName">[58][18:0]</obj_property>
+            <obj_property name="ObjectShortName">[58][18:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_branchpredictor/UUT/history_table[59]" type="array">
+            <obj_property name="ElementShortName">[59][18:0]</obj_property>
+            <obj_property name="ObjectShortName">[59][18:0]</obj_property>
+         </wvobject>
+      </wvobject>
+      <wvobject fp_name="group226" type="group">
+         <obj_property name="label">Set 13</obj_property>
+         <obj_property name="DisplayName">label</obj_property>
+         <wvobject fp_name="/tb_branchpredictor/UUT/history_table[52]" type="array">
+            <obj_property name="ElementShortName">[52][18:0]</obj_property>
+            <obj_property name="ObjectShortName">[52][18:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_branchpredictor/UUT/history_table[53]" type="array">
+            <obj_property name="ElementShortName">[53][18:0]</obj_property>
+            <obj_property name="ObjectShortName">[53][18:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_branchpredictor/UUT/history_table[54]" type="array">
+            <obj_property name="ElementShortName">[54][18:0]</obj_property>
+            <obj_property name="ObjectShortName">[54][18:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_branchpredictor/UUT/history_table[55]" type="array">
+            <obj_property name="ElementShortName">[55][18:0]</obj_property>
+            <obj_property name="ObjectShortName">[55][18:0]</obj_property>
+         </wvobject>
+      </wvobject>
+      <wvobject fp_name="group216" type="group">
+         <obj_property name="label">Set 11</obj_property>
+         <obj_property name="DisplayName">label</obj_property>
+         <wvobject fp_name="/tb_branchpredictor/UUT/history_table[44]" type="array">
+            <obj_property name="ElementShortName">[44][18:0]</obj_property>
+            <obj_property name="ObjectShortName">[44][18:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_branchpredictor/UUT/history_table[45]" type="array">
+            <obj_property name="ElementShortName">[45][18:0]</obj_property>
+            <obj_property name="ObjectShortName">[45][18:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_branchpredictor/UUT/history_table[46]" type="array">
+            <obj_property name="ElementShortName">[46][18:0]</obj_property>
+            <obj_property name="ObjectShortName">[46][18:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_branchpredictor/UUT/history_table[47]" type="array">
+            <obj_property name="ElementShortName">[47][18:0]</obj_property>
+            <obj_property name="ObjectShortName">[47][18:0]</obj_property>
+         </wvobject>
+      </wvobject>
+      <wvobject fp_name="group211" type="group">
+         <obj_property name="label">Set 10</obj_property>
+         <obj_property name="DisplayName">label</obj_property>
+         <wvobject fp_name="/tb_branchpredictor/UUT/history_table[40]" type="array">
+            <obj_property name="ElementShortName">[40][18:0]</obj_property>
+            <obj_property name="ObjectShortName">[40][18:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_branchpredictor/UUT/history_table[41]" type="array">
+            <obj_property name="ElementShortName">[41][18:0]</obj_property>
+            <obj_property name="ObjectShortName">[41][18:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_branchpredictor/UUT/history_table[42]" type="array">
+            <obj_property name="ElementShortName">[42][18:0]</obj_property>
+            <obj_property name="ObjectShortName">[42][18:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_branchpredictor/UUT/history_table[43]" type="array">
+            <obj_property name="ElementShortName">[43][18:0]</obj_property>
+            <obj_property name="ObjectShortName">[43][18:0]</obj_property>
+         </wvobject>
+      </wvobject>
+      <wvobject fp_name="group206" type="group">
+         <obj_property name="label">Set 9</obj_property>
+         <obj_property name="DisplayName">label</obj_property>
+         <wvobject fp_name="/tb_branchpredictor/UUT/history_table[36]" type="array">
+            <obj_property name="ElementShortName">[36][18:0]</obj_property>
+            <obj_property name="ObjectShortName">[36][18:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_branchpredictor/UUT/history_table[37]" type="array">
+            <obj_property name="ElementShortName">[37][18:0]</obj_property>
+            <obj_property name="ObjectShortName">[37][18:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_branchpredictor/UUT/history_table[38]" type="array">
+            <obj_property name="ElementShortName">[38][18:0]</obj_property>
+            <obj_property name="ObjectShortName">[38][18:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_branchpredictor/UUT/history_table[39]" type="array">
+            <obj_property name="ElementShortName">[39][18:0]</obj_property>
+            <obj_property name="ObjectShortName">[39][18:0]</obj_property>
+         </wvobject>
+      </wvobject>
+      <wvobject fp_name="group201" type="group">
+         <obj_property name="label">Set 8</obj_property>
+         <obj_property name="DisplayName">label</obj_property>
+         <wvobject fp_name="/tb_branchpredictor/UUT/history_table[32]" type="array">
+            <obj_property name="ElementShortName">[32][18:0]</obj_property>
+            <obj_property name="ObjectShortName">[32][18:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_branchpredictor/UUT/history_table[33]" type="array">
+            <obj_property name="ElementShortName">[33][18:0]</obj_property>
+            <obj_property name="ObjectShortName">[33][18:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_branchpredictor/UUT/history_table[34]" type="array">
+            <obj_property name="ElementShortName">[34][18:0]</obj_property>
+            <obj_property name="ObjectShortName">[34][18:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_branchpredictor/UUT/history_table[35]" type="array">
+            <obj_property name="ElementShortName">[35][18:0]</obj_property>
+            <obj_property name="ObjectShortName">[35][18:0]</obj_property>
+         </wvobject>
+      </wvobject>
+      <wvobject fp_name="group196" type="group">
+         <obj_property name="label">Set 7</obj_property>
+         <obj_property name="DisplayName">label</obj_property>
+         <wvobject fp_name="/tb_branchpredictor/UUT/history_table[28]" type="array">
+            <obj_property name="ElementShortName">[28][18:0]</obj_property>
+            <obj_property name="ObjectShortName">[28][18:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_branchpredictor/UUT/history_table[29]" type="array">
+            <obj_property name="ElementShortName">[29][18:0]</obj_property>
+            <obj_property name="ObjectShortName">[29][18:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_branchpredictor/UUT/history_table[30]" type="array">
+            <obj_property name="ElementShortName">[30][18:0]</obj_property>
+            <obj_property name="ObjectShortName">[30][18:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_branchpredictor/UUT/history_table[31]" type="array">
+            <obj_property name="ElementShortName">[31][18:0]</obj_property>
+            <obj_property name="ObjectShortName">[31][18:0]</obj_property>
+         </wvobject>
+      </wvobject>
+      <wvobject fp_name="group191" type="group">
+         <obj_property name="label">Set 6</obj_property>
+         <obj_property name="DisplayName">label</obj_property>
+         <wvobject fp_name="/tb_branchpredictor/UUT/history_table[24]" type="array">
+            <obj_property name="ElementShortName">[24][18:0]</obj_property>
+            <obj_property name="ObjectShortName">[24][18:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_branchpredictor/UUT/history_table[25]" type="array">
+            <obj_property name="ElementShortName">[25][18:0]</obj_property>
+            <obj_property name="ObjectShortName">[25][18:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_branchpredictor/UUT/history_table[26]" type="array">
+            <obj_property name="ElementShortName">[26][18:0]</obj_property>
+            <obj_property name="ObjectShortName">[26][18:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_branchpredictor/UUT/history_table[27]" type="array">
+            <obj_property name="ElementShortName">[27][18:0]</obj_property>
+            <obj_property name="ObjectShortName">[27][18:0]</obj_property>
+         </wvobject>
+      </wvobject>
+      <wvobject fp_name="group186" type="group">
+         <obj_property name="label">Set 5</obj_property>
+         <obj_property name="DisplayName">label</obj_property>
+         <wvobject fp_name="/tb_branchpredictor/UUT/history_table[20]" type="array">
+            <obj_property name="ElementShortName">[20][18:0]</obj_property>
+            <obj_property name="ObjectShortName">[20][18:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_branchpredictor/UUT/history_table[21]" type="array">
+            <obj_property name="ElementShortName">[21][18:0]</obj_property>
+            <obj_property name="ObjectShortName">[21][18:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_branchpredictor/UUT/history_table[22]" type="array">
+            <obj_property name="ElementShortName">[22][18:0]</obj_property>
+            <obj_property name="ObjectShortName">[22][18:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_branchpredictor/UUT/history_table[23]" type="array">
+            <obj_property name="ElementShortName">[23][18:0]</obj_property>
+            <obj_property name="ObjectShortName">[23][18:0]</obj_property>
+         </wvobject>
+      </wvobject>
+      <wvobject fp_name="group181" type="group">
+         <obj_property name="label">Set 4</obj_property>
+         <obj_property name="DisplayName">label</obj_property>
+         <wvobject fp_name="/tb_branchpredictor/UUT/history_table[16]" type="array">
+            <obj_property name="ElementShortName">[16][18:0]</obj_property>
+            <obj_property name="ObjectShortName">[16][18:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_branchpredictor/UUT/history_table[17]" type="array">
+            <obj_property name="ElementShortName">[17][18:0]</obj_property>
+            <obj_property name="ObjectShortName">[17][18:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_branchpredictor/UUT/history_table[18]" type="array">
+            <obj_property name="ElementShortName">[18][18:0]</obj_property>
+            <obj_property name="ObjectShortName">[18][18:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_branchpredictor/UUT/history_table[19]" type="array">
+            <obj_property name="ElementShortName">[19][18:0]</obj_property>
+            <obj_property name="ObjectShortName">[19][18:0]</obj_property>
+         </wvobject>
+      </wvobject>
+      <wvobject fp_name="group176" type="group">
+         <obj_property name="label">Set 3</obj_property>
+         <obj_property name="DisplayName">label</obj_property>
+         <wvobject fp_name="/tb_branchpredictor/UUT/history_table[12]" type="array">
+            <obj_property name="ElementShortName">[12][18:0]</obj_property>
+            <obj_property name="ObjectShortName">[12][18:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_branchpredictor/UUT/history_table[13]" type="array">
+            <obj_property name="ElementShortName">[13][18:0]</obj_property>
+            <obj_property name="ObjectShortName">[13][18:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_branchpredictor/UUT/history_table[14]" type="array">
+            <obj_property name="ElementShortName">[14][18:0]</obj_property>
+            <obj_property name="ObjectShortName">[14][18:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_branchpredictor/UUT/history_table[15]" type="array">
+            <obj_property name="ElementShortName">[15][18:0]</obj_property>
+            <obj_property name="ObjectShortName">[15][18:0]</obj_property>
+         </wvobject>
+      </wvobject>
+      <wvobject fp_name="group171" type="group">
+         <obj_property name="label">Set 2</obj_property>
+         <obj_property name="DisplayName">label</obj_property>
+         <wvobject fp_name="/tb_branchpredictor/UUT/history_table[8]" type="array">
+            <obj_property name="ElementShortName">[8][18:0]</obj_property>
+            <obj_property name="ObjectShortName">[8][18:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_branchpredictor/UUT/history_table[9]" type="array">
+            <obj_property name="ElementShortName">[9][18:0]</obj_property>
+            <obj_property name="ObjectShortName">[9][18:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_branchpredictor/UUT/history_table[10]" type="array">
+            <obj_property name="ElementShortName">[10][18:0]</obj_property>
+            <obj_property name="ObjectShortName">[10][18:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_branchpredictor/UUT/history_table[11]" type="array">
+            <obj_property name="ElementShortName">[11][18:0]</obj_property>
+            <obj_property name="ObjectShortName">[11][18:0]</obj_property>
+         </wvobject>
+      </wvobject>
+      <wvobject fp_name="group166" type="group">
+         <obj_property name="label">Set 1</obj_property>
+         <obj_property name="DisplayName">label</obj_property>
+         <wvobject fp_name="/tb_branchpredictor/UUT/history_table[4]" type="array">
+            <obj_property name="ElementShortName">[4][18:0]</obj_property>
+            <obj_property name="ObjectShortName">[4][18:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_branchpredictor/UUT/history_table[5]" type="array">
+            <obj_property name="ElementShortName">[5][18:0]</obj_property>
+            <obj_property name="ObjectShortName">[5][18:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_branchpredictor/UUT/history_table[6]" type="array">
+            <obj_property name="ElementShortName">[6][18:0]</obj_property>
+            <obj_property name="ObjectShortName">[6][18:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_branchpredictor/UUT/history_table[7]" type="array">
+            <obj_property name="ElementShortName">[7][18:0]</obj_property>
+            <obj_property name="ObjectShortName">[7][18:0]</obj_property>
+         </wvobject>
+      </wvobject>
+      <wvobject fp_name="group161" type="group">
+         <obj_property name="label">Set 0</obj_property>
+         <obj_property name="DisplayName">label</obj_property>
+         <wvobject fp_name="/tb_branchpredictor/UUT/history_table[0]" type="array">
+            <obj_property name="ElementShortName">[0][18:0]</obj_property>
+            <obj_property name="ObjectShortName">[0][18:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_branchpredictor/UUT/history_table[1]" type="array">
+            <obj_property name="ElementShortName">[1][18:0]</obj_property>
+            <obj_property name="ObjectShortName">[1][18:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_branchpredictor/UUT/history_table[2]" type="array">
+            <obj_property name="ElementShortName">[2][18:0]</obj_property>
+            <obj_property name="ObjectShortName">[2][18:0]</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_branchpredictor/UUT/history_table[3]" type="array">
+            <obj_property name="ElementShortName">[3][18:0]</obj_property>
+            <obj_property name="ObjectShortName">[3][18:0]</obj_property>
+         </wvobject>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="/tb_branchpredictor/UUT/fifo_counter" type="array">
+      <obj_property name="ElementShortName">fifo_counter[0:15][1:0]</obj_property>
+      <obj_property name="ObjectShortName">fifo_counter[0:15][1:0]</obj_property>
+      <obj_property name="CustomSignalColor">#00FFFF</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+   </wvobject>
+   <wvobject type="divider" fp_name="divider323">
+      <obj_property name="label">Datapath Signals</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+   </wvobject>
+   <wvobject fp_name="group244" type="group">
+      <obj_property name="label">IF Entries in Set</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject fp_name="/tb_branchpredictor/UUT/if_entry0" type="array">
+         <obj_property name="ElementShortName">if_entry0[18:0]</obj_property>
+         <obj_property name="ObjectShortName">if_entry0[18:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_branchpredictor/UUT/if_entry1" type="array">
+         <obj_property name="ElementShortName">if_entry1[18:0]</obj_property>
+         <obj_property name="ObjectShortName">if_entry1[18:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_branchpredictor/UUT/if_entry2" type="array">
+         <obj_property name="ElementShortName">if_entry2[18:0]</obj_property>
+         <obj_property name="ObjectShortName">if_entry2[18:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_branchpredictor/UUT/if_entry3" type="array">
+         <obj_property name="ElementShortName">if_entry3[18:0]</obj_property>
+         <obj_property name="ObjectShortName">if_entry3[18:0]</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group243" type="group">
+      <obj_property name="label">IF Valid</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject fp_name="/tb_branchpredictor/UUT/if_valid0" type="logic">
+         <obj_property name="ElementShortName">if_valid0</obj_property>
+         <obj_property name="ObjectShortName">if_valid0</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_branchpredictor/UUT/if_valid1" type="logic">
+         <obj_property name="ElementShortName">if_valid1</obj_property>
+         <obj_property name="ObjectShortName">if_valid1</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_branchpredictor/UUT/if_valid2" type="logic">
+         <obj_property name="ElementShortName">if_valid2</obj_property>
+         <obj_property name="ObjectShortName">if_valid2</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_branchpredictor/UUT/if_valid3" type="logic">
+         <obj_property name="ElementShortName">if_valid3</obj_property>
+         <obj_property name="ObjectShortName">if_valid3</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="/tb_branchpredictor/UUT/if_loadentry" type="array">
+      <obj_property name="ElementShortName">if_loadentry[18:0]</obj_property>
+      <obj_property name="ObjectShortName">if_loadentry[18:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_branchpredictor/UUT/if_iseq" type="array">
+      <obj_property name="ElementShortName">if_iseq[3:0]</obj_property>
+      <obj_property name="ObjectShortName">if_iseq[3:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="group245" type="group">
+      <obj_property name="label">ID Entries in Set</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject fp_name="/tb_branchpredictor/UUT/id_entry0" type="array">
+         <obj_property name="ElementShortName">id_entry0[18:0]</obj_property>
+         <obj_property name="ObjectShortName">id_entry0[18:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_branchpredictor/UUT/id_entry1" type="array">
+         <obj_property name="ElementShortName">id_entry1[18:0]</obj_property>
+         <obj_property name="ObjectShortName">id_entry1[18:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_branchpredictor/UUT/id_entry2" type="array">
+         <obj_property name="ElementShortName">id_entry2[18:0]</obj_property>
+         <obj_property name="ObjectShortName">id_entry2[18:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_branchpredictor/UUT/id_entry3" type="array">
+         <obj_property name="ElementShortName">id_entry3[18:0]</obj_property>
+         <obj_property name="ObjectShortName">id_entry3[18:0]</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group246" type="group">
+      <obj_property name="label">ID Valid</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject fp_name="/tb_branchpredictor/UUT/id_valid0" type="logic">
+         <obj_property name="ElementShortName">id_valid0</obj_property>
+         <obj_property name="ObjectShortName">id_valid0</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_branchpredictor/UUT/id_valid1" type="logic">
+         <obj_property name="ElementShortName">id_valid1</obj_property>
+         <obj_property name="ObjectShortName">id_valid1</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_branchpredictor/UUT/id_valid2" type="logic">
+         <obj_property name="ElementShortName">id_valid2</obj_property>
+         <obj_property name="ObjectShortName">id_valid2</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_branchpredictor/UUT/id_valid3" type="logic">
+         <obj_property name="ElementShortName">id_valid3</obj_property>
+         <obj_property name="ObjectShortName">id_valid3</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="/tb_branchpredictor/UUT/sat_counter" type="array">
+      <obj_property name="ElementShortName">sat_counter[1:0]</obj_property>
+      <obj_property name="ObjectShortName">sat_counter[1:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_branchpredictor/UUT/id_set" type="array">
+      <obj_property name="ElementShortName">id_set[3:0]</obj_property>
+      <obj_property name="ObjectShortName">id_set[3:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_branchpredictor/UUT/id_tag" type="array">
+      <obj_property name="ElementShortName">id_tag[5:0]</obj_property>
+      <obj_property name="ObjectShortName">id_tag[5:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_branchpredictor/UUT/id_iseq" type="array">
+      <obj_property name="ElementShortName">id_iseq[3:0]</obj_property>
+      <obj_property name="ObjectShortName">id_iseq[3:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_branchpredictor/UUT/feedback" type="logic">
+      <obj_property name="ElementShortName">feedback</obj_property>
+      <obj_property name="ObjectShortName">feedback</obj_property>
+      <obj_property name="CustomSignalColor">#008080</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+   </wvobject>
+   <wvobject fp_name="group247" type="group">
+      <obj_property name="label">EXE BTYPE</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject fp_name="/tb_branchpredictor/UUT/is_beq" type="logic">
+         <obj_property name="ElementShortName">is_beq</obj_property>
+         <obj_property name="ObjectShortName">is_beq</obj_property>
+         <obj_property name="CustomSignalColor">#008080</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_branchpredictor/UUT/is_bne" type="logic">
+         <obj_property name="ElementShortName">is_bne</obj_property>
+         <obj_property name="ObjectShortName">is_bne</obj_property>
+         <obj_property name="CustomSignalColor">#008080</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_branchpredictor/UUT/is_blt" type="logic">
+         <obj_property name="ElementShortName">is_blt</obj_property>
+         <obj_property name="ObjectShortName">is_blt</obj_property>
+         <obj_property name="CustomSignalColor">#008080</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_branchpredictor/UUT/is_bge" type="logic">
+         <obj_property name="ElementShortName">is_bge</obj_property>
+         <obj_property name="ObjectShortName">is_bge</obj_property>
+         <obj_property name="CustomSignalColor">#008080</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_branchpredictor/UUT/is_bltu" type="logic">
+         <obj_property name="ElementShortName">is_bltu</obj_property>
+         <obj_property name="ObjectShortName">is_bltu</obj_property>
+         <obj_property name="CustomSignalColor">#008080</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_branchpredictor/UUT/is_bgeu" type="logic">
+         <obj_property name="ElementShortName">is_bgeu</obj_property>
+         <obj_property name="ObjectShortName">is_bgeu</obj_property>
+         <obj_property name="CustomSignalColor">#008080</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="/tb_branchpredictor/UUT/exe_tag" type="array">
+      <obj_property name="ElementShortName">exe_tag[5:0]</obj_property>
+      <obj_property name="ObjectShortName">exe_tag[5:0]</obj_property>
+      <obj_property name="CustomSignalColor">#008080</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_branchpredictor/UUT/exe_set" type="array">
+      <obj_property name="ElementShortName">exe_set[3:0]</obj_property>
+      <obj_property name="ObjectShortName">exe_set[3:0]</obj_property>
+      <obj_property name="CustomSignalColor">#008080</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+   </wvobject>
+   <wvobject fp_name="group248" type="group">
+      <obj_property name="label">EXE Entries</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject fp_name="/tb_branchpredictor/UUT/exe_entry0" type="array">
+         <obj_property name="ElementShortName">exe_entry0[18:0]</obj_property>
+         <obj_property name="ObjectShortName">exe_entry0[18:0]</obj_property>
+         <obj_property name="CustomSignalColor">#008080</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_branchpredictor/UUT/exe_entry1" type="array">
+         <obj_property name="ElementShortName">exe_entry1[18:0]</obj_property>
+         <obj_property name="ObjectShortName">exe_entry1[18:0]</obj_property>
+         <obj_property name="CustomSignalColor">#008080</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_branchpredictor/UUT/exe_entry2" type="array">
+         <obj_property name="ElementShortName">exe_entry2[18:0]</obj_property>
+         <obj_property name="ObjectShortName">exe_entry2[18:0]</obj_property>
+         <obj_property name="CustomSignalColor">#008080</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_branchpredictor/UUT/exe_entry3" type="array">
+         <obj_property name="ElementShortName">exe_entry3[18:0]</obj_property>
+         <obj_property name="ObjectShortName">exe_entry3[18:0]</obj_property>
+         <obj_property name="CustomSignalColor">#008080</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group249" type="group">
+      <obj_property name="label">EXE Valid</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject fp_name="/tb_branchpredictor/UUT/exe_valid0" type="logic">
+         <obj_property name="ElementShortName">exe_valid0</obj_property>
+         <obj_property name="ObjectShortName">exe_valid0</obj_property>
+         <obj_property name="CustomSignalColor">#008080</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_branchpredictor/UUT/exe_valid1" type="logic">
+         <obj_property name="ElementShortName">exe_valid1</obj_property>
+         <obj_property name="ObjectShortName">exe_valid1</obj_property>
+         <obj_property name="CustomSignalColor">#008080</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_branchpredictor/UUT/exe_valid2" type="logic">
+         <obj_property name="ElementShortName">exe_valid2</obj_property>
+         <obj_property name="ObjectShortName">exe_valid2</obj_property>
+         <obj_property name="CustomSignalColor">#008080</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_branchpredictor/UUT/exe_valid3" type="logic">
+         <obj_property name="ElementShortName">exe_valid3</obj_property>
+         <obj_property name="ObjectShortName">exe_valid3</obj_property>
+         <obj_property name="CustomSignalColor">#008080</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="/tb_branchpredictor/UUT/exe_loadentry" type="array">
+      <obj_property name="ElementShortName">exe_loadentry[18:0]</obj_property>
+      <obj_property name="ObjectShortName">exe_loadentry[18:0]</obj_property>
+      <obj_property name="CustomSignalColor">#008080</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_branchpredictor/UUT/is_pred_correct" type="logic">
+      <obj_property name="ElementShortName">is_pred_correct</obj_property>
+      <obj_property name="ObjectShortName">is_pred_correct</obj_property>
+      <obj_property name="CustomSignalColor">#008080</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_branchpredictor/UUT/exe_setoffset" type="array">
+      <obj_property name="ElementShortName">exe_setoffset[1:0]</obj_property>
+      <obj_property name="ObjectShortName">exe_setoffset[1:0]</obj_property>
+      <obj_property name="CustomSignalColor">#008080</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_branchpredictor/UUT/exe_iseq" type="array">
+      <obj_property name="ElementShortName">exe_iseq[3:0]</obj_property>
+      <obj_property name="ObjectShortName">exe_iseq[3:0]</obj_property>
+      <obj_property name="CustomSignalColor">#008080</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+   </wvobject>
+</wave_config>

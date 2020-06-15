@@ -1,0 +1,248 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wave_config>
+   <wave_state>
+   </wave_state>
+   <db_ref_list>
+      <db_ref path="tb_top_behav.wdb" id="1">
+         <top_modules>
+            <top_module name="glbl" />
+            <top_module name="tb_top" />
+         </top_modules>
+      </db_ref>
+   </db_ref_list>
+   <zoom_setting>
+      <ZoomStartTime time="15674778242fs"></ZoomStartTime>
+      <ZoomEndTime time="16192620641fs"></ZoomEndTime>
+      <Cursor1Time time="16026950000fs"></Cursor1Time>
+   </zoom_setting>
+   <column_width_setting>
+      <NameColumnWidth column_width="114"></NameColumnWidth>
+      <ValueColumnWidth column_width="58"></ValueColumnWidth>
+   </column_width_setting>
+   <WVObjectSize size="17" />
+   <wvobject fp_name="/tb_top/CLK100MHZ" type="logic">
+      <obj_property name="ElementShortName">CLK100MHZ</obj_property>
+      <obj_property name="ObjectShortName">CLK100MHZ</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_top/TOP/CLK_BUF" type="logic">
+      <obj_property name="ElementShortName">CLK_BUF</obj_property>
+      <obj_property name="ObjectShortName">CLK_BUF</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_top/nrst" type="logic">
+      <obj_property name="ElementShortName">nrst</obj_property>
+      <obj_property name="ObjectShortName">nrst</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_top/ck_io0" type="logic">
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="ElementShortName">ck_io0</obj_property>
+      <obj_property name="ObjectShortName">ck_io0</obj_property>
+      <obj_property name="label">ck_io0 | SCK</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_top/ck_io1" type="logic">
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="ElementShortName">ck_io1</obj_property>
+      <obj_property name="ObjectShortName">ck_io1</obj_property>
+      <obj_property name="label">ck_io1 | MISO</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_top/ck_io2" type="logic">
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="ElementShortName">ck_io2</obj_property>
+      <obj_property name="ObjectShortName">ck_io2</obj_property>
+      <obj_property name="label">ck_io2 | MOSI</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_top/ck_io3" type="logic">
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="ElementShortName">ck_io3</obj_property>
+      <obj_property name="ObjectShortName">ck_io3</obj_property>
+      <obj_property name="CustomSignalColor">#FFD700</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+      <obj_property name="label">ck_io3 | SS0</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_top/ck_io4" type="logic">
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="ElementShortName">ck_io4</obj_property>
+      <obj_property name="ObjectShortName">ck_io4</obj_property>
+      <obj_property name="CustomSignalColor">#FFD700</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+      <obj_property name="label">ck_io4 | SS1</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_top/ck_io5" type="logic">
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="ElementShortName">ck_io5</obj_property>
+      <obj_property name="ObjectShortName">ck_io5</obj_property>
+      <obj_property name="CustomSignalColor">#FFD700</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+      <obj_property name="label">ck_io5 | SS2</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_top/ck_io6" type="logic">
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="ElementShortName">ck_io6</obj_property>
+      <obj_property name="ObjectShortName">ck_io6</obj_property>
+      <obj_property name="CustomSignalColor">#FFD700</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+      <obj_property name="label">ck_io6 | SS3</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_top/ck_io7" type="logic">
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="ElementShortName">ck_io7</obj_property>
+      <obj_property name="ObjectShortName">ck_io7</obj_property>
+      <obj_property name="CustomSignalColor">#00FFFF</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+      <obj_property name="label">ck_io7 | UART_TX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_top/ck_io8" type="logic">
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="ElementShortName">ck_io8</obj_property>
+      <obj_property name="ObjectShortName">ck_io8</obj_property>
+      <obj_property name="CustomSignalColor">#00FFFF</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+      <obj_property name="label">ck_io8 | UART_RX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_top/ck_io38" type="logic">
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="ElementShortName">ck_io38</obj_property>
+      <obj_property name="ObjectShortName">ck_io38</obj_property>
+      <obj_property name="label">ck_io38 | SCL</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_top/ck_io39" type="logic">
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="ElementShortName">ck_io39</obj_property>
+      <obj_property name="ObjectShortName">ck_io39</obj_property>
+      <obj_property name="label">ck_io39 | SDA</obj_property>
+   </wvobject>
+   <wvobject type="divider" fp_name="divider201">
+      <obj_property name="label">TESTBENCH</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="BkColor">#FF0000</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_top/TOP/int_sig" type="array">
+      <obj_property name="ElementShortName">int_sig[5:0]</obj_property>
+      <obj_property name="ObjectShortName">int_sig[5:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="group426" type="group">
+      <obj_property name="label">Testbench Signals</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="isExpanded"></obj_property>
+      <wvobject fp_name="/tb_top/spi_counter" type="array">
+         <obj_property name="ElementShortName">spi_counter[31:0]</obj_property>
+         <obj_property name="ObjectShortName">spi_counter[31:0]</obj_property>
+         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/spi_shiftreg" type="array">
+         <obj_property name="ElementShortName">spi_shiftreg[15:0]</obj_property>
+         <obj_property name="ObjectShortName">spi_shiftreg[15:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/spi_miso_shiftreg" type="array">
+         <obj_property name="ElementShortName">spi_miso_shiftreg[15:0]</obj_property>
+         <obj_property name="ObjectShortName">spi_miso_shiftreg[15:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/SCL" type="logic">
+         <obj_property name="ElementShortName">SCL</obj_property>
+         <obj_property name="ObjectShortName">SCL</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/SDA" type="logic">
+         <obj_property name="ElementShortName">SDA</obj_property>
+         <obj_property name="ObjectShortName">SDA</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/i2c_shiftreg" type="array">
+         <obj_property name="ElementShortName">i2c_shiftreg[31:0]</obj_property>
+         <obj_property name="ObjectShortName">i2c_shiftreg[31:0]</obj_property>
+         <obj_property name="Radix">HEXRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/i2c_counter" type="array">
+         <obj_property name="ElementShortName">i2c_counter[31:0]</obj_property>
+         <obj_property name="ObjectShortName">i2c_counter[31:0]</obj_property>
+         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/ENCODER/data_in" type="array">
+         <obj_property name="ElementShortName">data_in[7:0]</obj_property>
+         <obj_property name="ObjectShortName">data_in[7:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/ENCODER/TX_BUFFER/buffer" type="array">
+         <obj_property name="ElementShortName">buffer[15:0][7:0]</obj_property>
+         <obj_property name="ObjectShortName">buffer[15:0][7:0]</obj_property>
+         <obj_property name="Radix">ASCIIRADIX</obj_property>
+         <obj_property name="isExpanded"></obj_property>
+         <wvobject fp_name="/tb_top/ENCODER/TX_BUFFER/buffer[15]" type="array">
+            <obj_property name="ElementShortName">[15][7:0]</obj_property>
+            <obj_property name="ObjectShortName">[15][7:0]</obj_property>
+            <obj_property name="Radix">ASCIIRADIX</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_top/ENCODER/TX_BUFFER/buffer[14]" type="array">
+            <obj_property name="ElementShortName">[14][7:0]</obj_property>
+            <obj_property name="ObjectShortName">[14][7:0]</obj_property>
+            <obj_property name="Radix">ASCIIRADIX</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_top/ENCODER/TX_BUFFER/buffer[13]" type="array">
+            <obj_property name="ElementShortName">[13][7:0]</obj_property>
+            <obj_property name="ObjectShortName">[13][7:0]</obj_property>
+            <obj_property name="Radix">ASCIIRADIX</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_top/ENCODER/TX_BUFFER/buffer[12]" type="array">
+            <obj_property name="ElementShortName">[12][7:0]</obj_property>
+            <obj_property name="ObjectShortName">[12][7:0]</obj_property>
+            <obj_property name="Radix">ASCIIRADIX</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_top/ENCODER/TX_BUFFER/buffer[11]" type="array">
+            <obj_property name="ElementShortName">[11][7:0]</obj_property>
+            <obj_property name="ObjectShortName">[11][7:0]</obj_property>
+            <obj_property name="Radix">ASCIIRADIX</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_top/ENCODER/TX_BUFFER/buffer[10]" type="array">
+            <obj_property name="ElementShortName">[10][7:0]</obj_property>
+            <obj_property name="ObjectShortName">[10][7:0]</obj_property>
+            <obj_property name="Radix">ASCIIRADIX</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_top/ENCODER/TX_BUFFER/buffer[9]" type="array">
+            <obj_property name="ElementShortName">[9][7:0]</obj_property>
+            <obj_property name="ObjectShortName">[9][7:0]</obj_property>
+            <obj_property name="Radix">ASCIIRADIX</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_top/ENCODER/TX_BUFFER/buffer[8]" type="array">
+            <obj_property name="ElementShortName">[8][7:0]</obj_property>
+            <obj_property name="ObjectShortName">[8][7:0]</obj_property>
+            <obj_property name="Radix">ASCIIRADIX</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_top/ENCODER/TX_BUFFER/buffer[7]" type="array">
+            <obj_property name="ElementShortName">[7][7:0]</obj_property>
+            <obj_property name="ObjectShortName">[7][7:0]</obj_property>
+            <obj_property name="Radix">ASCIIRADIX</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_top/ENCODER/TX_BUFFER/buffer[6]" type="array">
+            <obj_property name="ElementShortName">[6][7:0]</obj_property>
+            <obj_property name="ObjectShortName">[6][7:0]</obj_property>
+            <obj_property name="Radix">ASCIIRADIX</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_top/ENCODER/TX_BUFFER/buffer[5]" type="array">
+            <obj_property name="ElementShortName">[5][7:0]</obj_property>
+            <obj_property name="ObjectShortName">[5][7:0]</obj_property>
+            <obj_property name="Radix">ASCIIRADIX</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_top/ENCODER/TX_BUFFER/buffer[4]" type="array">
+            <obj_property name="ElementShortName">[4][7:0]</obj_property>
+            <obj_property name="ObjectShortName">[4][7:0]</obj_property>
+            <obj_property name="Radix">ASCIIRADIX</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_top/ENCODER/TX_BUFFER/buffer[3]" type="array">
+            <obj_property name="ElementShortName">[3][7:0]</obj_property>
+            <obj_property name="ObjectShortName">[3][7:0]</obj_property>
+            <obj_property name="Radix">ASCIIRADIX</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_top/ENCODER/TX_BUFFER/buffer[2]" type="array">
+            <obj_property name="ElementShortName">[2][7:0]</obj_property>
+            <obj_property name="ObjectShortName">[2][7:0]</obj_property>
+            <obj_property name="Radix">ASCIIRADIX</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_top/ENCODER/TX_BUFFER/buffer[1]" type="array">
+            <obj_property name="ElementShortName">[1][7:0]</obj_property>
+            <obj_property name="ObjectShortName">[1][7:0]</obj_property>
+            <obj_property name="Radix">ASCIIRADIX</obj_property>
+         </wvobject>
+         <wvobject fp_name="/tb_top/ENCODER/TX_BUFFER/buffer[0]" type="array">
+            <obj_property name="ElementShortName">[0][7:0]</obj_property>
+            <obj_property name="ObjectShortName">[0][7:0]</obj_property>
+            <obj_property name="Radix">ASCIIRADIX</obj_property>
+         </wvobject>
+      </wvobject>
+   </wvobject>
+</wave_config>

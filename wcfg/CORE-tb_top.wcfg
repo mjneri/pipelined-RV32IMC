@@ -1,0 +1,605 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wave_config>
+   <wave_state>
+   </wave_state>
+   <db_ref_list>
+      <db_ref path="tb_top_behav.wdb" id="1">
+         <top_modules>
+            <top_module name="glbl" />
+            <top_module name="tb_top" />
+         </top_modules>
+      </db_ref>
+   </db_ref_list>
+   <zoom_setting>
+      <ZoomStartTime time="134538165fs"></ZoomStartTime>
+      <ZoomEndTime time="134750366fs"></ZoomEndTime>
+      <Cursor1Time time="134692165fs"></Cursor1Time>
+   </zoom_setting>
+   <column_width_setting>
+      <NameColumnWidth column_width="148"></NameColumnWidth>
+      <ValueColumnWidth column_width="65"></ValueColumnWidth>
+   </column_width_setting>
+   <WVObjectSize size="22" />
+   <wvobject fp_name="/tb_top/TOP/CLKIP_OUT" type="logic">
+      <obj_property name="ElementShortName">CLKIP_OUT</obj_property>
+      <obj_property name="ObjectShortName">CLKIP_OUT</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_top/TOP/locked" type="logic">
+      <obj_property name="ElementShortName">locked</obj_property>
+      <obj_property name="ObjectShortName">locked</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_top/TOP/nrst" type="logic">
+      <obj_property name="ElementShortName">nrst</obj_property>
+      <obj_property name="ObjectShortName">nrst</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_top/TOP/int_sig" type="array">
+      <obj_property name="ElementShortName">int_sig[5:0]</obj_property>
+      <obj_property name="ObjectShortName">int_sig[5:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_top/TOP/RISCVCORE/if_pcnew" type="array">
+      <obj_property name="ElementShortName">if_pcnew[11:0]</obj_property>
+      <obj_property name="ObjectShortName">if_pcnew[11:0]</obj_property>
+   </wvobject>
+   <wvobject type="divider" fp_name="divider1483">
+      <obj_property name="label">CORE</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_top/TOP/RISCVCORE/if_PC" type="array">
+      <obj_property name="ElementShortName">if_PC[11:0]</obj_property>
+      <obj_property name="ObjectShortName">if_PC[11:0]</obj_property>
+      <obj_property name="CustomSignalColor">#D2691E</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_top/TOP/RISCVCORE/id_PC" type="array">
+      <obj_property name="ElementShortName">id_PC[11:0]</obj_property>
+      <obj_property name="ObjectShortName">id_PC[11:0]</obj_property>
+      <obj_property name="CustomSignalColor">#D2691E</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_top/TOP/RISCVCORE/exe_PC" type="array">
+      <obj_property name="ElementShortName">exe_PC[11:0]</obj_property>
+      <obj_property name="ObjectShortName">exe_PC[11:0]</obj_property>
+      <obj_property name="CustomSignalColor">#D2691E</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_top/TOP/RISCVCORE/mem_PC" type="array">
+      <obj_property name="ElementShortName">mem_PC[11:0]</obj_property>
+      <obj_property name="ObjectShortName">mem_PC[11:0]</obj_property>
+      <obj_property name="CustomSignalColor">#D2691E</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_top/TOP/RISCVCORE/wb_PC" type="array">
+      <obj_property name="ElementShortName">wb_PC[11:0]</obj_property>
+      <obj_property name="ObjectShortName">wb_PC[11:0]</obj_property>
+      <obj_property name="CustomSignalColor">#D2691E</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+   </wvobject>
+   <wvobject fp_name="group1125" type="group">
+      <obj_property name="label">INSTRUCTIONS</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject fp_name="/tb_top/TOP/RISCVCORE/if_inst" type="array">
+         <obj_property name="ElementShortName">if_inst[31:0]</obj_property>
+         <obj_property name="ObjectShortName">if_inst[31:0]</obj_property>
+         <obj_property name="CustomSignalColor">#0000FF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/TOP/RISCVCORE/id_inst" type="array">
+         <obj_property name="ElementShortName">id_inst[31:0]</obj_property>
+         <obj_property name="ObjectShortName">id_inst[31:0]</obj_property>
+         <obj_property name="CustomSignalColor">#0000FF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/TOP/RISCVCORE/exe_inst" type="array">
+         <obj_property name="ElementShortName">exe_inst[31:0]</obj_property>
+         <obj_property name="ObjectShortName">exe_inst[31:0]</obj_property>
+         <obj_property name="CustomSignalColor">#0000FF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/TOP/RISCVCORE/mem_inst" type="array">
+         <obj_property name="ElementShortName">mem_inst[31:0]</obj_property>
+         <obj_property name="ObjectShortName">mem_inst[31:0]</obj_property>
+         <obj_property name="CustomSignalColor">#0000FF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/TOP/RISCVCORE/wb_inst" type="array">
+         <obj_property name="ElementShortName">wb_inst[31:0]</obj_property>
+         <obj_property name="ObjectShortName">wb_inst[31:0]</obj_property>
+         <obj_property name="CustomSignalColor">#0000FF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group1496" type="group">
+      <obj_property name="label">INTCON</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject fp_name="/tb_top/TOP/int_sig" type="array">
+         <obj_property name="ElementShortName">int_sig[5:0]</obj_property>
+         <obj_property name="ObjectShortName">int_sig[5:0]</obj_property>
+         <obj_property name="CustomSignalColor">#00FFFF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/TOP/RISCVCORE/INT_CON/save_PC" type="array">
+         <obj_property name="ElementShortName">save_PC[11:0]</obj_property>
+         <obj_property name="ObjectShortName">save_PC[11:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/TOP/RISCVCORE/INT_CON/save_PC_en" type="logic">
+         <obj_property name="ElementShortName">save_PC_en</obj_property>
+         <obj_property name="ObjectShortName">save_PC_en</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/TOP/RISCVCORE/INT_CON/ISR_running" type="logic">
+         <obj_property name="ElementShortName">ISR_running</obj_property>
+         <obj_property name="ObjectShortName">ISR_running</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/TOP/RISCVCORE/INT_CON/ISR_en" type="array">
+         <obj_property name="ElementShortName">ISR_en[5:0]</obj_property>
+         <obj_property name="ObjectShortName">ISR_en[5:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/TOP/RISCVCORE/INT_CON/ISR_stall" type="logic">
+         <obj_property name="ElementShortName">ISR_stall</obj_property>
+         <obj_property name="ObjectShortName">ISR_stall</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/TOP/RISCVCORE/INT_CON/ISR_stall_counter" type="array">
+         <obj_property name="ElementShortName">ISR_stall_counter[2:0]</obj_property>
+         <obj_property name="ObjectShortName">ISR_stall_counter[2:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/TOP/RISCVCORE/INT_CON/sel_ISR" type="logic">
+         <obj_property name="ElementShortName">sel_ISR</obj_property>
+         <obj_property name="ObjectShortName">sel_ISR</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/TOP/RISCVCORE/INT_CON/ret_ISR" type="logic">
+         <obj_property name="ElementShortName">ret_ISR</obj_property>
+         <obj_property name="ObjectShortName">ret_ISR</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/TOP/RISCVCORE/INT_CON/interrupt_captured" type="logic">
+         <obj_property name="ElementShortName">interrupt_captured</obj_property>
+         <obj_property name="ObjectShortName">interrupt_captured</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/TOP/RISCVCORE/INT_CON/ISR_PC_flush" type="logic">
+         <obj_property name="ElementShortName">ISR_PC_flush</obj_property>
+         <obj_property name="ObjectShortName">ISR_PC_flush</obj_property>
+         <obj_property name="CustomSignalColor">#00FFFF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/TOP/RISCVCORE/INT_CON/ISR_pipe_flush" type="logic">
+         <obj_property name="ElementShortName">ISR_pipe_flush</obj_property>
+         <obj_property name="ObjectShortName">ISR_pipe_flush</obj_property>
+         <obj_property name="CustomSignalColor">#00FFFF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group1506" type="group">
+      <obj_property name="label">CONTROLLER</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject fp_name="/tb_top/TOP/RISCVCORE/CONTROL/opcode" type="array">
+         <obj_property name="ElementShortName">opcode[6:0]</obj_property>
+         <obj_property name="ObjectShortName">opcode[6:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/TOP/RISCVCORE/CONTROL/funct3" type="array">
+         <obj_property name="ElementShortName">funct3[2:0]</obj_property>
+         <obj_property name="ObjectShortName">funct3[2:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/TOP/RISCVCORE/CONTROL/funct7" type="array">
+         <obj_property name="ElementShortName">funct7[6:0]</obj_property>
+         <obj_property name="ObjectShortName">funct7[6:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/TOP/RISCVCORE/CONTROL/ALU_op" type="array">
+         <obj_property name="ElementShortName">ALU_op[3:0]</obj_property>
+         <obj_property name="ObjectShortName">ALU_op[3:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/TOP/RISCVCORE/CONTROL/sel_opA" type="logic">
+         <obj_property name="ElementShortName">sel_opA</obj_property>
+         <obj_property name="ObjectShortName">sel_opA</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/TOP/RISCVCORE/CONTROL/sel_opB" type="logic">
+         <obj_property name="ElementShortName">sel_opB</obj_property>
+         <obj_property name="ObjectShortName">sel_opB</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/TOP/RISCVCORE/CONTROL/is_stype" type="logic">
+         <obj_property name="ElementShortName">is_stype</obj_property>
+         <obj_property name="ObjectShortName">is_stype</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/TOP/RISCVCORE/CONTROL/is_jump" type="logic">
+         <obj_property name="ElementShortName">is_jump</obj_property>
+         <obj_property name="ObjectShortName">is_jump</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/TOP/RISCVCORE/CONTROL/is_btype" type="logic">
+         <obj_property name="ElementShortName">is_btype</obj_property>
+         <obj_property name="ObjectShortName">is_btype</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/TOP/RISCVCORE/CONTROL/wr_en" type="logic">
+         <obj_property name="ElementShortName">wr_en</obj_property>
+         <obj_property name="ObjectShortName">wr_en</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/TOP/RISCVCORE/CONTROL/dm_select" type="array">
+         <obj_property name="ElementShortName">dm_select[2:0]</obj_property>
+         <obj_property name="ObjectShortName">dm_select[2:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/TOP/RISCVCORE/CONTROL/imm_select" type="array">
+         <obj_property name="ElementShortName">imm_select[2:0]</obj_property>
+         <obj_property name="ObjectShortName">imm_select[2:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/TOP/RISCVCORE/CONTROL/sel_pc" type="logic">
+         <obj_property name="ElementShortName">sel_pc</obj_property>
+         <obj_property name="ObjectShortName">sel_pc</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/TOP/RISCVCORE/CONTROL/sel_data" type="array">
+         <obj_property name="ElementShortName">sel_data[2:0]</obj_property>
+         <obj_property name="ObjectShortName">sel_data[2:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/TOP/RISCVCORE/CONTROL/store_select" type="array">
+         <obj_property name="ElementShortName">store_select[1:0]</obj_property>
+         <obj_property name="ObjectShortName">store_select[1:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/TOP/RISCVCORE/CONTROL/sel_opBR" type="logic">
+         <obj_property name="ElementShortName">sel_opBR</obj_property>
+         <obj_property name="ObjectShortName">sel_opBR</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group1523" type="group">
+      <obj_property name="label">ALU</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject fp_name="/tb_top/TOP/RISCVCORE/ALU/op_a" type="array">
+         <obj_property name="ElementShortName">op_a[31:0]</obj_property>
+         <obj_property name="ObjectShortName">op_a[31:0]</obj_property>
+         <obj_property name="CustomSignalColor">#FF00FF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/TOP/RISCVCORE/ALU/op_b" type="array">
+         <obj_property name="ElementShortName">op_b[31:0]</obj_property>
+         <obj_property name="ObjectShortName">op_b[31:0]</obj_property>
+         <obj_property name="CustomSignalColor">#FF00FF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/TOP/RISCVCORE/ALU/ALU_op" type="array">
+         <obj_property name="ElementShortName">ALU_op[3:0]</obj_property>
+         <obj_property name="ObjectShortName">ALU_op[3:0]</obj_property>
+         <obj_property name="CustomSignalColor">#FF00FF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/TOP/RISCVCORE/ALU/res" type="array">
+         <obj_property name="ElementShortName">res[31:0]</obj_property>
+         <obj_property name="ObjectShortName">res[31:0]</obj_property>
+         <obj_property name="CustomSignalColor">#FF00FF</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group1524" type="group">
+      <obj_property name="label">STOREBLOCK</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject fp_name="/tb_top/TOP/RISCVCORE/exe_store_select" type="array">
+         <obj_property name="ElementShortName">exe_store_select[1:0]</obj_property>
+         <obj_property name="ObjectShortName">exe_store_select[1:0]</obj_property>
+         <obj_property name="CustomSignalColor">#FFD700</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/TOP/RISCVCORE/exe_dm_write" type="array">
+         <obj_property name="ElementShortName">exe_dm_write[3:0]</obj_property>
+         <obj_property name="ObjectShortName">exe_dm_write[3:0]</obj_property>
+         <obj_property name="CustomSignalColor">#FFD700</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/TOP/RISCVCORE/STOREBLOCK/byte_offset" type="array">
+         <obj_property name="ElementShortName">byte_offset[1:0]</obj_property>
+         <obj_property name="ObjectShortName">byte_offset[1:0]</obj_property>
+         <obj_property name="CustomSignalColor">#FFD700</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group1525" type="group">
+      <obj_property name="label">DATAMEM</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject fp_name="/tb_top/TOP/RISCVCORE/LOADBLOCK/loaddata" type="array">
+         <obj_property name="ElementShortName">loaddata[31:0]</obj_property>
+         <obj_property name="ObjectShortName">loaddata[31:0]</obj_property>
+         <obj_property name="CustomSignalColor">#00FF7F</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/TOP/RISCVCORE/DATAMEM/dm_write" type="array">
+         <obj_property name="ElementShortName">dm_write[3:0]</obj_property>
+         <obj_property name="ObjectShortName">dm_write[3:0]</obj_property>
+         <obj_property name="CustomSignalColor">#00FF7F</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/TOP/RISCVCORE/DATAMEM/data_in" type="array">
+         <obj_property name="ElementShortName">data_in[31:0]</obj_property>
+         <obj_property name="ObjectShortName">data_in[31:0]</obj_property>
+         <obj_property name="CustomSignalColor">#00FF7F</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/TOP/RISCVCORE/DATAMEM/data_out" type="array">
+         <obj_property name="ElementShortName">data_out[31:0]</obj_property>
+         <obj_property name="ObjectShortName">data_out[31:0]</obj_property>
+         <obj_property name="CustomSignalColor">#00FF7F</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group196" type="group">
+      <obj_property name="label">CLOCKS</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject fp_name="/tb_top/TOP/RISCVCORE/CLK_BUF" type="logic">
+         <obj_property name="ElementShortName">CLK_BUF</obj_property>
+         <obj_property name="ObjectShortName">CLK_BUF</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/TOP/RISCVCORE/if_clk" type="logic">
+         <obj_property name="ElementShortName">if_clk</obj_property>
+         <obj_property name="ObjectShortName">if_clk</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/TOP/RISCVCORE/id_clk" type="logic">
+         <obj_property name="ElementShortName">id_clk</obj_property>
+         <obj_property name="ObjectShortName">id_clk</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/TOP/RISCVCORE/exe_clk" type="logic">
+         <obj_property name="ElementShortName">exe_clk</obj_property>
+         <obj_property name="ObjectShortName">exe_clk</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/TOP/RISCVCORE/mem_clk" type="logic">
+         <obj_property name="ElementShortName">mem_clk</obj_property>
+         <obj_property name="ObjectShortName">mem_clk</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/TOP/RISCVCORE/wb_clk" type="logic">
+         <obj_property name="ElementShortName">wb_clk</obj_property>
+         <obj_property name="ObjectShortName">wb_clk</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/TOP/RISCVCORE/rf_clk" type="logic">
+         <obj_property name="ElementShortName">rf_clk</obj_property>
+         <obj_property name="ObjectShortName">rf_clk</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group204" type="group">
+      <obj_property name="label">CLOCK ENABLES</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject fp_name="/tb_top/TOP/RISCVCORE/if_clk_en" type="logic">
+         <obj_property name="ElementShortName">if_clk_en</obj_property>
+         <obj_property name="ObjectShortName">if_clk_en</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/TOP/RISCVCORE/id_clk_en" type="logic">
+         <obj_property name="ElementShortName">id_clk_en</obj_property>
+         <obj_property name="ObjectShortName">id_clk_en</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/TOP/RISCVCORE/exe_clk_en" type="logic">
+         <obj_property name="ElementShortName">exe_clk_en</obj_property>
+         <obj_property name="ObjectShortName">exe_clk_en</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/TOP/RISCVCORE/mem_clk_en" type="logic">
+         <obj_property name="ElementShortName">mem_clk_en</obj_property>
+         <obj_property name="ObjectShortName">mem_clk_en</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/TOP/RISCVCORE/wb_clk_en" type="logic">
+         <obj_property name="ElementShortName">wb_clk_en</obj_property>
+         <obj_property name="ObjectShortName">wb_clk_en</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/TOP/RISCVCORE/rf_clk_en" type="logic">
+         <obj_property name="ElementShortName">rf_clk_en</obj_property>
+         <obj_property name="ObjectShortName">rf_clk_en</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/TOP/RISCVCORE/SF_CONTROLLER/nrst" type="logic">
+         <obj_property name="ElementShortName">nrst</obj_property>
+         <obj_property name="ObjectShortName">nrst</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/TOP/RISCVCORE/SF_CONTROLLER/prev_nrst" type="logic">
+         <obj_property name="ElementShortName">prev_nrst</obj_property>
+         <obj_property name="ObjectShortName">prev_nrst</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/TOP/RISCVCORE/SF_CONTROLLER/shut_down" type="logic">
+         <obj_property name="ElementShortName">shut_down</obj_property>
+         <obj_property name="ObjectShortName">shut_down</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group727" type="group">
+      <obj_property name="label">BHT</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject fp_name="/tb_top/TOP/RISCVCORE/BHT/ISR_running" type="logic">
+         <obj_property name="ElementShortName">ISR_running</obj_property>
+         <obj_property name="ObjectShortName">ISR_running</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/TOP/RISCVCORE/BHT/stall" type="logic">
+         <obj_property name="ElementShortName">stall</obj_property>
+         <obj_property name="ObjectShortName">stall</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/TOP/RISCVCORE/BHT/if_PC" type="array">
+         <obj_property name="ElementShortName">if_PC[10:0]</obj_property>
+         <obj_property name="ObjectShortName">if_PC[10:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/TOP/RISCVCORE/BHT/id_PC" type="array">
+         <obj_property name="ElementShortName">id_PC[10:0]</obj_property>
+         <obj_property name="ObjectShortName">id_PC[10:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/TOP/RISCVCORE/BHT/id_branchtarget" type="array">
+         <obj_property name="ElementShortName">id_branchtarget[10:0]</obj_property>
+         <obj_property name="ObjectShortName">id_branchtarget[10:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/TOP/RISCVCORE/BHT/id_is_jump" type="logic">
+         <obj_property name="ElementShortName">id_is_jump</obj_property>
+         <obj_property name="ObjectShortName">id_is_jump</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/TOP/RISCVCORE/BHT/id_is_btype" type="logic">
+         <obj_property name="ElementShortName">id_is_btype</obj_property>
+         <obj_property name="ObjectShortName">id_is_btype</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/TOP/RISCVCORE/BHT/exe_PC" type="array">
+         <obj_property name="ElementShortName">exe_PC[10:0]</obj_property>
+         <obj_property name="ObjectShortName">exe_PC[10:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/TOP/RISCVCORE/BHT/exe_branchtarget" type="array">
+         <obj_property name="ElementShortName">exe_branchtarget[10:0]</obj_property>
+         <obj_property name="ObjectShortName">exe_branchtarget[10:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/TOP/RISCVCORE/BHT/exe_sel_opBR" type="logic">
+         <obj_property name="ElementShortName">exe_sel_opBR</obj_property>
+         <obj_property name="ObjectShortName">exe_sel_opBR</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/TOP/RISCVCORE/BHT/exe_z" type="logic">
+         <obj_property name="ElementShortName">exe_z</obj_property>
+         <obj_property name="ObjectShortName">exe_z</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/TOP/RISCVCORE/BHT/exe_less" type="logic">
+         <obj_property name="ElementShortName">exe_less</obj_property>
+         <obj_property name="ObjectShortName">exe_less</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/TOP/RISCVCORE/BHT/exe_btype" type="array">
+         <obj_property name="ElementShortName">exe_btype[5:0]</obj_property>
+         <obj_property name="ObjectShortName">exe_btype[5:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/TOP/RISCVCORE/BHT/exe_c_btype" type="array">
+         <obj_property name="ElementShortName">exe_c_btype[1:0]</obj_property>
+         <obj_property name="ObjectShortName">exe_c_btype[1:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/TOP/RISCVCORE/BHT/if_prediction" type="logic">
+         <obj_property name="ElementShortName">if_prediction</obj_property>
+         <obj_property name="ObjectShortName">if_prediction</obj_property>
+         <obj_property name="CustomSignalColor">#FF0000</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/TOP/RISCVCORE/BHT/exe_correction" type="array">
+         <obj_property name="ElementShortName">exe_correction[1:0]</obj_property>
+         <obj_property name="ObjectShortName">exe_correction[1:0]</obj_property>
+         <obj_property name="CustomSignalColor">#FF0000</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/TOP/RISCVCORE/BHT/jump_flush" type="logic">
+         <obj_property name="ElementShortName">jump_flush</obj_property>
+         <obj_property name="ObjectShortName">jump_flush</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/TOP/RISCVCORE/BHT/branch_flush" type="logic">
+         <obj_property name="ElementShortName">branch_flush</obj_property>
+         <obj_property name="ObjectShortName">branch_flush</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/TOP/RISCVCORE/BHT/id_jump_in_bht" type="logic">
+         <obj_property name="ElementShortName">id_jump_in_bht</obj_property>
+         <obj_property name="ObjectShortName">id_jump_in_bht</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/TOP/RISCVCORE/BHT/if_PBT" type="array">
+         <obj_property name="ElementShortName">if_PBT[10:0]</obj_property>
+         <obj_property name="ObjectShortName">if_PBT[10:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/TOP/RISCVCORE/BHT/exe_PBT" type="array">
+         <obj_property name="ElementShortName">exe_PBT[10:0]</obj_property>
+         <obj_property name="ObjectShortName">exe_PBT[10:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/TOP/RISCVCORE/BHT/exe_CNI" type="array">
+         <obj_property name="ElementShortName">exe_CNI[10:0]</obj_property>
+         <obj_property name="ObjectShortName">exe_CNI[10:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/TOP/RISCVCORE/BHT/history_table" type="array">
+         <obj_property name="ElementShortName">history_table[0:63][21:0]</obj_property>
+         <obj_property name="ObjectShortName">history_table[0:63][21:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/TOP/RISCVCORE/BHT/feedback" type="logic">
+         <obj_property name="ElementShortName">feedback</obj_property>
+         <obj_property name="ObjectShortName">feedback</obj_property>
+         <obj_property name="CustomSignalColor">#FF0000</obj_property>
+         <obj_property name="UseCustomSignalColor">true</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/TOP/RISCVCORE/BHT/exe_entry" type="array">
+         <obj_property name="ElementShortName">exe_entry[0:3][21:0]</obj_property>
+         <obj_property name="ObjectShortName">exe_entry[0:3][21:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/TOP/RISCVCORE/BHT/exe_valid" type="array">
+         <obj_property name="ElementShortName">exe_valid[3:0]</obj_property>
+         <obj_property name="ObjectShortName">exe_valid[3:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/TOP/RISCVCORE/BHT/exe_iseqto" type="array">
+         <obj_property name="ElementShortName">exe_iseqto[3:0]</obj_property>
+         <obj_property name="ObjectShortName">exe_iseqto[3:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/TOP/RISCVCORE/BHT/exe_loadentry" type="array">
+         <obj_property name="ElementShortName">exe_loadentry[21:0]</obj_property>
+         <obj_property name="ObjectShortName">exe_loadentry[21:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/TOP/RISCVCORE/BHT/exe_setoffset" type="array">
+         <obj_property name="ElementShortName">exe_setoffset[1:0]</obj_property>
+         <obj_property name="ObjectShortName">exe_setoffset[1:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/TOP/RISCVCORE/BHT/exe_set" type="array">
+         <obj_property name="ElementShortName">exe_set[3:0]</obj_property>
+         <obj_property name="ObjectShortName">exe_set[3:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/TOP/RISCVCORE/BHT/exe_tag" type="array">
+         <obj_property name="ElementShortName">exe_tag[6:0]</obj_property>
+         <obj_property name="ObjectShortName">exe_tag[6:0]</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group829" type="group">
+      <obj_property name="label">SF_CONTROLLER</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <wvobject fp_name="/tb_top/TOP/RISCVCORE/SF_CONTROLLER/if_stall" type="logic">
+         <obj_property name="ElementShortName">if_stall</obj_property>
+         <obj_property name="ObjectShortName">if_stall</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/TOP/RISCVCORE/SF_CONTROLLER/id_stall" type="logic">
+         <obj_property name="ElementShortName">id_stall</obj_property>
+         <obj_property name="ObjectShortName">id_stall</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/TOP/RISCVCORE/SF_CONTROLLER/exe_stall" type="logic">
+         <obj_property name="ElementShortName">exe_stall</obj_property>
+         <obj_property name="ObjectShortName">exe_stall</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/TOP/RISCVCORE/SF_CONTROLLER/mem_stall" type="logic">
+         <obj_property name="ElementShortName">mem_stall</obj_property>
+         <obj_property name="ObjectShortName">mem_stall</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/TOP/RISCVCORE/SF_CONTROLLER/wb_stall" type="logic">
+         <obj_property name="ElementShortName">wb_stall</obj_property>
+         <obj_property name="ObjectShortName">wb_stall</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/TOP/RISCVCORE/SF_CONTROLLER/if_flush" type="logic">
+         <obj_property name="ElementShortName">if_flush</obj_property>
+         <obj_property name="ObjectShortName">if_flush</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/TOP/RISCVCORE/SF_CONTROLLER/id_flush" type="logic">
+         <obj_property name="ElementShortName">id_flush</obj_property>
+         <obj_property name="ObjectShortName">id_flush</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/TOP/RISCVCORE/SF_CONTROLLER/exe_flush" type="logic">
+         <obj_property name="ElementShortName">exe_flush</obj_property>
+         <obj_property name="ObjectShortName">exe_flush</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/TOP/RISCVCORE/SF_CONTROLLER/mem_flush" type="logic">
+         <obj_property name="ElementShortName">mem_flush</obj_property>
+         <obj_property name="ObjectShortName">mem_flush</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/TOP/RISCVCORE/SF_CONTROLLER/wb_flush" type="logic">
+         <obj_property name="ElementShortName">wb_flush</obj_property>
+         <obj_property name="ObjectShortName">wb_flush</obj_property>
+      </wvobject>
+   </wvobject>
+   <wvobject fp_name="group1126" type="group">
+      <obj_property name="label">REGFILE</obj_property>
+      <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="isExpanded"></obj_property>
+      <wvobject fp_name="/tb_top/TOP/RISCVCORE/RF/wr_en" type="logic">
+         <obj_property name="ElementShortName">wr_en</obj_property>
+         <obj_property name="ObjectShortName">wr_en</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/TOP/RISCVCORE/RF/wr_data" type="array">
+         <obj_property name="ElementShortName">wr_data[31:0]</obj_property>
+         <obj_property name="ObjectShortName">wr_data[31:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/TOP/RISCVCORE/RF/src1_addr" type="array">
+         <obj_property name="ElementShortName">src1_addr[4:0]</obj_property>
+         <obj_property name="ObjectShortName">src1_addr[4:0]</obj_property>
+         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/TOP/RISCVCORE/RF/src2_addr" type="array">
+         <obj_property name="ElementShortName">src2_addr[4:0]</obj_property>
+         <obj_property name="ObjectShortName">src2_addr[4:0]</obj_property>
+         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/TOP/RISCVCORE/RF/dest_addr" type="array">
+         <obj_property name="ElementShortName">dest_addr[4:0]</obj_property>
+         <obj_property name="ObjectShortName">dest_addr[4:0]</obj_property>
+         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/TOP/RISCVCORE/RF/src1_out" type="array">
+         <obj_property name="ElementShortName">src1_out[31:0]</obj_property>
+         <obj_property name="ObjectShortName">src1_out[31:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/TOP/RISCVCORE/RF/src2_out" type="array">
+         <obj_property name="ElementShortName">src2_out[31:0]</obj_property>
+         <obj_property name="ObjectShortName">src2_out[31:0]</obj_property>
+      </wvobject>
+      <wvobject fp_name="/tb_top/TOP/RISCVCORE/RF/regfile" type="array">
+         <obj_property name="ElementShortName">regfile[0:31][31:0]</obj_property>
+         <obj_property name="ObjectShortName">regfile[0:31][31:0]</obj_property>
+      </wvobject>
+   </wvobject>
+</wave_config>

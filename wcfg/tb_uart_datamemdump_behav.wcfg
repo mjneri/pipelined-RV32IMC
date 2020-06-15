@@ -1,0 +1,131 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wave_config>
+   <wave_state>
+   </wave_state>
+   <db_ref_list>
+      <db_ref path="tb_uart_datamemdump_behav.wdb" id="1">
+         <top_modules>
+            <top_module name="glbl" />
+            <top_module name="tb_uart_datamemdump" />
+         </top_modules>
+      </db_ref>
+   </db_ref_list>
+   <zoom_setting>
+      <ZoomStartTime time="15932630000fs"></ZoomStartTime>
+      <ZoomEndTime time="16099430001fs"></ZoomEndTime>
+      <Cursor1Time time="16071630000fs"></Cursor1Time>
+   </zoom_setting>
+   <column_width_setting>
+      <NameColumnWidth column_width="150"></NameColumnWidth>
+      <ValueColumnWidth column_width="63"></ValueColumnWidth>
+   </column_width_setting>
+   <WVObjectSize size="25" />
+   <wvobject fp_name="/tb_uart_datamemdump/CLK" type="logic">
+      <obj_property name="ElementShortName">CLK</obj_property>
+      <obj_property name="ObjectShortName">CLK</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_uart_datamemdump/nrst" type="logic">
+      <obj_property name="ElementShortName">nrst</obj_property>
+      <obj_property name="ObjectShortName">nrst</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_uart_datamemdump/con_data" type="array">
+      <obj_property name="ElementShortName">con_data[31:0]</obj_property>
+      <obj_property name="ObjectShortName">con_data[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_uart_datamemdump/con_addr" type="array">
+      <obj_property name="ElementShortName">con_addr[9:0]</obj_property>
+      <obj_property name="ObjectShortName">con_addr[9:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_uart_datamemdump/TX" type="logic">
+      <obj_property name="ElementShortName">TX</obj_property>
+      <obj_property name="ObjectShortName">TX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_uart_datamemdump/UUT/sendStr" type="array">
+      <obj_property name="ElementShortName">sendStr[0:35][7:0]</obj_property>
+      <obj_property name="ObjectShortName">sendStr[0:35][7:0]</obj_property>
+      <obj_property name="Radix">ASCIIRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_uart_datamemdump/UUT/strLast" type="array">
+      <obj_property name="ElementShortName">strLast[3:0]</obj_property>
+      <obj_property name="ObjectShortName">strLast[3:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_uart_datamemdump/UUT/strLength" type="array">
+      <obj_property name="ElementShortName">strLength[5:0]</obj_property>
+      <obj_property name="ObjectShortName">strLength[5:0]</obj_property>
+      <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_uart_datamemdump/UUT/clock_counter" type="array">
+      <obj_property name="ElementShortName">clock_counter[31:0]</obj_property>
+      <obj_property name="ObjectShortName">clock_counter[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_uart_datamemdump/UUT/strIndex" type="array">
+      <obj_property name="ElementShortName">strIndex[5:0]</obj_property>
+      <obj_property name="ObjectShortName">strIndex[5:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_uart_datamemdump/UUT/UARTState" type="array">
+      <obj_property name="ElementShortName">UARTState[3:0]</obj_property>
+      <obj_property name="ObjectShortName">UARTState[3:0]</obj_property>
+      <obj_property name="WaveformStyle">STYLE_DIGITAL</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_uart_datamemdump/UUT/reset_ctr" type="array">
+      <obj_property name="ElementShortName">reset_ctr[17:0]</obj_property>
+      <obj_property name="ObjectShortName">reset_ctr[17:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_uart_datamemdump/UUT/test_pass" type="array">
+      <obj_property name="ElementShortName">test_pass[9:0]</obj_property>
+      <obj_property name="ObjectShortName">test_pass[9:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_uart_datamemdump/UUT/test_total" type="array">
+      <obj_property name="ElementShortName">test_total[9:0]</obj_property>
+      <obj_property name="ObjectShortName">test_total[9:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_uart_datamemdump/UUT/UARTSend" type="logic">
+      <obj_property name="ElementShortName">UARTSend</obj_property>
+      <obj_property name="ObjectShortName">UARTSend</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_uart_datamemdump/UUT/UARTReady" type="logic">
+      <obj_property name="ElementShortName">UARTReady</obj_property>
+      <obj_property name="ObjectShortName">UARTReady</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_uart_datamemdump/UUT/UARTData" type="array">
+      <obj_property name="ElementShortName">UARTData[7:0]</obj_property>
+      <obj_property name="ObjectShortName">UARTData[7:0]</obj_property>
+      <obj_property name="Radix">ASCIIRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_uart_datamemdump/UUT/ANSWER_STR" type="array">
+      <obj_property name="ElementShortName">ANSWER_STR[0:35][7:0]</obj_property>
+      <obj_property name="ObjectShortName">ANSWER_STR[0:35][7:0]</obj_property>
+      <obj_property name="Radix">ASCIIRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_uart_datamemdump/UUT/RESULT_STR" type="array">
+      <obj_property name="ElementShortName">RESULT_STR[0:34][7:0]</obj_property>
+      <obj_property name="ObjectShortName">RESULT_STR[0:34][7:0]</obj_property>
+      <obj_property name="Radix">ASCIIRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_uart_datamemdump/UUT/CLOCKCYCLES_STR" type="array">
+      <obj_property name="ElementShortName">CLOCKCYCLES_STR[0:25][7:0]</obj_property>
+      <obj_property name="ObjectShortName">CLOCKCYCLES_STR[0:25][7:0]</obj_property>
+      <obj_property name="Radix">ASCIIRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_uart_datamemdump/UUT/TESTPROGNAME_STR" type="array">
+      <obj_property name="ElementShortName">TESTPROGNAME_STR[0:11][7:0]</obj_property>
+      <obj_property name="ObjectShortName">TESTPROGNAME_STR[0:11][7:0]</obj_property>
+      <obj_property name="Radix">ASCIIRADIX</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_uart_datamemdump/UUT/LINE1_STR" type="array">
+      <obj_property name="ElementShortName">LINE1_STR[0:32][7:0]</obj_property>
+      <obj_property name="ObjectShortName">LINE1_STR[0:32][7:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_uart_datamemdump/UUT/LINE2_STR" type="array">
+      <obj_property name="ElementShortName">LINE2_STR[0:30][7:0]</obj_property>
+      <obj_property name="ObjectShortName">LINE2_STR[0:30][7:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_uart_datamemdump/UUT/LINE3_STR" type="array">
+      <obj_property name="ElementShortName">LINE3_STR[0:30][7:0]</obj_property>
+      <obj_property name="ObjectShortName">LINE3_STR[0:30][7:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_uart_datamemdump/UUT/ENDLINE_STR" type="array">
+      <obj_property name="ElementShortName">ENDLINE_STR[0:35][7:0]</obj_property>
+      <obj_property name="ObjectShortName">ENDLINE_STR[0:35][7:0]</obj_property>
+   </wvobject>
+</wave_config>

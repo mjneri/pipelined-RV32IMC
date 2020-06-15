@@ -1,0 +1,127 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<wave_config>
+   <wave_state>
+   </wave_state>
+   <db_ref_list>
+      <db_ref path="tb_top_behav.wdb" id="1">
+         <top_modules>
+            <top_module name="glbl" />
+            <top_module name="tb_top" />
+         </top_modules>
+      </db_ref>
+   </db_ref_list>
+   <zoom_setting>
+      <ZoomStartTime time="1481259666fs"></ZoomStartTime>
+      <ZoomEndTime time="1481471667fs"></ZoomEndTime>
+      <Cursor1Time time="1481294999fs"></Cursor1Time>
+   </zoom_setting>
+   <column_width_setting>
+      <NameColumnWidth column_width="148"></NameColumnWidth>
+      <ValueColumnWidth column_width="66"></ValueColumnWidth>
+   </column_width_setting>
+   <WVObjectSize size="22" />
+   <wvobject fp_name="/tb_top/TOP/CLK_BUF" type="logic">
+      <obj_property name="ElementShortName">CLK_BUF</obj_property>
+      <obj_property name="ObjectShortName">CLK_BUF</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_top/nrst" type="logic">
+      <obj_property name="ElementShortName">nrst</obj_property>
+      <obj_property name="ObjectShortName">nrst</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_top/TOP/locked" type="logic">
+      <obj_property name="ElementShortName">locked</obj_property>
+      <obj_property name="ObjectShortName">locked</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_top/TOP/int_sig" type="array">
+      <obj_property name="ElementShortName">int_sig[5:0]</obj_property>
+      <obj_property name="ObjectShortName">int_sig[5:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_top/TOP/PROTOCOL_CON/ctr" type="array">
+      <obj_property name="ElementShortName">ctr[6:0]</obj_property>
+      <obj_property name="ObjectShortName">ctr[6:0]</obj_property>
+      <obj_property name="CustomSignalColor">#E0FFFF</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_top/TOP/PROTOCOL_CON/mem_in" type="array">
+      <obj_property name="ElementShortName">mem_in[31:0]</obj_property>
+      <obj_property name="ObjectShortName">mem_in[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_top/TOP/PROTOCOL_CON/mem_addr" type="array">
+      <obj_property name="ElementShortName">mem_addr[10:0]</obj_property>
+      <obj_property name="ObjectShortName">mem_addr[10:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_top/TOP/PROTOCOL_CON/mem_out" type="array">
+      <obj_property name="ElementShortName">mem_out[31:0]</obj_property>
+      <obj_property name="ObjectShortName">mem_out[31:0]</obj_property>
+      <obj_property name="CustomSignalColor">#FF0080</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_top/TOP/PROTOCOL_CON/mem_wr" type="array">
+      <obj_property name="ElementShortName">mem_wr[3:0]</obj_property>
+      <obj_property name="ObjectShortName">mem_wr[3:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_top/TOP/RISCVCORE/DATAMEM/protocol_sel" type="logic">
+      <obj_property name="ElementShortName">protocol_sel</obj_property>
+      <obj_property name="ObjectShortName">protocol_sel</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_top/TOP/RISCVCORE/DATAMEM/coremem_doutb" type="array">
+      <obj_property name="ElementShortName">coremem_doutb[31:0]</obj_property>
+      <obj_property name="ObjectShortName">coremem_doutb[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_top/TOP/RISCVCORE/DATAMEM/protocolmem_doutb" type="array">
+      <obj_property name="ElementShortName">protocolmem_doutb[31:0]</obj_property>
+      <obj_property name="ObjectShortName">protocolmem_doutb[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_top/TOP/PROTOCOL_CON/spi_din" type="array">
+      <obj_property name="ElementShortName">spi_din[31:0]</obj_property>
+      <obj_property name="ObjectShortName">spi_din[31:0]</obj_property>
+      <obj_property name="CustomSignalColor">#FFD700</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_top/TOP/PROTOCOL_CON/spi_con" type="array">
+      <obj_property name="ElementShortName">spi_con[31:0]</obj_property>
+      <obj_property name="ObjectShortName">spi_con[31:0]</obj_property>
+      <obj_property name="CustomSignalColor">#FFD700</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_top/TOP/PROTOCOL_CON/uart_din" type="array">
+      <obj_property name="ElementShortName">uart_din[31:0]</obj_property>
+      <obj_property name="ObjectShortName">uart_din[31:0]</obj_property>
+      <obj_property name="CustomSignalColor">#800080</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_top/TOP/PROTOCOL_CON/uart_con" type="array">
+      <obj_property name="ElementShortName">uart_con[31:0]</obj_property>
+      <obj_property name="ObjectShortName">uart_con[31:0]</obj_property>
+      <obj_property name="CustomSignalColor">#800080</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_top/TOP/PROTOCOL_CON/i2c_din" type="array">
+      <obj_property name="ElementShortName">i2c_din[31:0]</obj_property>
+      <obj_property name="ObjectShortName">i2c_din[31:0]</obj_property>
+      <obj_property name="CustomSignalColor">#FFD700</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_top/TOP/PROTOCOL_CON/i2c_con" type="array">
+      <obj_property name="ElementShortName">i2c_con[31:0]</obj_property>
+      <obj_property name="ObjectShortName">i2c_con[31:0]</obj_property>
+      <obj_property name="CustomSignalColor">#FFD700</obj_property>
+      <obj_property name="UseCustomSignalColor">true</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_top/TOP/PROTOCOL_CON/spi_rco_t" type="array">
+      <obj_property name="ElementShortName">spi_rco_t[31:0]</obj_property>
+      <obj_property name="ObjectShortName">spi_rco_t[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_top/TOP/PROTOCOL_CON/spi_dat_t" type="array">
+      <obj_property name="ElementShortName">spi_dat_t[31:0]</obj_property>
+      <obj_property name="ObjectShortName">spi_dat_t[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_top/TOP/PROTOCOL_CON/uart_rco" type="array">
+      <obj_property name="ElementShortName">uart_rco[31:0]</obj_property>
+      <obj_property name="ObjectShortName">uart_rco[31:0]</obj_property>
+   </wvobject>
+   <wvobject fp_name="/tb_top/TOP/PROTOCOL_CON/i2c_rco" type="array">
+      <obj_property name="ElementShortName">i2c_rco[31:0]</obj_property>
+      <obj_property name="ObjectShortName">i2c_rco[31:0]</obj_property>
+   </wvobject>
+</wave_config>
