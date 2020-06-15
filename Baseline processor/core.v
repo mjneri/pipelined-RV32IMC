@@ -31,9 +31,9 @@ module core(
 
 	// inputs from protocol controllers
 	input [3:0] con_write,				// Write enable signal
-	input [`DATAMEM_BITS:0] con_addr,	// Word-aligned data address
-	input [`WORD_WIDTH-1:0] con_in,		// Input data from Protocol controllers
-	output [`WORD_WIDTH-1:0] con_out	// Ouput of DATAMEM connected to Protocol controllers
+	input [`DATAMEM_BITS-1:0] con_addr,	// Word-aligned data address
+	input [`DATAMEM_WIDTH-1:0] con_in,		// Input data from Protocol controllers
+	output [`DATAMEM_WIDTH-1:0] con_out	// Ouput of DATAMEM connected to Protocol controllers
 );
 	
 /******************************** DECLARING WIRES *******************************/
@@ -211,8 +211,8 @@ module core(
 	wire [`BHT_PC_ADDR_BITS-1:0] if_PBT;	// Predicted branch target
 	wire [`BHT_PC_ADDR_BITS-1:0] exe_PBT;	// Predicted branch target
 	wire [`BHT_PC_ADDR_BITS-1:0] exe_CNI;	// Correct Next Instruction
-	wire branch_flush;
-	wire jump_flush;
+	wire branch_flush;						// Flushes IF/ID & ID/EXE
+	wire jump_flush;						// Flushes IF/ID only
 // &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 
 
@@ -222,17 +222,13 @@ module core(
 // Data Forwarding Control Signals ===============================================
 	wire fw_exe_to_id_A;
     wire fw_exe_to_id_B;
-
     wire fw_mem_to_id_A;
     wire fw_mem_to_id_B;
-
 	wire fw_wb_to_id_A;
     wire fw_wb_to_id_B;
-
     wire fw_wb_to_exe_A;
     wire fw_wb_to_exe_B;
-
-	wire load_hazard;
+	wire load_hazard;						// Asserts if a load hazard is detected
 // &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 
 
@@ -334,14 +330,12 @@ module core(
 
 
 // Interrupt Controller Signals===================================================
-
-	wire ISR_PC_flush;
-	wire ISR_pipe_flush;
-	wire sel_ISR;
-	wire ret_ISR;
-	wire ISR_running;
-	wire [`PC_ADDR_BITS-1:0] save_PC;
-
+	wire ISR_PC_flush;						// Flushes PC at ISR start sequence
+	wire ISR_pipe_flush;					// Flushes IF/ID at ISR start/end sequence
+	wire sel_ISR;							// selects ISRMEM
+	wire ret_ISR;							// selects save_PC as input to PC
+	wire ISR_running;						// asserted if the ISR is running
+	wire [`PC_ADDR_BITS-1:0] save_PC;		// saves PC address of interrupted instruction
 // &&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&&
 
 
@@ -406,17 +400,14 @@ module core(
 		.id_sel_opA(id_sel_opA),
 		.id_sel_opB(id_sel_opB),
 
-		//.id_sel_data(id_sel_data),
 		.exe_sel_data(exe_sel_data),
 		.mem_sel_data(mem_sel_data),
 		.wb_sel_data(wb_sel_data),
 
 		.id_is_stype(id_is_stype),
-		//.exe_is_stype(exe_is_stype),
 
 		.id_imm_select(id_imm_select),
 
-		.id_opcode(id_opcode),
 		.exe_opcode(exe_opcode),
 		.exe_comp_use_A(exe_comp_use_A),
 		.exe_comp_use_B(exe_comp_use_B),
@@ -507,12 +498,10 @@ module core(
 		.id_jump_in_bht(id_jump_in_bht),
 		.id_sel_pc(id_sel_pc),
 
-		//.ISR_stall(ISR_stall),
 		.ISR_PC_flush(ISR_PC_flush),
 		.ISR_pipe_flush(ISR_pipe_flush),
 		.sel_ISR(sel_ISR),
 		.ret_ISR(ret_ISR),
-		//.ISR_en(ISR_en),
 
 		.ISR_running(ISR_running),
 		.save_PC(save_PC)
@@ -654,23 +643,6 @@ module core(
 
 	// Branch target address computation
 	// id_brOP = rfoutA for JALR only
-	
-	/*
-	assign id_brOP = (fw_exe_to_id_A && id_opcode == 7'h67)?(
-						(exe_sel_data == 3'd4)? exe_DIVout		:
-					 	(exe_sel_data == 3'd2)? exe_imm			:
-					 	(exe_sel_data == 3'd1)? exe_ALUout		:
-					 							exe_pc4)		:
-					 (fw_mem_to_id_A  && id_opcode == 7'h67)?(
-					 	(mem_sel_data == 3'd4)? mem_DIVout		: 
-						(mem_sel_data == 3'd3)? mem_loaddata 	:
-						(mem_sel_data == 3'd2)? mem_imm 		:
-						(mem_sel_data == 3'd1)? mem_ALUout		:
-												mem_pc4)		:
-					 (fw_wb_to_id_A  && id_opcode == 7'h67)? 
-					 					wb_wr_data				:
-					 (id_sel_opBR)? id_rfoutA : id_PC;
-	*/
 	assign id_brOP = (id_sel_opBR) ? id_fwdopA : id_PC;
 	assign id_branchtarget = id_brOP + (id_is_comp ? (id_sel_opBR ? 32'd0: id_c_jt) : id_base_imm);
 
@@ -708,6 +680,7 @@ module core(
         .jt(id_c_jt)
     );
     
+	// Assigning control signals based on whether the decoded instruction is compressed
     assign id_dm_select = id_is_comp ? id_c_dm_select : id_base_dm_select; 
     assign id_sel_data = id_is_comp ? id_c_sel_data : id_base_sel_data;
     assign id_store_select = id_is_comp ? id_c_store_select : id_base_store_select;
@@ -726,6 +699,7 @@ module core(
 	assign id_is_btype = id_is_comp ? id_c_is_btype : id_base_is_btype;
 	assign id_imm_select = id_is_comp ? id_c_imm_select : id_base_imm_select;
 	assign id_is_nop = id_is_comp ? id_c_is_nop : (id_inst == 32'h13);
+	// ================================================================================
     
 	pipereg_id_exe ID_EXE(
 		.clk(exe_clk),
@@ -813,17 +787,17 @@ module core(
 
 		.ISR_running(ISR_running),
 
-		.stall(id_stall),		// used for the flushing logic, not really for writing to the BHT
+		.stall(id_stall),
 
-		.if_PC(if_PC[11:1]),
+		.if_PC(if_PC[`PC_ADDR_BITS-1:1]),
 
-		.id_PC(id_PC[11:1]),
-		.id_branchtarget(id_branchtarget[11:1]),
+		.id_PC(id_PC[`PC_ADDR_BITS-1:1]),
+		.id_branchtarget(id_branchtarget[`PC_ADDR_BITS-1:1]),
 		.id_is_jump(id_is_jump),
 		.id_is_btype(id_is_btype),
 
-		.exe_PC(exe_PC[11:1]),
-		.exe_branchtarget(exe_branchtarget[11:1]),
+		.exe_PC(exe_PC[`PC_ADDR_BITS-1:1]),
+		.exe_branchtarget(exe_branchtarget[`PC_ADDR_BITS-1:1]),
 		.exe_sel_opBR(exe_sel_opBR),
 		.exe_z(exe_z),
 		.exe_less(exe_less),
@@ -882,13 +856,8 @@ module core(
 		.nrst(nrst),
 
 		.dm_write(exe_dm_write),
-		.exe_data_addr(exe_ALUout[12:2]),
-		.mem_data_addr(mem_ALUout[12:2]),
+		.data_addr(exe_ALUout[`DATAMEM_BITS+1:2]),
 		.data_in(exe_storedata),
-
-		// .BTN(BTN),
-		// .SW(SW),
-		// .LED(LED),
 
 		.con_write(con_write),
 		.con_addr(con_addr),
@@ -932,7 +901,4 @@ module core(
 						(wb_sel_data == 3'd2) ? wb_imm :
 						(wb_sel_data == 3'd4) ? wb_DIVout :
 						wb_loaddata;
-
-
-
 endmodule

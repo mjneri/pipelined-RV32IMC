@@ -7,7 +7,8 @@
 //-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=
 // Module Name: storeblock.v
 // Description: Generates the data to be stored in the data memory
-//				based on the store instruction used.
+//				based on the store instruction used. The dm_write write enable
+//				signal is also generated
 //
 // Revisions:
 // Revision 0.01 - File Created

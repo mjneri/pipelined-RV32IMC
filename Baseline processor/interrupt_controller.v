@@ -58,7 +58,7 @@ module interrupt_controller(
 
 	// Assert if the ISR start/end sequence has started or if URET is detected.
 	// NOTE: start/end sequence refers to the period when the pipeline has to stall -> before the ISR executes & after the ISR is finished executing.
-	assign ISR_stall = (ISR_stall_counter != 0) || (exe_opcode == 7'h73);
+	assign ISR_stall = (ISR_stall_counter != 0) || (exe_opcode == `OPC_URET);
 
 	// ISR_PC_flush asserts for the following conditions:
 	//		+ save_PC == if_PC; Since save_PC already contains if_PC in this case, the instruction corresponding to if_PC shouldn't be propagated to prevent it from being executed twice.
@@ -132,7 +132,7 @@ module interrupt_controller(
 					ISR_stall_counter <= 1;
 			
 			// Initiate ISR end sequence once URET opcode is detected
-			if(exe_opcode == 7'h73) 
+			if(exe_opcode == `OPC_URET) 
 				ISR_stall_counter <= 1;
 			
 			// Reset ISR_stall_counter to 0 once counter value == 5
@@ -166,7 +166,7 @@ module interrupt_controller(
             ISR_running <= 0;
         end else begin
             // Initiate ISR end sequence once URET opcode is detected
-            if(exe_opcode == 7'h73) begin
+            if(exe_opcode == `OPC_URET) begin
                 ret_ISR <= 1;
                 sel_ISR <= 0;
             end

@@ -8,16 +8,13 @@ module tb_core();
 	reg nrst;
 
 	reg [`INT_SIG_WIDTH-1:0] int_sig;
-	// reg [3:0] BTN;
-	// reg [2:0] SW;
-	// wire [3:0] LED;
 
 	reg [3:0] con_write;
-	reg [10:0] con_addr;
-	reg [31:0] con_in;
-	wire [31:0] con_out;
+	reg [`DATAMEM_BITS:0] con_addr;
+	reg [`WORD_WIDTH-1:0] con_in;
+	wire [`WORD_WIDTH-1:0] con_out;
 
-	reg [31:0] last_inst;
+	reg [`WORD_WIDTH-1:0] last_inst;
 
 	core CORE(
 		.CLKIP_OUT(CLK),
@@ -25,9 +22,6 @@ module tb_core();
 		.nrst(nrst),
 
 		.int_sig(int_sig),
-		// .BTN(BTN),
-		// .SW(SW),
-		// .LED(LED),
 
 		.con_write(con_write),
 		.con_addr(con_addr),
@@ -116,6 +110,17 @@ module tb_core();
 			exe_inst <= CORE.id_inst;
 			mem_inst <= exe_inst;
 			wb_inst <= mem_inst;
+		end
+	end
+
+	reg [`PC_ADDR_BITS-1:0] mem_PC, wb_PC;
+	always@(posedge CLK) begin
+		if(!nrst) begin
+			mem_PC <= 0;
+			wb_PC <= 0;
+		end else begin
+			mem_PC <= CORE.exe_PC;
+			wb_PC <= mem_PC;
 		end
 	end
 	
@@ -315,28 +320,28 @@ module tb_core();
 	//		+ during stalls (division)
 	//		+ a stall occurs before the ISR executes (load hazard, etc.)
 	//		+ while a branch instruction is still in the pipeline before ISR executes
-	// always@(posedge CLK) begin
-	// 	if(clock_counter == 20) int_sig[0] = 1;
-	// 	if(clock_counter == 55) int_sig[1] = 1;
-	// 	if(clock_counter == 100) int_sig[0] = 0;
-	// 	if(clock_counter == 105) int_sig[1] = 0;
+	always@(posedge CLK) begin
+		if(clock_counter == 20) int_sig[0] = 1;
+		if(clock_counter == 55) int_sig[1] = 1;
+		if(clock_counter == 100) int_sig[0] = 0;
+		if(clock_counter == 105) int_sig[1] = 0;
 
-	// 	if(clock_counter == 213) int_sig[0] = 1;
-	// 	// if(clock_counter == 250) int_sig[0] = 0;
+		// if(clock_counter == 213) int_sig[0] = 1;
+		// // if(clock_counter == 250) int_sig[0] = 0;
 
-	// 	if(clock_counter == 239) int_sig[1] = 1;
-	// 	if(clock_counter == 241) int_sig[2] = 1;
-	// 	if(clock_counter == 243) int_sig[2] = 0;
+		// if(clock_counter == 239) int_sig[1] = 1;
+		// if(clock_counter == 241) int_sig[2] = 1;
+		// if(clock_counter == 243) int_sig[2] = 0;
 
-	// 	if(clock_counter == 460) int_sig[2] = 1;
-	// 	if(clock_counter == 462) int_sig[0] = 0;
-	// 	// if(clock_counter == 500) int_sig[0] = 0;
+		// if(clock_counter == 460) int_sig[2] = 1;
+		// if(clock_counter == 462) int_sig[0] = 0;
+		// // if(clock_counter == 500) int_sig[0] = 0;
 
-	// 	if(clock_counter == 7376) int_sig[3] = 1;
-	// 	if(clock_counter == 7400) int_sig[3] = 0;
+		// if(clock_counter == 7376) int_sig[3] = 1;
+		// if(clock_counter == 7400) int_sig[3] = 0;
 
-	// 	if(clock_counter == 8000) int_sig = 4'hF;
-	// end
+		// if(clock_counter == 8000) int_sig = 4'hF;
+	end
 
 	// The following code is for checking the contents
 	// of BLOCKMEM

@@ -26,13 +26,7 @@ module top(
 	input CLK100MHZ,
 	input nrst,
 
-	// FPGA I/O pins
-	// input [3:0] BTN,
-	// input [2:0] SW,
-	// output [3:0] LED,
-
 	// Protocol controller related I/O
-	// output UART_TX		// Output pin for UARTDUMP
 	output ck_io0,		// SCK
 	input ck_io1,		// MISO
 	output ck_io2,		// MOSI
@@ -40,8 +34,10 @@ module top(
 	output ck_io4,		// SS1
 	output ck_io5,		// SS2
 	output ck_io6,		// SS3
+
 	output ck_io7,		// UART_ENC
 	input ck_io8,		// UART_DEC
+
 	inout ck_io38,		// Tristate buffer/I2C SCL
 	inout ck_io39		// Tristate buffer/I2C SDA
 );
@@ -52,16 +48,15 @@ module top(
 	wire CLKFB;				// CLKIP Feedback
 	wire CLKFB_BUF;			// CLKFB buffer output
 	wire locked;			// determines stability of CLKIP output
-	// wire [3:0] db_btn;	// Debounced button inputs
 	
 	// Interrupt signals
 	wire [`INT_SIG_WIDTH-1:0] int_sig;
 
 	// Uncomment the following if needed:
-	wire [10:0] con_addr;	// Output datamem address from protocol controllers
-	wire [3:0] con_write;	// Write enable signal from protocol controllers
-	wire [31:0] con_in;		// Input data to datamem from protocol controllers
-	wire [31:0] con_out;	// Output data of datamem based on con_addr
+	wire [`DATAMEM_BITS-1:0] con_addr;		// Output datamem address from protocol controllers
+	wire [3:0] con_write;					// Write enable signal from protocol controllers
+	wire [`DATAMEM_WIDTH-1:0] con_in;		// Input data to datamem from protocol controllers
+	wire [`DATAMEM_WIDTH-1:0] con_out;		// Output data of datamem based on con_addr
 
 	// Wires for the protocol controllers (based on top_tb.v from Single-cycle RV32IC)
 	// I2C
@@ -99,7 +94,6 @@ module top(
 	clk_wiz_0 CLKIP(
 		.clk_in1(CLK100MHZ),
 		.clk_out1(CLKIP_OUT),
-		// .resetn(nrst),
 		.locked(locked),
 		.clkfb_in(CLKFB_BUF),
 		.clkfb_out(CLKFB)
@@ -125,9 +119,6 @@ module top(
 		.nrst(nrst & locked),
 
 		.int_sig(int_sig),
-		// .BTN(BTN),
-		// .SW(SW),
-		// .LED(LED),
 
 		.con_write(con_write),
 		.con_addr(con_addr),
@@ -172,31 +163,11 @@ module top(
 		.int_sig(int_sig)
 	);
 
-	// UART Data Memory Dump
-	// uart_datamemdump UARTDUMP(
-	// 	.CLK(CLK_BUF),
-	// 	.nrst(nrst & locked),
-	// 	.con_data(con_out),
-
-	// 	// Outputs
-	// 	.con_addr(con_addr),
-	// 	.TX(UART_TX)
-	// );
-
-	// Button debouncing
-	// btndebounce DEBOUNCE(
-	// 	.CLK(CLK_BUF),
-	// 	.nrst(nrst & locked),
-
-	// 	.btn(BTN),
-	// 	.db_btn(db_btn)
-	// );
-
 	// For Vivado ILA Capture control; Remove if not needed
-	(* dont_touch = "yes" *) reg [31:0] ila_ctr = 0;
-	always@(posedge CLK_BUF) begin
-		if(nrst & locked) ila_ctr <= ila_ctr + 1;
-		else ila_ctr <= 0;
-	end
+	// (* dont_touch = "yes" *) reg [31:0] ila_ctr = 0;
+	// always@(posedge CLK_BUF) begin
+	// 	if(nrst & locked) ila_ctr <= ila_ctr + 1;
+	// 	else ila_ctr <= 0;
+	// end
 
 endmodule

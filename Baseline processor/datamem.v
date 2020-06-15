@@ -27,6 +27,7 @@
 
 
 `timescale 1ns / 1ps
+`include "constants.vh"
 
 module datamem(
 	input core_clk,				// Gated clock signal
@@ -35,32 +36,27 @@ module datamem(
 
 	// Inputs from the RISCV core
 	input [3:0] dm_write,
-	input [10:0] exe_data_addr,
-	input [10:0] mem_data_addr,
-	input [31:0] data_in,
-
-	// Ports for FPGA I/O
-	// input [3:0] BTN,
-	// input [2:0] SW,
-	// output [3:0] LED,
+	input [`DATAMEM_BITS-1:0] data_addr,
+	input [`DATAMEM_WIDTH-1:0] data_in,
 
 	// Inputs from protocol controllers
 	// NOTE: protocol controllers cannot read from FPGAIO
-	input [3:0] con_write,		// Similar to dm_write
-	input [10:0] con_addr,		// datamem address from protocol controller
-	input [31:0] con_in,		// data input from protocol controller
+	input [3:0] con_write,				// Similar to dm_write
+	input [`DATAMEM_BITS-1:0] con_addr,	// datamem address from protocol controller
+	input [`DATAMEM_WIDTH-1:0] con_in,	// data input from protocol controller
 
-	output [31:0] data_out,		// data output to the RISC-V core
-	output [31:0] con_out		// data output to protocol controller
+	// Outputs
+	output [`DATAMEM_WIDTH-1:0] data_out,	// data output to the RISC-V core
+	output [`DATAMEM_WIDTH-1:0] con_out		// data output to protocol controller
 );
 	
 	// Block memory outputs
-	wire [31:0] coremem_douta, coremem_doutb;
-	wire [31:0] protocolmem_douta, protocolmem_doutb;
+	wire [`DATAMEM_WIDTH-1:0] coremem_douta, coremem_doutb;
+	wire [`DATAMEM_WIDTH-1:0] protocolmem_douta, protocolmem_doutb;
 
 	// Determine which blockmem output to select
 	// If x_sel = 1, select PROTOCOLMEM output, else select COREMEM output
-	wire core_sel = mem_data_addr[10];
+	wire core_sel = data_addr[10];
 	wire protocol_sel = con_addr[10];
 
 	// Datamem that uses BLOCKMEM from Vivado IP Catalog
@@ -70,7 +66,7 @@ module datamem(
 	blk_mem_gen_datamem COREMEM(
 		.clka(core_clk),
 		.wea(dm_write),
-		.addra(exe_data_addr[9:0]),
+		.addra(data_addr[9:0]),
 		.dina(data_in),
 		.douta(coremem_douta),
 
@@ -85,7 +81,7 @@ module datamem(
 	blk_mem_gen_protocol PROTOCOLMEM(
 		.clka(core_clk),
 		.wea(4'b0),
-		.addra(exe_data_addr[3:0]),
+		.addra(data_addr[3:0]),
 		.dina(32'b0),
 		.douta(protocolmem_douta),
 
@@ -97,10 +93,15 @@ module datamem(
 	);
 
 	// Assigning data_out for the Core
-	assign data_out = core_sel? protocolmem_douta : coremem_douta;
+	reg core_sel_reg = 0;
+	always@(posedge core_clk) begin
+		if(!nrst) core_sel_reg <= 0;
+		else core_sel_reg <= core_sel;
+	end
+	assign data_out = core_sel_reg? protocolmem_douta : coremem_douta;
 
 	// Assigning con_out
-	reg protocol_sel_reg;
+	reg protocol_sel_reg = 0;
 	always@(posedge con_clk) begin
 		if(!nrst) protocol_sel_reg <= 0;
 		else protocol_sel_reg <= protocol_sel;

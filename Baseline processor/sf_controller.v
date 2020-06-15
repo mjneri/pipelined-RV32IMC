@@ -87,15 +87,15 @@ module sf_controller(
 
     // Forwarding Unit Inputs
     // Source registers
-	input [4:0] id_rsA,
-	input [4:0] id_rsB,
-	input [4:0] exe_rsA,
-	input [4:0] exe_rsB,
+	input [`REGFILE_BITS-1:0] id_rsA,
+	input [`REGFILE_BITS-1:0] id_rsB,
+	input [`REGFILE_BITS-1:0] exe_rsA,
+	input [`REGFILE_BITS-1:0] exe_rsB,
 
 	// Destination registers
-	input [4:0] exe_rd,
-	input [4:0] mem_rd,
-	input [4:0] wb_rd,
+	input [`REGFILE_BITS-1:0] exe_rd,
+	input [`REGFILE_BITS-1:0] mem_rd,
+	input [`REGFILE_BITS-1:0] wb_rd,
 
 	// Control signals
 	input exe_wr_en,
@@ -105,17 +105,14 @@ module sf_controller(
 	input id_sel_opA,
 	input id_sel_opB,
 
-	//input [2:0] id_sel_data,
 	input [2:0] exe_sel_data,
 	input [2:0] mem_sel_data,
 	input [2:0] wb_sel_data,
 
 	input id_is_stype,
-	//input exe_is_stype,
 
 	input [2:0] id_imm_select,
 
-	input [6:0] id_opcode,
 	input [6:0] exe_opcode,
 	input exe_comp_use_A,
 	input exe_comp_use_B,
@@ -174,17 +171,14 @@ module sf_controller(
 		.id_sel_opA(id_sel_opA),
 		.id_sel_opB(id_sel_opB),
 
-		//.id_sel_data(id_sel_data),
 		.exe_sel_data(exe_sel_data),
 		.mem_sel_data(mem_sel_data),
 		.wb_sel_data(wb_sel_data),
 
 		.id_is_stype(id_is_stype),
-		//.exe_is_stype(exe_is_stype),
 
 		.id_imm_select(id_imm_select),
 
-		.id_opcode(id_opcode),
 		.exe_opcode(exe_opcode),
 		.exe_comp_use_A(exe_comp_use_A),
 		.exe_comp_use_B(exe_comp_use_B),
@@ -260,7 +254,8 @@ module sf_controller(
 	// A note: the shut_down signal is meant to be a stopgap measure that should be re-evaluated depending on
 	// how the processor core is meant to reset or not between cases of nrst deasserting.
 	// In other words, this signal solves a problem where the processor does not actually reset when nrst is deasserted
-	// due to the nature of the clock enable signals.
+	// due to the nature of the clock enable signals. (Alternatively, all registers could be changed to asynchronous resets, but
+	// it's considered bad practice, so we didn't do it).
 	//
 	// The processor resetting when nrst is deasserted is intended, but other behavior may be desired.
 	// For example, a signal to put the processor to sleep until it is meant to wake up, without going through polling loop

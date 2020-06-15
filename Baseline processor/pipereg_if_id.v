@@ -24,7 +24,7 @@ module pipereg_if_id(
 
 	input flush,
 
-	// PC + 4
+	// Incremented PC
 	input [`PC_ADDR_BITS-1:0] if_pc4,
 	output reg [`PC_ADDR_BITS-1:0] id_pc4,
 
@@ -32,7 +32,9 @@ module pipereg_if_id(
 	input[`WORD_WIDTH-1:0] if_inst,
 	output reg [`WORD_WIDTH-1:0] id_inst,
 
-	// PC for debugging
+	// PC signal for branch target computation. 
+	// Can be merged with pc4, but lots of signals in core.v 
+	// will have to be renamed, so this stays here.
 	input [`PC_ADDR_BITS-1:0] if_PC,
 	output reg [`PC_ADDR_BITS-1:0] id_PC
 );

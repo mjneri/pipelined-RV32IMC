@@ -39,8 +39,8 @@ module pipereg_exe_mem(
 	input [`WORD_WIDTH-1:0] exe_imm,
 	output reg [`WORD_WIDTH-1:0] mem_imm,
 
-	input [4:0] exe_rd,
-	output reg [4:0] mem_rd,
+	input [`REGFILE_BITS-1:0] exe_rd,
+	output reg [`REGFILE_BITS-1:0] mem_rd,
 
 	// Control signals
 	input [3:0] exe_dm_write,

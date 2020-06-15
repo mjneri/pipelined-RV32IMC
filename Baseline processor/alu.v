@@ -24,11 +24,11 @@ module alu(
 	input nrst,
 	input load_hazard,
 
-	input [31:0] op_a,
-	input [31:0] op_b,
+	input [`WORD_WIDTH-1:0] op_a,
+	input [`WORD_WIDTH-1:0] op_b,
 	input [3:0] ALU_op,
 
-	output reg [31:0] res,
+	output reg [`WORD_WIDTH-1:0] res,
 	output mul_stall,
 	output z,
 	output less,
@@ -36,9 +36,8 @@ module alu(
 );
 
 
-    wire signed [31:0]  signed_a;
-    wire signed [31:0]  signed_b;
-    wire signed [31:0]  signed_res;
+    wire signed [`WORD_WIDTH-1:0]  signed_a;
+    wire signed [`WORD_WIDTH-1:0]  signed_b;
 
 	wire [63:0] mulh_res, mulhsu_res, mulhu_res;
     
@@ -48,8 +47,6 @@ module alu(
 	assign z	=	op_a == op_b;
 	assign less =	op_a < op_b;
 	assign signed_less	=	signed_a < signed_b;
-
-	assign signed_res = signed_a >>> signed_b[4:0];
 
 	// Instantiating Multiplier IPs
 	wire mulhsu_clken = (ALU_op == `ALU_MULHSU)? 1'b1 : 1'b0;

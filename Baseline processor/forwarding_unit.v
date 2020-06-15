@@ -23,18 +23,19 @@
 
 
 `timescale 1ns / 1ps
+`include "constants.vh"
 
 module forwarding_unit(
 	// Source registers
-	input [4:0] id_rsA,
-	input [4:0] id_rsB,
-	input [4:0] exe_rsA,
-	input [4:0] exe_rsB,
+	input [`REGFILE_BITS-1:0] id_rsA,
+	input [`REGFILE_BITS-1:0] id_rsB,
+	input [`REGFILE_BITS-1:0] exe_rsA,
+	input [`REGFILE_BITS-1:0] exe_rsB,
 
 	// Destination registers
-	input [4:0] exe_rd,
-	input [4:0] mem_rd,
-	input [4:0] wb_rd,
+	input [`REGFILE_BITS-1:0] exe_rd,
+	input [`REGFILE_BITS-1:0] mem_rd,
+	input [`REGFILE_BITS-1:0] wb_rd,
 
 	// Control signals
 	input exe_wr_en,
@@ -44,17 +45,14 @@ module forwarding_unit(
 	input id_sel_opA,
 	input id_sel_opB,
 
-	//input [2:0] id_sel_data,
 	input [2:0] exe_sel_data,
 	input [2:0] mem_sel_data,
 	input [2:0] wb_sel_data,
 
 	input id_is_stype,
-	//input exe_is_stype,
 
 	input [2:0] id_imm_select,
 
-	input [6:0] id_opcode,
 	input [6:0] exe_opcode,
 	input exe_comp_use_A,
 	input exe_comp_use_B,
@@ -111,9 +109,9 @@ module forwarding_unit(
 
     // base:
     // A: NOT lui/auipc/jal
-    wire base_use_A = !(exe_opcode == 7'h37 || exe_opcode == 7'h17 || exe_opcode == 7'h6F);						// if inst uses operand A
+    wire base_use_A = !(exe_opcode == `OPC_LUI || exe_opcode == `OPC_AUIPC || exe_opcode == `OPC_JAL);			// if inst uses operand A
     // B: conditions for A + r-type/b-type/store
-    wire base_use_B = base_use_A && (exe_opcode == 7'h33 || exe_opcode == 7'h63 || exe_opcode == 7'h23);		// if inst uses operand B
+    wire base_use_B = base_use_A && (exe_opcode == `OPC_RTYPE || exe_opcode == `OPC_BTYPE || exe_opcode == `OPC_STYPE);		// if inst uses operand B
     // compressed:
     // check if use_A/use_B is nonzero
     wire fwd_A = exe_is_comp ? exe_comp_use_A : base_use_A;

@@ -23,10 +23,6 @@
 module tb_top();
 
 	reg CLK100MHZ, nrst;
-	// reg [3:0] BTN;
-	// reg [2:0] SW;
-	// wire [3:0] LED;
-	// wire UART_TX;
 	wire ck_io0;
 	reg  ck_io1;
 	wire ck_io2;
@@ -43,11 +39,6 @@ module tb_top();
 		.CLK100MHZ(CLK100MHZ),
 		.nrst(nrst),
 
-		// .BTN(BTN),
-		// .SW(SW),
-		// .LED(LED),
-
-		// .UART_TX(UART_TX)
 		.ck_io0(ck_io0),
 		.ck_io1(ck_io1),
 		.ck_io2(ck_io2),
@@ -67,17 +58,10 @@ module tb_top();
 	initial begin
 		CLK100MHZ = 0;
 		nrst = 0;
-		// BTN = 0;
-		// SW = 0;
 		ck_io1 = 1;
 		ck_io8 = 1;
-		// ck_io38 = 0;
-		// ck_io39 = 0;
 
 		#100 nrst = 1;
-		// #100 BTN[1] = 1;
-		// #100000 nrst = 0;
-		// #10000 nrst = 1;
 	end
 	
 	// reg [11:0] mem_PC, wb_PC;
@@ -114,7 +98,7 @@ module tb_top();
         .baudcontrol(enc_baud),
 
         .uart_enc(enc_tx),
-        .uart_rco()
+        .uart_rco(/*This signal is not needed*/)
 	);
 
 	always@(*) ck_io8 = enc_tx;

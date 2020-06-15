@@ -24,14 +24,14 @@
 module instmem(
 	input sel_ISR,
 
-	input [11:0] addr,
-	output [31:0] inst
+	input [`PC_ADDR_BITS-1:0] addr,
+	output [`WORD_WIDTH-1:0] inst
 );
 	
 	wire [`WORD_WIDTH-1:0] prog;
 	wire [`WORD_WIDTH-1:0] isr;
-	wire [11:0] addr_1 = addr[11:1];
-    wire [11:0] addr_2 = addr[11:1] + 11'd1;
+	wire [`PC_ADDR_BITS-1:0] addr_1 = addr[`PC_ADDR_BITS-1:1];
+    wire [`PC_ADDR_BITS-1:0] addr_2 = addr[`PC_ADDR_BITS-1:1] + 11'd1;
 
 	reg [`MEM_WIDTH-1:0] instmem [0:`MEM_DEPTH-1];
 	reg [`MEM_WIDTH-1:0] isr_mem [0:`MEM_DEPTH-1];

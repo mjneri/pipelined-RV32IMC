@@ -39,8 +39,8 @@ module pipereg_mem_wb(
 	input [`WORD_WIDTH-1:0] mem_imm,
 	output reg [`WORD_WIDTH-1:0] wb_imm,
 
-	input [4:0] mem_rd,
-	output reg [4:0] wb_rd,
+	input [`REGFILE_BITS-1:0] mem_rd,
+	output reg [`REGFILE_BITS-1:0] wb_rd,
 
 	// Control signals go here
 	input mem_wr_en,

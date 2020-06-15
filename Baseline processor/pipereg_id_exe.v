@@ -24,7 +24,7 @@ module pipereg_id_exe(
 
 	input flush,
 
-	// PC +4
+	// Incremented PC
 	input [`PC_ADDR_BITS-1:0] id_pc4,
 	output reg [`PC_ADDR_BITS-1:0] exe_pc4,
 
@@ -57,8 +57,8 @@ module pipereg_id_exe(
 	output reg [`WORD_WIDTH-1:0] exe_imm,
 
 	// Destination register
-	input [4:0] id_rd,
-	output reg [4:0] exe_rd,
+	input [`REGFILE_BITS-1:0] id_rd,
+	output reg [`REGFILE_BITS-1:0] exe_rd,
 
 	// PC of current instruction for debugging
 	input [`PC_ADDR_BITS-1:0] id_PC,
@@ -79,12 +79,6 @@ module pipereg_id_exe(
 
 	input [1:0] id_div_op,
 	output reg [1:0] exe_div_op,
-
-	// input id_sel_opA,
-	// output reg exe_sel_opA,
-
-	// input id_sel_opB,
-	// output reg exe_sel_opB,
 
 	input id_is_stype,
 	output reg exe_is_stype,
@@ -110,11 +104,12 @@ module pipereg_id_exe(
 	input id_is_comp,
 	output reg exe_is_comp,
 
-	input [4:0] id_rs1,
-	output reg [4:0] exe_rs1,
+	// Additional signals
+	input [`REGFILE_BITS-1:0] id_rs1,
+	output reg [`REGFILE_BITS-1:0] exe_rs1,
 
-	input [4:0] id_rs2,
-	output reg [4:0] exe_rs2
+	input [`REGFILE_BITS-1:0] id_rs2,
+	output reg [`REGFILE_BITS-1:0] exe_rs2
 );
 	
 	initial begin
@@ -135,8 +130,6 @@ module pipereg_id_exe(
 		exe_sel_opBR <= 0;
 		exe_div_valid <= 0;
 		exe_div_op <= 0;
-		// exe_sel_opA <= 0;
-		// exe_sel_opB <= 0;
 		exe_is_stype <= 0;
 		exe_wr_en <= 0;
 		exe_dm_select <= 0;
@@ -170,8 +163,6 @@ module pipereg_id_exe(
 
 			exe_div_valid <= 0;
 			exe_div_op <= 0;
-			// exe_sel_opA <= 0;
-			// exe_sel_opB <= 0;
 			exe_is_stype <= 0;
 			exe_wr_en <= 0;
 			exe_dm_select <= 0;
@@ -202,8 +193,6 @@ module pipereg_id_exe(
 
 			exe_div_valid <= id_div_valid;
 			exe_div_op <= id_div_op;
-			// exe_sel_opA <= id_sel_opA;
-			// exe_sel_opB <= id_sel_opB;
 			exe_is_stype <= id_is_stype;
 			exe_wr_en <= id_wr_en;
 			exe_dm_select <= id_dm_select;

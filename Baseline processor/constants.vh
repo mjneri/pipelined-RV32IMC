@@ -1,6 +1,9 @@
 `ifndef CONST_VH		// Guard prevents header file from being included more than once
 `define CONST_VH
 
+// ceilLog2(x) returns how many bits are needed to represent x values
+// EX: 1. ceilLog2(32) = 5 since 5 bits are needed to represent 32 values [0,31]
+// EX: 2. ceilLog2(128) = 7 bits to represent 128 values [0,127]
 `define ceilLog2(x) ((x) > 2**30 ? 31 : \
                      (x) > 2**29 ? 30 : \
                      (x) > 2**28 ? 29 : \
@@ -33,21 +36,30 @@
                      (x) > 2**1 ? 2 : \
                      (x) > 2**0 ? 1 : 0)
 
-`define INT_SIG_WIDTH 6
+`define INT_SIG_WIDTH 6         // If changing this, make sure to go to mcont.v so interrupt signals match the width
 
-`define MEM_DEPTH 2048
-`define MEM_WIDTH 16
-`define WORD_WIDTH 32
+`define MEM_DEPTH 2048          // For Halfword-addressable Instruction Memory
+`define MEM_WIDTH 16            // Halfwords
+`define WORD_WIDTH 32           // Word width of 32bits; Used for Instructions, operands, and immediates
 
-`define PC_ADDR_BITS 12
-`define DATAMEM_DEPTH 1024
+`define PC_ADDR_BITS 12         // For addressing 4kB Instruction memory
+
+// If changing any of the parameters below, double check datamem.v, since some signals
+// there don't use parameters.
+`define DATAMEM_WIDTH 32        // Block Memory Width; Can be changed with WORD_WIDTH
+`define DATAMEM_DEPTH 1040		// 1024(COREMEM) + 16(PROTOCOLMEM) Block Memory Depth
 `define DATAMEM_BITS `ceilLog2(`DATAMEM_DEPTH)
-`define REGFILE_SIZE 32
+
+`define REGFILE_SIZE 32         // Can be changed if implementing RISC-V Floating point extensions,
+								// but read up on the RISC-V specifications to be sure.
+
 `define REGFILE_BITS `ceilLog2(`REGFILE_SIZE)
 
 // BHT CONSTANTS
-`define BHT_PC_ADDR_BITS `PC_ADDR_BITS-1
-`define BHT_ENTRY 64		// Only use values in powers of 2
+`define BHT_PC_ADDR_BITS `PC_ADDR_BITS-1		// No need to take byte offset of PC address
+`define BHT_ENTRY 64							// Only use values in powers of 2
+												// NOTE: the BHT is expected to be a 4-way set associative cache
+												// even if the size is changed.
 
 `define BHT_SET_BITS `ceilLog2(`BHT_ENTRY/4)
 `define BHT_TAG_BITS `BHT_PC_ADDR_BITS - `BHT_SET_BITS
@@ -67,6 +79,7 @@
                                                 // LSB = `BHT_ENTRY_BITS-`BHT_TAG_BITS-2
 
 // CONTROLLER CONSTANTS
+// Instruction opcodes; can be modified if implementing more extensions
 `define OPC_LUI 7'h37
 `define OPC_AUIPC 7'h17
 `define OPC_JAL 7'h6f
@@ -76,7 +89,9 @@
 `define OPC_STYPE 7'h23
 `define OPC_RTYPE 7'h33
 `define OPC_LOAD 7'h03
+`define OPC_URET 7'h73
 
+// ALU opcodes
 `define ALU_ADD 4'd1
 `define ALU_SUB 4'd2
 `define ALU_AND 4'd3
