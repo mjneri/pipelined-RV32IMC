@@ -372,3 +372,7 @@ set_output_delay -clock [get_clocks CLKIP_OUT] -max -add_delay 2.000 [get_ports 
 # set_property C_ENABLE_CLK_DIVIDER false [get_debug_cores dbg_hub]
 # set_property C_USER_SCAN_CHAIN 1 [get_debug_cores dbg_hub]
 # connect_debug_port dbg_hub/clk [get_nets CLK_BUF]
+
+set_units -power mW -digits 1
+
+reset_switching_activity -all 
