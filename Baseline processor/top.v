@@ -193,10 +193,10 @@ module top(
 	// );
 
 	// For Vivado ILA Capture control; Remove if not needed
-	(* dont_touch = "yes" *) reg [31:0] ila_ctr = 0;
-	always@(posedge CLK_BUF) begin
-		if(nrst & locked) ila_ctr <= ila_ctr + 1;
-		else ila_ctr <= 0;
-	end
+	// (* dont_touch = "yes" *) reg [31:0] ila_ctr = 0;
+	// always@(posedge CLK_BUF) begin
+	// 	if(nrst & locked) ila_ctr <= ila_ctr + 1;
+	// 	else ila_ctr <= 0;
+	// end
 
 endmodule
