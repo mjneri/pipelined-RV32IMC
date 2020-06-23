@@ -2,7 +2,7 @@
 # with the RV32IMC core.
 # --
 # Hardware configuration:
-# UART: ESP8266 running esp8266-spotify-remote.ino
+# UART: ESP8266 running esp8266-spotify-remote.ino (Available: https://github.com/ThingPulse/esp8266-spotify-remote)
 # SPI: Arduino Uno w/ buttons
 # I2C: LCD
 # --
