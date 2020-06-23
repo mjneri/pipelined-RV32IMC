@@ -1,6 +1,7 @@
 # Python script for generating Text & Data dump files using RARS and
 # generating halfword instructions using assembler.py
 # when executing, terminal should be at the directory of the Assembly code.
+# NOTE: This python script was written for Windows 10.
 import sys
 import os
 from argparse import ArgumentParser
