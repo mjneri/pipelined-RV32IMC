@@ -1,4 +1,5 @@
-# Pipelined RV32IMC: Capstone Project for CoE 198 (2SAY1920)
+# Pipelined RV32IMC
+Capstone Project for CoE 198 (2SAY1920)
 
 ## Project Members
 + Emman Baylosis
@@ -7,8 +8,13 @@
 + Red Ridao
 + Allen Tan
 
+## Block Diagram
+<p align="center">
+  <img src="final-toplevel.png" alt="Size Limit CLI" width="738">
+</p>
+
 ## Quickstart
-+ Add all source files to Vivado (uncheck "Copy sources into project")
++ Add all source files to Vivado (uncheck "Copy sources into project") or use project_run.tcl
 + To generate dump files for assembly-tests, use dumpgen_script.py
 
 ### Using assembler.py
@@ -18,10 +24,10 @@
 
 ### Using dumpgen_script.py
 + Set terminal to directory of assembly code before running dumpgen_script.py
-+ RARS is used to generate datamem dumps & answer keys
++ [**RARS**](https://github.com/TheThirdOne/rars) is used to generate datamem dumps & answer keys
 ```python
   py dumpgen_script.py <input_file.s>
 ```
 
 #### Using project_run.tcl
-+ 
++ Execute using **Tools > Run Tcl Script...** in Vivado
