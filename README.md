@@ -9,23 +9,27 @@ This project uses Xilinx IP modules available in Vivado. The design was verified
 + Allen Tan
 
 ### Processor Specifications and Features
-+ **Architecture:** RV32IMC
-+ **Operating Frequency:** 50MHz
-+ **Memory:** 12kB
-+ **Pipeline stages:** 5-stage In-order Pipeline
-+ **Hazard Handling:** Data Forwarding & Bimodal Branch Prediction
-+ **Multiplication Latency:** 1 clock cycle
-+ **Division Latency:** 38-46 cycles
-+ **Branch Prediction:** 64-Entry Branch History Table w/ Branch Target Buffer
-+ **Branch/Jump Misprediction Penalty:** 2 cycles
-+ **FPGA Used:** Arty-A7 35
-+ **Supported Communication Protocols:** UART, SPI, I2C
+Features | Specifications
+---- | ----
+**Architecture** | RV32IMC
+**Operating Frequency** | 50MHz
+**Memory** | 12kB
+**Pipeline stages** | 5-stage In-order Pipeline
+**Hazard Handling** | Data Forwarding & Bimodal Branch Prediction
+**Multiplication Latency** | 1 clock cycle
+**Division Latency** | 38-46 cycles
+**Branch Prediction** | 64-Entry Branch History Table w/ Branch Target Buffer
+**Branch/Jump Misprediction Penalty** | 2 cycles
+**FPGA Used** | Arty-A7 35
+**Supported Communication Protocols** | UART, SPI, I2C (memory-mapped)
 
 
 ### Simplified Processor Block Diagram
 <p align="center">
   <img src="final-toplevel.png" alt="Size Limit CLI" width="738">
 </p>
+
+### Data Memory Organization
 
 ## Quickstart
 + Add all source files to Vivado (uncheck "Copy sources into project") or use **project_run.tcl**
