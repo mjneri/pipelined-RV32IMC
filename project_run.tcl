@@ -6,6 +6,9 @@
 #Set board
 # set_property BOARD_PART digilentinc.com:arty-a7-35:part0:1.0 [current_project]
 
+# Set Current Directory
+cd "C:/Users/MJ/Documents/UP Diliman/5th Year/2nd Sem/CoE 198/pipelined-RV32IMC"
+
 #Add Verilog Files to Project
 add_files -scan_for_includes ./processor
 add_files -scan_for_includes ./processor/protocol-controllers

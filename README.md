@@ -38,8 +38,17 @@ Features | Specifications
 + Add **board-files/arty-a7-35** to your Vivado Installation Directory. README.txt contains specific directory.
 + Create a project in Vivado. Set project name based on your preference, then just click next until you have to choose a default part.
 + In Boards, select **Arty A7-35** (part: *xc7a35ticsg324-1L*)
-+ Add all source files to Vivado (uncheck "Copy sources into project") or use **project_run.tcl**
++ Run **project_run.tcl** to add all source files to the project (see section below).
++ Double check design hierarchy to see if it matches the design hierarchy shown below.
 + To generate dump files for assembly-tests, use **dumpgen_script.py**
+
+### Using project_run.tcl
++ Execute using **Tools > Run Tcl Script...** in Vivado
+
+## Vivado Project Design Hierarchy
+<p align="center">
+  <img src="img/design-hier.png" alt="Size Limit CLI" width="738">
+</p>
 
 ### Using assembler.py
 ```python
@@ -53,9 +62,6 @@ Features | Specifications
 ```python
 > py dumpgen_script.py <input_file.s>
 ```
-
-### Using project_run.tcl
-+ Execute using **Tools > Run Tcl Script...** in Vivado
 
 ### Using Vivado ILA
 + Comment/uncomment `ila_ctr` in **top.v**
