@@ -39,7 +39,7 @@ module tb_top();
 	wire ck_io38;
 	wire ck_io39;
 
-	top TOP(
+	multi_instance TOP(
 		.CLK100MHZ(CLK100MHZ),
 		.nrst(nrst),
 
@@ -92,79 +92,79 @@ module tb_top();
 	// end
 
 	// Stimulus for the UART decoder
-	reg [7:0] enc_din = 0;
-	reg enc_en = 0;
-	reg [1:0] enc_parity = 0;
-	reg enc_stopsel = 0;
-	reg [23:0] enc_baud = 24'd26;
-	wire enc_tx;
-	integer enc_counter = 0;
+	// reg [7:0] enc_din = 0;
+	// reg enc_en = 0;
+	// reg [1:0] enc_parity = 0;
+	// reg enc_stopsel = 0;
+	// reg [23:0] enc_baud = 24'd26;
+	// wire enc_tx;
+	// integer enc_counter = 0;
 
 	reg CLK50MHZ = 0;
 	always #10 CLK50MHZ = ~CLK50MHZ;
 
-	Encoder ENCODER(
-		.clk(CLK50MHZ),
-        .nrst(nrst),
+	// Encoder ENCODER(
+	// 	.clk(CLK50MHZ),
+    //     .nrst(nrst),
 
-        .data_in(enc_din),
-        .en(enc_en),
-        .parity(enc_parity),
-        .stop_sel(enc_stopsel),
-        .baudcontrol(enc_baud),
+    //     .data_in(enc_din),
+    //     .en(enc_en),
+    //     .parity(enc_parity),
+    //     .stop_sel(enc_stopsel),
+    //     .baudcontrol(enc_baud),
 
-        .uart_enc(enc_tx),
-        .uart_rco()
-	);
+    //     .uart_enc(enc_tx),
+    //     .uart_rco()
+	// );
 
-	always@(*) ck_io8 = enc_tx;
+	// always@(*) ck_io8 = enc_tx;
 
-	// Task for encoder stimulus
-	task enc_stimulus();
-		input [7:0] din;
-		begin
-			enc_din = din;
-			#5 enc_en = 1'b1;
-			#20 enc_en = 1'b0;
-		end
-	endtask
+	// // Task for encoder stimulus
+	// task enc_stimulus();
+	// 	input [7:0] din;
+	// 	begin
+	// 		enc_din = din;
+	// 		#5 enc_en = 1'b1;
+	// 		#20 enc_en = 1'b0;
+	// 	end
+	// endtask
 
-	task enc_strinput();
-		input [16*8:0] string;
-		begin
-			enc_stimulus(string[127:120]);
-			#200 enc_stimulus(string[119:112]);
-			#200 enc_stimulus(string[111:104]);
-			#200 enc_stimulus(string[103:96]);
-			#200 enc_stimulus(string[95:88]);
-			#200 enc_stimulus(string[87:80]);
-			#200 enc_stimulus(string[79:72]);
-			#200 enc_stimulus(string[71:64]);
-			#200 enc_stimulus(string[63:56]);
-			#200 enc_stimulus(string[55:48]);
-			#200 enc_stimulus(string[47:40]);
-			#200 enc_stimulus(string[39:32]);
-			#200 enc_stimulus(string[31:24]);
-			#200 enc_stimulus(string[23:16]);
-			#200 enc_stimulus(string[15:8]);
-			#200 enc_stimulus(string[7:0]);
-		end
-	endtask
+	// task enc_strinput();
+	// 	input [16*8:0] string;
+	// 	begin
+	// 		enc_stimulus(string[127:120]);
+	// 		#200 enc_stimulus(string[119:112]);
+	// 		#200 enc_stimulus(string[111:104]);
+	// 		#200 enc_stimulus(string[103:96]);
+	// 		#200 enc_stimulus(string[95:88]);
+	// 		#200 enc_stimulus(string[87:80]);
+	// 		#200 enc_stimulus(string[79:72]);
+	// 		#200 enc_stimulus(string[71:64]);
+	// 		#200 enc_stimulus(string[63:56]);
+	// 		#200 enc_stimulus(string[55:48]);
+	// 		#200 enc_stimulus(string[47:40]);
+	// 		#200 enc_stimulus(string[39:32]);
+	// 		#200 enc_stimulus(string[31:24]);
+	// 		#200 enc_stimulus(string[23:16]);
+	// 		#200 enc_stimulus(string[15:8]);
+	// 		#200 enc_stimulus(string[7:0]);
+	// 	end
+	// endtask
 
-	always@(posedge CLK50MHZ) begin
-		if(nrst /* & TOP.locked */) begin
-			// Up to 16 bytes only -> max data that TXBUFFER can store
-			enc_counter <= enc_counter + 1;
-			if(enc_counter == 130000) enc_strinput("The Deli\n5:32pm\r\n");
-			if(enc_counter == 240000) enc_strinput("Chon\nRosewood\r\n\0");
-			if(enc_counter == 350000) enc_strinput("hCon\nRosewood\r\n\0");
-			if(enc_counter == 460000) enc_strinput("Vraell\nFall\r\n\0\0\0");
-			if(enc_counter == 570000) enc_strinput("Coldplay\nSparks\n");
-			if(enc_counter == 680000) enc_strinput("Polyphia\nGOAT\r\n\0");
-			if(enc_counter == 790000) enc_strinput("NITO\nHomesick\r\n\0");
-			if(enc_counter == 800000) enc_strinput("NITO\nHomesick\r\n\0");
-		end
-	end
+	// always@(posedge CLK50MHZ) begin
+	// 	if(nrst /* & TOP.locked */) begin
+	// 		// Up to 16 bytes only -> max data that TXBUFFER can store
+	// 		enc_counter <= enc_counter + 1;
+	// 		if(enc_counter == 130000) enc_strinput("The Deli\n5:32pm\r\n");
+	// 		if(enc_counter == 240000) enc_strinput("Chon\nRosewood\r\n\0");
+	// 		if(enc_counter == 350000) enc_strinput("hCon\nRosewood\r\n\0");
+	// 		if(enc_counter == 460000) enc_strinput("Vraell\nFall\r\n\0\0\0");
+	// 		if(enc_counter == 570000) enc_strinput("Coldplay\nSparks\n");
+	// 		if(enc_counter == 680000) enc_strinput("Polyphia\nGOAT\r\n\0");
+	// 		if(enc_counter == 790000) enc_strinput("NITO\nHomesick\r\n\0");
+	// 		if(enc_counter == 800000) enc_strinput("NITO\nHomesick\r\n\0");
+	// 	end
+	// end
 
 	// // For checking UART_TX output of top-level design
 	// // settings: 115200bps, no parity, 1 stop bit
@@ -293,6 +293,11 @@ module tb_top();
 	end
 
 	// Drive inout ports of the module
-	assign ck_io39 = (TOP.i2c_sda_t && i2c_counter == 9)? 1'b0 : (TOP.i2c_sda_t)? 1'b1 : 1'bZ;
-	assign ck_io38 = (TOP.i2c_scl_t)? 1'b1 : 1'bZ;
+	// For behavioral sim, use this:
+	// assign ck_io39 = (TOP.i2c_sda_t && i2c_counter == 9)? 1'b0 : (TOP.i2c_sda_t)? 1'b1 : 1'bZ;
+	// assign ck_io38 = (TOP.i2c_scl_t)? 1'b1 : 1'bZ;
+
+	// For post-impl sim, use this:
+	assign ck_io39 = (TOP.ck_io39_OBUF && i2c_counter == 9)? 1'b0 : (TOP.ck_io39_OBUF)? 1'b1 : 1'bZ;
+	assign ck_io38 = (TOP.ck_io38_OBUF)? 1'b1 : 1'bZ;
 endmodule
