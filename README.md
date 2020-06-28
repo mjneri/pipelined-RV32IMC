@@ -26,12 +26,12 @@ Features | Specifications
 
 ## Simplified Processor Block Diagram
 <p align="center">
-  <img src="final-toplevel.png" alt="Size Limit CLI" width="738">
+  <img src="img/final-toplevel.png" alt="Size Limit CLI" width="738">
 </p>
 
 ## Data Memory Organization
 <p align="center">
-  <img src="mem-organization.png" alt="Size Limit CLI" width="500">
+  <img src="img/mem-organization.png" alt="Size Limit CLI" width="500">
 </p>
 
 ## Quickstart
