@@ -1,17 +1,8 @@
-#Create project and set part
-# cd D:/pipelined-RV32IMC
-# create_project -force -part xc7a35ticsg324-1L CoE198_project RV32IMC
-#create_project -force -part target Xilinx_part project_directory project_name
-
-#Set board
-# set_property BOARD_PART digilentinc.com:arty-a7-35:part0:1.0 [current_project]
-
-# Set Current Directory
-cd "C:/Users/MJ/Documents/UP Diliman/5th Year/2nd Sem/CoE 198/pipelined-RV32IMC"
+# Set Current Directory to point to Github Repo directory (where project_run.tcl should be located)
+cd "Z:/Your Directory/Github/pipelined-RV32IMC"
 
 #Add Verilog Files to Project
 add_files -scan_for_includes ./processor
-add_files -scan_for_includes ./processor/protocol-controllers
 import_files
 
 #Add data memory files
@@ -42,6 +33,9 @@ import_ip -files {./vivado-ip-src/blk_mem_gen_datamem/blk_mem_gen_datamem.xci   
 				  ./vivado-ip-src/mult_gen_hsu/mult_gen_hsu.xci  				\
 				  ./vivado-ip-src/mult_gen_signed/mult_gen_signed.xci 			\
 				  ./vivado-ip-src/mult_gen_u/mult_gen_u.xci}
+
+# Import Waveform files
+add_files -fileset sim_1 ./wcfg
 
 #Generate output products so that instmem.coe and datamem.coe will not be read-only files
 #generate_target synthesis [get_files blk_mem_gen_instmem.xci]
