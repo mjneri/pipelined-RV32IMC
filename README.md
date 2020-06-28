@@ -8,7 +8,7 @@ This project uses Xilinx IP modules available in Vivado. The design was verified
 + Red Ridao
 + Allen Tan
 
-### Processor Specifications and Features
+## Processor Specifications and Features
 Features | Specifications
 ---- | ----
 **Architecture** | RV32IMC
@@ -24,12 +24,15 @@ Features | Specifications
 **Supported Communication Protocols** | UART, SPI, I2C (memory-mapped)
 
 
-### Simplified Processor Block Diagram
+## Simplified Processor Block Diagram
 <p align="center">
   <img src="final-toplevel.png" alt="Size Limit CLI" width="738">
 </p>
 
-### Data Memory Organization
+## Data Memory Organization
+<p align="center">
+  <img src="mem-organization.png" alt="Size Limit CLI" width="500">
+</p>
 
 ## Quickstart
 + Add all source files to Vivado (uncheck "Copy sources into project") or use **project_run.tcl**
