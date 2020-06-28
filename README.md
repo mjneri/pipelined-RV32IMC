@@ -35,6 +35,9 @@ Features | Specifications
 </p>
 
 ## Quickstart
++ Add board-files/arty-a7-35 to your Vivado Installation Directory. README.txt contains specific directory.
++ Create a project in Vivado. Set project name based on your preference, then just click next until you have to choose a default part.
++ In Boards, select **Arty A7-35** (part: *xc7a35ticsg324-1L*)
 + Add all source files to Vivado (uncheck "Copy sources into project") or use **project_run.tcl**
 + To generate dump files for assembly-tests, use **dumpgen_script.py**
 
