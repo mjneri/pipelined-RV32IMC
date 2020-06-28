@@ -19,6 +19,7 @@ Features | Specifications
 **Multiplication Latency** | 1 clock cycle
 **Division Latency** | 38-46 cycles
 **Branch Prediction** | 64-Entry Branch History Table w/ Branch Target Buffer
+**BHT Implementation** | 4-way Set Associative w/ FIFO Replacement Algorithm
 **Branch/Jump Misprediction Penalty** | 2 cycles
 **FPGA Used** | Arty-A7 35
 **Supported Communication Protocols** | UART, SPI, I2C (memory-mapped)
