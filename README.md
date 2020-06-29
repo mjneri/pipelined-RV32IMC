@@ -50,7 +50,7 @@ Features | Specifications
 
 ### Using assembler.py
 ```python
-> py assembler\assembler.py <input_file.s> <output_file.dmp> -comp_buffer True
+> python assembler\assembler.py <input_file.s> <output_file.dmp> -comp_buffer True
 ```
 
 ### Using dumpgen_script.py
@@ -58,7 +58,7 @@ Features | Specifications
 + Edit `assembler_folder_path` in **dumpgen_script.py** using absolute path
 + [**RARS**](https://github.com/TheThirdOne/rars) is used to generate datamem dumps & answer keys
 ```python
-> py dumpgen_script.py <input_file.s>
+> python dumpgen_script.py <input_file.s>
 ```
 
 ### Using Vivado ILA
