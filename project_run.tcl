@@ -1,5 +1,7 @@
 # Set Current Directory to point to Github Repo directory (where project_run.tcl should be located)
-cd "Z:/Your Directory/Github/pipelined-RV32IMC"
+set SRCDIR "Z:/Your Directory/Github/pipelined-RV32IMC"
+
+cd $SRCDIR
 
 #Add Verilog Files to Project
 add_files -scan_for_includes ./processor
@@ -24,17 +26,20 @@ set_property top_lib xil_defaultlib [get_filesets sim_1]
 set_property top top [current_fileset]
 
 #Import IP Modules
-import_ip -files {./vivado-ip-src/blk_mem_gen_datamem/blk_mem_gen_datamem.xci   \
-				  ./vivado-ip-src/blk_mem_gen_protocol/blk_mem_gen_protocol.xci \
-				  ./vivado-ip-src/clk_wiz_0/clk_wiz_0.xci 						\
-				  ./vivado-ip-src/div_gen_unsigned/div_gen_unsigned.xci 		\
-				  ./vivado-ip-src/div_gen_signed/div_gen_signed.xci 			\
-				  ./vivado-ip-src/mult_gen_hsu/mult_gen_hsu.xci  				\
-				  ./vivado-ip-src/mult_gen_signed/mult_gen_signed.xci 			\
-				  ./vivado-ip-src/mult_gen_u/mult_gen_u.xci}
+add_files	{./vivado-ip-src/blk_mem_gen_datamem/blk_mem_gen_datamem.xci	\
+			./vivado-ip-src/blk_mem_gen_protocol/blk_mem_gen_protocol.xci	\
+			./vivado-ip-src/clk_wiz_0/clk_wiz_0.xci 						\
+			./vivado-ip-src/div_gen_unsigned/div_gen_unsigned.xci 			\
+			./vivado-ip-src/div_gen_signed/div_gen_signed.xci 				\
+			./vivado-ip-src/mult_gen_hsu/mult_gen_hsu.xci  					\
+			./vivado-ip-src/mult_gen_signed/mult_gen_signed.xci 			\
+			./vivado-ip-src/mult_gen_u/mult_gen_u.xci}
 
 # Import Waveform files
-add_files -fileset sim_1 ./wcfg
+# add_files -fileset sim_1 ./wcfg
+
+# Set arty7_a35t.xdc as target constraints file
+set_property target_constrs_file [format %s%s $SRCDIR "/constraints/arty7_a35t.xdc"] [current_fileset -constrset]
 
 #Generate output products so that instmem.coe and datamem.coe will not be read-only files
 #generate_target synthesis [get_files blk_mem_gen_instmem.xci]
@@ -52,9 +57,6 @@ add_files -fileset sim_1 ./wcfg
 #if {$locked && $upgrade != ""} {
 #    upgrade_ip [get_ips clk_wiz_0]
 #}
-
-#Set target constraints
-#set_property target_constrs_file D:/pipelined-RV32IMC/PipelineProcessor_3/CoE198_test3.srcs/constrs_1/imports/VivadoFiles/arty7_a35t.xdc [current_fileset -constrset]
 
 #Synthesis and Implementation
 #launch_runs synth_1
