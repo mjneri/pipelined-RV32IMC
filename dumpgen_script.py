@@ -25,7 +25,7 @@ filename = args.file.split('.')[0]
 
 # Generating Command strings
 # Edit assembler_folder_path using absolute path to RARS
-assembler_folder_path = "..\\pipelined-RV32IMC\\assembler\\"
+assembler_folder_path = "Z:\\Your Directory\\Github\\pipelined-RV32IMC\\assembler\\"
 text_command = 'py "'+ assembler_folder_path + 'assembler.py" ' + args.file + ' ' + filename + '_text.dmp ' + '-comp_buffer True'
 data_command = 'java -jar "' + assembler_folder_path + 'rars1_4.jar" a mc CompactDataAtZero dump .data HexText \"' + filename + '_data.dmp\" \"' + filename+'_base.s'+'"'
 ans_command = 'java -jar "' + assembler_folder_path + 'rars1_4.jar" 50000 mc CompactDataAtZero dump .data HexText \"' + filename + '_answerkey.mem\"  \"' + filename+'_base.s' + '"'

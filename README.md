@@ -40,12 +40,11 @@ Features | Specifications
 + Create a project in Vivado. In Boards, select **Arty A7-35** (part: *xc7a35ticsg324-1L*).
 + Run **project_run.tcl** to add all source files to the project (see section below).
 + Check for any missing sources. You can double check w/ [img/design-hier.png](img/design-hier.png)
-+ Make sure to set **arty7_a35t.xdc** as the target constraints file in Vivado.
 + To generate dump files for assembly-tests, use **dumpgen_script.py**
 + Should you want to test BHT performance when its size is varied, go to the BHT constants in **processor/constants.vh**
 
 ### Using project_run.tcl
-+ Edit current directory in **project_run.tcl** to where the source files are located in your PC.
++ Edit `SRCDIR` in **project_run.tcl** to location of this repository in your PC
 + Execute using **Tools > Run Tcl Script...** in Vivado
 
 ### Using assembler.py
