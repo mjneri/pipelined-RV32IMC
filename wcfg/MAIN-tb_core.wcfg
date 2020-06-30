@@ -11,13 +11,13 @@
       </db_ref>
    </db_ref_list>
    <zoom_setting>
-      <ZoomStartTime time="7653560fs"></ZoomStartTime>
-      <ZoomEndTime time="50669288fs"></ZoomEndTime>
-      <Cursor1Time time="43500000fs"></Cursor1Time>
+      <ZoomStartTime time="41210000fs"></ZoomStartTime>
+      <ZoomEndTime time="42037001fs"></ZoomEndTime>
+      <Cursor1Time time="41381000fs"></Cursor1Time>
    </zoom_setting>
    <column_width_setting>
-      <NameColumnWidth column_width="152"></NameColumnWidth>
-      <ValueColumnWidth column_width="60"></ValueColumnWidth>
+      <NameColumnWidth column_width="150"></NameColumnWidth>
+      <ValueColumnWidth column_width="70"></ValueColumnWidth>
    </column_width_setting>
    <WVObjectSize size="22" />
    <wvobject fp_name="/tb_core/CLK" type="logic">
@@ -61,7 +61,7 @@
       <wvobject fp_name="/tb_core/max_data_addr" type="array">
          <obj_property name="ElementShortName">max_data_addr[31:0]</obj_property>
          <obj_property name="ObjectShortName">max_data_addr[31:0]</obj_property>
-         <obj_property name="Radix">HEXRADIX</obj_property>
+         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
       </wvobject>
       <wvobject fp_name="/tb_core/clock_counter" type="array">
          <obj_property name="ElementShortName">clock_counter[31:0]</obj_property>
@@ -179,12 +179,12 @@
          <obj_property name="UseCustomSignalColor">true</obj_property>
       </wvobject>
       <wvobject fp_name="/tb_core/mem_PC" type="array">
-         <obj_property name="ElementShortName">mem_PC[31:0]</obj_property>
-         <obj_property name="ObjectShortName">mem_PC[31:0]</obj_property>
+         <obj_property name="ElementShortName">mem_PC[11:0]</obj_property>
+         <obj_property name="ObjectShortName">mem_PC[11:0]</obj_property>
       </wvobject>
       <wvobject fp_name="/tb_core/wb_PC" type="array">
-         <obj_property name="ElementShortName">wb_PC[31:0]</obj_property>
-         <obj_property name="ObjectShortName">wb_PC[31:0]</obj_property>
+         <obj_property name="ElementShortName">wb_PC[11:0]</obj_property>
+         <obj_property name="ObjectShortName">wb_PC[11:0]</obj_property>
       </wvobject>
    </wvobject>
    <wvobject fp_name="group25" type="group">
@@ -868,6 +868,7 @@
    <wvobject fp_name="group104" type="group">
       <obj_property name="label">ALU</obj_property>
       <obj_property name="DisplayName">label</obj_property>
+      <obj_property name="isExpanded"></obj_property>
       <wvobject fp_name="/tb_core/CORE/ALU/op_a" type="array">
          <obj_property name="ElementShortName">op_a[31:0]</obj_property>
          <obj_property name="ObjectShortName">op_a[31:0]</obj_property>
@@ -883,6 +884,7 @@
       <wvobject fp_name="/tb_core/CORE/ALU/res" type="array">
          <obj_property name="ElementShortName">res[31:0]</obj_property>
          <obj_property name="ObjectShortName">res[31:0]</obj_property>
+         <obj_property name="Radix">UNSIGNEDDECRADIX</obj_property>
       </wvobject>
       <wvobject fp_name="/tb_core/CORE/ALU/z" type="logic">
          <obj_property name="ElementShortName">z</obj_property>
@@ -996,7 +998,6 @@
    <wvobject fp_name="group111" type="group">
       <obj_property name="label">BHT</obj_property>
       <obj_property name="DisplayName">label</obj_property>
-      <obj_property name="isExpanded"></obj_property>
       <wvobject fp_name="/tb_core/CORE/BRANCHPREDICTOR/CLK" type="logic">
          <obj_property name="ElementShortName">CLK</obj_property>
          <obj_property name="ObjectShortName">CLK</obj_property>
@@ -1144,7 +1145,6 @@
       <wvobject fp_name="group633" type="group">
          <obj_property name="label">Loaded entries</obj_property>
          <obj_property name="DisplayName">label</obj_property>
-         <obj_property name="isExpanded"></obj_property>
          <wvobject fp_name="/tb_core/CORE/BRANCHPREDICTOR/if_set" type="array">
             <obj_property name="ElementShortName">if_set[3:0]</obj_property>
             <obj_property name="ObjectShortName">if_set[3:0]</obj_property>

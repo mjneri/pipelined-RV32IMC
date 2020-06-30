@@ -125,7 +125,7 @@ module tb_core();
 	end
 	
 
-	// Checking for 10 NOPs/looping jumps in a row
+	// Checking for 10 NOPs/50 looping jumps in a row
 	// NOTE: checking for last_inst should be done for at least 50 cycles
 	// if there are DIV operations running in the processor.
 	always@(posedge CLK) begin
@@ -136,7 +136,7 @@ module tb_core();
 	    end
 	    else
             if (!done)
-                if (INST == last_inst && (INST[15:0] == 16'h0001 || INST == 32'h00000013)) begin
+                if ((last_inst[15:0] == 16'h0001 || last_inst == 32'h13) && (INST[15:0] == 16'h0001 || INST == 32'h13)) begin
                     consecutive_nops = consecutive_nops + 1;
                     check = check + 1;
                 end
@@ -160,7 +160,7 @@ module tb_core();
 	end
 	// This controlls the done flag
 	always@(posedge CLK) begin
-		if(check == 49 || consecutive_nops == 8) done = 1;
+		if(check == 50 || consecutive_nops == 10) done = 1;
 	end
 
 	// Tracking how many clock cycles it takes to execute the program
@@ -321,10 +321,10 @@ module tb_core();
 	//		+ a stall occurs before the ISR executes (load hazard, etc.)
 	//		+ while a branch instruction is still in the pipeline before ISR executes
 	always@(posedge CLK) begin
-		if(clock_counter == 20) int_sig[0] = 1;
-		if(clock_counter == 55) int_sig[1] = 1;
-		if(clock_counter == 100) int_sig[0] = 0;
-		if(clock_counter == 105) int_sig[1] = 0;
+		// if(clock_counter == 20) int_sig[0] = 1;
+		// if(clock_counter == 55) int_sig[1] = 1;
+		// if(clock_counter == 100) int_sig[0] = 0;
+		// if(clock_counter == 105) int_sig[1] = 0;
 
 		// if(clock_counter == 213) int_sig[0] = 1;
 		// // if(clock_counter == 250) int_sig[0] = 0;
@@ -382,24 +382,30 @@ module tb_core();
 		j = 0;
 		done = 0;
 		$display("\n");
-		$display("Passed %0d/%0d test cases.\nClock cycles: %0d", pass, total_test_cases, clock_counter-50);
+		if(check == 50) i = 50;
+		else i = 10;
+		$display("Passed %0d/%0d test cases.\nClock cycles: %0d", pass, total_test_cases, clock_counter-i);
 		$display("Total cycles stalled: %0d", cumulative_stall_counter);
 		$display("Total cycles flushed: %0d", cumulative_flush_counter);
 		$display("Total NOPs: %0d", nop_counter);
 		$display("=================\n");
 
 		// Clock gating counters
+		// Some counters subtracted by i to compensate for check & consecutive_nops
 		$display("---| Clock Gating Metrics |---");
-		$display("PC clock: %0d/%0d cycles", if_clk_counter-50, clock_counter-50);
-		$display("IF/ID clock: %0d/%0d cycles", id_clk_counter, clock_counter-50);
-		$display("ID/EXE clock: %0d/%0d cycles", exe_clk_counter, clock_counter-50);
-		$display("EXE/MEM & DATAMEM clock: %0d/%0d cycles", mem_clk_counter, clock_counter-50);
-		$display("MEM/WB clock: %0d/%0d cycles", wb_clk_counter, clock_counter-50);
-		$display("Regfile clock: %0d/%0d cycles", rf_clk_counter, clock_counter-50);
-		$display("Ungated clock: %0d/%0d cycles", clock_counter-50, clock_counter-50);
+		$display("PC clock: %0d/%0d cycles", if_clk_counter-i, clock_counter-i);
+		$display("IF/ID clock: %0d/%0d cycles", id_clk_counter-i, clock_counter-i);
+		$display("ID/EXE clock: %0d/%0d cycles", exe_clk_counter, clock_counter-i);
+		$display("EXE/MEM & DATAMEM clock: %0d/%0d cycles", mem_clk_counter, clock_counter-i);
+		$display("MEM/WB clock: %0d/%0d cycles", wb_clk_counter, clock_counter-i);
+		$display("Regfile clock: %0d/%0d cycles", rf_clk_counter, clock_counter-i);
+		$display("Ungated clock: %0d/%0d cycles", clock_counter-i, clock_counter-i);
 		$display("=================\n");
 		
 		// Computing BHT metrics
+		// If check == 50, an infinite loop executed for 50 times.
+		// So if the BHT accesses seems much higher than expected,
+		// it's probably due to this.
 		for(j = 0; j < `BHT_ENTRY; j = j + 1) begin
 			total_bht_correct = total_bht_correct + bht_correct[j];
 			total_bht_accesses = total_bht_accesses + bht_accesses[j];
