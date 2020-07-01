@@ -41,7 +41,6 @@ Features | Specifications
 + Run **project_run.tcl** to add all source files to the project (see section below).
 + Check for any missing sources. You can double check w/ [img/design-hier.png](img/design-hier.png)
 + To generate dump files for assembly-tests, use **dumpgen_script.py**
-+ Should you want to test BHT performance when its size is varied, go to the BHT constants in **processor/constants.vh**
 
 ### Using project_run.tcl
 + Edit `SRCDIR` in **project_run.tcl** to location of this repository in your PC
