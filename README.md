@@ -36,6 +36,7 @@ Features | Specifications
 </p>
 
 ## Creating Vivado Project
++ Clone this GitHub repository to your PC
 + Add **board-files/arty-a7-35** to your Vivado Installation Directory. README.txt contains specific directory.
 + Create a project in Vivado. In Boards, select **Arty A7-35** (part: *xc7a35ticsg324-1L*).
 + Run **project_run.tcl** to add all source files to the project (see section below).
